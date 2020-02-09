@@ -2,8 +2,8 @@ package model
 
 import "time"
 
-// Shipmenbysap ...
-type Shipmenbysap struct {
+// Shipmentbysap ...
+type Shipmentbysap struct {
 	Material     int
 	Qty          int64
 	ShipmentDate time.Time

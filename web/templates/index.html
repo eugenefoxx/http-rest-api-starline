@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <title>Home</title>
+</head>
+
+<body>
+  <h2>Hello, {{.user}} {{.id}}</h2>
+  <br>
+  <form method="post" action="/logout">
+    <button type="submit">Logout</button>
+  </form>
+  <br>
+
+
+  <div class="btn-group-vertical" style="margin-top: 10px;">
+    <span class="item-text">
+      <h5>Ссылки на google-файлы</h5>
+    </span>
+    <a class="btn btn-primary" href="/users" role="button" target="_blank">Register</a>
+    <a class="btn btn-primary" href="https://www.opennet.ru/" role="button" target="_blank">Opennet</a>
+    <a class="btn btn-primary" href="/shipmentbysap" role="button" target="_blank">SAP</a>
+  </div>
+
+
+
+
+</body>
+
+
+
+</html>

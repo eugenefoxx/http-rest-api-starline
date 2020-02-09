@@ -3,5 +3,5 @@ package store
 // Store ...
 type Store interface {
 	User() UserRepository
-	Shipmenbysap() ShipmentbysapRepository
+	Shipmentbysap() ShipmentbysapRepository
 }

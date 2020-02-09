@@ -106,7 +106,8 @@ func (s *server) configureRouter() {
 	//	s.router.HandleFunc("/sessions", s.redirectMain())
 	//	s.router.HandleFunc("/sessions", s.pageredirectMain())
 
-	s.router.HandleFunc("/shipmentbysap", s.shipmentBySAP()) //.Methods("GET")
+	s.router.HandleFunc("/shipmentbysap", s.authMiddleware(s.pageshipmentBySAP())).Methods("GET")
+	s.router.HandleFunc("/shipmentbysap", s.authMiddleware(s.shipmentBySAP())).Methods("POST")
 
 	//	s.router.HandleFunc("/main", s.authMiddleware(s.pageredirectMain())).Methods("GET")
 	s.router.HandleFunc("/logout", s.signOut()).Methods("POST")
@@ -407,6 +408,13 @@ func (s *server) handleSessionsCreate() http.HandlerFunc {
 	}
 }
 
+func (s *server) pageshipmentBySAP() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var body, _ = helper.LoadFile("./web/templates/insertsapbyship.html")
+		fmt.Fprintf(w, body)
+	}
+}
+
 func (s *server) shipmentBySAP() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		//	material := r.FormValue("material")
@@ -420,13 +428,34 @@ func (s *server) shipmentBySAP() http.HandlerFunc {
 		}
 		comment := r.FormValue("comment")
 
-		u := &model.Shipmenbysap{
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		id, ok := session.Values["user_id"]
+		if !ok {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		user1, err := s.store.User().Find(id.(int))
+		if err != nil {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		user2 := strconv.Atoi(user1)
+
+		u := &model.Shipmentbysap{
 			Material: material,
 			Qty:      qty,
 			Comment:  comment,
+			ID:       user2,
 		}
 
-		if err := s.store.Shipmenbysap().InterDate(u); err != nil {
+		if err := s.store.Shipmentbysap().InterDate(u); err != nil {
 			s.error(w, r, http.StatusUnprocessableEntity, err)
 			return
 		}

@@ -10,7 +10,7 @@ type ShipmentbysapRepository struct {
 }
 
 // InterDate ...
-func (r *ShipmentbysapRepository) InterDate(s *model.Shipmenbysap) error {
+func (r *ShipmentbysapRepository) InterDate(s *model.Shipmentbysap) error {
 	//	s := model.Shipmenbysap{}
 	/*
 		return r.store.db.QueryRow(
@@ -30,10 +30,11 @@ func (r *ShipmentbysapRepository) InterDate(s *model.Shipmenbysap) error {
 	*/
 	_, err := r.store.db.Exec(
 		// if err := r.store.db.QueryRow(
-		"INSERT INTO shipmentbysap (material, qty, comment) VALUES ($1, $2, $3)",
+		"INSERT INTO shipmentbysap (material, qty, comment, id) VALUES ($1, $2, $3, $4)",
 		s.Material,
 		s.Qty,
 		s.Comment,
+		s.ID,
 	//	s.ID,
 	) /*.Scan(
 		&s.Material,
