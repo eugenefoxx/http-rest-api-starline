@@ -98,16 +98,17 @@ func (s *server) configureRouter() {
 	s.router.HandleFunc("/users", s.pagehandleUsersCreate()).Methods("GET")
 	s.router.HandleFunc("/users", s.handleUsersCreate()).Methods("POST")
 
-	s.router.HandleFunc("/sessions", s.pagehandleSessionsCreate()).Methods("GET")
-
 	//	s.router.HandleFunc("/sessions", s.redirectMain(s.handleSessionsCreate())).Methods("POST")
 	//s.router.HandleFunc("/sessions", s.handleSessionsCreate(s.redirectMain())).Methods("POST")
+	s.router.HandleFunc("/sessions", s.pagehandleSessionsCreate()).Methods("GET")
 	s.router.HandleFunc("/sessions", s.handleSessionsCreate()).Methods("POST")
 	//	s.router.HandleFunc("/sessions", s.redirectMain())
 	//	s.router.HandleFunc("/sessions", s.pageredirectMain())
 
 	s.router.HandleFunc("/shipmentbysap", s.authMiddleware(s.pageshipmentBySAP())).Methods("GET")
 	s.router.HandleFunc("/shipmentbysap", s.authMiddleware(s.shipmentBySAP())).Methods("POST")
+
+	s.router.HandleFunc("/showdateshipmentbysap", s.showShipmentBySAP())
 
 	//	s.router.HandleFunc("/main", s.authMiddleware(s.pageredirectMain())).Methods("GET")
 	s.router.HandleFunc("/logout", s.signOut()).Methods("POST")
@@ -426,6 +427,7 @@ func (s *server) shipmentBySAP() http.HandlerFunc {
 		if err != nil {
 			fmt.Println(err)
 		}
+
 		comment := r.FormValue("comment")
 
 		session, err := s.sessionStore.Get(r, sessionName)
@@ -440,19 +442,20 @@ func (s *server) shipmentBySAP() http.HandlerFunc {
 			return
 		}
 
-		user1, err := s.store.User().Find(id.(int))
+		user, err := s.store.User().Find(id.(int))
 		if err != nil {
 			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
 			return
 		}
 
-		user2 := strconv.Atoi(user1)
+		//	user2 := strconv.Atoi(user1)
 
 		u := &model.Shipmentbysap{
 			Material: material,
 			Qty:      qty,
 			Comment:  comment,
-			ID:       user2,
+			ID:       user.ID,
+			LastName: user.LastName,
 		}
 
 		if err := s.store.Shipmentbysap().InterDate(u); err != nil {
@@ -481,6 +484,30 @@ func (s *server) shipmentBySAP() http.HandlerFunc {
 		tpl.ExecuteTemplate(w, "insertsapbyship.html", nil)
 	}
 
+}
+
+func (s *server) showShipmentBySAP() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		u := &model.Shipmentbysap{
+			u.Material,
+			u.Qty,
+			u.Comment,
+			u.ShipmentDate,
+			u.ShipmentTime,
+			u.LastName,
+			/*	Material:     material,
+				Qty:          qty,
+				Comment:      comment,
+				ShipmenDate:  shipmentdate,
+				ShipmentTime: shipmenttime,
+				LastName:     lastname, */
+		}
+		if err := s.store.Shipmentbysap().ShowDate(u); err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+	}
 }
 
 func (s *server) signOut() http.HandlerFunc {
