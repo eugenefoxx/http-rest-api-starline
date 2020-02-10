@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShipmentBySAP</title>
+</head>
+
+<body>
+    <div>
+        <table>
+            <caption>Отгрузка по SAP</caption>
+            <thead>
+                <tr>
+                    <th>Material</th>
+                    <th>Qty</th>
+                    <th>ShipmentDate</th>
+                    <th>ShipmentTime</th>
+                    <th>LastNAme</th>
+                    <th>Comment</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range . }}
+                <tr>
+                    <td>{{.Material}}</td>
+                    <td>{{.Qty}}</td>
+                    <td>{{.ShipmentDate}}</td>
+                    <td>{{.ShipmentTime}}</td>
+                    <td>{{.LastName}}</td>
+                    <td>{{.Comment}}</td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

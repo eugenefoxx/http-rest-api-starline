@@ -509,11 +509,17 @@ func (s *server) showShipmentBySAP() http.HandlerFunc {
 				ShipmentTime: shipmenttime,
 				LastName:     lastname, */
 		}
-		if err := s.store.Shipmentbysap().ShowDate(u); err != nil {
+		/*
+			if err := s.store.Shipmentbysap().ShowDate(u); err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+		*/
+		_, err := s.store.Shipmentbysap().ShowDate(u)
+		if err != nil {
 			s.error(w, r, http.StatusUnprocessableEntity, err)
 			return
 		}
-
 	}
 }
 

@@ -104,6 +104,7 @@ func (r *ShipmentbysapRepository) ShowDate(showdate *model.Shipmentbysap) (*mode
 	if err := r.store.db.QueryRow(
 		"SELECT * FROM shipmentbysap",
 	).Scan(
+		&showdate.ID,
 		&showdate.Material,
 		&showdate.Qty,
 		&showdate.Comment,
