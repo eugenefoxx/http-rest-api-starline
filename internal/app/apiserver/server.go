@@ -488,13 +488,20 @@ func (s *server) shipmentBySAP() http.HandlerFunc {
 
 func (s *server) showShipmentBySAP() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+
+		var material int
+		var qty int64
+		var comment string
+		var shipmentdate time.Time
+		var shipmenttime time.Time
+		var lastname string
 		u := &model.Shipmentbysap{
-			u.Material,
-			u.Qty,
-			u.Comment,
-			u.ShipmentDate,
-			u.ShipmentTime,
-			u.LastName,
+			Material:     material,
+			Qty:          qty,
+			Comment:      comment,
+			ShipmentDate: shipmentdate,
+			ShipmentTime: shipmenttime,
+			LastName:     lastname,
 			/*	Material:     material,
 				Qty:          qty,
 				Comment:      comment,

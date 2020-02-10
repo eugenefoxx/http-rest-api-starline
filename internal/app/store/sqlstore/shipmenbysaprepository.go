@@ -65,25 +65,27 @@ func (r *ShipmentbysapRepository) InterDate(s *model.Shipmentbysap) error {
 }
 
 // ShowDate ...
-func (r *ShipmentbysapRepository) ShowDate(s *model.Shipmentbysap) (*model.Shipmentbysap, error) {
-	rows, err := r.store.db.Query(
-		"SELECT * FROM shipmentbysap",
-		s.Material,
-		s.Qty,
-		s.Comment,
-		s.ShipmentDate,
-		s.ShipmentTime,
-		s.LastName,
-	)
+func (r *ShipmentbysapRepository) ShowDate(showdate *model.Shipmentbysap) (*model.Shipmentbysap, error) {
+	/*
+		rows, err := r.store.db.Query(
+			"SELECT * FROM shipmentbysap",
+			s.Material,
+			s.Qty,
+			s.Comment,
+			s.ShipmentDate,
+			s.ShipmentTime,
+			s.LastName,
+		)
 
-	if err != nil {
-		//	if err == sql.ErrNoRows {
-		//	return store.ErrRecordNotFound
-		panic(err)
-	}
+		if err != nil {
+			//	if err == sql.ErrNoRows {
+			//	return store.ErrRecordNotFound
+			panic(err)
+		}
 
-	defer rows.Close()
-	showdate := &model.Shipmentbysap{}
+		defer rows.Close()
+	*/
+	//	showdate := &model.Shipmentbysap{}
 	/*
 		for rows.Next() {
 			p := showdate{}
