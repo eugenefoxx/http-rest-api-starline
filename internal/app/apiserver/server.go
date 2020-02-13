@@ -505,8 +505,8 @@ func (s *server) showShipmentBySAP() http.HandlerFunc {
 		var material int
 		var qty int64
 		var comment string
-		var shipmentdate *time.Time
-		var shipmenttime *time.Time
+		var shipmentdate time.Time
+		var shipmenttime time.Time
 		var lastname string
 
 		u := &model.Shipmentbysap{
@@ -535,7 +535,10 @@ func (s *server) showShipmentBySAP() http.HandlerFunc {
 			s.error(w, r, http.StatusUnprocessableEntity, err)
 			return
 		}
+
+		tpl.ExecuteTemplate(w, "showdatebysap.html", nil)
 	}
+
 }
 
 func (s *server) signOut() http.HandlerFunc {
