@@ -67,42 +67,37 @@ func (r *ShipmentbysapRepository) InterDate(s *model.Shipmentbysap) error {
 // ShowDate ...
 func (r *ShipmentbysapRepository) ShowDate(showdate *model.Shipmentbysap) (*model.Shipmentbysap, error) {
 	/*
-		rows, err := r.store.db.Query(
-			"SELECT * FROM shipmentbysap",
-			s.Material,
-			s.Qty,
-			s.Comment,
-			s.ShipmentDate,
-			s.ShipmentTime,
-			s.LastName,
-		)
+		rows, err := r.store.db.Query("SELECT * FROM shipmentbysap")
 
 		if err != nil {
-			//	if err == sql.ErrNoRows {
-			//	return store.ErrRecordNotFound
-			panic(err)
-		}
-
-		defer rows.Close()
-	*/
-	//	showdate := &model.Shipmentbysap{}
-	/*
-		for rows.Next() {
-			p := showdate{}
-			err := rows.Scan(&p.Material, &p.Qty, &p.Comment, &p.ShipmentDate, &p.ShipmentTime, &p.LastName)
-			if err != nil {
-				fmt.Println(err)
-				continue
+			if err == sql.ErrNoRows {
+				return store.ErrRecordNotFound
+				// panic(err)
 			}
-			showdate = append(showdate, p)
-		}
 
-		for _, p := range showdate {
-			fmt.Println(p.Material, p.Qty, p.Comment, p.ShipmentDate, p.ShipmentTime, &p.LastName)
-		}
+			defer rows.Close()
+
+			//	showdate := &model.Shipmentbysap{}
+
+			for rows.Next() {
+				p := showdate{}
+				err := rows.Scan(&p.Material, &p.Qty, &p.Comment, &p.ShipmentDate, &p.ShipmentTime, &p.LastName)
+				if err != nil {
+					fmt.Println(err)
+					//	continue
+				}
+				showdate = append(showdate, p)
+			}
+
+			for _, p := range showdate {
+				fmt.Println(p.Material, p.Qty, p.Comment, p.ShipmentDate, p.ShipmentTime, &p.LastName)
+			}
+
+			return p, nil
 	*/
+
 	if err := r.store.db.QueryRow(
-		"SELECT * FROM shipmentbysap",
+		"SELECT id, material, qty, comment, shipment_date, shipment_time, lastname FROM shipmentbysap",
 	).Scan(
 		&showdate.ID,
 		&showdate.Material,
@@ -119,4 +114,21 @@ func (r *ShipmentbysapRepository) ShowDate(showdate *model.Shipmentbysap) (*mode
 	}
 
 	return showdate, nil
+
 }
+
+//var shipmentDate time.Time
+//var shipmentTime time.Time
+/*
+type rawTime []byte
+
+func (t rawTime) Time() (time.Time, error) {
+	return time.Parse("15:04:05", string(t))
+}
+
+type rawDate []byte
+
+func (t rawDate) Time() (time.Time, error) {
+	return time.Parse("2020-02-10", string(t))
+}
+*/

@@ -486,16 +486,31 @@ func (s *server) shipmentBySAP() http.HandlerFunc {
 
 }
 
+type rawTime []byte
+
+func (t rawTime) Time() (time.Time, error) {
+	return time.Parse("15:04:05", string(t))
+}
+
+type rawDate []byte
+
+func (t rawDate) Time() (time.Time, error) {
+	return time.Parse("2020-02-10", string(t))
+}
+
 func (s *server) showShipmentBySAP() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
+		var id int
 		var material int
 		var qty int64
 		var comment string
-		var shipmentdate time.Time
-		var shipmenttime time.Time
+		var shipmentdate *time.Time
+		var shipmenttime *time.Time
 		var lastname string
+
 		u := &model.Shipmentbysap{
+			ID:           id,
 			Material:     material,
 			Qty:          qty,
 			Comment:      comment,
