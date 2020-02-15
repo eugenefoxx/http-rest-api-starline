@@ -67,37 +67,56 @@ func (r *ShipmentbysapRepository) InterDate(s *model.Shipmentbysap) error {
 // ShowDate ...
 func (r *ShipmentbysapRepository) ShowDate(showdate *model.Shipmentbysap) (*model.Shipmentbysap, error) {
 	/*
-		rows, err := r.store.db.Query("SELECT * FROM shipmentbysap")
-
+		shipment := &model.Shipmenbysap{}
+		rows, err := r.store.db.Query(
+			"SELECT id, material, qty, comment, shipment_date, shipment_time, lastname FROM shipmentbysap",
+		)
 		if err != nil {
-			if err == sql.ErrNoRows {
-				return store.ErrRecordNotFound
-				// panic(err)
+			panic(err)
+		}
+		defer rows.Close()
+
+		for rows.Next() {
+			p := &model.Shipmenbysap{}
+			err := rows.Scan(
+				&p.ID,
+				&p.Material,
+				&p.Qty,
+				&p.Comment,
+				&p.ShipmentDate,
+				&p.ShipmentTime,
+				&p.LastName,
+			)
+			if err != nil {
+				if err == sql.ErrNoRows {
+					return nil, store.ErrRecordNotFound
+				}
+				return nil, err
 			}
 
-			defer rows.Close()
-
-			//	showdate := &model.Shipmentbysap{}
+			shipment = append(shipment, p)
+		}
 
 			for rows.Next() {
-				p := showdate{}
+				p := showdate1{}
 				err := rows.Scan(&p.Material, &p.Qty, &p.Comment, &p.ShipmentDate, &p.ShipmentTime, &p.LastName)
 				if err != nil {
-					fmt.Println(err)
+					//		fmt.Println(err)
+					panic(err)
 					//	continue
 				}
-				showdate = append(showdate, p)
+				showdate1 = append(showdate1, p)
 			}
 
-			for _, p := range showdate {
-				fmt.Println(p.Material, p.Qty, p.Comment, p.ShipmentDate, p.ShipmentTime, &p.LastName)
-			}
+			//	for _, p := range showdate {
+			//		fmt.Println(p.Material, p.Qty, p.Comment, p.ShipmentDate, p.ShipmentTime, &p.LastName)
+			//	}
 
-			return p, nil
+		return showdate, nil
 	*/
 
 	if err := r.store.db.QueryRow(
-		"SELECT id, material, qty, comment, shipment_date, shipment_time, lastname FROM shipmentbysap",
+		"SELECT id, material, qty, comment, shipment_date, shipment_time, lastname FROM shipmentbysap WHERE material=$1", 1014040,
 	).Scan(
 		&showdate.ID,
 		&showdate.Material,
@@ -120,15 +139,15 @@ func (r *ShipmentbysapRepository) ShowDate(showdate *model.Shipmentbysap) (*mode
 //var shipmentDate time.Time
 //var shipmentTime time.Time
 /*
-type rawTime []byte
+   type rawTime []byte
 
-func (t rawTime) Time() (time.Time, error) {
-	return time.Parse("15:04:05", string(t))
-}
+   func (t rawTime) Time() (time.Time, error) {
+   	return time.Parse("15:04:05", string(t))
+   }
 
-type rawDate []byte
+   type rawDate []byte
 
-func (t rawDate) Time() (time.Time, error) {
-	return time.Parse("2020-02-10", string(t))
-}
+   func (t rawDate) Time() (time.Time, error) {
+   	return time.Parse("2020-02-10", string(t))
+   }
 */

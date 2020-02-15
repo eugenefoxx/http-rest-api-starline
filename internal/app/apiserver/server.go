@@ -108,7 +108,8 @@ func (s *server) configureRouter() {
 	s.router.HandleFunc("/shipmentbysap", s.authMiddleware(s.pageshipmentBySAP())).Methods("GET")
 	s.router.HandleFunc("/shipmentbysap", s.authMiddleware(s.shipmentBySAP())).Methods("POST")
 
-	s.router.HandleFunc("/showdateshipmentbysap", s.showShipmentBySAP())
+	s.router.HandleFunc("/showdateshipmentbysap", s.pageshowShipmentBySAP()).Methods("GET")
+	s.router.HandleFunc("/showdateshipmentbysap", s.showShipmentBySAP()).Methods("POST")
 
 	//	s.router.HandleFunc("/main", s.authMiddleware(s.pageredirectMain())).Methods("GET")
 	s.router.HandleFunc("/logout", s.signOut()).Methods("POST")
@@ -498,6 +499,13 @@ func (t rawDate) Time() (time.Time, error) {
 	return time.Parse("2020-02-10", string(t))
 }
 
+func (s *server) pageshowShipmentBySAP() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var body, _ = helper.LoadFile("./web/templates/showdatebysap.html")
+		fmt.Fprintf(w, body)
+	}
+}
+
 func (s *server) showShipmentBySAP() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
@@ -530,13 +538,24 @@ func (s *server) showShipmentBySAP() http.HandlerFunc {
 				return
 			}
 		*/
-		_, err := s.store.Shipmentbysap().ShowDate(u)
+
+		rrr, err := s.store.Shipmentbysap().ShowDate(u)
 		if err != nil {
 			s.error(w, r, http.StatusUnprocessableEntity, err)
 			return
 		}
 
-		tpl.ExecuteTemplate(w, "showdatebysap.html", nil)
+		data := map[string]interface{}{
+			"ID":           rrr.ID,
+			"Material":     rrr.Material,
+			"Qty":          rrr.Qty,
+			"Comment":      rrr.Comment,
+			"ShipmentDate": rrr.ShipmentDate,
+			"ShipmentTime": rrr.ShipmentTime,
+			"LastName":     rrr.LastName,
+		}
+
+		tpl.ExecuteTemplate(w, "showdatebysap.html", data)
 	}
 
 }
