@@ -2,6 +2,7 @@ package sqlstore
 
 import (
 	"database/sql"
+	"time"
 
 	"github.com/eugenefoxx/http-rest-api-starline/internal/app/model"
 	"github.com/eugenefoxx/http-rest-api-starline/internal/app/store"
@@ -10,6 +11,16 @@ import (
 // ShipmentbysapRepository ...
 type ShipmentbysapRepository struct {
 	store *Store
+}
+
+type Shipmentbysap2 struct {
+	Material     int
+	Qty          int64
+	ShipmentDate time.Time
+	ShipmentTime time.Time
+	ID           int
+	LastName     string
+	Comment      string
 }
 
 // InterDate ...
@@ -65,74 +76,86 @@ func (r *ShipmentbysapRepository) InterDate(s *model.Shipmentbysap) error {
 }
 
 // ShowDate ...
-func (r *ShipmentbysapRepository) ShowDate(showdate *model.Shipmentbysap) (*model.Shipmentbysap, error) {
-	/*
-		shipment := &model.Shipmenbysap{}
-		rows, err := r.store.db.Query(
-			"SELECT id, material, qty, comment, shipment_date, shipment_time, lastname FROM shipmentbysap",
+func (r *ShipmentbysapRepository) ShowDate() (*model.Shipmentbysaps, error) {
+
+	shipment := model.Shipmentbysap{}
+	shipmentList := make(model.Shipmentbysaps, 0)
+
+	rows, err := r.store.db.Query(
+		"SELECT id, material, qty, comment, shipment_date, shipment_time, lastname FROM shipmentbysap",
+	)
+	if err != nil {
+		return nil, err
+	}
+	//	defer rows.Close()
+
+	for rows.Next() {
+		//	p := Shipmentbysap2{}
+		//	p := &model.Shipmentbysap{}
+		err := rows.Scan(
+			&shipment.ID,
+			&shipment.Material,
+			&shipment.Qty,
+			&shipment.Comment,
+			&shipment.ShipmentDate,
+			&shipment.ShipmentTime,
+			&shipment.LastName,
 		)
 		if err != nil {
-			panic(err)
-		}
-		defer rows.Close()
-
-		for rows.Next() {
-			p := &model.Shipmenbysap{}
-			err := rows.Scan(
-				&p.ID,
-				&p.Material,
-				&p.Qty,
-				&p.Comment,
-				&p.ShipmentDate,
-				&p.ShipmentTime,
-				&p.LastName,
-			)
-			if err != nil {
-				if err == sql.ErrNoRows {
-					return nil, store.ErrRecordNotFound
-				}
-				return nil, err
+			if err == sql.ErrNoRows {
+				return nil, store.ErrRecordNotFound
 			}
-
-			shipment = append(shipment, p)
+			return nil, err
 		}
 
-			for rows.Next() {
-				p := showdate1{}
-				err := rows.Scan(&p.Material, &p.Qty, &p.Comment, &p.ShipmentDate, &p.ShipmentTime, &p.LastName)
-				if err != nil {
-					//		fmt.Println(err)
-					panic(err)
-					//	continue
-				}
-				showdate1 = append(showdate1, p)
-			}
+		shipmentList = append(shipmentList, shipment)
+	}
 
-			//	for _, p := range showdate {
-			//		fmt.Println(p.Material, p.Qty, p.Comment, p.ShipmentDate, p.ShipmentTime, &p.LastName)
-			//	}
-
-		return showdate, nil
-	*/
-
-	if err := r.store.db.QueryRow(
-		"SELECT id, material, qty, comment, shipment_date, shipment_time, lastname FROM shipmentbysap WHERE material=$1", 1014040,
-	).Scan(
-		&showdate.ID,
-		&showdate.Material,
-		&showdate.Qty,
-		&showdate.Comment,
-		&showdate.ShipmentDate,
-		&showdate.ShipmentTime,
-		&showdate.LastName,
-	); err != nil {
-		if err == sql.ErrNoRows {
-			return nil, store.ErrRecordNotFound
-		}
+	err = rows.Err()
+	if err != nil {
 		return nil, err
 	}
 
-	return showdate, nil
+	r.store.db.Close()
+
+	/*
+		for rows.Next() {
+			p := showdate1{}
+			err := rows.Scan(&p.Material, &p.Qty, &p.Comment, &p.ShipmentDate, &p.ShipmentTime, &p.LastName)
+			if err != nil {
+				//		fmt.Println(err)
+				panic(err)
+				//	continue
+			}
+			showdate1 = append(showdate1, p)
+		}
+
+		//	for _, p := range showdate {
+		//		fmt.Println(p.Material, p.Qty, p.Comment, p.ShipmentDate, p.ShipmentTime, &p.LastName)
+		//	}
+	*/
+	return &shipmentList, nil
+
+	/*
+		if err := r.store.db.QueryRow(
+			"SELECT id, material, qty, comment, shipment_date, shipment_time, lastname FROM shipmentbysap WHERE material=$1", 1014040,
+		).Scan(
+			&showdate.ID,
+			&showdate.Material,
+			&showdate.Qty,
+			&showdate.Comment,
+			&showdate.ShipmentDate,
+			&showdate.ShipmentTime,
+			&showdate.LastName,
+		); err != nil {
+			if err == sql.ErrNoRows {
+				return nil, store.ErrRecordNotFound
+			}
+			return nil, err
+		}
+
+		return showdate, nil
+	*/
 
 }
 

@@ -54,6 +54,7 @@ type server struct {
 
 func init() {
 	tpl = template.Must(template.ParseGlob("./web/templates/*.html"))
+	//tpl = template.Must(template.ParseFiles("./web/templates/*.html"))
 	//	tpl = template.Must(template.ParseGlob("C:/Users/Евгений/templates/*.html"))
 
 	var err error
@@ -91,6 +92,7 @@ func (s *server) configureRouter() {
 	//	}
 	//	database = db
 	//	defer db.Close()
+	http.Handle("/assets/", http.StripPrefix("/assets", http.FileServer(http.Dir("./web/*"))))
 
 	s.router.Use(s.setRequestID)
 	s.router.Use(s.logRequest)
@@ -108,8 +110,8 @@ func (s *server) configureRouter() {
 	s.router.HandleFunc("/shipmentbysap", s.authMiddleware(s.pageshipmentBySAP())).Methods("GET")
 	s.router.HandleFunc("/shipmentbysap", s.authMiddleware(s.shipmentBySAP())).Methods("POST")
 
-	s.router.HandleFunc("/showdateshipmentbysap", s.pageshowShipmentBySAP()).Methods("GET")
-	s.router.HandleFunc("/showdateshipmentbysap", s.showShipmentBySAP()).Methods("POST")
+	//	s.router.HandleFunc("/showdateshipmentbysap", s.pageshowShipmentBySAP()) //.Methods("GET")
+	s.router.HandleFunc("/showdateshipmentbysap", s.showShipmentBySAP()) //.Methods("POST")
 
 	//	s.router.HandleFunc("/main", s.authMiddleware(s.pageredirectMain())).Methods("GET")
 	s.router.HandleFunc("/logout", s.signOut()).Methods("POST")
@@ -508,30 +510,31 @@ func (s *server) pageshowShipmentBySAP() http.HandlerFunc {
 
 func (s *server) showShipmentBySAP() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		/*
+			var id int
+			var material int
+			var qty int64
+			var comment string
+			var shipmentdate time.Time
+			var shipmenttime time.Time
+			var lastname string
 
-		var id int
-		var material int
-		var qty int64
-		var comment string
-		var shipmentdate time.Time
-		var shipmenttime time.Time
-		var lastname string
-
-		u := &model.Shipmentbysap{
-			ID:           id,
-			Material:     material,
-			Qty:          qty,
-			Comment:      comment,
-			ShipmentDate: shipmentdate,
-			ShipmentTime: shipmenttime,
-			LastName:     lastname,
-			/*	Material:     material,
+			u := &model.Shipmentbysap{
+				ID:           id,
+				Material:     material,
 				Qty:          qty,
 				Comment:      comment,
-				ShipmenDate:  shipmentdate,
+				ShipmentDate: shipmentdate,
 				ShipmentTime: shipmenttime,
-				LastName:     lastname, */
-		}
+				LastName:     lastname,
+					Material:     material,
+					Qty:          qty,
+					Comment:      comment,
+					ShipmenDate:  shipmentdate,
+					ShipmentTime: shipmenttime,
+					LastName:     lastname,
+			}
+		*/
 		/*
 			if err := s.store.Shipmentbysap().ShowDate(u); err != nil {
 				s.error(w, r, http.StatusUnprocessableEntity, err)
@@ -539,23 +542,38 @@ func (s *server) showShipmentBySAP() http.HandlerFunc {
 			}
 		*/
 
-		rrr, err := s.store.Shipmentbysap().ShowDate(u)
+		get, err := s.store.Shipmentbysap().ShowDate()
 		if err != nil {
 			s.error(w, r, http.StatusUnprocessableEntity, err)
 			return
 		}
-
-		data := map[string]interface{}{
-			"ID":           rrr.ID,
-			"Material":     rrr.Material,
-			"Qty":          rrr.Qty,
-			"Comment":      rrr.Comment,
-			"ShipmentDate": rrr.ShipmentDate,
-			"ShipmentTime": rrr.ShipmentTime,
-			"LastName":     rrr.LastName,
+		/*
+			data := map[string]interface{}{
+				"ID":           rrr.ID,
+				"Material":     rrr.Material,
+				"Qty":          rrr.Qty,
+				"Comment":      rrr.Comment,
+				"ShipmentDate": rrr.ShipmentDate,
+				"ShipmentTime": rrr.ShipmentTime,
+				"LastName":     rrr.LastName,
+			}
+		*/
+		/*
+			tmpl, err := template.ParseFiles("./web/templates/showdatebysap.html")
+			if err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}
+			if err := tmpl.Execute(w, data); err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}
+		*/
+		err = tpl.ExecuteTemplate(w, "showdatebysap.html", get)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
 		}
-
-		tpl.ExecuteTemplate(w, "showdatebysap.html", data)
 	}
 
 }

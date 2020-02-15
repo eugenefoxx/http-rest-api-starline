@@ -2,6 +2,11 @@ package model
 
 import "time"
 
+// Main The function will return a pointer to the array of type Shipmentbysap
+func Main() *Shipmentbysaps {
+	return &Shipmentbysaps{}
+}
+
 // Shipmentbysap ...
 type Shipmentbysap struct {
 	Material     int
@@ -12,6 +17,9 @@ type Shipmentbysap struct {
 	LastName     string
 	Comment      string
 }
+
+// Shipmentbysaps ...
+type Shipmentbysaps []Shipmentbysap
 
 type rawTime []byte
 

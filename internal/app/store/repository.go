@@ -12,5 +12,5 @@ type UserRepository interface {
 // ShipmentbysapRepository ...
 type ShipmentbysapRepository interface {
 	InterDate(*model.Shipmentbysap) error
-	ShowDate(*model.Shipmentbysap) (*model.Shipmentbysap, error)
+	ShowDate() (*model.Shipmentbysaps, error)
 }
