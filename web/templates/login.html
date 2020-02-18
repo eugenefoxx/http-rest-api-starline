@@ -3,18 +3,58 @@
 
 <head>
     <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <title>First Form</title>
+
+    <style>
+        #text {
+            text-align: center;
+        }
+
+        body {
+            /*    background-image: url("/resources/apparat.jpg"); 
+            /* Путь к фоновому изображению */
+            background-color: dodgerblue;
+            /* Цвет фона */
+        }
+
+        #registration {
+            margin-top: 150px;
+        }
+
+        #login {
+            margin-top: 150px;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Login</h1>
-    <form method="post" action="/sessions">
-        <label for="email">Username</label>
-        <input type="text" id="email" name="email">
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password">
-        <button type="submit">Login</button>
-    </form>
+    <div id="login" class="container-fluid">
+        <h1 id="text" style="font-size: 30pt; font-weight: bold;">Авторизация</h1>
+        <form id="text" method="post" action="/">
+            <div class="form-group">
+                <label for="email" style="font-size: 15pt;">Пользователь</label>
+                <input type="text" id="email" name="email">
+                <label for="password" style="font-size: 15pt;">Пароль</label>
+                <input type="password" id="password" name="password">
+                <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+        </form>
+    </div>
+
+    <div id="text" class="row">
+        <div class="col-sm">
+            <a href="/users">
+                <h2 id="registration" style="color: white; font-size: 30pt;">Регистрация</h2>
+            </a>
+        </div>
+    </div>
+
+    <p class="fig"> <img src="/resources/apparat.jpg" width="680" height="350" class="img-fluid" alt="Цех"></p>
+    <!--   <p class="fig"> <img src="https://ic.pics.livejournal.com/starline_alarm/31413688/167347/167347_original.jpg"
+            class="img-fluid" alt="Цех"></p>-->
 </body>
+
+
 
 </html>

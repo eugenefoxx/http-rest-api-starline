@@ -9,7 +9,7 @@ func Main() *Shipmentbysaps {
 
 // Shipmentbysap ...
 type Shipmentbysap struct {
-	Material     int
+	Material     int64
 	Qty          int64
 	ShipmentDate time.Time
 	ShipmentTime time.Time

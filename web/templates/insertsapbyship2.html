@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <title>SAP</title>
+</head>
+
+<body>
+    <div class="panel panel-default">
+        <!--<h1>SAP </h1>-->
+        <div class="panel-heading">SAP</div>
+        <form method="post" action="/shipmentbysap">
+            <div class="panel-body" id="main_block">
+
+                <div class="col-sm-3 nopadding">
+                    <div class="form-group">
+                        <!--  <label for="material">Material</label>-->
+                        <input required type="number" class="form-control" id="Material" name="Material[]" minlength="6"
+                            maxlength="6" value="" placeholder="Material">
+                    </div>
+                </div>
+                <div class="col-sm-3 nopadding">
+                    <div class="form-group">
+                        <!--   <label for="qty">Qty</label>-->
+                        <input type="number" class="form-control" id="Qty" name="Qty[]" value="" placeholder="Qty">
+                    </div>
+                </div>
+                <div class="col-sm-3 nopadding">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <!--   <label for="comment">Comment</label>-->
+                            <input type="text" class="form-control" id="Comment" value="" name="Comment[]"
+                                placeholder="Comment">
+                            <div class="input-group-btn">
+                                <button class="btn btn-success" type="button" onclick="add_education_fields();"> <span
+                                        class="glyphicon glyphicon-plus" aria-hidden="true"></span> </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clear"></div>
+                <div id="education_fields"></div>
+
+            </div>
+            <div class="panel-footer"><small>Press <span class="glyphicon glyphicon-plus gs"></span> to add another
+                    form
+                    field :)</small>,
+                <small>Press <span class="glyphicon glyphicon-minus gs"></span> to remove form field :)</small>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        var room = 1;
+        // add dynamic fields
+        function add_education_fields() {
+
+            var Material = $('#Material').val();
+            var qty = $('#Qty').val();
+            var Comment = $('#Comment').val();
+            //-  var educationDate = $('#educationDate option:selected').val();
+
+            room++;
+            var parentDiv = document.getElementById('education_fields'); // point to the parent Div
+            var childDiv = document.createElement("div"); // create child div on the fly
+            childDiv.setAttribute("class", "form-group removeclass" + room); // add a dynamic class to the child div
+            childDiv.innerHTML = '' +
+                '<div class="col-sm-3 nopadding">' +
+                '<div class="form-group">' +
+                ' <input required type="number" class="form-control" id="Material" name="Material[]" placeholder="Material">' +
+                '</div>' +
+                '</div>' +
+                '<div class="col-sm-3 nopadding">' +
+                '<div class="form-group"> ' +
+                '<input type="number" class="form-control" id="Qty" name="Qty[]" placeholder="Qty">' +
+                '</div>' +
+                '</div>' +
+                '<div class="col-sm-3 nopadding">' +
+                '<div class="form-group"> ' +
+                '<div class="input-group"> ' +
+                '<input type="text" class="form-control" id="Comment" name="Comment[]" placeholder="Comment">' +
+                //   '</div>' +
+                //   '</div>' +
+                //    '<div class="col-sm-3 nopadding">' +
+                //    '<div class="form-group">' +
+                //    '<div class="input-group"> ' +
+                //    '<select readonly="readonly" class="form-control" id="educationDate" name="educationDate[]">' +
+                //    '<option value="' + educationDate + '">' + educationDate + '</option>' +
+                //    '</select>' +
+                // '</div>' +
+                '<div class="input-group-btn">' +
+                ' <button class="btn btn-danger" type="button" onclick="remove_education_fields(' + room + ');"> ' +
+                '<span class="glyphicon glyphicon-minus" aria-hidden="true"></span> ' +
+                '</button>' +
+                '</div></div></div>' +
+                '</div>' +
+                '<div class="clear"></div>';
+
+            parentDiv.appendChild(childDiv); //  append or inject dynamic fields to the parent div
+            var StoredDiv = $('.removeclass' + room).html();
+            manage_append(room, StoredDiv, 'add'); //  store the dynamic fields to local storage
+            $('#Material').val(' ');  // then reset all fields
+            $('#Qty').val(' ');
+            $('#Comment').val(' ');
+            //   $('#educationDate').val(0);
+        }
+        // remove dynamic fields
+        function remove_education_fields(rid) {
+            manage_append(rid, 0, 'delete');
+            $('.removeclass' + rid).remove();
+        }
+        // add and remove dynamic fields from local storage
+        function manage_append(room, html, action) {
+            if (action === 'add') {
+                localStorage.setItem(room, html);//
+            } else {
+                localStorage.removeItem(room);
+            }
+
+        }
+
+        // restore dynamic fields from local storage
+        $(function () {
+            for (var i = 0, len = localStorage.length; i < len; ++i) {
+                $("#education_fields").append(localStorage.getItem(localStorage.key(i)));
+            }
+        });
+
+    </script>
+</body>
+
+</html>

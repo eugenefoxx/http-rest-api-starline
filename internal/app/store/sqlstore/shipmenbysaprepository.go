@@ -13,16 +13,6 @@ type ShipmentbysapRepository struct {
 	store *Store
 }
 
-type Shipmentbysap2 struct {
-	Material     int
-	Qty          int64
-	ShipmentDate time.Time
-	ShipmentTime time.Time
-	ID           int
-	LastName     string
-	Comment      string
-}
-
 // InterDate ...
 func (r *ShipmentbysapRepository) InterDate(s *model.Shipmentbysap) error {
 	//	s := model.Shipmenbysap{}
@@ -50,6 +40,7 @@ func (r *ShipmentbysapRepository) InterDate(s *model.Shipmentbysap) error {
 		s.Comment,
 		s.ID,
 		s.LastName,
+
 	//	s.ID,
 	) /*.Scan(
 		&s.Material,
@@ -82,18 +73,17 @@ func (r *ShipmentbysapRepository) ShowDate() (*model.Shipmentbysaps, error) {
 	shipmentList := make(model.Shipmentbysaps, 0)
 
 	rows, err := r.store.db.Query(
-		"SELECT id, material, qty, comment, shipment_date, shipment_time, lastname FROM shipmentbysap",
+		"SELECT material, qty, comment, shipment_date, shipment_time, lastname FROM shipmentbysap",
 	)
 	if err != nil {
 		return nil, err
 	}
-	//	defer rows.Close()
+	defer rows.Close()
 
 	for rows.Next() {
-		//	p := Shipmentbysap2{}
-		//	p := &model.Shipmentbysap{}
+
 		err := rows.Scan(
-			&shipment.ID,
+			//	&shipment.ID,
 			&shipment.Material,
 			&shipment.Qty,
 			&shipment.Comment,
@@ -116,61 +106,23 @@ func (r *ShipmentbysapRepository) ShowDate() (*model.Shipmentbysaps, error) {
 		return nil, err
 	}
 
-	r.store.db.Close()
+	//	r.store.db.Close()
 
-	/*
-		for rows.Next() {
-			p := showdate1{}
-			err := rows.Scan(&p.Material, &p.Qty, &p.Comment, &p.ShipmentDate, &p.ShipmentTime, &p.LastName)
-			if err != nil {
-				//		fmt.Println(err)
-				panic(err)
-				//	continue
-			}
-			showdate1 = append(showdate1, p)
-		}
-
-		//	for _, p := range showdate {
-		//		fmt.Println(p.Material, p.Qty, p.Comment, p.ShipmentDate, p.ShipmentTime, &p.LastName)
-		//	}
-	*/
 	return &shipmentList, nil
-
-	/*
-		if err := r.store.db.QueryRow(
-			"SELECT id, material, qty, comment, shipment_date, shipment_time, lastname FROM shipmentbysap WHERE material=$1", 1014040,
-		).Scan(
-			&showdate.ID,
-			&showdate.Material,
-			&showdate.Qty,
-			&showdate.Comment,
-			&showdate.ShipmentDate,
-			&showdate.ShipmentTime,
-			&showdate.LastName,
-		); err != nil {
-			if err == sql.ErrNoRows {
-				return nil, store.ErrRecordNotFound
-			}
-			return nil, err
-		}
-
-		return showdate, nil
-	*/
 
 }
 
-//var shipmentDate time.Time
-//var shipmentTime time.Time
-/*
-   type rawTime []byte
+var shipmentDate time.Time
+var shipmentTime time.Time
 
-   func (t rawTime) Time() (time.Time, error) {
-   	return time.Parse("15:04:05", string(t))
-   }
+type rawTime []byte
 
-   type rawDate []byte
+func (t rawTime) TimeTime() (time.Time, error) {
+	return time.Parse("15:04:05", string(t))
+}
 
-   func (t rawDate) Time() (time.Time, error) {
-   	return time.Parse("2020-02-10", string(t))
-   }
-*/
+type rawDate []byte
+
+func (t rawDate) TimeDate() (time.Time, error) {
+	return time.Parse("2020-02-10", string(t))
+}

@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"html/template"
 	"io"
-	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -57,14 +56,7 @@ func init() {
 	//tpl = template.Must(template.ParseFiles("./web/templates/*.html"))
 	//	tpl = template.Must(template.ParseGlob("C:/Users/Евгений/templates/*.html"))
 
-	var err error
-	database, err = sql.Open("postgres", "postgres://postgres:123@localhost/starline")
-	if err != nil {
-		log.Fatal(err)
-	}
 }
-
-var database *sql.DB
 
 func newServer(store store.Store, sessionStore sessions.Store) *server {
 	s := &server{
@@ -92,7 +84,10 @@ func (s *server) configureRouter() {
 	//	}
 	//	database = db
 	//	defer db.Close()
-	http.Handle("/assets/", http.StripPrefix("/assets", http.FileServer(http.Dir("./web/*"))))
+	//	s.router.Handle("/resources/", http.StripPrefix("/resources", http.FileServer(http.Dir("./web/images"))))
+	// http.Handle("/resources/", http.StripPrefix("/resources", http.FileServer(http.Dir("./web/images"))))
+	//http.Handle("/resource", http.FileServer(http.Dir("./web/images")))
+	//	http.Handle("/", s.router)
 
 	s.router.Use(s.setRequestID)
 	s.router.Use(s.logRequest)
@@ -102,8 +97,8 @@ func (s *server) configureRouter() {
 
 	//	s.router.HandleFunc("/sessions", s.redirectMain(s.handleSessionsCreate())).Methods("POST")
 	//s.router.HandleFunc("/sessions", s.handleSessionsCreate(s.redirectMain())).Methods("POST")
-	s.router.HandleFunc("/sessions", s.pagehandleSessionsCreate()).Methods("GET")
-	s.router.HandleFunc("/sessions", s.handleSessionsCreate()).Methods("POST")
+	s.router.HandleFunc("/", s.pagehandleSessionsCreate()).Methods("GET")
+	s.router.HandleFunc("/", s.handleSessionsCreate()).Methods("POST")
 	//	s.router.HandleFunc("/sessions", s.redirectMain())
 	//	s.router.HandleFunc("/sessions", s.pageredirectMain())
 
@@ -111,7 +106,7 @@ func (s *server) configureRouter() {
 	s.router.HandleFunc("/shipmentbysap", s.authMiddleware(s.shipmentBySAP())).Methods("POST")
 
 	//	s.router.HandleFunc("/showdateshipmentbysap", s.pageshowShipmentBySAP()) //.Methods("GET")
-	s.router.HandleFunc("/showdateshipmentbysap", s.showShipmentBySAP()) //.Methods("POST")
+	s.router.HandleFunc("/showdateshipmentbysap", s.authMiddleware(s.showShipmentBySAP())) //.Methods("POST")
 
 	//	s.router.HandleFunc("/main", s.authMiddleware(s.pageredirectMain())).Methods("GET")
 	s.router.HandleFunc("/logout", s.signOut()).Methods("POST")
@@ -126,7 +121,12 @@ func (s *server) configureRouter() {
 	private.Use(s.authenticateUser)
 	private.HandleFunc("/whoami", s.handleWhoami()).Methods("GET")
 
-	open.StartWith("http://localhost:8181/", "chromium")
+	//	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("./web/images"))))
+
+	//http.Handle("/resources/", http.StripPrefix("/resources/", http.FileServer(http.Dir("./web/images/"))))
+	//	http.Handle("/", http.FileServer(http.Dir("./web/images")))
+
+	open.StartWith("http://localhost:3000/", "chromium")
 
 }
 
@@ -177,7 +177,7 @@ func (s *server) jsPage() http.HandlerFunc {
 
 func (s *server) loginPage() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		tpl.ExecuteTemplate(w, "register.html", nil)
+		tpl.ExecuteTemplate(w, "register.html", nil) // register.html
 	}
 }
 
@@ -262,7 +262,7 @@ func (s *server) authMiddleware(h http.HandlerFunc) http.HandlerFunc {
 			} */
 
 		if id == nil {
-			http.Redirect(w, r, "/sessions", http.StatusSeeOther)
+			http.Redirect(w, r, "/", http.StatusSeeOther)
 			//tpl.ExecuteTemplate(w, "login.html", nil)
 		} else {
 			h.ServeHTTP(w, r)
@@ -298,12 +298,6 @@ func (s *server) handleUsersCreate() http.HandlerFunc {
 
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
-		//	req := &request{}
-		//	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
-		//		s.error(w, r, http.StatusBadRequest, err)
-		//		return
-		//	}
-		//	if r.Method == http.MethodPost {
 
 		email := r.FormValue("email")
 		password := r.FormValue("password")
@@ -327,13 +321,13 @@ func (s *server) handleUsersCreate() http.HandlerFunc {
 		//	http.Redirect(w, r, target, 302)
 
 		//	}
-		tpl.ExecuteTemplate(w, "index.html", nil)
+		tpl.ExecuteTemplate(w, "login.html", nil)
 	}
 }
 
 func (s *server) pagehandleSessionsCreate() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var body, _ = helper.LoadFile("./web/templates/login.html")
+		var body, _ = helper.LoadFile("./web/templates/login.html") // "./web/templates/login.html"
 		fmt.Fprintf(w, body)
 	}
 }
@@ -407,14 +401,14 @@ func (s *server) handleSessionsCreate() http.HandlerFunc {
 			"user": u.LastName,
 			"id":   u.FirstName,
 		}
-		tpl.ExecuteTemplate(w, "index.html", data)
+		tpl.ExecuteTemplate(w, "index.html", data) //  "index.html"
 
 	}
 }
 
 func (s *server) pageshipmentBySAP() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var body, _ = helper.LoadFile("./web/templates/insertsapbyship.html")
+		var body, _ = helper.LoadFile("./web/templates/insertsapbyship2.html")
 		fmt.Fprintf(w, body)
 	}
 }
@@ -422,16 +416,24 @@ func (s *server) pageshipmentBySAP() http.HandlerFunc {
 func (s *server) shipmentBySAP() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		//	material := r.FormValue("material")
-		material, err := strconv.Atoi(r.FormValue("material"))
+		//	material, err := strconv.Atoi(r.FormValue("Material[]"))
+		material, err := strconv.ParseInt(r.FormValue("Material[]")[0:], 10, 64)
 		if err != nil {
 			fmt.Println(err)
 		}
-		qty, err := strconv.ParseInt(r.FormValue("qty")[0:], 10, 64)
+		// проверка кол-ва символом в номере материала SAP
+		checkmaterial := strconv.FormatInt(material, 10)
+		if len(checkmaterial) != 7 {
+			tpl.ExecuteTemplate(w, "error.html", nil)
+			return
+		}
+
+		qty, err := strconv.ParseInt(r.FormValue("Qty[]")[0:], 10, 64)
 		if err != nil {
 			fmt.Println(err)
 		}
 
-		comment := r.FormValue("comment")
+		comment := r.FormValue("Comment[]")
 
 		session, err := s.sessionStore.Get(r, sessionName)
 		if err != nil {
@@ -465,30 +467,16 @@ func (s *server) shipmentBySAP() http.HandlerFunc {
 			s.error(w, r, http.StatusUnprocessableEntity, err)
 			return
 		}
-		/*
-			_, err = database.Exec(
-				"INSERT INTO shipmentbysap (material, qty, comment) VALUES ($1, $2, $3)",
-				u.Material,
-				u.Qty,
-				u.Comment,
-			//	s.ShipmentDate,
-			//	s.ID,
-			) /*.Scan(
-				&u.Material,
-				&u.Qty,
-				&u.Comment,
-			//	&s.ShipmentDate,
-			//	&s.ID,
-			)
-			if err != nil {
-				log.Println(err)
-			}
-		*/
-		tpl.ExecuteTemplate(w, "insertsapbyship.html", nil)
-	}
 
+		//	} else {
+		//		tpl.ExecuteTemplate(w, "error.htmp", nil)
+		//		return
+		//	}
+		tpl.ExecuteTemplate(w, "insertsapbyship2.html", nil)
+	}
 }
 
+/*
 type rawTime []byte
 
 func (t rawTime) Time() (time.Time, error) {
@@ -500,7 +488,7 @@ type rawDate []byte
 func (t rawDate) Time() (time.Time, error) {
 	return time.Parse("2020-02-10", string(t))
 }
-
+*/
 func (s *server) pageshowShipmentBySAP() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var body, _ = helper.LoadFile("./web/templates/showdatebysap.html")
@@ -510,65 +498,13 @@ func (s *server) pageshowShipmentBySAP() http.HandlerFunc {
 
 func (s *server) showShipmentBySAP() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		/*
-			var id int
-			var material int
-			var qty int64
-			var comment string
-			var shipmentdate time.Time
-			var shipmenttime time.Time
-			var lastname string
-
-			u := &model.Shipmentbysap{
-				ID:           id,
-				Material:     material,
-				Qty:          qty,
-				Comment:      comment,
-				ShipmentDate: shipmentdate,
-				ShipmentTime: shipmenttime,
-				LastName:     lastname,
-					Material:     material,
-					Qty:          qty,
-					Comment:      comment,
-					ShipmenDate:  shipmentdate,
-					ShipmentTime: shipmenttime,
-					LastName:     lastname,
-			}
-		*/
-		/*
-			if err := s.store.Shipmentbysap().ShowDate(u); err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-		*/
 
 		get, err := s.store.Shipmentbysap().ShowDate()
 		if err != nil {
 			s.error(w, r, http.StatusUnprocessableEntity, err)
 			return
 		}
-		/*
-			data := map[string]interface{}{
-				"ID":           rrr.ID,
-				"Material":     rrr.Material,
-				"Qty":          rrr.Qty,
-				"Comment":      rrr.Comment,
-				"ShipmentDate": rrr.ShipmentDate,
-				"ShipmentTime": rrr.ShipmentTime,
-				"LastName":     rrr.LastName,
-			}
-		*/
-		/*
-			tmpl, err := template.ParseFiles("./web/templates/showdatebysap.html")
-			if err != nil {
-				http.Error(w, err.Error(), 400)
-				return
-			}
-			if err := tmpl.Execute(w, data); err != nil {
-				http.Error(w, err.Error(), 400)
-				return
-			}
-		*/
+
 		err = tpl.ExecuteTemplate(w, "showdatebysap.html", get)
 		if err != nil {
 			http.Error(w, err.Error(), 400)
@@ -609,7 +545,7 @@ func (s *server) signOut() http.HandlerFunc {
 			c.Value = "Unuse"
 			c.Expires = time.Unix(1414414788, 1414414788000)
 		*/
-		http.Redirect(w, r, "/sessions", http.StatusSeeOther)
+		http.Redirect(w, r, "/", http.StatusSeeOther)
 		//	tpl.ExecuteTemplate(w, "login.html", nil)
 	})
 }

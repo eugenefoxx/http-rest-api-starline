@@ -5,38 +5,356 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ShipmentBySAP</title>
+
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="DataTables/datatables.min.css" />
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/v/dt/dt-1.10.18/b-1.5.6/b-flash-1.5.6/datatables.min.css" />
+
+    <link href="https://cdn.datatables.net/fixedcolumns/3.2.6/css/fixedColumns.dataTables.min.css" />
+    <link href="https://cdn.datatables.net/fixedcolumns/3.2.6/js/dataTables.fixedColumns.min.js" />
+
+    <script type="text/javascript"
+        src="https://cdn.datatables.net/v/dt/dt-1.10.18/b-1.5.6/b-flash-1.5.6/datatables.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="css/mdb.min.css" rel="stylesheet">
+    <!-- Your custom styles (optional) -->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/addons/datatables.min.css" rel="stylesheet">
+
+    <!-- SCRIPTS -->
+    <!-- JQuery -->
+    <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+    <!-- Bootstrap tooltips -->
+    <script type="text/javascript" src="js/popper.min.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript" src="js/mdb.min.js"></script>
+
+    <script type="text/javascript" src="js/addons/datatables.min.js"></script>
+
+    <script type="/javascript" src="DataTables/datatables.min.js"></script>
+    <script type="text/javascript" src="js/addons/datatables.min.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
 </head>
 
-<body>
-    <div>
-        <table>
-            <caption>Отгрузка по SAP</caption>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Material</th>
-                    <th>Qty</th>
-                    <th>ShipmentDate</th>
-                    <th>ShipmentTime</th>
-                    <th>LastNAme</th>
-                    <th>Comment</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{range . }}
-                <tr>
-                    <td>{{.ID }}</td>
-                    <td>{{.Material }}</td>
-                    <td>{{.Qty }}</td>
-                    <td>{{.ShipmentDate }}</td>
-                    <td>{{.ShipmentTime }}</td>
-                    <td>{{.LastName }}</td>
-                    <td>{{.Comment }}</td>
-                </tr>
-                {{end}}
-            </tbody>
-        </table>
+<body id="body">
+    <div class="row">
+        <div class="col-sm">
+            <a href="/main">
+                <h2 style="color: white;">На главную</h2>
+            </a>
+        </div>
     </div>
+    <div class="container">
+        <h1 class="text-center" style="color: white;">Отгрузка по SAP
+        </h1>
+        <a href="#" class="export"><button type="button" class="btn btn-default btn-lg"><span
+                    class="glyphicon glyphicon-download-alt"></span> Export Table data into Excel
+            </button></a>
+        </container>
+        <div id="dvData">
+            <input class="form-control" id="myInput" type="text" placeholder="Search.." class="display"
+                style="width:100%">
+            <br>
+            <div class="table-responsive">
+                <table id="example" id="examplecsv" id="dtBasicExample"
+                    class="table table-fixed-head table-xl table-bordered table-striped">
+                    <caption style="color: white;">Отгрузка по SAP</caption>
+                    <thead class="thead-dark" id="kepka">
+                        <tr>
+                            <!--<th>ID</th>-->
+                            <th scope="col">Material</th>
+                            <th scope="col">Qty</th>
+                            <th scope="col">ShipmentDate</th>
+                            <th scope="col">ShipmentTime</th>
+                            <th scope="col">LastNAme</th>
+                            <th scope="col">Comment</th>
+                        </tr>
+                    </thead>
+                    <tbody id="myTable">
+                        {{range . }}
+                        <tr>
+                            <!--<td>{{.ID }}</td>-->
+                            <td>{{.Material }}</td>
+                            <td>{{.Qty }}</td>
+                            <td>{{.ShipmentDate }}</td>
+                            <td>{{.ShipmentTime }}</td>
+                            <td>{{.LastName }}</td>
+                            <td>{{.Comment }}</td>
+                        </tr>
+                        {{end}}
+                    </tbody>
+                </table>
+            </div>
+            <script>
+                $(document).ready(function () {
+                    $("#myInput").on("keyup", function () {
+                        var value = $(this).val().toLowerCase();
+                        $("#myTable tr").filter(function () {
+                            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                        });
+                    });
+
+                });
+            </script>
+
+            <script>
+                var div = $('#kepka');
+                var start = $(div).offset().top;
+
+                $.event.add(window, "scroll", function () {
+                    var p = $(window).scrollTop();
+                    $(div).css('position', ((p) > start) ? 'fixed' : ''); //  static
+                    $(div).css('margin-left', '500px');
+                    $(div).css('top', ((p) > start) ? '10px' : '');
+                });
+            </script>
+
+            <script>
+                $(document).ready(function () {
+                    // Setup - add a text input to each footer cell
+                    $('#example tfoot th').each(function () {
+                        var title = $(this).text();
+                        $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+                    });
+
+                    // DataTable
+                    var table = $('#example').DataTable({
+                        "pageLength": 50
+                    });
+
+                    // Apply the search
+                    table.columns().every(function () {
+                        var that = this;
+
+                        $('input', this.footer()).on('keyup change', function () {
+                            if (that.search() !== this.value) {
+                                that
+                                    .search(this.value)
+                                    .draw();
+                            }
+                        });
+                    });
+
+                    table.page.len(50).draw();
+                });
+            </script>
+
+            <script>
+                $(document).ready(function () {
+                    $('#dtBasicExample').DataTable();
+                    $('.dataTables_length').addClass('bs-select');
+                });
+            </script>
+
+
+            <script>
+                $(document).ready(function () {
+                    $('#examplecsv').DataTable({
+                        dom: 'Bfrtip',
+                        buttons: [
+                            'copy', 'csv', 'excel', 'pdf', 'print'
+                        ]
+                    });
+                });
+            </script>
+
+
+            <script type="text/javascript">
+                $(document).ready(function () {
+
+                    function exportTableToCSV($table, filename) {
+
+                        var $rows = $table.find('tr:has(td):visible'),
+
+                            // Temporary delimiter characters unlikely to be typed by keyboard
+                            // This is to avoid accidentally splitting the actual contents
+                            tmpColDelim = String.fromCharCode(5), // vertical tab character
+                            tmpRowDelim = String.fromCharCode(0), // null character
+
+                            // actual delimiter characters for CSV format
+                            colDelim = ',',   // '","'
+                            rowDelim = '\r\n'; // '"\r\n"'
+
+                        var csv = 'Material,Qty,ShipmentDate,ShipmentTime,LastName, Comment  ' + rowDelim;
+
+                        // Grab text from table into CSV formatted string
+                        csv += ' ' + $rows.map(function (i, row) {  // '"'
+                            var $row = $(row),
+                                $cols = $row.find('td');
+
+                            var result = $cols.map(function (j, col) {
+                                var $col = $(col),
+                                    text = $col.text();
+
+                                return text.replace('"', '""'); // escape double quotes  ('"', '""')
+
+                            }).get().join(tmpColDelim);
+
+                            return result;
+
+                        }).get().join(tmpRowDelim)
+                            .split(tmpRowDelim).join(rowDelim)
+                            .split(tmpColDelim).join(colDelim) + '"',  // '"'
+
+                            // Data URI
+                            csvData = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csv);
+
+                        $(this)
+                            .attr({
+                                'download': filename,
+                                'href': csvData,
+                                'target': '_blank'
+                            });
+                    }
+
+                    // This must be a hyperlink
+                    $(".export").on('click', function (event) {
+                        // CSV
+                        exportTableToCSV.apply(this, [$('#example'), 'export.csv']);
+
+                        // IF CSV, don't do event.preventDefault() or return false
+                        // We actually need this to be a typical hyperlink
+                    });
+                });
+            </script>
+
+            <style>
+                tfoot input {
+                    width: 100%;
+                    padding: 3px;
+                    box-sizing: border-box;
+                }
+            </style>
+
+            <style>
+                table.dataTable thead .sorting:after,
+                table.dataTable thead .sorting:before,
+                table.dataTable thead .sorting_asc:after,
+                table.dataTable thead .sorting_asc:before,
+                table.dataTable thead .sorting_asc_disabled:after,
+                table.dataTable thead .sorting_asc_disabled:before,
+                table.dataTable thead .sorting_desc:after,
+                table.dataTable thead .sorting_desc:before,
+                table.dataTable thead .sorting_desc_disabled:after,
+                table.dataTable thead .sorting_desc_disabled:before {
+                    bottom: .5em;
+                }
+            </style>
+
+            <!--'Arial'-->
+            <style>
+                table {
+                    font-family: 'Serif';
+                    margin: 25px auto;
+                    border-collapse: collapse;
+                    border: 1px solid #eee;
+                    border-bottom: 2px solid #00cccc;
+                    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1), 0px 10px 20px rgba(0, 0, 0, 0.05), 0px 20px 20px rgba(0, 0, 0, 0.05), 0px 30px 20px rgba(0, 0, 0, 0.05);
+                }
+
+                table th,
+                table td {
+                    color: #000000;
+                    border: 1px solid #eee;
+                    padding: 12px 35px;
+                    border-collapse: collapse;
+                    font-size: 12px;
+                }
+
+                table th {
+                    background: #00cccc;
+                    color: #fff;
+                    text-transform: uppercase;
+                    font-size: 12px;
+                }
+
+                table th.last {
+                    border-right: none;
+                }
+
+
+
+                body {
+                    font-family: 'Vollkorn', serif;
+                    color: #ccc;
+                }
+            </style>
+            <style>
+                #body {
+                    background-color: dodgerblue;
+                }
+
+                #caption {
+                    color: white;
+                }
+            </style>
+            <!--
+<style>
+thead {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.table-fixed-head {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  height: 100vh;
+}
+
+.table-fixed-head th,
+.table-fixed-head td {
+  padding: 5px;
+  text-align: center;
+  width: 33.333vw;
+}
+
+.table-fixed-head thead {
+  background-color: #333;
+  color: #FDFDFD;
+}
+
+.table-fixed-head thead tr {
+  display: block;
+  position: relative;
+}
+
+.table-fixed-head tbody {
+  display: block;
+  overflow: auto;
+  width: 100%;
+  height: calc(100vh - 30px);
+}
+
+.table-fixed-head tbody tr:nth-child(even) {
+  background-color: #DDD;
+} 
+-->
+            </style>
+        </div>
+    </div>
+    <!--    <link rel="stylesheet" type="text/css" href="DataTables/datatables.min.css" />
+    <script type="text/javascript" src="js/DataTables/datatables.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>window.JQuery || document.write('<script src="js/jquery-3.4.1.min.js"><\/script>'); </script>-->
 </body>
 
 </html>

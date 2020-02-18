@@ -3,21 +3,42 @@
 
 <head>
     <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <title>First Form</title>
+
+    <style>
+        #dateform {
+            font-size: 15px;
+        }
+
+        #text {
+            text-align: center;
+        }
+    </style>
+
 </head>
 
+
 <body>
-    <h1>Register </h1>
-    <form method="post" action="/users">
-        <label for="email">Username</label>
-        <input type="text" id="email" name="email">
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password">
-        <label for="firstname">Firstname</label>
-        <input type="text" id="firstname" name="firstname">
-        <label for="lastname">Lastname</label>
-        <input type="text" id="lastname" name="lastname">
-        <button type="submit">Login</button>
+    <h1>Регистрация</h1>
+    <form id="text" method="post" action="/users">
+        <div class="form-group">
+            <label for="email" id="dateform">Пользователь</label>
+            <input type="text" id="email" name="email">
+            <br>
+            <p></p>
+            <label for="password">Пароль</label>
+            <input type="password" id="password" name="password" style="margin-left: 50px;">
+            <br>
+            <p></p>
+            <label for="firstname">Имя</label>
+            <input type="text" id="firstname" name="firstname" style="margin-left: 60px;">
+            <br>
+            <p></p>
+            <label for="lastname">Фамилия</label>
+            <input type="text" id="lastname" name="lastname" style="margin-left: 180px;">
+            <button type="submit">Зарегистриовать</button>
+        </div>
     </form>
 </body>
 

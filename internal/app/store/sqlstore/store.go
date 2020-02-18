@@ -7,17 +7,20 @@ import (
 	_ "github.com/lib/pq" // ...
 	//	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	//	_ "github.com/golang-migrate/migrate/v4/source/github"
+	//	"github.com/jackc/pgx/v4"
 )
 
 // Store ...
 type Store struct {
-	db             *sql.DB
+	db *sql.DB
+	//	db             *pgx.Conn
 	userRepository *UserRepository
 	/////	shipmentbysapRepository *ShipmentbysapRepository
 	shipmentbysapRepository *ShipmentbysapRepository
 }
 
 // New ...
+// func New(db *sql.DB) *Store {
 func New(db *sql.DB) *Store {
 	return &Store{
 		db: db,

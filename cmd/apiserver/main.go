@@ -4,9 +4,9 @@ import (
 	"flag"
 	"log"
 
-	_ "github.com/lib/pq"
 	"github.com/BurntSushi/toml"
 	"github.com/eugenefoxx/http-rest-api-starline/internal/app/apiserver"
+	_ "github.com/lib/pq"
 )
 
 var (
@@ -19,7 +19,7 @@ func init() {
 
 func main() {
 	flag.Parse()
-
+	//	http.Handle("/resources/", http.StripPrefix("/resources", http.FileServer(http.Dir("./web/images"))))
 	config := apiserver.NewConfig()
 	_, err := toml.DecodeFile(configPath, config)
 	if err != nil {
