@@ -88,17 +88,29 @@
                         </tr>
                     </thead>
                     <tbody id="myTable">
-                        {{range . }}
-                        <tr>
-                            <!--<td>{{.ID }}</td>-->
-                            <td>{{.Material }}</td>
-                            <td>{{.Qty }}</td>
-                            <td>{{.ShipmentDate }}</td>
-                            <td>{{.ShipmentTime }}</td>
-                            <td>{{.LastName }}</td>
-                            <td>{{.Comment }}</td>
-                        </tr>
-                        {{end}}
+                        << range .>>
+                            <tr>
+                                <!--<td>{{.ID }}</td>-->
+                                <td>
+                                    <<.Material>>
+                                </td>
+                                <td>
+                                    <<.Qty>>
+                                </td>
+                                <td>
+                                    <<.ShipmentDate>>
+                                </td>
+                                <td>
+                                    <<.ShipmentTime>>
+                                </td>
+                                <td>
+                                    <<.LastName>>
+                                </td>
+                                <td>
+                                    <<.Comment>>
+                                </td>
+                            </tr>
+                            <<end>>
                     </tbody>
                 </table>
             </div>

@@ -52,7 +52,8 @@ type server struct {
 }
 
 func init() {
-	tpl = template.Must(template.ParseGlob("./web/templates/*.html"))
+	//	tpl = template.Must(template.ParseGlob("./web/templates/*.html"))
+	tpl = template.Must(template.New("./web/templates/*.html").Delims("<<", ">>").ParseGlob("./web/templates/*.html"))
 	//tpl = template.Must(template.ParseFiles("./web/templates/*.html"))
 	//	tpl = template.Must(template.ParseGlob("C:/Users/Евгений/templates/*.html"))
 
@@ -123,8 +124,9 @@ func (s *server) configureRouter() {
 
 	//	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("./web/images"))))
 
-	//http.Handle("/resources/", http.StripPrefix("/resources/", http.FileServer(http.Dir("./web/images/"))))
+	http.Handle("/resources/", http.StripPrefix("/resources", http.FileServer(http.Dir("./web/images/"))))
 	//	http.Handle("/", http.FileServer(http.Dir("./web/images")))
+	http.Handle("/", s.router)
 
 	open.StartWith("http://localhost:3000/", "chromium")
 
@@ -408,7 +410,7 @@ func (s *server) handleSessionsCreate() http.HandlerFunc {
 
 func (s *server) pageshipmentBySAP() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var body, _ = helper.LoadFile("./web/templates/insertsapbyship2.html")
+		var body, _ = helper.LoadFile("./web/templates/insertsapbyship3.html")
 		fmt.Fprintf(w, body)
 	}
 }
@@ -417,7 +419,7 @@ func (s *server) shipmentBySAP() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		//	material := r.FormValue("material")
 		//	material, err := strconv.Atoi(r.FormValue("Material[]"))
-		material, err := strconv.ParseInt(r.FormValue("Material[]")[0:], 10, 64)
+		material, err := strconv.ParseInt(r.FormValue("material")[0:], 10, 64)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -428,12 +430,12 @@ func (s *server) shipmentBySAP() http.HandlerFunc {
 			return
 		}
 
-		qty, err := strconv.ParseInt(r.FormValue("Qty[]")[0:], 10, 64)
+		qty, err := strconv.ParseInt(r.FormValue("qty")[0:], 10, 64)
 		if err != nil {
 			fmt.Println(err)
 		}
 
-		comment := r.FormValue("Comment[]")
+		comment := r.FormValue("comment")
 
 		session, err := s.sessionStore.Get(r, sessionName)
 		if err != nil {
@@ -472,7 +474,7 @@ func (s *server) shipmentBySAP() http.HandlerFunc {
 		//		tpl.ExecuteTemplate(w, "error.htmp", nil)
 		//		return
 		//	}
-		tpl.ExecuteTemplate(w, "insertsapbyship2.html", nil)
+		tpl.ExecuteTemplate(w, "insertsapbyship3.html", nil)
 	}
 }
 

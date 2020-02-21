@@ -9,13 +9,13 @@ func Main() *Shipmentbysaps {
 
 // Shipmentbysap ...
 type Shipmentbysap struct {
-	Material     int64
-	Qty          int64
-	ShipmentDate time.Time
-	ShipmentTime time.Time
-	ID           int
-	LastName     string
-	Comment      string
+	Material     int64     `json:"material"`
+	Qty          int64     `json:"qty"`
+	ShipmentDate time.Time `json:"shipmentdate"`
+	ShipmentTime time.Time `json:"shipmenttime"`
+	ID           int       `json:"id"`
+	LastName     string    `json:"lastname"`
+	Comment      string    `json:"comment"`
 }
 
 // Shipmentbysaps ...

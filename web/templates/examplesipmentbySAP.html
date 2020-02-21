@@ -1,0 +1,127 @@
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Example Dynamic Form</title>
+    <script src="https://unpkg.com/vue@2.1.10/dist/vue.js"></script>
+    <style>
+        .fileContainer {
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .fileContainer [type=file] {
+            cursor: inherit;
+            display: block;
+            font-size: 999px;
+            filter: alpha(opacity=0);
+            min-height: 21px;
+            min-width: 100%;
+            opacity: 0;
+            position: absolute;
+            right: 0;
+            text-align: right;
+            top: 0;
+        }
+        
+        .fileContainer {
+            background: #E3E3E3;
+            float: left;
+            padding: .5em;
+            height: 21px;
+        }
+        
+        .fileContainer [type=file] {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+<!--   <div id="app"> @submit="shipmentBySAP"-->
+  <div id="app" action="http://localhost:3000/shipmentbysap" method="post"> 
+        <table class="table">
+            <thead>
+                <tr>
+                    <td><strong>Material</strong></td>
+                    <td><strong>Qty</strong></td>
+                    <td><strong>Comment</strong></td>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(row, index) in rows">
+
+                    <td><input type="number" v-model="row.material"></td>
+                    <td><input type="number" v-model="row.qty"></td>
+                    <td><input type="text" v-model="row.comment"></td>
+                 <!--   <td>
+                        <label class="fileContainer">
+                            {{row.file.name}}
+                            <input type="file" @change="setFilename($event, row)" :id="index">
+                        </label>
+                    </td> -->
+                    <td>
+                        <a v-on:click="removeElement(index);" style="cursor: pointer">Remove</a>
+                    </td>
+
+
+                </tr>
+            </tbody>
+        </table>
+        <div>
+            <button class="button btn-primary" @click="addRow">Add row</button>
+        </div>
+     <div>
+            <button input @submit="shipmentBySAP" type="submit">Отправить</button>
+        </div>
+</div>
+    <script type="text/javascript">
+        var app = new Vue({
+            el: "#app",
+            data: {
+                rows: []
+            },
+            methods: {
+                addRow: function() {
+                    var elem = document.createElement('tr');
+                    this.rows.push({
+                        title: "",
+                        description: "",
+                        commnet: "",
+                      //  file: {
+                      //      name: 'Choose File'
+                      //  }
+                    });
+                },
+                removeElement: function(index) {
+                    this.rows.splice(index, 1);
+                },
+                sshipmentBySAP: function (e) {
+                    console.log("test")
+            if (this.material && this.qty) {
+                return true;
+            }
+
+            this.errors = [];
+
+            if (!this.name) {
+                this.errors.push('Требуется указать material.');
+            }
+            if (!this.age) {
+                this.errors.push('Требуется указать qty.');
+            }
+
+            e.preventDefault();
+        }
+    //,
+            //    setFilename: function(event, row) {
+             //       var file = event.target.files[0];
+             //       row.file = file
+             //   }
+            }
+        });
+    </script>
+</body>
+
+</html>
