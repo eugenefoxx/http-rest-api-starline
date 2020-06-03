@@ -110,7 +110,7 @@
                                     <<.Comment>>
                                 </td>
                             </tr>
-                            <<end>>
+                         << end >>
                     </tbody>
                 </table>
             </div>
@@ -204,7 +204,7 @@
                             colDelim = ',',   // '","'
                             rowDelim = '\r\n'; // '"\r\n"'
 
-                        var csv = 'Material,Qty,ShipmentDate,ShipmentTime,LastName, Comment  ' + rowDelim;
+                        var csv = 'Material,Qty,ShipmentDate,ShipmentTime,LastName,Comment  ' + rowDelim;
 
                         // Grab text from table into CSV formatted string
                         csv += ' ' + $rows.map(function (i, row) {  // '"'

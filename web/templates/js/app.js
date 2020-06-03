@@ -1,3 +1,4 @@
+console.log('work')
 const app = new Vue({
     el: '#app',
     data: {
@@ -8,7 +9,7 @@ const app = new Vue({
     },
     methods: {
         shipmentBySAP: function (e) {
-            if (this.material && this.qty) {
+            /*if (this.material && this.qty) {
                 return true;
             }
 
@@ -19,9 +20,10 @@ const app = new Vue({
             }
             if (!this.age) {
                 this.errors.push('Требуется указать qty.');
-            }
+            }*/
+            console.log(e)
+            //e.preventDefault();
 
-            e.preventDefault();
         }
     }
 })

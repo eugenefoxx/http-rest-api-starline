@@ -8,12 +8,12 @@ import (
 
 // User ...
 type User struct {
-	ID                int    //`json:"id"`
-	Email             string //`json:"email"`
-	Password          string //`json:"password,omitempty"`
-	EncryptedPassword string //`json:"-"`
-	FirstName         string
-	LastName          string
+	ID                int    `json:"id"`
+	Email             string `json:"email"`
+	Password          string `json:"password,omitempty"`
+	EncryptedPassword string `json:"-"`
+	FirstName         string `json:"firstname"`
+	LastName          string `json:"lastname"`
 }
 
 // Validate ...

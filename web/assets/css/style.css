@@ -1,0 +1,8 @@
+@font-face {
+    font-family: CrimsonPro;
+    src: url(http-rest-api-starline/web/assets/fonts/CrimsonPro-Bold.ttf); 
+    
+}
+P {
+    font-family: CrimsonPro;
+   }

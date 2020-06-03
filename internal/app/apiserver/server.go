@@ -8,18 +8,30 @@ import (
 	"fmt"
 	"html/template"
 	"io"
+	"io/ioutil"
+	"log"
 	"net/http"
 	"strconv"
 	"time"
 
+	//	"github.com/eugenefoxx/http-rest-api-starline/internal/app/model"
+	//	"github.com/eugenefoxx/http-rest-api-starline/internal/app/store"
+	//	"github.com/eugenefoxx/http-rest-api-starline/internal/app/store/helper"
+	//	"github.com/google/uuid"
+	//	"github.com/gorilla/handlers"
+	//	"github.com/gorilla/mux"
+	//	"github.com/gorilla/sessions"
+	//	_ "github.com/lib/pq"
+	//	"github.com/sirupsen/logrus"
 	"github.com/eugenefoxx/http-rest-api-starline/internal/app/model"
 	"github.com/eugenefoxx/http-rest-api-starline/internal/app/store"
 	"github.com/eugenefoxx/http-rest-api-starline/internal/app/store/helper"
+
+	//	"github.com/gobuffalo/packr/v2/jam/store"
 	"github.com/google/uuid"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
-	//	_ "github.com/lib/pq"
 	"github.com/sirupsen/logrus"
 	"github.com/skratchdot/open-golang/open"
 )
@@ -28,12 +40,16 @@ const (
 	sessionName        = "starline"
 	ctxKeyUser  ctxKey = iota
 	ctxKeyRequestID
+
+//	web_DIR = "/web/"
 )
 
 var (
 	errIncorrectEmailOrPassword = errors.New("incorrect email or password")
 	errNotAuthenticated         = errors.New("not authenticated")
 	tpl                         *template.Template
+
+//	web_DIR                  = "/web/"
 )
 
 /*
@@ -56,12 +72,13 @@ func init() {
 	tpl = template.Must(template.New("./web/templates/*.html").Delims("<<", ">>").ParseGlob("./web/templates/*.html"))
 	//tpl = template.Must(template.ParseFiles("./web/templates/*.html"))
 	//	tpl = template.Must(template.ParseGlob("C:/Users/Евгений/templates/*.html"))
+	//	http.Handle("/resources/", http.StripPrefix("/resources", http.FileServer(http.Dir("./web/images/"))))
 
 }
 
 func newServer(store store.Store, sessionStore sessions.Store) *server {
 	s := &server{
-		router:       mux.NewRouter(),
+		router:       mux.NewRouter(), // mux.NewRouter()  NewRouter()
 		logger:       logrus.New(),
 		store:        store,
 		sessionStore: sessionStore,
@@ -77,6 +94,17 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 }
 
+/*
+func NewRouter() *mux.Router {
+	router := mux.NewRouter().StrictSlash(true) //.StrictSlash(true)
+
+	router.
+		PathPrefix(web_DIR).
+		Handler(http.StripPrefix(web_DIR, http.FileServer(http.Dir("."+web_DIR))))
+
+	return router
+}
+*/
 func (s *server) configureRouter() {
 	//	connStr := "user=postgres password=123 host=localhost dbname=starline sslmode=disable"
 	//	db, err := sql.Open("postgres", connStr)
@@ -122,13 +150,17 @@ func (s *server) configureRouter() {
 	private.Use(s.authenticateUser)
 	private.HandleFunc("/whoami", s.handleWhoami()).Methods("GET")
 
+	s.router.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("./web"))))
+
 	//	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("./web/images"))))
 
-	http.Handle("/resources/", http.StripPrefix("/resources", http.FileServer(http.Dir("./web/images/"))))
+	//	http.Handle("/resources/", http.StripPrefix("/resources", http.FileServer(http.Dir("./web/"))))
+	//	http.Handle("/resources/", http.StripPrefix("/resources", http.FileServer(http.Dir(config.assets))))
 	//	http.Handle("/", http.FileServer(http.Dir("./web/images")))
-	http.Handle("/", s.router)
+	//s.router.Handle("/resources/", http.StripPrefix("/resources", http.FileServer(http.Dir("./web/"))))
+	//	http.Handle("/", s.router)
 
-	open.StartWith("http://localhost:3000/", "chromium")
+	open.StartWith("http://localhost:3000/", "firefox") // chromium
 
 }
 
@@ -295,23 +327,43 @@ func (s *server) pagehandleUsersCreate() http.HandlerFunc {
 
 func (s *server) handleUsersCreate() http.HandlerFunc {
 	type request struct {
-		Email    string // `json:"email"`
-		Password string //`json:"password"`
-
+		Email     string `json:"email"`
+		Password  string `json:"password"`
+		FirstName string `json:"firstname"`
+		LastName  string `json:"lastname"`
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
+		req := &request{}
+		//	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
+		//		s.error(w, r, http.StatusBadRequest, err)
+		//		return
+		//	}
 
-		email := r.FormValue("email")
-		password := r.FormValue("password")
-		firstname := r.FormValue("firstname")
-		lastname := r.FormValue("lastname")
+		//	email := r.FormValue("email")
+		//	password := r.FormValue("password")
+		//	firstname := r.FormValue("firstname")
+		//	lastname := r.FormValue("lastname")
+
+		//req.Email = r.FormValue("email")
+		//fmt.Println(req.Email)
+
+		//req.Password = r.FormValue("password")
+
+		//req.FirstName = r.FormValue("firstname")
+
+		//req.LastName = r.FormValue("lastname")
 		//	target := "/users"
+
+		//	fmt.Println(req.Password)
+		//	fmt.Println(req.FirstName)
+		//	fmt.Println(req.LastName)
 		u := &model.User{
-			Email:     email,    //req.Email,
-			Password:  password, //req.Password,
-			FirstName: firstname,
-			LastName:  lastname,
+			Email:     req.Email,     //req.Email, email
+			Password:  req.Password,  //req.Password, password
+			FirstName: req.FirstName, // firstname req.FirstName
+			LastName:  req.LastName,  // lastname req.LastName
 		}
+		//json.NewEncoder(w).Encode(u)
 		if err := s.store.User().Create(u); err != nil {
 			s.error(w, r, http.StatusUnprocessableEntity, err)
 			return
@@ -352,24 +404,33 @@ func (s *server) redirectMain() http.HandlerFunc {
 }
 
 func (s *server) handleSessionsCreate() http.HandlerFunc {
-	/*
-		//	type request struct {
-		//		Email    string //`json:"email"`
-		//		Password string //`json:"password"`
-		//	}
-	*/
+
+	type request struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+
 	//return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
+		//	reqBody, err := ioutil.ReadAll(r.Body)
+		//	if err != nil {
+		//		log.Fatal(err)
+		//	}
+		//	fmt.Printf("%s", reqBody)
+
 		//	req := &request{}
 		//	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
 		//		s.error(w, r, http.StatusBadRequest, err)
 		//		return
 		//	}
+
+		//	fmt.Printf("%s", req)
 		//		if r.Method == http.MethodPost {
 		r.ParseForm()
 		email := r.FormValue("email")
 		password := r.FormValue("password")
 		//	target := "/sessions"
+
 		u, err := s.store.User().FindByEmail(email)
 		if err != nil || !u.ComparePassword(password) {
 			s.error(w, r, http.StatusUnauthorized, errIncorrectEmailOrPassword)
@@ -410,32 +471,85 @@ func (s *server) handleSessionsCreate() http.HandlerFunc {
 
 func (s *server) pageshipmentBySAP() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var body, _ = helper.LoadFile("./web/templates/insertsapbyship3.html")
+		var body, _ = helper.LoadFile("./web/templates/insertsapbyship4.html")
 		fmt.Fprintf(w, body)
 	}
 }
 
 func (s *server) shipmentBySAP() http.HandlerFunc {
+	type reqA struct {
+		Material int
+		Qty      int
+		Comment  string
+		//	ID       int
+		//	LastName string
+	}
+
+	type request struct {
+		Material int    `db:"material"`
+		Qty      int    `db:"qty"`
+		Comment  string `db:"comment"`
+		ID       int    `db:"id"`
+		LastName string `db:"lastname"`
+	}
 	return func(w http.ResponseWriter, r *http.Request) {
+		//	hdata := reqA{}
+		//	var hdata ReqA
+
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		var hdata []reqA
+
+		json.Unmarshal(body, &hdata)
+		//	json.Marshal(body)
+		fmt.Printf("tect %s", body)
+		//	fmt.Printf("1 тест %s", &hdata.Material)
+		//	fmt.Println("tect2 %s", hdata, "\n")
+		fmt.Println("\nall of the data", hdata)
+		//req := &request{}
+		//	if err := json.NewDecoder(r.Body).Decode(&hdata); err != nil {
+		//		s.error(w, r, http.StatusBadRequest, err)
+		//		return
+		//	}
+		//	fmt.Printf("%s", hdata)
+
 		//	material := r.FormValue("material")
 		//	material, err := strconv.Atoi(r.FormValue("Material[]"))
-		material, err := strconv.ParseInt(r.FormValue("material")[0:], 10, 64)
-		if err != nil {
-			fmt.Println(err)
-		}
+		//	material, err := strconv.Atoi(r.FormValue("material"))
+		//	material := req.Material
+		//	использую	material, err := strconv.Atoi(r.FormValue("material"))
+		//	material := r.FormValue("material")
+		//	material, err := strconv.ParseInt(r.FormValue("material")[0:], 10, 64)
+		//		if err != nil {
+		//			fmt.Println(err)
+		//		}
 		// проверка кол-ва символом в номере материала SAP
-		checkmaterial := strconv.FormatInt(material, 10)
-		if len(checkmaterial) != 7 {
-			tpl.ExecuteTemplate(w, "error.html", nil)
-			return
-		}
-
-		qty, err := strconv.ParseInt(r.FormValue("qty")[0:], 10, 64)
-		if err != nil {
-			fmt.Println(err)
-		}
-
-		comment := r.FormValue("comment")
+		//	checkmaterial := strconv.FormatInt(material, 10)
+		//	checkmaterial := strconv.Itoa(material)
+		///checkmaterial := material
+		//	if len(checkmaterial) != 7 {
+		//		tpl.ExecuteTemplate(w, "error.html", nil)
+		//		return
+		//	}
+		//	req.Qty = r.ParseForm("qty")
+		// qty, err := strconv.ParseInt(r.FormValue("qty")[0:], 10, 64)
+		//	qty := req.Qty
+		//	использую	qty, err := strconv.Atoi(r.FormValue("qty"))
+		//	qty := r.FormValue("qty")
+		//		if err != nil {
+		//			fmt.Println(err)
+		//		}
+		//checkqty := strconv.Itoa(qty)
+		//if len(checkqty) > 1 {
+		//	tpl.ExecuteTemplate(w, "error.html", nil)
+		//		return
+		//	}
+		//req.Comment = r.ParseForm("comment")
+		//	comment := req.Comment
+		//	использую	comment := r.FormValue("comment")
 
 		session, err := s.sessionStore.Get(r, sessionName)
 		if err != nil {
@@ -454,28 +568,61 @@ func (s *server) shipmentBySAP() http.HandlerFunc {
 			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
 			return
 		}
+		//	hdata.ID = user.ID
+		//	hdata.LastName = user.LastName
+		/*
+			var record []request
+			record.Material = hdata.Material
+			//	fmt.Printf("2 тест %v", record.Material)
+			record.Material = hdata.Qty
+			record.Comment = hdata.Comment
+			record.ID = user.ID
+			record.LastName = user.LastName
+			//	user2 := strconv.Atoi(user1)
+		*/
 
-		//	user2 := strconv.Atoi(user1)
+		for _, v := range hdata {
+			fmt.Println(v.Material, v.Qty, v.Comment, user.ID, user.LastName)
+			checkmaterial := strconv.Itoa(v.Material)
+			//	checkmaterial := v.Material
+			if len(checkmaterial) == 7 {
+				u := &model.Shipmentbysap{
+					Material: v.Material,    //record.Material, //material,
+					Qty:      v.Qty,         //record.Qty,      // qty,
+					Comment:  v.Comment,     //record.Comment,  //comment,
+					ID:       user.ID,       //record.ID,       //user.ID,
+					LastName: user.LastName, //record.LastName, // user.LastName,
+				}
 
-		u := &model.Shipmentbysap{
-			Material: material,
-			Qty:      qty,
-			Comment:  comment,
-			ID:       user.ID,
-			LastName: user.LastName,
+				if err := s.store.Shipmentbysap().InterDate(u); err != nil {
+					s.error(w, r, http.StatusUnprocessableEntity, err)
+					return
+				}
+			} else {
+				fmt.Println("кол-во не равно 7", v.Material)
+
+				tpl.ExecuteTemplate(w, "error.html", nil)
+				return
+			}
+
+			//	http.Redirect(w, r, "/main", 303)
+			//	http.Redirect(w, r, "/main", 303)
+			//	return
+			//	}
+			//	u :=
+			//	fmt.Println("Material print:", u.Material)
+			//	fmt.Println("Qty print:", u.Qty)
+			//	fmt.Println("Comment print:", u.Comment)
+
+			//	} else {
+			//		tpl.ExecuteTemplate(w, "error.htmp", nil)
+			//		return
+			//	}
+
 		}
-
-		if err := s.store.Shipmentbysap().InterDate(u); err != nil {
-			s.error(w, r, http.StatusUnprocessableEntity, err)
-			return
-		}
-
-		//	} else {
-		//		tpl.ExecuteTemplate(w, "error.htmp", nil)
-		//		return
-		//	}
-		tpl.ExecuteTemplate(w, "insertsapbyship3.html", nil)
+		tpl.ExecuteTemplate(w, "insertsapbyship4.html", nil)
 	}
+
 }
 
 /*

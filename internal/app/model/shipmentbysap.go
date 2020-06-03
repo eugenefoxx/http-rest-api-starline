@@ -9,8 +9,8 @@ func Main() *Shipmentbysaps {
 
 // Shipmentbysap ...
 type Shipmentbysap struct {
-	Material     int64     `json:"material"`
-	Qty          int64     `json:"qty"`
+	Material     int       `json:"material"`
+	Qty          int       `json:"qty"`
 	ShipmentDate time.Time `json:"shipmentdate"`
 	ShipmentTime time.Time `json:"shipmenttime"`
 	ID           int       `json:"id"`

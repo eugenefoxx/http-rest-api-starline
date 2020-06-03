@@ -1,0 +1,77 @@
+@font-face {
+    font-family: CrimsonPro;
+    src: url("/assets/fonts/CrimsonPro-BoldItalic.ttf"); 
+    
+}
+
+* {
+    margin: 0;
+    box-sizing: border-box;
+ 
+}
+
+body {
+    font-family: CrimsonPro;
+    background-color:rgba(12, 133, 231, 0.533);
+  //  margin-top:120px;
+  //  width: auto;
+  
+     .section_login {
+        background-color: whitesmoke;
+        display: flex;
+        justify-content: space-between;
+        margin-top:120px;
+        .section_login_autorization {
+        
+        
+       // margin-top: 120px;
+      // background-color: whitesmoke;
+        
+        justify-content: space-between;
+        margin-left: 100px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        width: 1500px;
+          .user_name {
+            font-size: 20pt;
+                     }
+        }
+        .section_login_registration {
+            margin-right: 280px;
+            margin-top: 10px;
+        }
+    }
+    .fig2 {
+        margin-top: 30px;
+        margin-bottom: 30px;
+        margin-left: 500px;
+    }
+
+    header {
+      //  margin: auto;
+        margin-top: 10px;
+        background-color: yellow;
+        text-align: center;
+    }
+
+    .register-form {
+        margin-left: 600px;
+        margin-top: 200px;
+        justify-content: space-between;
+        font-size: 20pt;
+
+        
+    }
+    .register-field_user {
+        margin-left: 10px;
+        }
+    .register-field_pass{
+        margin-left: 100px;
+    }    
+    .register-field_name {
+        margin-left: 142px;
+    }
+    .register-field_lastname {
+        margin-left: 76px;
+    }
+}
