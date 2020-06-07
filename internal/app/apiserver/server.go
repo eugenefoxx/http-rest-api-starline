@@ -12,6 +12,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	//	"github.com/eugenefoxx/http-rest-api-starline/internal/app/model"
@@ -121,6 +122,7 @@ func (s *server) configureRouter() {
 	s.router.Use(s.setRequestID)
 	s.router.Use(s.logRequest)
 	s.router.Use(handlers.CORS(handlers.AllowedOrigins([]string{"*"})))
+
 	s.router.HandleFunc("/users", s.pagehandleUsersCreate()).Methods("GET")
 	s.router.HandleFunc("/users", s.handleUsersCreate()).Methods("POST")
 
@@ -137,6 +139,8 @@ func (s *server) configureRouter() {
 	//	s.router.HandleFunc("/showdateshipmentbysap", s.pageshowShipmentBySAP()) //.Methods("GET")
 	s.router.HandleFunc("/showdateshipmentbysap", s.authMiddleware(s.showShipmentBySAP())) //.Methods("POST")
 
+	s.router.HandleFunc("/showdateshipmentbysapbysearch", s.authMiddleware(s.pageshowShipmentBySAPBySearch())).Methods("GET")
+	s.router.HandleFunc("/showdateshipmentbysapbysearch", s.authMiddleware(s.showShipmentBySAPBySearch())).Methods("POST")
 	//	s.router.HandleFunc("/main", s.authMiddleware(s.pageredirectMain())).Methods("GET")
 	s.router.HandleFunc("/logout", s.signOut()).Methods("POST")
 
@@ -338,20 +342,20 @@ func (s *server) handleUsersCreate() http.HandlerFunc {
 		//		s.error(w, r, http.StatusBadRequest, err)
 		//		return
 		//	}
-
+		fmt.Println("зашел на регистрацию")
 		//	email := r.FormValue("email")
 		//	password := r.FormValue("password")
 		//	firstname := r.FormValue("firstname")
 		//	lastname := r.FormValue("lastname")
 
-		//req.Email = r.FormValue("email")
+		req.Email = r.FormValue("email")
 		//fmt.Println(req.Email)
 
-		//req.Password = r.FormValue("password")
+		req.Password = r.FormValue("password")
 
-		//req.FirstName = r.FormValue("firstname")
+		req.FirstName = r.FormValue("firstname")
 
-		//req.LastName = r.FormValue("lastname")
+		req.LastName = r.FormValue("lastname")
 		//	target := "/users"
 
 		//	fmt.Println(req.Password)
@@ -375,6 +379,7 @@ func (s *server) handleUsersCreate() http.HandlerFunc {
 		//	http.Redirect(w, r, target, 302)
 
 		//	}
+		fmt.Println("регистрируюсь")
 		tpl.ExecuteTemplate(w, "login.html", nil)
 	}
 }
@@ -486,11 +491,13 @@ func (s *server) shipmentBySAP() http.HandlerFunc {
 	}
 
 	type request struct {
-		Material int    `db:"material"`
-		Qty      int    `db:"qty"`
-		Comment  string `db:"comment"`
-		ID       int    `db:"id"`
-		LastName string `db:"lastname"`
+		Material     int       `db:"material"`
+		Qty          int       `db:"qty"`
+		Comment      string    `db:"comment"`
+		ID           int       `db:"id"`
+		LastName     string    `db:"lastname"`
+		ShipmentDate time.Time `db:"shipment_date"`
+		ShipmentTime time.Time `db:"shipment_time"`
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
 		//	hdata := reqA{}
@@ -592,6 +599,7 @@ func (s *server) shipmentBySAP() http.HandlerFunc {
 					Comment:  v.Comment,     //record.Comment,  //comment,
 					ID:       user.ID,       //record.ID,       //user.ID,
 					LastName: user.LastName, //record.LastName, // user.LastName,
+
 				}
 
 				if err := s.store.Shipmentbysap().InterDate(u); err != nil {
@@ -654,13 +662,85 @@ func (s *server) showShipmentBySAP() http.HandlerFunc {
 			return
 		}
 
-		err = tpl.ExecuteTemplate(w, "showdatebysap.html", get)
+		err = tpl.ExecuteTemplate(w, "showdatebysap2.html", get)
 		if err != nil {
 			http.Error(w, err.Error(), 400)
 			return
 		}
 	}
 
+}
+
+func (s *server) pageshowShipmentBySAPBySearch() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var body, _ = helper.LoadFile("./web/templates/showdatebysapbysearch.html")
+		fmt.Fprintf(w, body)
+	}
+}
+
+func (s *server) showShipmentBySAPBySearch() http.HandlerFunc {
+
+	type SearchBy struct {
+		LastName string    `json:"lastname"`
+		Date1    time.Time `json:"date1"`
+		Date2    time.Time `json:"date2"`
+		Material int       `json:"material"`
+	}
+
+	type Request struct {
+		Material int    `db:"material"`
+		Qty      int    `db:"qty"`
+		Comment  string `db:"comment"`
+		ID       int    `db:"id"`
+		LastName string `db:"lastname"`
+	}
+
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		//	var searchdata []SearchBy
+		searchdata := []SearchBy{}
+		const layoutISO = "2006-01-02"
+		json.Unmarshal(body, &searchdata)
+		fmt.Printf("test searchData %s", body)
+		fmt.Println("\nall of the data search", searchdata)
+		//	fmt.Println(searchdata.Date1.Format(time.RFC3339))
+		for i, v := range searchdata {
+			fmt.Println(i, v)
+			fmt.Println(v.Date1.Format(layoutISO))
+			//	fmt.Println("\t", v.Date1.Format(time.RFC3339))
+
+		}
+
+		tpl.ExecuteTemplate(w, "showdatebysap.html", nil)
+	}
+}
+
+type MyTime struct {
+	time.Time
+}
+
+const dateFormat = "2006-01-02"
+
+func (m *MyTime) UnmarshalJSON(p []byte) error {
+	t, err := time.Parse(dateFormat, strings.Replace(
+		string(p),
+		"\"",
+		"",
+		-1,
+	))
+
+	if err != nil {
+		return err
+	}
+
+	m.Time = t
+
+	return nil
 }
 
 func (s *server) signOut() http.HandlerFunc {
