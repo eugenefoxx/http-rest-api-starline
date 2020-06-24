@@ -9,15 +9,16 @@ func Main() *Shipmentbysaps {
 
 // Shipmentbysap ...
 type Shipmentbysap struct {
-	Material      int       `db:"material"`
-	Qty           int       `db:"qty"`
-	ShipmentDate  time.Time `db:"shipment_date"`
-	ShipmentDate2 string    `db:"shipment_date"`
-	ShipmentTime  time.Time `db:"shipment_time"`
-	ShipmentTime2 string    `db:"shipment_time"`
-	ID            int       `db:"id"`
-	LastName      string    `db:"lastname"`
-	Comment       string    `db:"comment"`
+	Material      int       `json:"material"`
+	Qty           int       `json:"qty"`
+	ShipmentDate  time.Time `json:"shipment_date"`
+	ShipmentDate2 string    `json:"shipment_date2"`
+	ShipmentDate3 string    `json:"shipment_date3"`
+	ShipmentTime  time.Time `json:"shipment_time"`
+	ShipmentTime2 string    `json:"shipment_time2"`
+	ID            int       `json:"id"`
+	LastName      string    `json:"lastname"`
+	Comment       string    `json:"comment"`
 }
 
 // Shipmentbysaps ...

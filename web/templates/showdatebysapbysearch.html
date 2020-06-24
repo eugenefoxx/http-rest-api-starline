@@ -62,8 +62,8 @@
                 <!--   <form > -->
                 <tr v-for="(row, index) in rows" v-bind:refs="'ref-'+index">
                     <td><input type="text" v-model="row.lastname" /></td>
-                    <td><input type="date" value="2015-08-06T17:52:48Z" v-model="row.date1" /></td> 
-                    <td><input type="date" value="2018-07-22" v-model="row.date2" /></td>
+                    <td><input type="date" v-model="row.date1" /></td> <!--value="2015-08-06T17:52:48Z"-->
+                    <td><input type="date" v-model="row.date2" /></td><!--value="2018-07-22"-->
                     <td><input type="number" v-model="row.material" /></td>
                     <!--   <td>
                         <label class="fileContainer">

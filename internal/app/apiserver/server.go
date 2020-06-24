@@ -141,6 +141,12 @@ func (s *server) configureRouter() {
 
 	s.router.HandleFunc("/showdateshipmentbysapbysearch", s.authMiddleware(s.pageshowShipmentBySAPBySearch())).Methods("GET")
 	s.router.HandleFunc("/showdateshipmentbysapbysearch", s.authMiddleware(s.showShipmentBySAPBySearch())).Methods("POST")
+
+	s.router.HandleFunc("/showdateshipmentbysapbysearchstatic", s.authMiddleware(s.pageshowShipmentBySAPBySearchStatic())).Methods("GET")
+	s.router.HandleFunc("/showdateshipmentbysapbysearchstatic", s.authMiddleware(s.showShipmentBySAPBySearchStatic())).Methods("POST")
+
+	s.router.HandleFunc("/showShipmentbysapbysearchDateStatic", s.authMiddleware(s.pageshowShipmentBySAPBySearchStatic())).Methods("GET")
+	s.router.HandleFunc("/showShipmentbysapbysearchDateStatic", s.authMiddleware(s.showShipmentBySAPBySearchDateStatic())).Methods("POST")
 	//	s.router.HandleFunc("/main", s.authMiddleware(s.pageredirectMain())).Methods("GET")
 	s.router.HandleFunc("/logout", s.signOut()).Methods("POST")
 
@@ -678,15 +684,67 @@ func (s *server) pageshowShipmentBySAPBySearch() http.HandlerFunc {
 	}
 }
 
-func (s *server) showShipmentBySAPBySearch() http.HandlerFunc {
+type SearchBy struct {
+	LastName string     `json:"lastname, string"`
+	Date1    CustomDate `json:"date1, string"`
+	Date2    CustomDate `json:"date2, string"`
+	Material int        `json:"material, string"`
+}
 
-	type SearchBy struct {
-		LastName string    `json:"lastname"`
-		Date1    time.Time `json:"date1"`
-		Date2    time.Time `json:"date2"`
-		Material int       `json:"material"`
+/*
+type Unmarshaler interface {
+	UnmarshalJSON([]byte) error
+}
+*/
+/*
+// first create a type alias
+type JsonDate time.Time
+
+// imeplement Marshaler und Unmarshalere interface
+func (j *JsonDate) UnmarshalJSON(b []byte) error {
+	s := strings.Trim(string(b), "\"") // s := strings.Trim(string(b), "\"")
+
+	t, err := time.Parse("2006-01-02", s)
+	if err != nil {
+		return err
 	}
+	fmt.Println("parse", t)
+	*j = JsonDate(t)
+	return nil
+}
+*/
 
+type CustomDate struct {
+	time.Time
+}
+
+const layout = "2006-01-02"
+
+func (c *CustomDate) UnmarshalJSON(b []byte) (err error) {
+	s := strings.Trim(string(b), `"`) // remove quotes
+	if s == "null" {
+		return
+	}
+	c.Time, err = time.Parse(layout, s)
+	return
+}
+
+func (c CustomDate) MarshalJSON() ([]byte, error) {
+	if c.Time.IsZero() {
+		return nil, nil
+	}
+	return []byte(fmt.Sprintf(`"%s"`, c.Time.Format(layout))), nil
+}
+
+func (s *server) showShipmentBySAPBySearch() http.HandlerFunc {
+	/*
+		type SearchBy struct {
+			LastName string `json:"lastname"`
+			Date1    string `json:"date1"`
+			Date2    string `json:"date2"`
+			Material int    `json:"material"`
+		}
+	*/
 	type Request struct {
 		Material int    `db:"material"`
 		Qty      int    `db:"qty"`
@@ -696,36 +754,98 @@ func (s *server) showShipmentBySAPBySearch() http.HandlerFunc {
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
-
 		body, err := ioutil.ReadAll(r.Body)
+		//	body, err := r.Body  // ioutil.ReadAll(r.Body)
 		if err != nil {
 			log.Fatal(err)
 		}
 
 		//	var searchdata []SearchBy
-		searchdata := []SearchBy{}
+		//	searchdata := []SearchBy{}
+		var searchdata []SearchBy
 		const layoutISO = "2006-01-02"
-		json.Unmarshal(body, &searchdata)
-		fmt.Printf("test searchData %s", body)
-		fmt.Println("\nall of the data search", searchdata)
+
+		err1 := json.Unmarshal(body, &searchdata)
+		if err1 != nil {
+			fmt.Println("Error unmarshalling data: ", err)
+			return
+		}
+		//	UnmarshalJSON(body)
+		fmt.Printf("test searchData r.Body %s", body)
+		fmt.Println("\nall of the data searchBy", searchdata)
 		//	fmt.Println(searchdata.Date1.Format(time.RFC3339))
 		for i, v := range searchdata {
 			fmt.Println(i, v)
-			fmt.Println(v.Date1.Format(layoutISO))
+			fmt.Println("LastName", v.LastName)
+			fmt.Println("ниже читаю формат Date1\n")
+			//	fmt.Println("v.Date1.Format(layoutISO)", v.Date1.Format(time.RFC3339)) // fmt.Println(v.Date1.Format(layoutISO))
+			//	fmt.Println(v.Date1.GobDecode)
+			fmt.Println(v.Date1)
+
 			//	fmt.Println("\t", v.Date1.Format(time.RFC3339))
+			//	date := fmtdate.ParseTime("DD-MM-YYYY", v.Date1)
+			//	fmt.Println(time.Parse(layoutISO, v.Date1))
+			//	fmt.Println(date)
 
 		}
+		decoder := json.NewDecoder(r.Body)
+		decoder.Decode(&searchdata)
+		fmt.Printf("%+v\n", searchdata)
 
 		tpl.ExecuteTemplate(w, "showdatebysap.html", nil)
 	}
+
 }
 
+/*
+// UnmarshalJSON ...
+func (l *SearchBy) UnmarshalJSON(j []byte) error {
+	var rawStrings map[string]string
+
+	err := json.Unmarshal(j, &rawStrings)
+	if err != nil {
+		return err
+	}
+
+	for k, v := range rawStrings {
+		if strings.ToLower(k) == "lastname" {
+			l.LastName = v
+		}
+
+		if strings.ToLower(k) == "date1" {
+			t, err := time.Parse(time.RFC3339, v)
+			if err != nil {
+				return err
+			}
+			l.Date1 = t
+		}
+
+		if strings.ToLower(k) == "date2" {
+			t, err := time.Parse(time.RFC3339, v)
+			if err != nil {
+				return err
+			}
+			l.Date1 = t
+		}
+
+		if strings.ToLower(k) == "material" {
+			l.Material, err = strconv.Atoi(v)
+			if err != nil {
+				return err
+			}
+		}
+
+	}
+	return nil
+}
+*/
 type MyTime struct {
 	time.Time
 }
 
 const dateFormat = "2006-01-02"
 
+/*
 func (m *MyTime) UnmarshalJSON(p []byte) error {
 	t, err := time.Parse(dateFormat, strings.Replace(
 		string(p),
@@ -741,6 +861,88 @@ func (m *MyTime) UnmarshalJSON(p []byte) error {
 	m.Time = t
 
 	return nil
+}
+*/
+
+func (s *server) pageshowShipmentBySAPBySearchStatic() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var body, _ = helper.LoadFile("./web/templates/showdatebysapbysearchstatic.html")
+		fmt.Fprintf(w, body)
+	}
+}
+
+func (s *server) showShipmentBySAPBySearchStatic() http.HandlerFunc {
+	type searchBy struct {
+		LastName string `json:"lastname"`
+		Date1    string `json:"date1"`
+		Date2    string `json:"date2"`
+		Material int    `json:"material"`
+	}
+	return func(w http.ResponseWriter, r *http.Request) {
+		search := &searchBy{}
+		//		r.ParseForm()
+		materialInt, err := strconv.Atoi(r.FormValue("material"))
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		search.LastName = r.FormValue("lastname")
+		fmt.Println("lastname - ", search.LastName)
+		search.Date1 = r.FormValue("date1")
+		fmt.Println("date1 - ", search.Date1)
+		search.Date2 = r.FormValue("date2")
+		fmt.Println("date2 - ", search.Date2)
+		search.Material = materialInt
+		fmt.Println("material - ", search.Material)
+		//	search.Material = r.FormValue("material")
+		/*
+			ss := &model.Shipmentbysap{
+				LastName:      search.LastName,
+				ShipmentDate2: search.Date1,
+				ShipmentDate3: search.Date2,
+				Material:      search.Material,
+			}
+		*/
+		get, err := s.store.Shipmentbysap().ShowDateBySearch(search.LastName, search.Date1, search.Date2, search.Material)
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		err = tpl.ExecuteTemplate(w, "showdatebysap2.html", get)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
+	}
+}
+
+func (s *server) showShipmentBySAPBySearchDateStatic() http.HandlerFunc {
+	type searchBy struct {
+		Date1 string `json:"date1"`
+		Date2 string `json:"date2"`
+	}
+	return func(w http.ResponseWriter, r *http.Request) {
+		search := &searchBy{}
+		//		r.ParseForm()
+
+		search.Date1 = r.FormValue("date1")
+		fmt.Println("date1 - ", search.Date1)
+		search.Date2 = r.FormValue("date2")
+		fmt.Println("date2 - ", search.Date2)
+
+		get, err := s.store.Shipmentbysap().ShowDataByDate(search.Date1, search.Date2)
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		err = tpl.ExecuteTemplate(w, "showdatebysap2.html", get)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
+	}
 }
 
 func (s *server) signOut() http.HandlerFunc {

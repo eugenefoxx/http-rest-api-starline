@@ -2,6 +2,7 @@ package sqlstore
 
 import (
 	"database/sql"
+	"fmt"
 	"time"
 
 	"github.com/eugenefoxx/http-rest-api-starline/internal/app/model"
@@ -184,15 +185,16 @@ func (t rawDate) TimeDate() (time.Time, error) {
 }
 
 // ShowDateBySearch ...
-func (r *ShipmentbysapRepository) ShowDateBySearch() (*model.Shipmentbysaps, error) {
+func (r *ShipmentbysapRepository) ShowDateBySearch(lastname string, shipment_date2 string, shipment_date3 string, material int) (*model.Shipmentbysaps, error) {
 
 	shipment := model.Shipmentbysap{}
 	shipmentList := make(model.Shipmentbysaps, 0)
 
 	rows, err := r.store.db.Query(
-		"SELECT material, qty, comment, shipment_date, shipment_time, lastname FROM shipmentbysap WHERE lastname = $1 AND shipment_date between $2 and $3 AND material = $4",
-	)
+		"SELECT material, qty, comment, TO_CHAR(shipment_date, 'YYYY-MM-DD') shipment_date2, TO_CHAR(shipment_time, 'HH24:MI:SS') shipment_time2, lastname FROM shipmentbysap WHERE lastname = $1 AND shipment_date BETWEEN $2 AND $3 AND material = $4",
+		lastname, shipment_date2, shipment_date3, material)
 	if err != nil {
+		fmt.Println("ошибка в select")
 		return nil, err
 	}
 	defer rows.Close()
@@ -204,12 +206,13 @@ func (r *ShipmentbysapRepository) ShowDateBySearch() (*model.Shipmentbysaps, err
 			&shipment.Material,
 			&shipment.Qty,
 			&shipment.Comment,
-			&shipment.ShipmentDate, // rawDate ShipmentDate
-			&shipment.ShipmentTime,
+			&shipment.ShipmentDate2, // rawDate ShipmentDate
+			&shipment.ShipmentTime2,
 			&shipment.LastName,
 		)
 		if err != nil {
 			if err == sql.ErrNoRows {
+				fmt.Println("ошибка в rows.Scan")
 				return nil, store.ErrRecordNotFound
 			}
 			return nil, err
@@ -220,6 +223,56 @@ func (r *ShipmentbysapRepository) ShowDateBySearch() (*model.Shipmentbysaps, err
 
 	err = rows.Err()
 	if err != nil {
+		fmt.Println("ошибка в rows.Err")
+		return nil, err
+	}
+
+	//	r.store.db.Close()
+
+	return &shipmentList, nil
+
+}
+
+// ShowDataByDate ...
+func (r *ShipmentbysapRepository) ShowDataByDate(shipmentDate2 string, shipmentDate3 string) (*model.Shipmentbysaps, error) {
+
+	shipment := model.Shipmentbysap{}
+	shipmentList := make(model.Shipmentbysaps, 0)
+
+	rows, err := r.store.db.Query(
+		"SELECT material, qty, comment, TO_CHAR(shipment_date, 'YYYY-MM-DD') shipment_date2, TO_CHAR(shipment_time, 'HH24:MI:SS') shipment_time2, lastname FROM shipmentbysap WHERE shipment_date BETWEEN $1 AND $2",
+		shipmentDate2, shipmentDate3)
+	if err != nil {
+		fmt.Println("ошибка в select")
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+
+		err := rows.Scan(
+			//	&shipment.ID,
+			&shipment.Material,
+			&shipment.Qty,
+			&shipment.Comment,
+			&shipment.ShipmentDate2, // rawDate ShipmentDate
+			&shipment.ShipmentTime2,
+			&shipment.LastName,
+		)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				fmt.Println("ошибка в rows.Scan")
+				return nil, store.ErrRecordNotFound
+			}
+			return nil, err
+		}
+
+		shipmentList = append(shipmentList, shipment)
+	}
+
+	err = rows.Err()
+	if err != nil {
+		fmt.Println("ошибка в rows.Err")
 		return nil, err
 	}
 

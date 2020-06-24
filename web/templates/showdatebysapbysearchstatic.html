@@ -1,0 +1,54 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <body>
+        <header>
+            <h1>Поиск по параметрам</h1>
+        </header>
+        <form id="text" method="post" action="/showdateshipmentbysapbysearchstatic">
+            <div class="register-form">
+                <!--form-group-->
+                <label for="email" id="dateform">Пользователь</label>
+                <input class="register-field_user" type="text" id="lastname" name="lastname">
+                <br>
+                <p></p>
+                <label for="password">Дата от</label>
+                <input class="register-field_pass" type="date" id="date1" name="date1">
+                <br>
+                <p></p>
+                <label for="firstname">Дата по</label>
+                <input class="register-field_name" type="date" id="date2" name="date2">
+                <br>
+                <p></p>
+                <label for="lastname">Материал</label>
+                <input class="register-field_lastname" type="number" id="material" name="material">
+                <button type="submit">Отправить</button>
+            </div>
+        </form>
+        <br>
+        <header>
+            <h1>Поиск по дате</h1>
+        </header>
+        <form  method="post" action="/showShipmentbysapbysearchDateStatic">
+            <div class="register-form">
+                <!--form-group-->
+                
+                <p></p>
+                <label for="password">Дата от</label>
+                <input id="input_date" type="date" id="date1" name="date1">
+                <br>
+                <p></p>
+                <label for="firstname">Дата по</label>
+                <input id="input_date" type="date" id="date2" name="date2">
+                <br>
+                <p></p>
+                
+                <button type="submit">Отправить</button>
+            </div>
+        </form>
+    </body>
+    </html>
