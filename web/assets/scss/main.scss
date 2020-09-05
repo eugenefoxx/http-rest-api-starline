@@ -11,10 +11,108 @@
 }
 
 body {
-    font-family: CrimsonPro;
+ // font-family: Arial, Helvetica, sans-serif;
+ font-family: CrimsonPro;
     background-color:rgba(12, 133, 231, 0.533);
+}
+
+.navbar {
+  overflow: hidden;
+  background-color: rgb(198, 201, 14);
+}
+
+.navbar a {
+  float: left;
+  font-size: 30px;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.dropdown {
+  float: left;
+//  overflow: hidden;
+}
+
+.dropdown .dropbtn {
+  font-size: 30px;  
+  border: none;
+  outline: none;
+  color: white;
+  padding: 14px 16px;
+  background-color: inherit;
+  font-family: inherit;
+  margin: 0;
+}
+
+.navbar a:hover, .dropdown:hover .dropbtn {
+  background-color: red;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  
+}
+
+.dropdown-content a {
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown-content2 {
+  display: none;
+  position: absolute;
+  background-color: none;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content2 form {
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: right;
+}
+
+.dropdown-content2 form:hover {
+  background-color: none;
+}
+
+.dropdown:hover .dropdown-content2 {
+  display: block;
+}
+
+.user {
+  font-size: 20px;
+  margin-left: 1400px;
+}
+
+//body {
+//    font-family: CrimsonPro;
+//    background-color:rgba(12, 133, 231, 0.533);
   //  margin-top:120px;
-  //  width: auto;
+  //  width: auto; 
   
      .section_login {
         background-color: whitesmoke;
@@ -41,10 +139,10 @@ body {
             margin-top: 10px;
         }
     }
-    
+   
 
     header {
-      //  margin: auto;
+      /*  margin: auto; */
         margin-top: 10px;
         background-color: yellow;
         text-align: center;
@@ -72,7 +170,7 @@ body {
     }
 
     
-}
+//}
 
 .fig2 {
         margin-top: 30px;
@@ -91,12 +189,65 @@ body {
     }
 
 .header_body_start {
-    margin-top: 10px;
+        margin-top: 10px;
         background-color: yellow;
         text-align: right;
         display: flex;
         justify-content: space-between;
-}   
+} 
+
+/* Create two equal columns that floats next to each other */
+.column {
+    float:right;
+    width: 50%;
+    padding: 100px;
+    height: 300px; /* Should be removed. Only for demonstration */
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+[type="date"] {
+  background:#fff url(https://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/calendar_2.png)  97% 50% no-repeat ;
+}
+[type="date"]::-webkit-inner-spin-button {
+  display: none;
+}
+[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+}
+
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 52px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+label {
+  display: block;
+}
+input {
+  border: 1px solid #c4c4c4;
+  border-radius: 5px;
+  background-color: #fff;
+  padding: 3px 5px;
+  box-shadow: inset 0 3px 6px rgba(0,0,0,0.1);
+  width: 190px;
+}
+
+.container2 {
+  margin-top: 1000px;
+  margin-left: 10000px;
+}
 
 #myInput {
  /* background-image: url('/css/searchicon.png'); /* Add a search icon to input */
@@ -169,3 +320,8 @@ tr:nth-child(even) {
   border:4px solid #acbfa5
 }
 }
+
+.odd{background-color: white;} 
+
+.even{background-color: gray;} 
+

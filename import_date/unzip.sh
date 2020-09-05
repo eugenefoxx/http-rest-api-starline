@@ -1,0 +1,2 @@
+#!/bin/bash
+find /home/eugenearch/Code/github.com/eugenefoxx/http-rest-api-starline/import_date/out.csv* -exec gunzip -c {} > /home/eugenearch/Code/github.com/eugenefoxx/http-rest-api-starline/import_date/out.csv \;

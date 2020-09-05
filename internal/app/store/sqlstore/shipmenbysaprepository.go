@@ -76,9 +76,6 @@ func (r *ShipmentbysapRepository) ShowDate() (*model.Shipmentbysaps, error) { //
 	shipment := model.Shipmentbysap{}
 	shipmentList := make(model.Shipmentbysaps, 0)
 
-	const layoutISO = "2006-01-02"
-	const layoutTime = "15:04:05"
-
 	type ShipmentFormat struct {
 		Material     int    `db:"material"`
 		Qty          int    `db:"qty"`
@@ -277,7 +274,7 @@ func (r *ShipmentbysapRepository) ShowDataByDate(shipmentDate2 string, shipmentD
 	}
 
 	//	r.store.db.Close()
-
+	//fmt.Println(shipmentList)
 	return &shipmentList, nil
 
 }

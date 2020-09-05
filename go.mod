@@ -12,7 +12,8 @@ require (
 	github.com/gorilla/mux v1.7.3
 	github.com/gorilla/sessions v1.2.0
 	github.com/grisha/gowebapp v0.0.0-20170501201120-ea9a9e1c1f85
-	github.com/jmoiron/sqlx v1.2.0 // indirect
+	github.com/guregu/null v4.0.0+incompatible // indirect
+	github.com/jmoiron/sqlx v1.2.0
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/lib/pq v1.3.0
@@ -22,4 +23,5 @@ require (
 	golang.org/x/crypto v0.0.0-20191122220453-ac88ee75c92c
 	golang.org/x/sys v0.0.0-20190826190057-c7b8b68b1456 // indirect
 	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
+	gopkg.in/guregu/null.v4 v4.0.0
 )

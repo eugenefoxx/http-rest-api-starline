@@ -23,15 +23,3 @@ type Shipmentbysap struct {
 
 // Shipmentbysaps ...
 type Shipmentbysaps []Shipmentbysap
-
-type rawTime []byte
-
-func (t rawTime) Time() (time.Time, error) {
-	return time.Parse("15:04:05", string(t))
-}
-
-type ShipmentDate []byte
-
-func (t ShipmentDate) Time() (time.Time, error) {
-	return time.Parse("2020-02-10", string(t))
-}

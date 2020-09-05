@@ -1,13 +1,14 @@
 package apiserver
 
 import (
-	"database/sql"
+
 	//	"fmt"
 	"net/http"
 	//	"os"
 
 	"github.com/eugenefoxx/http-rest-api-starline/internal/app/store/sqlstore"
 	"github.com/gorilla/sessions"
+	"github.com/jmoiron/sqlx"
 )
 
 // Start ...
@@ -20,19 +21,21 @@ func Start(config *Config) error {
 	defer db.Close()
 	store := sqlstore.New(db)
 	sessionStore := sessions.NewCookieStore([]byte(config.SessionKey))
+	html := config.HTML
+
 	//	router := mux.NewRouter()
 	//	router.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("./static"))))
 
-	srv := newServer(store, sessionStore)
+	srv := newServer(store, sessionStore, html)
 
 	//	return http.ListenAndServe(config.BindAddr, srv)
 	// http.Handle("/resources/", http.StripPrefix("/resources", http.FileServer(http.Dir("./web/images"))))
 	return http.ListenAndServe(config.BindAddr, srv)
 }
 
-func newDB(databaseURL string) (*sql.DB, error) {
+func newDB(databaseURL string) (*sqlx.DB, error) {
 	//func newDB(databaseURL string) (*sql.DB, error) {
-	db, err := sql.Open("postgres", databaseURL)
+	db, err := sqlx.Open("postgres", databaseURL)
 	if err != nil {
 		return nil, err
 	}

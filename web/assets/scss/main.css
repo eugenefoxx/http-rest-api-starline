@@ -14,7 +14,99 @@ body {
   background-color: rgba(12, 133, 231, 0.533);
 }
 
-body .section_login {
+.navbar {
+  overflow: hidden;
+  background-color: #c6c90e;
+}
+
+.navbar a {
+  float: left;
+  font-size: 30px;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.dropdown {
+  float: left;
+}
+
+.dropdown .dropbtn {
+  font-size: 30px;
+  border: none;
+  outline: none;
+  color: white;
+  padding: 14px 16px;
+  background-color: inherit;
+  font-family: inherit;
+  margin: 0;
+}
+
+.navbar a:hover, .dropdown:hover .dropbtn {
+  background-color: red;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  -webkit-box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+          box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown-content2 {
+  display: none;
+  position: absolute;
+  background-color: none;
+  min-width: 160px;
+  -webkit-box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+          box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.dropdown-content2 form {
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: right;
+}
+
+.dropdown-content2 form:hover {
+  background-color: none;
+}
+
+.dropdown:hover .dropdown-content2 {
+  display: block;
+}
+
+.user {
+  font-size: 20px;
+  margin-left: 1400px;
+}
+
+.section_login {
   background-color: whitesmoke;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -25,7 +117,7 @@ body .section_login {
   margin-top: 120px;
 }
 
-body .section_login .section_login_autorization {
+.section_login .section_login_autorization {
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
@@ -35,22 +127,23 @@ body .section_login .section_login_autorization {
   width: 1500px;
 }
 
-body .section_login .section_login_autorization .user_name {
+.section_login .section_login_autorization .user_name {
   font-size: 20pt;
 }
 
-body .section_login .section_login_registration {
+.section_login .section_login_registration {
   margin-right: 280px;
   margin-top: 10px;
 }
 
-body header {
+header {
+  /*  margin: auto; */
   margin-top: 10px;
   background-color: yellow;
   text-align: center;
 }
 
-body .register-form {
+.register-form {
   margin-left: 600px;
   margin-top: 200px;
   -webkit-box-pack: justify;
@@ -59,19 +152,19 @@ body .register-form {
   font-size: 20pt;
 }
 
-body .register-field_user {
+.register-field_user {
   margin-left: 10px;
 }
 
-body .register-field_pass {
+.register-field_pass {
   margin-left: 100px;
 }
 
-body .register-field_name {
+.register-field_name {
   margin-left: 142px;
 }
 
-body .register-field_lastname {
+.register-field_lastname {
   margin-left: 76px;
 }
 
@@ -101,6 +194,65 @@ body .register-field_lastname {
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
+}
+
+/* Create two equal columns that floats next to each other */
+.column {
+  float: right;
+  width: 50%;
+  padding: 100px;
+  height: 300px;
+  /* Should be removed. Only for demonstration */
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+[type="date"] {
+  background: #fff url(https://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/calendar_2.png) 97% 50% no-repeat;
+}
+
+[type="date"]::-webkit-inner-spin-button {
+  display: none;
+}
+
+[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+}
+
+.button {
+  background-color: #4CAF50;
+  /* Green */
+  border: none;
+  color: white;
+  padding: 15px 52px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+label {
+  display: block;
+}
+
+input {
+  border: 1px solid #c4c4c4;
+  border-radius: 5px;
+  background-color: #fff;
+  padding: 3px 5px;
+  -webkit-box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.1);
+          box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.1);
+  width: 190px;
+}
+
+.container2 {
+  margin-top: 1000px;
+  margin-left: 10000px;
 }
 
 #myInput {
@@ -185,5 +337,13 @@ tr:nth-child(even) {
   margin: 20px 0 10px;
   border-radius: 5px;
   border: 4px solid #acbfa5;
+}
+
+.odd {
+  background-color: white;
+}
+
+.even {
+  background-color: gray;
 }
 /*# sourceMappingURL=main.css.map */

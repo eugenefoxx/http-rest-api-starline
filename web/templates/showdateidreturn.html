@@ -1,0 +1,122 @@
+<< define "layout">>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/assets/scss/main.css">
+    <title>ShowIDReturn</title>
+</head>
+
+<body>
+    <div class="row">
+        <a href="/showdateshipmentbysapbysearchstatic">
+            <h2 style="color: white;">В поиск</h2>
+        </a>
+
+    </div>
+    <div class="container">
+        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for ..." title="Type in a name" size="200">
+
+        <table id="myTable" onload="alternate('thetable')">
+            <caption style="color: white; font-size: 22px;">Пересчет ЕО</caption>
+            <button onclick="exportTableToCSV('export_shipment_sap.csv')">Экспортировать таблицу в csv файл</button>
+            <thead>
+                <tr>
+                    <!--<th>ID</th>-->
+                    <th scope="col" onclick="sortTable(0)">№ ЕО</th>
+                    <!--Material-->
+                    <th scope="col" onclick="sortTable(1)">SAP</th>
+                    <!--Qty-->
+                    <th scope="col" onclick="sortTable(2)">Описание</th>
+                    <!--ShipmentDate-->
+                    <!--    <th scope="col" onclick="sortTable(2)">ShipmentDate2</th>-->
+                    <th scope="col" onclick="sortTable(3)">Партия</th>
+                    <!--ShipmentTime-->
+                    <th scope="col" onclick="sortTable(4)">Кол-во/Факт</th>
+                    <!--LastName-->
+                    <th scope="col" onclick="sortTable(5)">Кол-во/SAP</th>
+                    <!--Comment-->
+                    <th scope="col" onclick="sortTable(6)">Кол-во/Panacim</th>
+                    <th scope="col" onclick="sortTable(7)">СПП-элемент</th>
+                    <th scope="col" onclick="sortTable(8)">Сумма на 7813</th>
+                    <th scope="col" onclick="sortTable(9)">Склад</th>
+                    <th scope="col" onclick="sortTable(10)">Кол-во в ЕО/SAP</th>
+                    <th scope="col" onclick="sortTable(11)">Остаток ЕО/Panacim</th>
+                    <th scope="col" onclick="sortTable(12)">StorageUnit</th>
+                    <th scope="col" onclick="sortTable(13)">StorageSubUnit</th>
+                    <th scope="col" onclick="sortTable(14)">Дата внесения</th>
+                    <th scope="col" onclick="sortTable(15)">Время внесения</th>
+                    <th scope="col" onclick="sortTable(16)">Сотрудник</th>
+                </tr>
+            </thead>
+            <tbody id="thetable">
+                << range .>>
+                    <tr class="header">
+                        <!--<td>{{.ID }}</td>-->
+                        <td>
+                            <<.IDRoll>>
+                        </td>
+                        <td>
+                            <<.Material>>
+                        </td>
+                        <td>
+                            <<.MaterialDescription>>
+                        </td>
+                        <td>
+                            <<.Lot>>
+                        </td>
+                        <td>
+                            <<.QtyFact>>
+                        </td>
+                        <td>
+                            <<.QtySAP>>
+                        </td>
+                        <td>
+                            <<.QtyPanacim>>
+                        </td>
+                        <td>
+                            <<.SPP>>
+                        </td>
+                        <td>
+                            <<.Summa>>
+                        </td>
+                        <td>
+                            <<.Warehouse>>
+                        </td>
+                        <td>
+                            <<.QtyIDSAP>>
+                        </td>
+                        <td>
+                            <<.EstimatedCurrentQuantity>>
+                        </td>
+                        <td>
+                            <<.StorageUnit>>
+                        </td>
+                        <td>
+                            <<.StorageSubUnit>>
+                        </td>
+                        <td>
+                            <<.ShipmentDate2>>
+                        </td>
+                        <td>
+                            <<.ShipmentTime2>>
+                        </td>
+                        <td>
+                            <<.Lastname>>
+                        </td>
+                    </tr>
+                    << end>>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="/assets/js/script.js" type="text/javascript"></script>
+    <script src="/assets/js/table-export.js" type="text/javascript"></script>
+</body>
+
+</html>
+
+<< end >>

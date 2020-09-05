@@ -17,3 +17,28 @@ type ShipmentbysapRepository interface {
 	ShowDateBySearch(string, string, string, int) (*model.Shipmentbysaps, error)
 	ShowDataByDate(string, string) (*model.Shipmentbysaps, error)
 }
+
+// IDReturnRepository ...
+type IDReturnRepository interface {
+	InterDate(*model.IDReturn) error
+}
+
+// PanacimStockRepository ...
+type PanacimStockRepository interface {
+	ImportDate()
+}
+
+//HUMOSAPStockRepository ...
+type HUMOSAPStockRepository interface {
+	ImportDate()
+}
+
+// MB52SAPStockRepository ...
+type MB52SAPStockRepository interface {
+	ImportDate()
+}
+
+// ShowdateidreturnRepository ...
+type ShowdateidreturnRepository interface {
+	ShowDataByDate(string, string) (*model.Showdateidreturns, error)
+}

@@ -2,7 +2,6 @@ package apiserver
 
 import (
 	"context"
-	"database/sql"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -24,9 +23,10 @@ import (
 	//	"github.com/gorilla/sessions"
 	//	_ "github.com/lib/pq"
 	//	"github.com/sirupsen/logrus"
+	//"github.com/eugenefoxx/http-rest-api-starline/internal/app/apiserver"
 	"github.com/eugenefoxx/http-rest-api-starline/internal/app/model"
 	"github.com/eugenefoxx/http-rest-api-starline/internal/app/store"
-	"github.com/eugenefoxx/http-rest-api-starline/internal/app/store/helper"
+	"github.com/jmoiron/sqlx"
 
 	//	"github.com/gobuffalo/packr/v2/jam/store"
 	"github.com/google/uuid"
@@ -34,7 +34,6 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	"github.com/sirupsen/logrus"
-	"github.com/skratchdot/open-golang/open"
 )
 
 const (
@@ -65,24 +64,26 @@ type server struct {
 	logger       *logrus.Logger
 	store        store.Store
 	sessionStore sessions.Store
-	database     *sql.DB
+	database     *sqlx.DB
+	html         string
 }
 
 func init() {
 	//	tpl = template.Must(template.ParseGlob("./web/templates/*.html"))
-	tpl = template.Must(template.New("./web/templates/*.html").Delims("<<", ">>").ParseGlob("./web/templates/*.html"))
-	//tpl = template.Must(template.ParseFiles("./web/templates/*.html"))
+	//	tpl = template.Must(template.New("./web/templates/*.html").Delims("<<", ">>").ParseGlob("./web/templates/*.html"))
+	//tpl = template.Must(template.ParseFiles("./web/templates/layout.html").Delims("<<", ">>").ParseGlob("./web/templates/*.html"))
 	//	tpl = template.Must(template.ParseGlob("C:/Users/Евгений/templates/*.html"))
 	//	http.Handle("/resources/", http.StripPrefix("/resources", http.FileServer(http.Dir("./web/images/"))))
 
 }
 
-func newServer(store store.Store, sessionStore sessions.Store) *server {
+func newServer(store store.Store, sessionStore sessions.Store, html string) *server {
 	s := &server{
 		router:       mux.NewRouter(), // mux.NewRouter()  NewRouter()
 		logger:       logrus.New(),
 		store:        store,
 		sessionStore: sessionStore,
+		html:         html,
 	}
 
 	s.configureRouter()
@@ -141,12 +142,22 @@ func (s *server) configureRouter() {
 
 	s.router.HandleFunc("/showdateshipmentbysapbysearch", s.authMiddleware(s.pageshowShipmentBySAPBySearch())).Methods("GET")
 	s.router.HandleFunc("/showdateshipmentbysapbysearch", s.authMiddleware(s.showShipmentBySAPBySearch())).Methods("POST")
-
+	// pageshowShipmentBySAPBySearchStatic
 	s.router.HandleFunc("/showdateshipmentbysapbysearchstatic", s.authMiddleware(s.pageshowShipmentBySAPBySearchStatic())).Methods("GET")
 	s.router.HandleFunc("/showdateshipmentbysapbysearchstatic", s.authMiddleware(s.showShipmentBySAPBySearchStatic())).Methods("POST")
 
 	s.router.HandleFunc("/showShipmentbysapbysearchDateStatic", s.authMiddleware(s.pageshowShipmentBySAPBySearchStatic())).Methods("GET")
 	s.router.HandleFunc("/showShipmentbysapbysearchDateStatic", s.authMiddleware(s.showShipmentBySAPBySearchDateStatic())).Methods("POST")
+
+	s.router.HandleFunc("/insertIDReturn", s.authMiddleware(s.pageidReturn())).Methods("GET")
+	s.router.HandleFunc("/insertIDReturn", s.authMiddleware(s.idReturn())).Methods("POST")
+
+	s.router.HandleFunc("/showIDReturn", s.authMiddleware(s.pageshowIDReturnDataByDate())).Methods("GET")
+	s.router.HandleFunc("/showIDReturn", s.authMiddleware(s.showIDReturnDataByDate())).Methods("POST")
+
+	s.router.HandleFunc("/testPana", s.authMiddleware(s.testPana())).Methods("GET")
+	s.router.HandleFunc("/testIDSAP", s.authMiddleware(s.testIDSAP())).Methods("GET")
+	s.router.HandleFunc("/testMB52", s.authMiddleware(s.testMB52())).Methods("GET")
 	//	s.router.HandleFunc("/main", s.authMiddleware(s.pageredirectMain())).Methods("GET")
 	s.router.HandleFunc("/logout", s.signOut()).Methods("POST")
 
@@ -170,7 +181,7 @@ func (s *server) configureRouter() {
 	//s.router.Handle("/resources/", http.StripPrefix("/resources", http.FileServer(http.Dir("./web/"))))
 	//	http.Handle("/", s.router)
 
-	open.StartWith("http://localhost:3000/", "firefox") // chromium
+	//	open.StartWith("http://localhost:3000/", "google-chrome-stable") // chromium
 
 }
 
@@ -181,6 +192,9 @@ func (s *server) handleHello() http.HandlerFunc {
 }
 
 func (s *server) main() http.HandlerFunc {
+	tpl = template.Must(template.New("").Delims("<<", ">>").ParseFiles(s.html + "layout.html"))
+	//tpl = template.Must(template.New("").Delims("<<", ">>").ParseFiles("web/templates/layout.html"))
+	//tpl = template.Must(template.ParseFiles("web/templates/index.html"))
 	return func(w http.ResponseWriter, r *http.Request) {
 		//	u := s.authenticateUser()
 		//	fmt.Println(u)
@@ -209,7 +223,9 @@ func (s *server) main() http.HandlerFunc {
 			"id":   u.FirstName,
 		}
 
-		tpl.ExecuteTemplate(w, "index.html", data)
+		//	tpl.ExecuteTemplate(w, "index.html", data)
+		tpl.ExecuteTemplate(w, "layout", data)
+
 	}
 }
 
@@ -329,9 +345,20 @@ func (s *server) handleWhoami() http.HandlerFunc {
 }
 
 func (s *server) pagehandleUsersCreate() http.HandlerFunc {
+	//	tpl = template.Must(template.New("").Delims("<<", ">>").ParseFiles("web/templates/register.html"))
+	//tpl, err := template.New("").Delims("<<", ">>").ParseFiles("web/templates/register.html")
+	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "register.html")
+	if err != nil {
+		panic(err)
+	}
 	return func(w http.ResponseWriter, r *http.Request) {
-		var body, _ = helper.LoadFile("./web/templates/register.html")
-		fmt.Fprintf(w, body)
+		//	var body, _ = helper.LoadFile("./web/templates/register.html")
+		//	fmt.Fprintf(w, body)
+		err = tpl.ExecuteTemplate(w, "layout", nil)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
 	}
 }
 
@@ -341,6 +368,12 @@ func (s *server) handleUsersCreate() http.HandlerFunc {
 		Password  string `json:"password"`
 		FirstName string `json:"firstname"`
 		LastName  string `json:"lastname"`
+	}
+
+	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "register.html")
+	//tpl, err := template.New("").Delims("<<", ">>").ParseFiles("web/templates/register.html")
+	if err != nil {
+		panic(err)
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
 		req := &request{}
@@ -386,21 +419,48 @@ func (s *server) handleUsersCreate() http.HandlerFunc {
 
 		//	}
 		fmt.Println("регистрируюсь")
-		tpl.ExecuteTemplate(w, "login.html", nil)
+		//tpl.ExecuteTemplate(w, "login.html", nil)
+		err = tpl.ExecuteTemplate(w, "layout", nil)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
 	}
 }
 
 func (s *server) pagehandleSessionsCreate() http.HandlerFunc {
+	//	tpl = template.Must(template.New("").Delims("<<", ">>").ParseFiles("web/templates/login.html"))
+	//tpl, err := template.New("").Delims("<<", ">>").ParseFiles("web/templates/login.html")
+	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "login.html")
+	if err != nil {
+		panic(err)
+	}
 	return func(w http.ResponseWriter, r *http.Request) {
-		var body, _ = helper.LoadFile("./web/templates/login.html") // "./web/templates/login.html"
-		fmt.Fprintf(w, body)
+		//	var body, _ = helper.LoadFile("./web/templates/login.html") // "./web/templates/login.html"
+		//	fmt.Fprintf(w, body)
+		err = tpl.ExecuteTemplate(w, "layout", nil)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
 	}
 }
 
 func (s *server) pageredirectMain() http.HandlerFunc {
+	//tpl = template.Must(template.New("").Delims("<<", ">>").ParseFiles("web/templates/layout.html"))
+	//tpl, err := template.New("").Delims("<<", ">>").ParseFiles("web/templates/layout.html")
+	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "layout.html")
+	if err != nil {
+		panic(err)
+	}
 	return func(w http.ResponseWriter, r *http.Request) {
-		var body, _ = helper.LoadFile("./web/templates/index.html")
-		fmt.Fprintf(w, body)
+		//	var body, _ = helper.LoadFile("./web/templates/index.html")
+		//	fmt.Fprintf(w, body)
+		err = tpl.ExecuteTemplate(w, "layout", nil)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
 	}
 }
 
@@ -421,6 +481,11 @@ func (s *server) handleSessionsCreate() http.HandlerFunc {
 		Password string `json:"password"`
 	}
 
+	//tpl, err := template.New("").Delims("<<", ">>").ParseFiles("web/templates/layout.html")
+	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "layout.html")
+	if err != nil {
+		panic(err)
+	}
 	//return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		//	reqBody, err := ioutil.ReadAll(r.Body)
@@ -475,15 +540,39 @@ func (s *server) handleSessionsCreate() http.HandlerFunc {
 			"user": u.LastName,
 			"id":   u.FirstName,
 		}
-		tpl.ExecuteTemplate(w, "index.html", data) //  "index.html"
+		//	tpl.ExecuteTemplate(w, "index.html", data) //  "index.html"
+		err = tpl.ExecuteTemplate(w, "layout", data)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
 
 	}
 }
 
 func (s *server) pageshipmentBySAP() http.HandlerFunc {
+	//tpl = template.Must(template.New("").Delims("<<", ">>").ParseFiles("web/templates/insertsapbyship6.html"))
+	//tpl, err := template.New("").Delims("<<", ">>").ParseFiles("web/templates/insertsapbyship6.html")
+	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "insertsapbyship6.html")
+	if err != nil {
+		panic(err)
+	}
 	return func(w http.ResponseWriter, r *http.Request) {
-		var body, _ = helper.LoadFile("./web/templates/insertsapbyship4.html")
-		fmt.Fprintf(w, body)
+		//	var body, _ = helper.LoadFile("./web/templates/insertsapbyship6.html")
+		//	fmt.Fprintf(w, body)
+		data := map[string]interface{}{
+			"user": "Я тут",
+		}
+		err = tpl.ExecuteTemplate(w, "layout", data)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+			//	}
+			//		if err = tpl.ExecuteTemplate(w, "layout", nil); err != nil {
+			//			s.error(w, r, http.StatusUnprocessableEntity, err)
+			//			return
+			//		}
+		}
 	}
 }
 
@@ -504,6 +593,14 @@ func (s *server) shipmentBySAP() http.HandlerFunc {
 		LastName     string    `db:"lastname"`
 		ShipmentDate time.Time `db:"shipment_date"`
 		ShipmentTime time.Time `db:"shipment_time"`
+	}
+
+	//	tpl = template.Must(template.ParseFiles("web/templates/insertsapbyship6.html"))
+	//tpl = template.Must(template.New("").Delims("<<", ">>").ParseFiles("web/templates/insertsapbyship6.html"))
+	//tpl, err := template.New("").Delims("<<", ">>").ParseFiles("web/templates/insertsapbyship6.html")
+	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "insertsapbyship6.html")
+	if err != nil {
+		panic(err)
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
 		//	hdata := reqA{}
@@ -607,16 +704,39 @@ func (s *server) shipmentBySAP() http.HandlerFunc {
 					LastName: user.LastName, //record.LastName, // user.LastName,
 
 				}
-
+				//	var send bool
 				if err := s.store.Shipmentbysap().InterDate(u); err != nil {
 					s.error(w, r, http.StatusUnprocessableEntity, err)
 					return
 				}
-			} else {
-				fmt.Println("кол-во не равно 7", v.Material)
+				//	}
 
-				tpl.ExecuteTemplate(w, "error.html", nil)
-				return
+				//	fm := session.Flashes("message")
+				//	session.Save(r, w)
+				//	fmt.Fprintf(w, "%v", fm[0])
+			} else {
+				if v.Material != 7 {
+					fmt.Println("кол-во не равно 7", v.Material)
+
+					strN, err := json.Marshal("JSON кол-во не равно 7.")
+					fmt.Println(string(strN))
+					if err != nil {
+						http.Error(w, err.Error(), http.StatusInternalServerError)
+					}
+					w.Write(strN)
+					//	break
+				}
+
+				/*	session, err := s.sessionStore.Get(r, "flash-session")
+					if err != nil {
+						http.Error(w, err.Error(), http.StatusInternalServerError)
+					}
+					session.AddFlash("This is a flashed message!", "message")
+					fm := session.Flashes("message")
+					session.Save(r, w)
+					fmt.Fprintf(w, "%v", fm[0]) */
+				//	tpl.ExecuteTemplate(w, "error.html", nil)
+				//	return
 			}
 
 			//	http.Redirect(w, r, "/main", 303)
@@ -634,7 +754,28 @@ func (s *server) shipmentBySAP() http.HandlerFunc {
 			//	}
 
 		}
-		tpl.ExecuteTemplate(w, "insertsapbyship4.html", nil)
+		strB, err := json.Marshal("Данные отправлены.")
+		fmt.Println(string(strB))
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+		w.Write(strB)
+		err = tpl.ExecuteTemplate(w, "layout", nil)
+		//	err = tpl.ExecuteTemplate(w, "layout", v)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
+		//	tpl.ExecuteTemplate(w, "insertsapbyship6.html", nil)
+		//	sessionF, err := s.sessionStore.Get(r, "flash-session")
+		//	if err != nil {
+		//		http.Error(w, err.Error(), http.StatusInternalServerError)
+		//	}
+		//	sessionF.AddFlash("This is a flashed message!", "FlashedMessages")
+		//	v := map[string]interface{}{
+		//		"FlashedMessages": session.Flashes(),
+		//	}
+
 	}
 
 }
@@ -653,13 +794,29 @@ func (t rawDate) Time() (time.Time, error) {
 }
 */
 func (s *server) pageshowShipmentBySAP() http.HandlerFunc {
+	// tpl = template.Must(template.New("").Delims("<<", ">>").ParseFiles("web/templates/showdatebysap2.html"))
+	//tpl, err := template.New("").Delims("<<", ">>").ParseFiles("web/templates/showdatebysap2.html")
+	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "showdatebysap2.html")
+	if err != nil {
+		panic(err)
+	}
 	return func(w http.ResponseWriter, r *http.Request) {
-		var body, _ = helper.LoadFile("./web/templates/showdatebysap.html")
-		fmt.Fprintf(w, body)
+		//	var body, _ = helper.LoadFile("./web/templates/showdatebysap2.html")
+		//	fmt.Fprintf(w, body)
+		err = tpl.ExecuteTemplate(w, "layout", nil)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
 	}
 }
 
 func (s *server) showShipmentBySAP() http.HandlerFunc {
+	//tpl, err := template.New("").Delims("<<", ">>").ParseFiles("web/templates/showdatebysap2.html")
+	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "showdatebysap2.html")
+	if err != nil {
+		panic(err)
+	}
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		get, err := s.store.Shipmentbysap().ShowDate()
@@ -667,8 +824,14 @@ func (s *server) showShipmentBySAP() http.HandlerFunc {
 			s.error(w, r, http.StatusUnprocessableEntity, err)
 			return
 		}
-
-		err = tpl.ExecuteTemplate(w, "showdatebysap2.html", get)
+		/*
+			err = tpl.ExecuteTemplate(w, "showdatebysap2.html", get)
+			if err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}
+		*/
+		err = tpl.ExecuteTemplate(w, "layout", get)
 		if err != nil {
 			http.Error(w, err.Error(), 400)
 			return
@@ -678,9 +841,20 @@ func (s *server) showShipmentBySAP() http.HandlerFunc {
 }
 
 func (s *server) pageshowShipmentBySAPBySearch() http.HandlerFunc {
+	//tpl = template.Must(template.New("").Delims("<<", ">>").ParseFiles("web/templates/showdatebysapbysearch.html"))
+	//tpl, err := template.New("").Delims("<<", ">>").ParseFiles("web/templates/showdatebysapbysearch.html")
+	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "showdatebysapbysearch.html")
+	if err != nil {
+		panic(err)
+	}
 	return func(w http.ResponseWriter, r *http.Request) {
-		var body, _ = helper.LoadFile("./web/templates/showdatebysapbysearch.html")
-		fmt.Fprintf(w, body)
+		//	var body, _ = helper.LoadFile("./web/templates/showdatebysapbysearch.html")
+		//	fmt.Fprintf(w, body)
+		err = tpl.ExecuteTemplate(w, "layout", nil)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
 	}
 }
 
@@ -753,6 +927,12 @@ func (s *server) showShipmentBySAPBySearch() http.HandlerFunc {
 		LastName string `db:"lastname"`
 	}
 
+	//tpl, err := template.New("").Delims("<<", ">>").ParseFiles("web/templates/showdatebysap.html")
+	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "showdatebysap.html")
+	if err != nil {
+		panic(err)
+	}
+
 	return func(w http.ResponseWriter, r *http.Request) {
 		body, err := ioutil.ReadAll(r.Body)
 		//	body, err := r.Body  // ioutil.ReadAll(r.Body)
@@ -792,7 +972,12 @@ func (s *server) showShipmentBySAPBySearch() http.HandlerFunc {
 		decoder.Decode(&searchdata)
 		fmt.Printf("%+v\n", searchdata)
 
-		tpl.ExecuteTemplate(w, "showdatebysap.html", nil)
+		//	tpl.ExecuteTemplate(w, "showdatebysap.html", nil)
+		err = tpl.ExecuteTemplate(w, "layout", nil)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
 	}
 
 }
@@ -865,9 +1050,22 @@ func (m *MyTime) UnmarshalJSON(p []byte) error {
 */
 
 func (s *server) pageshowShipmentBySAPBySearchStatic() http.HandlerFunc {
+	//tpl, err := template.New("").Delims("<<", ">>").ParseFiles("web/templates/showdatebysapbysearchstatic.html")
+	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "showdatebysapbysearchstatic.html")
+	if err != nil {
+		panic(err)
+	}
 	return func(w http.ResponseWriter, r *http.Request) {
-		var body, _ = helper.LoadFile("./web/templates/showdatebysapbysearchstatic.html")
-		fmt.Fprintf(w, body)
+		//	var body, _ = helper.LoadFile("./web/templates/showdatebysapbysearchstatic.html")
+		//	fmt.Fprintf(w, body)
+		data := map[string]interface{}{
+			"user": "Я тут",
+		}
+		if err = tpl.ExecuteTemplate(w, "layout", data); err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
 	}
 }
 
@@ -878,6 +1076,13 @@ func (s *server) showShipmentBySAPBySearchStatic() http.HandlerFunc {
 		Date2    string `json:"date2"`
 		Material int    `json:"material"`
 	}
+
+	//tpl, err := template.New("").Delims("<<", ">>").ParseFiles("web/templates/showdatebysap2.html")
+	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "showdatebysap2.html")
+	if err != nil {
+		panic(err)
+	}
+
 	return func(w http.ResponseWriter, r *http.Request) {
 		search := &searchBy{}
 		//		r.ParseForm()
@@ -909,7 +1114,8 @@ func (s *server) showShipmentBySAPBySearchStatic() http.HandlerFunc {
 			return
 		}
 
-		err = tpl.ExecuteTemplate(w, "showdatebysap2.html", get)
+		//	err = tpl.ExecuteTemplate(w, "showdatebysap2.html", get)
+		err = tpl.ExecuteTemplate(w, "layout", get)
 		if err != nil {
 			http.Error(w, err.Error(), 400)
 			return
@@ -922,6 +1128,12 @@ func (s *server) showShipmentBySAPBySearchDateStatic() http.HandlerFunc {
 		Date1 string `json:"date1"`
 		Date2 string `json:"date2"`
 	}
+	//tpl, err := template.New("").Delims("<<", ">>").ParseFiles("web/templates/showdatebysap2.html")
+	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "showdatebysap2.html")
+	if err != nil {
+		panic(err)
+	}
+
 	return func(w http.ResponseWriter, r *http.Request) {
 		search := &searchBy{}
 		//		r.ParseForm()
@@ -937,11 +1149,227 @@ func (s *server) showShipmentBySAPBySearchDateStatic() http.HandlerFunc {
 			return
 		}
 
-		err = tpl.ExecuteTemplate(w, "showdatebysap2.html", get)
+		//	err = tpl.ExecuteTemplate(w, "showdatebysap2.html", get)
+		err = tpl.ExecuteTemplate(w, "layout", get)
 		if err != nil {
 			http.Error(w, err.Error(), 400)
 			return
 		}
+	}
+}
+
+func (s *server) pageidReturn() http.HandlerFunc {
+	//tpl, err := template.New("").Delims("<<", ">>").ParseFiles("web/templates/insertidreturn2.html")
+	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "insertidreturn2.html")
+	if err != nil {
+		panic(err)
+	}
+	//	tpl = template.Must(template.New("").Delims("<<", ">>").ParseFiles("web/templates/insertidreturn2.html"))
+	return func(w http.ResponseWriter, r *http.Request) {
+		//	var body, _ = helper.LoadFile("./web/templates/insertidreturn2.html")
+		//	fmt.Fprintf(w, body)
+		err = tpl.ExecuteTemplate(w, "layout", nil)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
+	}
+}
+
+func (s *server) idReturn() http.HandlerFunc {
+	type req struct {
+		ScanID     string `json:"scanid"`
+		Material   int
+		IDRoll     int
+		Lot        string
+		QtyFact    int `json:"qtyfact"`
+		QtySAP     int `json:"qtysap"`
+		QtyPanacim int `json:"qtypanacim"`
+	}
+
+	//tpl = template.Must(template.ParseFiles("web/templates/insertidreturn2.html"))
+	//tpl = template.Must(template.New("").Delims("<<", ">>").ParseFiles("web/templates/insertidreturn2.html"))
+	//tpl, err := template.New("").Delims("<<", ">>").ParseFiles("web/templates/insertidreturn2.html")
+	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "insertidreturn2.html")
+	if err != nil {
+		panic(err)
+	}
+	return func(w http.ResponseWriter, r *http.Request) {
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		var rdata []req
+
+		json.Unmarshal(body, &rdata)
+		fmt.Printf("test %s", body)
+		fmt.Println("\nall of the rdata", rdata)
+
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		id, ok := session.Values["user_id"]
+		if !ok {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		user, err := s.store.User().Find(id.(int))
+		if err != nil {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		for _, v := range rdata {
+			if (strings.Contains(v.ScanID[0:1], "P") == true) && (len(v.ScanID) == 45) {
+
+				sap := v.ScanID[1:8]
+				material := v.Material
+				material, err := strconv.Atoi(sap)
+				if err != nil {
+					fmt.Println(err)
+				}
+				idsap := v.ScanID[20:30]
+				idroll := v.IDRoll
+				idroll, err = strconv.Atoi(idsap)
+				if err != nil {
+					fmt.Println(err)
+				}
+				v.Lot = v.ScanID[9:19]
+				u := &model.IDReturn{
+					Material:   material,
+					IDRoll:     idroll,
+					Lot:        v.Lot,
+					QtyFact:    v.QtyFact,
+					QtySAP:     v.QtySAP,
+					QtyPanacim: v.QtyPanacim,
+					ID:         user.ID, //record.ID,       //user.ID,
+					LastName:   user.LastName,
+				}
+
+				if err := s.store.IDReturn().InterDate(u); err != nil {
+					s.error(w, r, http.StatusUnprocessableEntity, err)
+
+					return
+				}
+
+				fmt.Fprintf(w, "Date of ID uploaded successfully")
+				return
+
+			} //else {
+			fmt.Println("не верное сканирование :\n" + v.ScanID + "\n")
+			//	fmt.Fprintf(w, "не верное сканирование :"+v.ScanID)
+
+			//	tpl.Execute(w, data)
+			return
+			//	}
+
+		}
+		//	data := map[string]interface{}{
+		//		"fuck": "OK",
+		//	}
+		err = tpl.ExecuteTemplate(w, "layout", nil)
+		//	tpl.ExecuteTemplate(w, "layout", data)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
+
+	}
+}
+
+func (s *server) pageshowIDReturnDataByDate() http.HandlerFunc {
+	//tpl, err := template.New("").Delims("<<", ">>").ParseFiles("web/templates/showdatebysapbysearchstatic.html")
+	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "showdatebysapbysearchstatic.html")
+	if err != nil {
+		panic(err)
+	}
+	return func(w http.ResponseWriter, r *http.Request) {
+		//	var body, _ = helper.LoadFile("./web/templates/showdatebysapbysearchstatic.html")
+		//	fmt.Fprintf(w, body)
+		err = tpl.ExecuteTemplate(w, "layout", nil)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
+	}
+}
+
+func (s *server) showIDReturnDataByDate() http.HandlerFunc {
+	type searchBy struct {
+		Date1 string `json:"date1"`
+		Date2 string `json:"date2"`
+	}
+
+	//tpl, err := template.New("").Delims("<<", ">>").ParseFiles("web/templates/showdateidreturn.html")
+	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "showdateidreturn.html")
+	if err != nil {
+		panic(err)
+	}
+
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		s.store.HUMOSAPStock().ImportDate()
+		s.store.MB52SAPStock().ImportDate()
+		s.store.PanacimStock().ImportDate()
+
+		search := &searchBy{}
+		//		r.ParseForm()
+
+		search.Date1 = r.FormValue("date1")
+		fmt.Println("date1 - ", search.Date1)
+		search.Date2 = r.FormValue("date2")
+		fmt.Println("date2 - ", search.Date2)
+
+		get, err := s.store.Showdateidreturn().ShowDataByDate(search.Date1, search.Date2)
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		//	err = tpl.ExecuteTemplate(w, "showdateidreturn.html", get)
+		err = tpl.ExecuteTemplate(w, "layout", get)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
+	}
+}
+
+func (s *server) testPana() http.HandlerFunc {
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		s.store.PanacimStock().ImportDate()
+		/*	_, err := s.store.PanacimStock().ImportDate()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			//	tpl.ExecuteTemplate(w, "testpana.html", nil)
+
+			//	err = tpl.ExecuteTemplate(w, "testpana.html", get)
+			//	if err != nil {
+			//		http.Error(w, err.Error(), 400)
+			//		return
+				} */
+	}
+}
+
+func (s *server) testIDSAP() http.HandlerFunc {
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		s.store.HUMOSAPStock().ImportDate()
+	}
+}
+
+func (s *server) testMB52() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		s.store.MB52SAPStock().ImportDate()
 	}
 }
 

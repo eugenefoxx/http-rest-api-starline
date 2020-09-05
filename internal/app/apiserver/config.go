@@ -8,7 +8,7 @@ type Config struct {
 	LogLevel    string `toml:"log_level"`
 	DatabaseURL string `toml:"database_url"`
 	SessionKey  string `toml:"session_key"`
-	Assets      string `toml:"assests"`
+	HTML        string `toml:"html"`
 }
 
 // NewConfig ...

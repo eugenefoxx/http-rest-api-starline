@@ -1,0 +1,1 @@
+DROP TABLE panacim_stock;

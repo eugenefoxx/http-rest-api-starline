@@ -1,0 +1,1 @@
+DROP TABLE sap_stock_import;
