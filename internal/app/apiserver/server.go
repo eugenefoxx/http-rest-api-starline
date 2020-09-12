@@ -578,7 +578,7 @@ func (s *server) pageshipmentBySAP() http.HandlerFunc {
 
 func (s *server) shipmentBySAP() http.HandlerFunc {
 	type reqA struct {
-		Material int
+		Material string //int
 		Qty      int
 		Comment  string
 		//	ID       int
@@ -693,11 +693,12 @@ func (s *server) shipmentBySAP() http.HandlerFunc {
 
 		for _, v := range hdata {
 			fmt.Println(v.Material, v.Qty, v.Comment, user.ID, user.LastName)
-			checkmaterial := strconv.Itoa(v.Material)
+			checkmaterial, _ := strconv.Atoi(v.Material)
+
 			//	checkmaterial := v.Material
-			if len(checkmaterial) == 7 {
+			if len(v.Material) == 7 {
 				u := &model.Shipmentbysap{
-					Material: v.Material,    //record.Material, //material,
+					Material: checkmaterial, //v.Material,    //record.Material, //material,
 					Qty:      v.Qty,         //record.Qty,      // qty,
 					Comment:  v.Comment,     //record.Comment,  //comment,
 					ID:       user.ID,       //record.ID,       //user.ID,
@@ -715,7 +716,8 @@ func (s *server) shipmentBySAP() http.HandlerFunc {
 				//	session.Save(r, w)
 				//	fmt.Fprintf(w, "%v", fm[0])
 			} else {
-				if v.Material != 7 {
+				//if checkmaterial != 7 {
+				if len(v.Material) != 7 {
 					fmt.Println("кол-во не равно 7", v.Material)
 
 					strN, err := json.Marshal("JSON кол-во не равно 7.")
@@ -1225,21 +1227,22 @@ func (s *server) idReturn() http.HandlerFunc {
 		}
 
 		for _, v := range rdata {
+			sap := v.ScanID[1:8]
+			material := v.Material
+			material, err := strconv.Atoi(sap)
+			if err != nil {
+				fmt.Println(err)
+			}
+			idsap := v.ScanID[20:30]
+			idroll := v.IDRoll
+			idroll, err = strconv.Atoi(idsap)
+			fmt.Println("idroll в 1-м цикле -", idroll)
+			if err != nil {
+				fmt.Println(err)
+			}
+			v.Lot = v.ScanID[9:19]
 			if (strings.Contains(v.ScanID[0:1], "P") == true) && (len(v.ScanID) == 45) {
 
-				sap := v.ScanID[1:8]
-				material := v.Material
-				material, err := strconv.Atoi(sap)
-				if err != nil {
-					fmt.Println(err)
-				}
-				idsap := v.ScanID[20:30]
-				idroll := v.IDRoll
-				idroll, err = strconv.Atoi(idsap)
-				if err != nil {
-					fmt.Println(err)
-				}
-				v.Lot = v.ScanID[9:19]
 				u := &model.IDReturn{
 					Material:   material,
 					IDRoll:     idroll,
@@ -1250,23 +1253,24 @@ func (s *server) idReturn() http.HandlerFunc {
 					ID:         user.ID, //record.ID,       //user.ID,
 					LastName:   user.LastName,
 				}
-
+				fmt.Println("idroll - ", idroll)
 				if err := s.store.IDReturn().InterDate(u); err != nil {
 					s.error(w, r, http.StatusUnprocessableEntity, err)
 
 					return
 				}
 
-				fmt.Fprintf(w, "Date of ID uploaded successfully")
+				//	fmt.Fprintf(w, "Date of ID uploaded successfully")
+				//	return
+
+			} else {
+				if (strings.Contains(v.ScanID[0:1], "P") == false) && (len(v.ScanID) != 45) {
+					fmt.Println("не верное сканирование :\n" + v.ScanID + "\n")
+					//	fmt.Fprintf(w, "не верное сканирование :"+v.ScanID)
+				}
+				//	tpl.Execute(w, data)
 				return
-
-			} //else {
-			fmt.Println("не верное сканирование :\n" + v.ScanID + "\n")
-			//	fmt.Fprintf(w, "не верное сканирование :"+v.ScanID)
-
-			//	tpl.Execute(w, data)
-			return
-			//	}
+			}
 
 		}
 		//	data := map[string]interface{}{
