@@ -1,25 +1,27 @@
-    << define "layout" >> 
+<< define "layout">>
     <!DOCTYPE html>
     <html lang="en">
+
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="/assets/scss/main.css">
         <title>Document</title>
     </head>
--
-     <body>
+    -
+
+    <body>
         <div class="row">
             <a href="/main">
                 <h2 style="color: white; margin-left: 50px;">На главную</h2>
             </a>
-        
+
         </div>
-        
+
         <div class="row">
-                        
+
             <div class="column">
-            <<.user>>
+                <!--<<.user>>-->
                 <form method="post" action="/showShipmentbysapbysearchDateStatic">
                     <!--     <div class="register-form">-->
                     <!--form-group-->
@@ -39,7 +41,7 @@
             </div>
 
             <div class="column">
-            
+
                 <form method="post" action="/showIDReturn">
                     <!--     <div class="register-form">-->
                     <!--form-group-->
@@ -59,7 +61,7 @@
             </div>
 
             <div class="column">
-            
+
                 <form id="text" method="post" action="/showdateshipmentbysapbysearchstatic">
                     <!--   <div class="register-form">-->
                     <!--form-group-->
@@ -79,7 +81,7 @@
                     <label for="material">Материал</label>
                     <input type="number" id="material" name="material">
                     <br>
-            
+
                     <br>
                     <button class="button" type="submit">Отправить</button>
                     <!--   </div>-->
@@ -90,5 +92,6 @@
 
         <script src="/assets/js/script.js"></script>
     </body>
+
     </html>
-    << end >>
+    << end>>
