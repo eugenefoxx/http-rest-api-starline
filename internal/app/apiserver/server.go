@@ -173,6 +173,8 @@ func (s *server) configureRouter() {
 
 	s.router.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("./web"))))
 
+	fmt.Println("Webserver StarlineProduction starting...")
+
 	//	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("./web/images"))))
 
 	//	http.Handle("/resources/", http.StripPrefix("/resources", http.FileServer(http.Dir("./web/"))))

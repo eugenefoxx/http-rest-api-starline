@@ -36,19 +36,19 @@ type HUMOSAPStockRepository struct {
 // ImportDate ...
 func (r *HUMOSAPStockRepository) ImportDate() {
 	humounzip()
-	//unzipCmd := exec.Command("bash", "-c", "find /home/eugenearch/Code/github.com/eugenefoxx/http-rest-api-starline/import_date/out.csv* -exec gunzip -c {} > /home/eugenearch/Code/github.com/eugenefoxx/http-rest-api-starline/import_date/out.csv")
+	//unzipCmd := exec.Command("bash", "-c", "find /home/webserver/http-rest-api-starline/import_date/out.csv* -exec gunzip -c {} > /home/webserver/http-rest-api-starline/import_date/out.csv")
 	//_, errunzipCmd := unzipCmd.Output()
 	//if errunzipCmd != nil {
 	//	panic(errunzipCmd)
 	//}
 
 	// humodeletezero()
-	humodeletezero1Cmd := exec.Command("bash", "-c", "sed 's/00000000000//g' /home/eugenearch/Code/github.com/eugenefoxx/http-rest-api-starline/import_date/out.csv > /home/eugenearch/Code/github.com/eugenefoxx/http-rest-api-starline/import_date/output1.csv")
+	humodeletezero1Cmd := exec.Command("bash", "-c", "sed 's/00000000000//g' /home/webserver/http-rest-api-starline/import_date/out.csv > /home/webserver/http-rest-api-starline/import_date/output1.csv")
 	_, errhumodeletezero1Cmd := humodeletezero1Cmd.Output()
 	if errhumodeletezero1Cmd != nil {
 		panic(errhumodeletezero1Cmd)
 	}
-	humodeletezero2Cmd := exec.Command("bash", "-c", "sed 's/0000000000//g' /home/eugenearch/Code/github.com/eugenefoxx/http-rest-api-starline/import_date/output1.csv > /home/eugenearch/Code/github.com/eugenefoxx/http-rest-api-starline/import_date/output2.csv")
+	humodeletezero2Cmd := exec.Command("bash", "-c", "sed 's/0000000000//g' /home/webserver/http-rest-api-starline/import_date/output1.csv > /home/webserver/http-rest-api-starline/import_date/output2.csv")
 	_, errhumodeletezero2Cmd := humodeletezero2Cmd.Output()
 	if errhumodeletezero1Cmd != nil {
 		panic(errhumodeletezero2Cmd)
@@ -57,7 +57,7 @@ func (r *HUMOSAPStockRepository) ImportDate() {
 	replacement()
 
 	// удаляем пустые строки
-	lsCmd := exec.Command("bash", "-c", "sed '/^$/d' /home/eugenearch/Code/github.com/eugenefoxx/http-rest-api-starline/import_date/good_out_id_sap.csv > /home/eugenearch/Code/github.com/eugenefoxx/http-rest-api-starline/import_date/2good_out_id_sap.csv")
+	lsCmd := exec.Command("bash", "-c", "sed '/^$/d' /home/webserver/http-rest-api-starline/import_date/good_out_id_sap.csv > /home/webserver/http-rest-api-starline/import_date/2good_out_id_sap.csv")
 	_, errCmd := lsCmd.Output()
 	if errCmd != nil {
 		panic(errCmd)
@@ -70,7 +70,7 @@ func (r *HUMOSAPStockRepository) ImportDate() {
 	}
 	println("truncate table id_sap_import")
 	cmd := "psql"
-	file := "/home/eugenearch/Code/github.com/eugenefoxx/http-rest-api-starline/import_date/2good_out_id_sap.csv"
+	file := "/home/webserver/http-rest-api-starline/import_date/2good_out_id_sap.csv"
 	args := []string{"-U", "postgres", "-d", "starline", "-c", fmt.Sprintf(`\copy id_sap_import from '%s' delimiter ';';`, file)}
 	// вариант с чтением шапки и подачи через командную строку
 	//args := []string{"-U", "postgres", "-d", "starline", "-c", fmt.Sprintf(`\copy id_sap_import from '%s' delimiter ',' csv header;`, os.Args[1])}
@@ -84,7 +84,7 @@ func (r *HUMOSAPStockRepository) ImportDate() {
 
 func humounzip() {
 	// разархивация файла humo
-	cmdbash := exec.Command("/bin/sh", "-c", "/home/eugenearch/Code/github.com/eugenefoxx/http-rest-api-starline/import_date/unzip.sh")
+	cmdbash := exec.Command("/bin/sh", "-c", "/home/webserver/http-rest-api-starline/import_date/unzip.sh")
 	//	cmd := exec.Command("Z:/Program Files/rentgen.exe")
 	//	log.Printf("Running command and waiting for it to finish...")
 	_, err := cmdbash.Output()
@@ -94,7 +94,7 @@ func humounzip() {
 }
 
 func humodeletezero() {
-	cmdbash := exec.Command("/bin/sh", "-c", "/home/eugenearch/Code/github.com/eugenefoxx/http-rest-api-starline/import_date/humodeletezero.sh")
+	cmdbash := exec.Command("/bin/sh", "-c", "/home/webserver/http-rest-api-starline/import_date/humodeletezero.sh")
 	//	cmd := exec.Command("Z:/Program Files/rentgen.exe")
 	//	log.Printf("Running command and waiting for it to finish...")
 	_, err := cmdbash.Output()
@@ -104,7 +104,7 @@ func humodeletezero() {
 }
 
 func replacement() {
-	badCSVfile, err := os.Open("/home/eugenearch/Code/github.com/eugenefoxx/http-rest-api-starline/import_date/output2.csv")
+	badCSVfile, err := os.Open("/home/webserver/http-rest-api-starline/import_date/output2.csv")
 
 	if err != nil {
 		fmt.Println(err)
@@ -126,7 +126,7 @@ func replacement() {
 	//	}
 	//	fmt.Println("number of lines:", lineCount-3)
 
-	goodCSVfile, err := os.Create("/home/eugenearch/Code/github.com/eugenefoxx/http-rest-api-starline/import_date/good_out_id_sap.csv")
+	goodCSVfile, err := os.Create("/home/webserver/http-rest-api-starline/import_date/good_out_id_sap.csv")
 
 	if err != nil {
 		fmt.Println(err)
@@ -170,7 +170,7 @@ func replacement() {
 }
 
 func count() string {
-	file, _ := os.Open("/home/eugenearch/Code/github.com/eugenefoxx/http-rest-api-starline/import_date/output2.csv")
+	file, _ := os.Open("/home/webserver/http-rest-api-starline/import_date/output2.csv")
 	fileScanner := bufio.NewScanner(file)
 	defer file.Close()
 	lineCount := 0
@@ -183,7 +183,7 @@ func count() string {
 }
 
 func clearzero() {
-	csvFile, err := os.Open("/home/eugenearch/Code/github.com/eugenefoxx/http-rest-api-starline/import_date/good_out_id_sap.csv")
+	csvFile, err := os.Open("/home/webserver/http-rest-api-starline/import_date/good_out_id_sap.csv")
 	reader := csv.NewReader(bufio.NewReader(csvFile))
 	reader.LazyQuotes = true
 	reader.Comma = ';'
@@ -222,7 +222,7 @@ func clearzero() {
 		fmt.Println(err)
 	}
 
-	csvdatafile, err := os.Create("/home/eugenearch/Code/github.com/eugenefoxx/http-rest-api-starline/import_date/clear_good_out_id_sap.csv")
+	csvdatafile, err := os.Create("/home/webserver/http-rest-api-starline/import_date/clear_good_out_id_sap.csv")
 
 	if err != nil {
 		fmt.Println(err)

@@ -30,4 +30,4 @@ CREATE TABLE panacim_stock (
     last_maintained	varchar NULL, 
     feeder_barcode	varchar  NULL,
     column_31 varchar  NULL
-    )
+    );

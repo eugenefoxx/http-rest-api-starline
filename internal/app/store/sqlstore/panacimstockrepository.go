@@ -28,7 +28,7 @@ func (r *PanacimStockRepository) ImportDate() {
 	}
 	println("truncate table panacim_stock")
 	cmd := "psql"
-	file := "/home/eugenearch/Code/github.com/eugenefoxx/http-rest-api-starline/import_date/outputPanaCIM.csv"
+	file := "/home/webserver/http-rest-api-starline/import_date/outputPanaCIM.csv"
 	args := []string{"-U", "postgres", "-d", "starline", "-c", fmt.Sprintf(`\copy panacim_stock from '%s' delimiter ',' csv header;`, file)}
 	v, err := exec.Command(cmd, args...).CombinedOutput()
 	if err != nil {
@@ -40,7 +40,7 @@ func (r *PanacimStockRepository) ImportDate() {
 }
 
 func panaread() [][]string {
-	f1, err := os.Open("/home/eugenearch/Code/github.com/eugenefoxx/http-rest-api-starline/import_date/MaterialManagementReport.csv") // Копия.csv  google_report_source.tsv
+	f1, err := os.Open("/home/webserver/http-rest-api-starline/import_date/MaterialManagementReport.csv") // Копия.csv  google_report_source.tsv
 	if err != nil {
 		panic(err)
 	}
@@ -55,7 +55,7 @@ func panaread() [][]string {
 }
 
 func writeChanges(rows [][]string) {
-	f, err := os.Create("/home/eugenearch/Code/github.com/eugenefoxx/http-rest-api-starline/import_date/outputPanaCIM.csv")
+	f, err := os.Create("/home/webserver/http-rest-api-starline/import_date/outputPanaCIM.csv")
 	if err != nil {
 		log.Fatal(err)
 	}

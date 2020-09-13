@@ -10,4 +10,4 @@ CREATE TABLE id_sap_import (
     t1 varchar NULL,
     t2 varchar NULL,
     spp_element varchar NULL  
-)
+);

@@ -8,4 +8,4 @@ CREATE TABLE sap_stock_import (
     qty_block real NULL,
     lot varchar NULL,
     spp_element varchar NULL
-)
+);

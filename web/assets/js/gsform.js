@@ -172,7 +172,7 @@ function drawSuccessMessage() {
 
 function sendData() {
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "http://localhost:3001/shipmentbysap", true);
+    xhr.open("POST", "http://10.1.20.110:3001/shipmentbysap", true);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(getData());
 
