@@ -141,11 +141,15 @@ function getData() {
         }
         var validMaterial = /\b31\d{5}\b/;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 347fef40815979cd8e0ea6a9d9d643725ed96cd0
         currentDiv = mainDiv.childNodes[i];
 
         if (
             !validMaterial.test(resultObj["material"]) ||
+<<<<<<< HEAD
             parseInt(resultObj["qty"]) < 1
         ) {
             invalidResult = true;
@@ -154,6 +158,20 @@ function getData() {
         } else {
             resultObj["qty"] = parseInt(resultObj["qty"]);
             finalData.push(resultObj);
+=======
+            parseInt(resultObj["qty"]) < 0
+        ) {
+            invalidResult = true;
+            //addValidationClass(" is-invalid", currentDiv);
+            //currentDiv.className += " is-invalid";
+            //console.log(currentDiv.childNodes);
+            drawErrorMessage(mainDiv.childNodes[i]);
+
+        } else {
+            resultObj["qty"] = parseInt(resultObj["qty"]);
+            finalData.push(resultObj);
+            //addValidationClass(" is-valid", currentDiv);
+>>>>>>> 347fef40815979cd8e0ea6a9d9d643725ed96cd0
             drawSuccessMessage(mainDiv.childNodes[i]);
         }
     }
@@ -161,11 +179,24 @@ function getData() {
     return JSON.stringify(finalData);
 }
 
+<<<<<<< HEAD
+=======
+/*function addValidationClass(addedClass, div) {
+    for (i = 0; i < div.childNodes - 1; i++) {
+        console.log(i)
+        //div.childNodes[i].className += addedClass
+    }
+}*/
+
+>>>>>>> 347fef40815979cd8e0ea6a9d9d643725ed96cd0
 function drawErrorMessage(div) {
     var errorMessage = document.createElement("div");
     errorMessage.id = "error-message";
     errorMessage.innerHTML = "Ошибка при передаче данных";
+<<<<<<< HEAD
     //mainDiv.appendChild(errorMessage);
+=======
+>>>>>>> 347fef40815979cd8e0ea6a9d9d643725ed96cd0
     div.appendChild(errorMessage);
 }
 
@@ -173,23 +204,29 @@ function drawSuccessMessage(div) {
     var successMessage = document.createElement("div");
     successMessage.id = "success-message";
     successMessage.innerHTML = "Данные переданы успешно";
+<<<<<<< HEAD
     //mainDiv.appendChild(successMessage);
+=======
+>>>>>>> 347fef40815979cd8e0ea6a9d9d643725ed96cd0
     div.appendChild(successMessage);
 }
 
 function sendData() {
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "http://localhost:3001/shipmentbysap", true);
+    xhr.open("POST", "http://10.1.20.110:3001/shipmentbysap", true);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(getData());
 
     xhr.onreadystatechange = function () {
         this.readyState == 4 && this.status == 200
+<<<<<<< HEAD
         //    if (this.readyState == 4 && this.status == 200) {
         //        drawSuccessMessage();
         //    } else {
         //        drawErrorMessage();
         //   }
+=======
+>>>>>>> 347fef40815979cd8e0ea6a9d9d643725ed96cd0
     };
 
     //resetForms();

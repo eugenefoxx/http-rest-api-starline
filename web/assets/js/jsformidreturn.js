@@ -104,7 +104,7 @@ function resetForms() {
         mainDiv.removeChild(mainDiv.firstChild);
     }
     finalData = [];
-  //  console.clear();
+    //  console.clear();
 }
 
 function canShowAddButton() {
@@ -144,7 +144,7 @@ function getData() {
 
 function sendData() {
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "http://localhost:3001/insertIDReturn", true);
+    xhr.open("POST", "http://10.1.20.110:3001/insertIDReturn", true);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(getData());
     resetForms();

@@ -1,6 +1,6 @@
 CREATE TABLE id_return (
     material integer NOT NULL,
-    id_roll integer NOT NULL primary key,
+    id_roll integer NOT NULL,
     lot varchar NOT NULL,
     qty_fact integer NOT NULL,
     qty_sap integer NOT NULL,

@@ -40,7 +40,7 @@ func (r *MB52SAPStockRepository) ImportDate() {
 	}
 	println("truncate table sap_stock_import")
 	cmd := "psql"
-	file := "/home/eugenearch/Code/github.com/eugenefoxx/http-rest-api-starline/import_date/MB52_out.csv"
+	file := "/home/webserver/http-rest-api-starline/import_date/MB52_out.csv"
 	args := []string{"-U", "postgres", "-d", "starline", "-c", fmt.Sprintf(`\copy sap_stock_import from '%s' delimiter '|' csv header;`, file)}
 	// вариант с чтением шапки и подачи через командную строку
 	//args := []string{"-U", "postgres", "-d", "starline", "-c", fmt.Sprintf(`\copy id_sap_import from '%s' delimiter ',' csv header;`, os.Args[1])}
@@ -52,7 +52,7 @@ func (r *MB52SAPStockRepository) ImportDate() {
 }
 
 func creatfloatvalue() {
-	csvFile, err := os.Open("/home/eugenearch/Code/github.com/eugenefoxx/http-rest-api-starline/import_date/export.csv")
+	csvFile, err := os.Open("/home/webserver/http-rest-api-starline/import_date/export.csv")
 	reader := csv.NewReader(bufio.NewReader(csvFile))
 	reader.LazyQuotes = true
 	reader.Comma = '|'
@@ -89,7 +89,7 @@ func creatfloatvalue() {
 		fmt.Println(err)
 	}
 
-	csvdatafile, err := os.Create("/home/eugenearch/Code/github.com/eugenefoxx/http-rest-api-starline/import_date/MB52_out.csv")
+	csvdatafile, err := os.Create("/home/webserver/http-rest-api-starline/import_date/MB52_out.csv")
 
 	if err != nil {
 		fmt.Println(err)

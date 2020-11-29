@@ -5,7 +5,7 @@ function exportTableToCSV(filename) {
         var row = [], cols = rows[i].querySelectorAll("td, th");
         for (var j = 0; j < cols.length; j++)
             row.push(cols[j].innerText);
-        csv.push(row.join(","));
+        csv.push(row.join('\t'));
     }
     // Download CSV file
     downloadCSV(csv.join("\n"), filename);
