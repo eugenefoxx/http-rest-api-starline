@@ -1,56 +1,124 @@
-<< define "layout" >> 
+<< define "layout">>
 
-<!DOCTYPE html>
-<html>
+    <!DOCTYPE html>
+    <html>
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="/assets/scss/main.css">
-    
-</head>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="/assets/scss/main.css">
 
-<body>
-    <div class="navbar">
-        <a href="#home">Home</a>
-        <a href="#news">News</a>
-        <div class="dropdown">
-            <button class="dropbtn">Логистика
-                <i class="fa fa-caret-down"></i>
-            </button>
-            <div class="dropdown-content">
-                <a href="/shipmentbysap">Отчет по отгрузке SAP</a>
-                <a href="/showdateshipmentbysapbysearchstatic">Отчет по отгрузке SAP по поиску Static</a>
-                <a href="/insertIDReturn">Пересчет ЕО с возвратом</a>
+    </head>
+
+    <body>
+
+        <div class="navbar">
+
+            <a href="#home">Home</a>
+            <a href="#news">News</a>
+            <div class="dropdown">
+
+                << if eq .admin true>>
+                    <button class="dropbtn">Логистика
+                        <i class="fa fa-caret-down"></i>
+                    </button>
+
+                    <div class="dropdown-content">
+                        <a href="/shipmentbysap">Отчет по отгрузке SAP</a>
+
+                        <a href="/showdateshipmentbysapbysearchstatic">Отчет по отгрузке SAP по поиску
+                            Static</a>
+
+                        <a href="/insertIDReturn">Пересчет ЕО с возвратом</a>
+                    </div>
+                    << else if eq .stockkeeper true>>
+                        <button class="dropbtn">Логистика
+                            <i class="fa fa-caret-down"></i>
+                        </button>
+
+                        <div class="dropdown-content">
+                            <a href="/shipmentbysap">Отчет по отгрузке SAP</a>
+
+                            <a href="/showdateshipmentbysapbysearchstatic">Отчет по отгрузке SAP по поиску
+                                Static</a>
+
+                            <a href="/insertIDReturn">Пересчет ЕО с возвратом</a>
+                        </div>
+                        << end>>
             </div>
-        </div>
-        <div class="dropdown" style="margin-left:1200px;">
-            <button class="dropbtn" ><<.user>> <<.id>>
-                <i class="fa fa-caret-down"></i>
-            </button>
-            <div class="dropdown-content2">
-                <form method="post" action="/logout" >
-                    <button class="button" type="submit">Logout</button>
-                </form>
+
+            <div class="dropdown">
+
+                << if eq .admin true>>
+                    <button class="dropbtn">Отдел качества
+                        <i class="fa fa-caret-down"></i>
+                    </button>
+
+                    <div class="dropdown-content">
+                        <a href="/insertvendor">Добавить поставщика в базу</a>
+                        <a href="/showvendor">Просмотр и редактирование поставщиков</a>
+                        <a href="/statusinspection">Компоненты на входном контроле</a>
+
+                    </div>
+                    << else if eq .SuperIngenerQuality true>>
+                        <button class="dropbtn">Отдел качества
+                            <i class="fa fa-caret-down"></i>
+                        </button>
+
+                        <div class="dropdown-content">
+                            <a href="/insertvendor">Добавить поставщика в базу</a>
+                            <a href="/showvendor">Просмотр и редактирование поставщиков</a>
+                            <a href="/statusinspection">Компоненты на входном контроле</a>
+
+                        </div>
+                        << else if eq .stockkeeperWH true>>
+                            <button class="dropbtn">Отдел качества
+                                <i class="fa fa-caret-down"></i>
+                            </button>
+                            <div class="dropdown-content">
+                                <a href="/ininspection">Отгрузка катушек на ВК</a>
+                                <a href="/statusinspection">Компоненты на входном контроле</a>
+                                <a href="/statusinspectionforwh">Компоненты на входном контроле для приема на склад</a>
+                            </div>
+                            << else if eq .inspector true>>
+                                <button class="dropbtn">Отдел качества
+                                    <i class="fa fa-caret-down"></i>
+                                </button>
+                                <div class="dropdown-content">
+                                    <a href="/statusinspection">Компоненты на входном контроле</a>
+                                </div>
+                                << end>>
             </div>
-        </div>
-    <!--    <div class="user">
+
+            <div class="dropdown" style="margin-left:1200px;">
+                <button class="dropbtn">
+                    <<.user>> <<.id>>
+                            <i class="fa fa-caret-down"></i>
+                </button>
+                <div class="dropdown-content2">
+                    <form method="post" action="/logout">
+                        <button class="button" type="submit">Logout</button>
+                    </form>
+                </div>
+            </div>
+
+            <!--    <div class="user">
         <<.user>> <<.id>>
         
         <form class="dropdown" method="post" action="/logout">
             <button type="submit">Logout</button>
         </form>
         </div>-->
-        <<block "header" .>><<end>>
-    </div>
-    
+            <<block "header" .>><<end>>
+        </div>
 
-    <script>
-        $('.alert').alert()
-    </script>
-</body>
 
-</html>
+        <script>
+            $('.alert').alert()
+        </script>
+    </body>
 
-<< end >>
+    </html>
+
+    << end>>

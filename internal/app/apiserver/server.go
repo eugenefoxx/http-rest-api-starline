@@ -10,6 +10,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -27,6 +28,7 @@ import (
 	"github.com/eugenefoxx/http-rest-api-starline/internal/app/model"
 	"github.com/eugenefoxx/http-rest-api-starline/internal/app/store"
 	"github.com/jmoiron/sqlx"
+	"github.com/skratchdot/open-golang/open"
 
 	//	"github.com/gobuffalo/packr/v2/jam/store"
 	"github.com/google/uuid"
@@ -48,6 +50,7 @@ var (
 	errIncorrectEmailOrPassword = errors.New("incorrect email or password")
 	errNotAuthenticated         = errors.New("not authenticated")
 	tpl                         *template.Template
+	LOGFILE                     = "/tmp/apiServer.log"
 
 //	web_DIR                  = "/web/"
 )
@@ -155,6 +158,26 @@ func (s *server) configureRouter() {
 	s.router.HandleFunc("/showIDReturn", s.authMiddleware(s.pageshowIDReturnDataByDate())).Methods("GET")
 	s.router.HandleFunc("/showIDReturn", s.authMiddleware(s.showIDReturnDataByDate())).Methods("POST")
 
+	s.router.HandleFunc("/insertvendor", s.authMiddleware(s.pageinsertVendor())).Methods("GET")
+	s.router.HandleFunc("/insertvendor", s.authMiddleware(s.insertVendor())).Methods("POST")
+
+	s.router.HandleFunc("/showvendor", s.authMiddleware(s.pageVendor())).Methods("GET")
+	s.router.HandleFunc("/updatevendor/{ID:[0-9]+}", s.authMiddleware(s.pageupdateVendor())).Methods("GET")
+	s.router.HandleFunc("/updatevendor/{ID:[0-9]+}", s.authMiddleware(s.updateVendor())).Methods("POST")
+	s.router.HandleFunc("/deletevendor/{ID:[0-9]+}", s.authMiddleware(s.deleteVendor())) //.Methods("DELETE")
+
+	s.router.HandleFunc("/ininspection", s.authMiddleware(s.pageinInspection())).Methods("GET")
+	s.router.HandleFunc("/ininspection", s.authMiddleware(s.inInspection())).Methods("POST")
+
+	s.router.HandleFunc("/statusinspection", s.authMiddleware(s.pageInspection())).Methods("GET")
+	s.router.HandleFunc("/updateinspection/{ID:[0-9]+}", s.authMiddleware(s.pageupdateInspection())).Methods("GET")
+	s.router.HandleFunc("/updateinspection/{ID:[0-9]+}", s.authMiddleware(s.updateInspection())).Methods("POST")
+	s.router.HandleFunc("/deleteinspection/{ID:[0-9]+}", s.authMiddleware(s.deleteInspection()))
+
+	s.router.HandleFunc("/statusinspectionforwh", s.authMiddleware(s.pageListAcceptWHInspection())).Methods("GET")
+	s.router.HandleFunc("/acceptinspectiontowh/{ID:[0-9]+}", s.authMiddleware(s.pageacceptWarehouseInspection())).Methods("GET")
+	s.router.HandleFunc("/acceptinspectiontowh/{ID:[0-9]+}", s.authMiddleware(s.acceptWarehouseInspection())).Methods("POST")
+
 	s.router.HandleFunc("/testPana", s.authMiddleware(s.testPana())).Methods("GET")
 	s.router.HandleFunc("/testIDSAP", s.authMiddleware(s.testIDSAP())).Methods("GET")
 	s.router.HandleFunc("/testMB52", s.authMiddleware(s.testMB52())).Methods("GET")
@@ -180,8 +203,8 @@ func (s *server) configureRouter() {
 	//	http.Handle("/", http.FileServer(http.Dir("./web/images")))
 	//s.router.Handle("/resources/", http.StripPrefix("/resources", http.FileServer(http.Dir("./web/"))))
 	//	http.Handle("/", s.router)
-
-	//	open.StartWith("http://localhost:3000/", "google-chrome-stable") // chromium
+	fmt.Println("Webserver StarLine launch.")
+	open.StartWith("http://localhost:3001/", "google-chrome-stable") // chromium
 
 }
 
@@ -196,6 +219,11 @@ func (s *server) main() http.HandlerFunc {
 	//tpl = template.Must(template.New("").Delims("<<", ">>").ParseFiles("web/templates/layout.html"))
 	//tpl = template.Must(template.ParseFiles("web/templates/index.html"))
 	return func(w http.ResponseWriter, r *http.Request) {
+		admin := false
+		stockkeeper := false
+		superIngenerQuality := false
+		stockkeeperWH := false
+		inspector := false
 		//	u := s.authenticateUser()
 		//	fmt.Println(u)
 		//	var body, _ = helper.LoadFile("./web/templates/index.html")
@@ -217,10 +245,27 @@ func (s *server) main() http.HandlerFunc {
 			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
 			return
 		}
-		fmt.Println("/main - user:", u.Email, u.ID)
+		fmt.Println("/main - user:", u.Email, u.ID, u.Role)
+		if u.Role == "Administrator" {
+			admin = true
+		} else if u.Role == "кладовщик" {
+			stockkeeper = true
+		} else if u.Role == "SuperIngenerQuality" {
+			superIngenerQuality = true
+		} else if u.Role == "кладовщик склада" {
+			stockkeeperWH = true
+		} else if u.Role == "контроллер качества" {
+			inspector = true
+		}
+
 		data := map[string]interface{}{
-			"user": u.LastName,
-			"id":   u.FirstName,
+			"user":                u.LastName,
+			"id":                  u.FirstName,
+			"admin":               admin,
+			"stockkeeper":         stockkeeper,
+			"SuperIngenerQuality": superIngenerQuality,
+			"stockkeeperWH":       stockkeeperWH,
+			"inspector":           inspector,
 		}
 
 		//	tpl.ExecuteTemplate(w, "index.html", data)
@@ -250,11 +295,31 @@ func (s *server) setRequestID(next http.Handler) http.Handler {
 }
 
 func (s *server) logRequest(next http.Handler) http.Handler {
+
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// open a file
+		f, err := os.OpenFile(LOGFILE, os.O_APPEND|os.O_CREATE|os.O_RDWR, 0666)
+		if err != nil {
+			fmt.Printf("error opening file: %v", err)
+		}
+
+		// don't forget to close it
+		defer f.Close()
+
+		// Log as JSON instead of the default ASCII formatter.
+		s.logger.SetFormatter(&logrus.TextFormatter{}) //(&s.logger.JSONFormatter{})
+
+		// Output to stderr instead of stdout, could also be a file.
+		s.logger.SetOutput(f)
+
+		// Only log the warning severity or above.
+		s.logger.SetLevel(s.logger.Level)
+
 		logger := s.logger.WithFields(logrus.Fields{
 			"remote_addr": r.RemoteAddr,
 			"request_id":  r.Context().Value(ctxKeyRequestID),
 		})
+
 		logger.Infof("started %s %s", r.Method, r.RequestURI)
 
 		start := time.Now()
@@ -268,6 +333,16 @@ func (s *server) logRequest(next http.Handler) http.Handler {
 			http.StatusText(rw.code),
 			time.Now().Sub(start),
 		)
+		/*
+			var log = logrus.New()
+			log.Out = os.Stdout
+			file, err := os.OpenFile("/tmp/logrus.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+			if err == nil {
+				log.Out = file
+			} else {
+				log.Info("Failed to log to file, using default stderr")
+			}
+		*/
 	})
 }
 
@@ -488,6 +563,15 @@ func (s *server) handleSessionsCreate() http.HandlerFunc {
 	}
 	//return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
+		f, err := os.OpenFile(LOGFILE, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+
+		if err != nil {
+			fmt.Println(err)
+			//	return
+		}
+		defer f.Close()
+		iLog := log.New(f, "func handleSessionsCreate ", log.LstdFlags)
+		iLog.SetFlags(log.LstdFlags | log.Lshortfile)
 		//	reqBody, err := ioutil.ReadAll(r.Body)
 		//	if err != nil {
 		//		log.Fatal(err)
@@ -502,16 +586,34 @@ func (s *server) handleSessionsCreate() http.HandlerFunc {
 
 		//	fmt.Printf("%s", req)
 		//		if r.Method == http.MethodPost {
+		admin := false
+		stockkeeper := false
+		superIngenerQuality := false
+		stockkeeperWH := false
+		inspector := false
+
 		r.ParseForm()
 		email := r.FormValue("email")
 		password := r.FormValue("password")
 		//	target := "/sessions"
 
-		u, err := s.store.User().FindByEmail(email)
+		u, err := s.store.User().FindByEmail(email, email)
 		if err != nil || !u.ComparePassword(password) {
 			s.error(w, r, http.StatusUnauthorized, errIncorrectEmailOrPassword)
 
 			return
+		}
+
+		if u.Role == "Administrator" {
+			admin = true
+		} else if u.Role == "кладовщик" {
+			stockkeeper = true
+		} else if u.Role == "SuperIngenerQuality" {
+			superIngenerQuality = true
+		} else if u.Role == "кладовщик склада" {
+			stockkeeperWH = true
+		} else if u.Role == "контроллер качества" {
+			inspector = true
 		}
 
 		session, err := s.sessionStore.Get(r, sessionName)
@@ -527,7 +629,8 @@ func (s *server) handleSessionsCreate() http.HandlerFunc {
 		}
 		s.respond(w, r, http.StatusOK, nil)
 
-		fmt.Println("handleSessionsCreate()", u.Email)
+		fmt.Println("handleSessionsCreate()", u.Email, u.Role)
+		iLog.Println("залогинился пользователь", u.Email)
 		//	s.redirectMain()
 		//	s.pageredirectMain()
 		//	_, ok := session.Values["user_id"]
@@ -537,8 +640,13 @@ func (s *server) handleSessionsCreate() http.HandlerFunc {
 		//	return
 		//	}
 		data := map[string]interface{}{
-			"user": u.LastName,
-			"id":   u.FirstName,
+			"user":                u.LastName,
+			"id":                  u.FirstName,
+			"admin":               admin,
+			"stockkeeper":         stockkeeper,
+			"SuperIngenerQuality": superIngenerQuality,
+			"stockkeeperWH":       stockkeeperWH,
+			"inspector":           inspector,
 		}
 		//	tpl.ExecuteTemplate(w, "index.html", data) //  "index.html"
 		err = tpl.ExecuteTemplate(w, "layout", data)
@@ -615,10 +723,10 @@ func (s *server) shipmentBySAP() http.HandlerFunc {
 
 		json.Unmarshal(body, &hdata)
 		//	json.Marshal(body)
-		fmt.Printf("tect %s", body)
+		fmt.Printf("body json: %s", body)
 		//	fmt.Printf("1 тест %s", &hdata.Material)
 		//	fmt.Println("tect2 %s", hdata, "\n")
-		fmt.Println("\nall of the data", hdata)
+		fmt.Println("\njson  struct hdata", hdata)
 		//req := &request{}
 		//	if err := json.NewDecoder(r.Body).Decode(&hdata); err != nil {
 		//		s.error(w, r, http.StatusBadRequest, err)
@@ -1235,10 +1343,10 @@ func (s *server) idReturn() http.HandlerFunc {
 			}
 			idsap := v.ScanID[20:30]
 			idroll := v.IDRoll
-			idroll, err = strconv.Atoi(idsap)
+			idroll, err1 := strconv.Atoi(idsap)
 			fmt.Println("idroll в 1-м цикле -", idroll)
 			if err != nil {
-				fmt.Println(err)
+				fmt.Println(err1)
 			}
 			v.Lot = v.ScanID[9:19]
 			if (strings.Contains(v.ScanID[0:1], "P") == true) && (len(v.ScanID) == 45) {
@@ -1374,6 +1482,800 @@ func (s *server) testIDSAP() http.HandlerFunc {
 func (s *server) testMB52() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		s.store.MB52SAPStock().ImportDate()
+	}
+}
+
+func (s *server) pageinsertVendor() http.HandlerFunc {
+	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "insertvendor.html")
+	if err != nil {
+		panic(err)
+	}
+	return func(w http.ResponseWriter, r *http.Request) {
+		//	var body, _ = helper.LoadFile("./web/templates/insertsapbyship6.html")
+		//	fmt.Fprintf(w, body)
+		//data := map[string]interface{}{
+		//	"user": "Я тут",
+		//}
+		err = tpl.ExecuteTemplate(w, "layout", nil)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+			//	}
+			//		if err = tpl.ExecuteTemplate(w, "layout", nil); err != nil {
+			//			s.error(w, r, http.StatusUnprocessableEntity, err)
+			//			return
+			//		}
+		}
+	}
+}
+
+func (s *server) insertVendor() http.HandlerFunc {
+	type requestFrom struct {
+		CodeDebitor string `json:"code_debitor"`
+		NameDebitor string `json:"name_debitor"`
+	}
+	/*
+		type requestDB struct {
+			CodeDebitor string `db:"code_debitor"`
+			NameDebitor string `db:"name_debitor"`
+			SPPElement  string `db:"spp_element"`
+		}
+	*/
+	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "insertvendor.html")
+	if err != nil {
+		panic(err)
+	}
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		admin := false
+		superIngenerQuality := false
+
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		var hdata []requestFrom
+		json.Unmarshal(body, &hdata)
+		fmt.Printf("body json: %s", body)
+		fmt.Println("\njson  struct hdata", hdata)
+
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		id, ok := session.Values["user_id"]
+		if !ok {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		user, err := s.store.User().Find(id.(int))
+		if err != nil {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		if user.Role == "Administrator" {
+			admin = true
+		} else if user.Role == "SuperIngenerQuality" {
+			superIngenerQuality = true
+			fmt.Println("SuperIngenerQuality - ", superIngenerQuality)
+		}
+
+		for _, v := range hdata {
+			fmt.Println(v.CodeDebitor, v.NameDebitor)
+
+			u := &model.Vendor{
+				CodeDebitor: v.CodeDebitor,
+				NameDebitor: v.NameDebitor,
+			}
+
+			if err := s.store.Vendor().InsertVendor(u); err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+		}
+
+		data := map[string]interface{}{
+			"admin":               admin,
+			"SuperIngenerQuality": superIngenerQuality,
+		}
+
+		err = tpl.ExecuteTemplate(w, "layout", data)
+		//	err = tpl.ExecuteTemplate(w, "layout", v)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
+
+	}
+
+}
+
+func (s *server) pageVendor() http.HandlerFunc {
+	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "showvendor.html")
+	if err != nil {
+		panic(err)
+	}
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		//	var body, _ = helper.LoadFile("./web/templates/insertsapbyship6.html")
+		//	fmt.Fprintf(w, body)
+		//data := map[string]interface{}{
+		//	"user": "Я тут",
+		//}
+		get, err := s.store.Vendor().ListVendor()
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		err = tpl.ExecuteTemplate(w, "layout", get)
+
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+			//	}
+			//		if err = tpl.ExecuteTemplate(w, "layout", nil); err != nil {
+			//			s.error(w, r, http.StatusUnprocessableEntity, err)
+			//			return
+			//		}
+		}
+	}
+}
+
+func (s *server) pageupdateVendor() http.HandlerFunc {
+	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "updatevendor.html")
+	if err != nil {
+		panic(err)
+	}
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		vars := mux.Vars(r)
+		id, err := strconv.Atoi(vars["ID"])
+		if err != nil {
+			log.Println(err)
+		}
+		//fmt.Println("ID - ?", id)
+		get, err := s.store.Vendor().EditVendor(id)
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+		err = tpl.ExecuteTemplate(w, "layout", get)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
+	}
+}
+
+func (s *server) updateVendor() http.HandlerFunc {
+	type request struct {
+		ID          int    `json:"ID"`
+		CodeDebitor string `json:"codedebitor"`
+		NameDebitor string `json:"namedebitor"`
+	}
+	_, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "updatevendor.html")
+	if err != nil {
+		panic(err)
+	}
+	return func(w http.ResponseWriter, r *http.Request) {
+		req := &request{}
+		vars := mux.Vars(r)
+		id, err := strconv.Atoi(vars["ID"])
+		if err != nil {
+			log.Println(err)
+		}
+
+		req.ID = id
+		req.CodeDebitor = r.FormValue("codedebitor")
+		req.NameDebitor = r.FormValue("namedebitor")
+
+		u := &model.Vendor{
+			ID:          req.ID,
+			CodeDebitor: req.CodeDebitor,
+			NameDebitor: req.NameDebitor,
+		}
+
+		if err := s.store.Vendor().UpdateVendor(u); err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		/*	err = tpl.ExecuteTemplate(w, "layout", nil)
+			if err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}*/
+		http.Redirect(w, r, "/showvendor", 303)
+	}
+}
+
+func (s *server) deleteVendor() http.HandlerFunc {
+	type request struct {
+		ID          int    `json:"ID"`
+		CodeDebitor string `json:"codedebitor"`
+		NameDebitor string `json:"namedebitor"`
+		SPPElement  string `json:"sppelement"`
+	}
+	_, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "updatevendor.html")
+	if err != nil {
+		panic(err)
+	}
+	return func(w http.ResponseWriter, r *http.Request) {
+		req := &request{}
+		vars := mux.Vars(r)
+		id, err := strconv.Atoi(vars["ID"])
+		if err != nil {
+			log.Println(err)
+		}
+
+		req.ID = id
+		//	req.CodeDebitor = r.FormValue("codedebitor")
+		//	req.NameDebitor = r.FormValue("namedebitor")
+		//	req.SPPElement = r.FormValue("sppelement")
+
+		u := &model.Vendor{
+			ID: req.ID,
+			//	CodeDebitor: req.CodeDebitor,
+			//	NameDebitor: req.NameDebitor,
+			//	SPPElement:  req.SPPElement,
+		}
+
+		if err := s.store.Vendor().DeleteVendor(u); err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		/*	err = tpl.ExecuteTemplate(w, "layout", nil)
+			if err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}*/
+		http.Redirect(w, r, "/showvendor", 303)
+	}
+}
+
+func (s *server) pageinInspection() http.HandlerFunc {
+	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "ininspection.html")
+	if err != nil {
+		panic(err)
+	}
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		err = tpl.ExecuteTemplate(w, "layout", nil)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
+	}
+}
+
+func (s *server) inInspection() http.HandlerFunc {
+	type req struct {
+		ScanID         string `json:"scanid"`
+		SAP            int
+		Lot            string
+		Roll           int
+		Qty            int
+		ProductionDate string
+		NumberVendor   string
+		Location       string
+	}
+
+	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "ininspection.html")
+	if err != nil {
+		panic(err)
+	}
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		var rdata []req
+		json.Unmarshal(body, &rdata)
+		fmt.Printf("test ininspection %s", body)
+		fmt.Println("\nall of the rdata ininspection", rdata)
+
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		id, ok := session.Values["user_id"]
+		if !ok {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		user, err := s.store.User().Find(id.(int))
+		if err != nil {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		const statusTransfer = "отгружено на ВК"
+
+		for _, v := range rdata {
+			idMaterial := v.ScanID[0:45]
+			sapStr := v.ScanID[1:8]
+			sap := v.SAP
+			sap, err := strconv.Atoi(sapStr)
+			if err != nil {
+				fmt.Println(err)
+			}
+			idrollStr := v.ScanID[20:30]
+			idrollIns := v.Roll
+			idrollIns, err = strconv.Atoi(idrollStr)
+			if err != nil {
+				fmt.Println(err)
+			}
+			v.Lot = v.ScanID[9:19]
+			qtyStr := v.ScanID[31:36]
+			qtyIns := v.Qty
+			qtyIns, err2 := strconv.Atoi(qtyStr)
+			if err != nil {
+				fmt.Println(err2)
+			}
+			v.ProductionDate = v.ScanID[37:45]
+			v.NumberVendor = v.ScanID[9:15]
+			fmt.Println("v.NumberVendor", v.NumberVendor)
+			if (strings.Contains(v.ScanID[0:1], "P") == true) && (len(v.ScanID) == 45) {
+				u := &model.Inspection{
+					IdMaterial:     idMaterial,
+					SAP:            sap,
+					Lot:            v.Lot,
+					IdRoll:         idrollIns,
+					Qty:            qtyIns,
+					ProductionDate: v.ProductionDate,
+					NumberVendor:   v.NumberVendor,
+					Location:       statusTransfer,
+					Lastname:       user.LastName,
+				}
+				if err := s.store.Inspection().InInspection(u); err != nil {
+					s.error(w, r, http.StatusUnprocessableEntity, err)
+
+					return
+				}
+			} else {
+				if (strings.Contains(v.ScanID[0:1], "P") == false) && (len(v.ScanID) != 45) {
+					fmt.Println("не верное сканирование :\n" + v.ScanID + "\n")
+					//	fmt.Fprintf(w, "не верное сканирование :"+v.ScanID)
+				}
+				//	tpl.Execute(w, data)
+				return
+			}
+		}
+
+		err = tpl.ExecuteTemplate(w, "layout", nil)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
+
+	}
+}
+
+func (s *server) pageInspection() http.HandlerFunc {
+	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "showinspection.html")
+	if err != nil {
+		panic(err)
+	}
+	return func(w http.ResponseWriter, r *http.Request) {
+		stockkeeperWH := true
+		quality := false
+		superIngenerQuality := false
+
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		id, ok := session.Values["user_id"]
+		if !ok {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		user, err := s.store.User().Find(id.(int))
+		if err != nil {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		if user.Role == "SuperIngenerQuality" {
+			superIngenerQuality = true
+			fmt.Println("pageInspection SuperIngenerQuality - ", superIngenerQuality)
+		} else if user.Groups == "качество" {
+			quality = true
+			fmt.Println("pageInspection quality - ", quality)
+		} else if user.Groups == "склад" {
+			stockkeeperWH = false
+		}
+
+		get, err := s.store.Inspection().ListInspection()
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		countTotal, err := s.store.Inspection().CountTotalInspection()
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		holdInspection, err := s.store.Inspection().HoldInspection()
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		notVerifyComponents, err := s.store.Inspection().NotVerifyComponents()
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		getStatic, err := s.store.Inspection().CountDebitor()
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		holdCountDebitor, err := s.store.Inspection().HoldCountDebitor()
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		notVerifyDebitor, err := s.store.Inspection().NotVerifyDebitor()
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		groups := map[string]interface{}{
+			"quality":             quality,
+			"warehouse":           stockkeeperWH,
+			"SuperIngenerQuality": superIngenerQuality,
+			"GET":                 get,
+			"CountTotal":          countTotal,
+			"HoldInspection":      holdInspection,
+			"NotVerifyComponents": notVerifyComponents,
+			"GetStatic":           getStatic,
+			"HoldCountDebitor":    holdCountDebitor,
+			"NotVerifyDebitor":    notVerifyDebitor,
+		}
+
+		err = tpl.ExecuteTemplate(w, "layout", groups)
+
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
+	}
+}
+
+func (s *server) pageupdateInspection() http.HandlerFunc {
+	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "updateinspection.html")
+	if err != nil {
+		panic(err)
+	}
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		vars := mux.Vars(r)
+		id, err := strconv.Atoi(vars["ID"])
+		if err != nil {
+			log.Println(err)
+		}
+
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		idd, ok := session.Values["user_id"]
+		if !ok {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		user, err := s.store.User().Find(idd.(int))
+		if err != nil {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+		fmt.Println("user.Groups - ?", user.Groups)
+		//fmt.Println("ID - ?", id)
+		get, err := s.store.Inspection().EditInspection(id, user.Groups)
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+		err = tpl.ExecuteTemplate(w, "layout", get)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
+	}
+}
+
+func (s *server) updateInspection() http.HandlerFunc {
+	type request struct {
+		ID     int    `json:"ID"`
+		Status string `json:"status"`
+		Note   string `json:"note"`
+	}
+	_, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "updateinspection.html")
+	if err != nil {
+		panic(err)
+	}
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		req := &request{}
+		vars := mux.Vars(r)
+		id, err := strconv.Atoi(vars["ID"])
+		if err != nil {
+			log.Println(err)
+		}
+
+		currentTime := time.Now()
+
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		idd, ok := session.Values["user_id"]
+		if !ok {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		user, err := s.store.User().Find(idd.(int))
+		if err != nil {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		req.ID = id
+		req.Status = r.FormValue("status")
+		req.Note = r.FormValue("note")
+
+		u := &model.Inspection{
+			ID:         req.ID,
+			Status:     req.Status,
+			Note:       req.Note,
+			Update:     user.LastName, //
+			Dateupdate: currentTime,   // Dateaccept
+			Timeupdate: currentTime,   // Timeaccept
+			Groups:     user.Groups,
+		}
+
+		if err := s.store.Inspection().UpdateInspection(u, user.Groups); err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		/*	err = tpl.ExecuteTemplate(w, "layout", nil)
+			if err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}*/
+		http.Redirect(w, r, "/statusinspection", 303)
+	}
+}
+
+func (s *server) deleteInspection() http.HandlerFunc {
+	type request struct {
+		ID int `json:"ID"`
+	}
+	_, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "updateinspection.html")
+	if err != nil {
+		panic(err)
+	}
+	return func(w http.ResponseWriter, r *http.Request) {
+		req := &request{}
+		vars := mux.Vars(r)
+		id, err := strconv.Atoi(vars["ID"])
+		if err != nil {
+			log.Println(err)
+		}
+
+		req.ID = id
+
+		u := &model.Inspection{
+			ID: req.ID,
+		}
+
+		if err := s.store.Inspection().DeleteItemInspection(u); err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		http.Redirect(w, r, "/statusinspection", 303)
+	}
+}
+
+//ListAcceptWHInspection
+func (s *server) pageListAcceptWHInspection() http.HandlerFunc { // acceptinspection.html showinspection.html
+	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "acceptinspection.html")
+	if err != nil {
+		panic(err)
+	}
+	return func(w http.ResponseWriter, r *http.Request) {
+		stockkeeperWH := false
+		//superIngenerQuality := true
+		//quality := false
+		//	statusStr := false
+
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		id, ok := session.Values["user_id"]
+		if !ok {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		user, err := s.store.User().Find(id.(int))
+		if err != nil {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		if user.Groups == "склад" {
+			stockkeeperWH = true
+		}
+		/*
+			if user.Groups == "качество" {
+				quality = true
+			} else if user.Groups == "склад" {
+				stockkeeperWH = true
+			}
+		*/
+		get, err := s.store.Inspection().ListAcceptWHInspection()
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+		groups := map[string]interface{}{
+			//	"quality":   quality,
+			"warehouse": stockkeeperWH,
+			//	"SuperIngenerQuality": superIngenerQuality,
+			"GET": get,
+			//	"status":    statusStr,
+		}
+
+		err = tpl.ExecuteTemplate(w, "layout", groups)
+
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
+	}
+}
+
+func (s *server) pageacceptWarehouseInspection() http.HandlerFunc {
+	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "acceptWarehouseInspection.html")
+	if err != nil {
+		panic(err)
+	}
+	return func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		id, err := strconv.Atoi(vars["ID"])
+		if err != nil {
+			log.Println(err)
+		}
+
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		idd, ok := session.Values["user_id"]
+		if !ok {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		user, err := s.store.User().Find(idd.(int))
+		if err != nil {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+		fmt.Println("user.Groups - ?", user.Groups)
+
+		//fmt.Println("ID - ?", id)
+		get, err := s.store.Inspection().EditAcceptWarehouseInspection(id, user.Groups)
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		err = tpl.ExecuteTemplate(w, "layout", get)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
+	}
+}
+
+func (s *server) acceptWarehouseInspection() http.HandlerFunc {
+	type request struct {
+		ID       int    `json:"ID"`
+		Location string `json:"location"`
+	}
+	_, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "acceptWarehouseInspection.html")
+	if err != nil {
+		panic(err)
+	}
+	return func(w http.ResponseWriter, r *http.Request) {
+		req := &request{}
+		vars := mux.Vars(r)
+		id, err := strconv.Atoi(vars["ID"])
+		if err != nil {
+			log.Println(err)
+		}
+
+		currentTime := time.Now()
+
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		idd, ok := session.Values["user_id"]
+		if !ok {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		user, err := s.store.User().Find(idd.(int))
+		if err != nil {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		req.ID = id
+		req.Location = r.FormValue("location")
+
+		u := &model.Inspection{
+			ID:             req.ID,
+			Location:       req.Location,
+			Lastnameaccept: user.LastName, // Lastnameaccept
+			Dateaccept:     currentTime,   // Dateaccept
+			Timeaccept:     currentTime,   // Timeaccept
+			Groups:         user.Groups,
+		}
+
+		if err := s.store.Inspection().AcceptWarehouseInspection(u, user.Groups); err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		/*	err = tpl.ExecuteTemplate(w, "layout", nil)
+			if err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}*/
+		http.Redirect(w, r, "/statusinspectionforwh", 303)
 	}
 }
 

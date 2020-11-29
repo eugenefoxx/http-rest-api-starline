@@ -1,4 +1,5 @@
-CREATE TABLE id_sap_import (
+CREATE TABLE id_sap_import
+(
     id integer NOT NULL,
     package integer NOT NULL,
     plant varchar NULL,
@@ -9,5 +10,5 @@ CREATE TABLE id_sap_import (
     lot varchar NOT NULL,
     t1 varchar NULL,
     t2 varchar NULL,
-    spp_element varchar NULL  
-)
+    spp_element varchar NULL
+);

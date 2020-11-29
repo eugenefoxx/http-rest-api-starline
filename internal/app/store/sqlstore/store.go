@@ -21,6 +21,8 @@ type Store struct {
 	humosapstockRepository     *HUMOSAPStockRepository
 	mb52sapstockRepository     *MB52SAPStockRepository
 	showdateidreturnRepository *ShowdateidreturnRepository
+	vendorRepository           *VendorRepository
+	inspectionRepository       *InspectionRepository
 }
 
 // New ...
@@ -122,4 +124,28 @@ func (s *Store) Showdateidreturn() store.ShowdateidreturnRepository {
 	}
 
 	return s.showdateidreturnRepository
+}
+
+func (s *Store) Vendor() store.VendorRepository {
+	if s.vendorRepository != nil {
+		return s.vendorRepository
+	}
+
+	s.vendorRepository = &VendorRepository{
+		store: s,
+	}
+
+	return s.vendorRepository
+}
+
+func (s *Store) Inspection() store.InspectionRepository {
+	if s.inspectionRepository != nil {
+		return s.inspectionRepository
+	}
+
+	s.inspectionRepository = &InspectionRepository{
+		store: s,
+	}
+
+	return s.inspectionRepository
 }

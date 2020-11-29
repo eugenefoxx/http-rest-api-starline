@@ -14,6 +14,9 @@ type User struct {
 	EncryptedPassword string `json:"-"`
 	FirstName         string `json:"firstname"`
 	LastName          string `json:"lastname"`
+	Role              string `json:"role"`
+	Groups            string `json:"groups"`
+	Tabel             string `json:"tabel"`
 }
 
 // Validate ...

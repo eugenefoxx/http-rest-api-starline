@@ -36,7 +36,7 @@ func (r *UserRepository) Find(id int) (*model.User, error) {
 
 	u := &model.User{}
 	if err := r.store.db.QueryRow(
-		"SELECT id, email, encrypted_password, firstname, lastname FROM users WHERE id = $1",
+		"SELECT id, email, encrypted_password, firstname, lastname, role, groups FROM users WHERE id = $1",
 		id,
 	).Scan(
 		&u.ID,
@@ -44,6 +44,8 @@ func (r *UserRepository) Find(id int) (*model.User, error) {
 		&u.EncryptedPassword,
 		&u.FirstName,
 		&u.LastName,
+		&u.Role,
+		&u.Groups,
 	); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, store.ErrRecordNotFound
@@ -54,18 +56,21 @@ func (r *UserRepository) Find(id int) (*model.User, error) {
 }
 
 // FindByEmail ...
-func (r *UserRepository) FindByEmail(email string) (*model.User, error) {
+func (r *UserRepository) FindByEmail(email string, tabel string) (*model.User, error) {
 
 	u := &model.User{}
 	if err := r.store.db.QueryRow(
-		"SELECT id, email, encrypted_password, firstname, lastname FROM users WHERE email = $1",
-		email,
+		"SELECT id, email, encrypted_password, firstname, lastname, role, groups, tabel FROM users WHERE email = $1 OR tabel = $2",
+		email, tabel,
 	).Scan(
 		&u.ID,
 		&u.Email,
 		&u.EncryptedPassword,
 		&u.FirstName,
 		&u.LastName,
+		&u.Role,
+		&u.Groups,
+		&u.Tabel,
 	); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, store.ErrRecordNotFound

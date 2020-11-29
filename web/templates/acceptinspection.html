@@ -1,0 +1,132 @@
+<< define "layout">>
+
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
+            integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+        <link rel="stylesheet" href="/assets/scss/main.css">
+        <title>Inspection</title>
+    </head>
+
+    <body>
+        <div class="row" style="margin-left:100px; ">
+            <a href="/main">
+                <h2 style="color: white;">На главную</h2>
+            </a>
+
+        </div>
+        <div class="container" style="padding-right: 5000px;">
+
+            << if eq .warehouse true>>
+                <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .."
+                    title="Type in a name" style="margin-left:0px; width: 1000px;">
+
+                <table id="myTable" onload="alternate('thetable')">
+                    <caption style="color: white; font-size: 22px;">Список на инспекции</caption>
+                    <button onclick="exportTableToCSV('export_shipment_sap.csv')"
+                        style="margin-left:0px; width: 1000px;">Экспортировать таблицу в csv
+                        файл</button>
+                    <thead>
+                        <tr>
+                            <th scope="col" onclick="sortTable(0)">№ ID</th>
+                            <!--<th>ID</th>-->
+                            <th scope="col" onclick="sortTable(1)">Полный код упаковки компонента</th>
+                            <!--Material-->
+                            <th scope="col" onclick="sortTable(2)">SAP</th>
+                            <!--Qty-->
+                            <th scope="col" onclick="sortTable(3)">Партия</th>
+                            <!--ShipmentDate-->
+                            <!--    <th scope="col" onclick="sortTable(2)">ShipmentDate2</th>-->
+                            <th scope="col" onclick="sortTable(4)">ЕО катушки</th>
+                            <th scope="col" onclick="sortTable(5)">Дата производства</th>
+                            <th scope="col" onclick="sortTable(6)">Имя дебитора</th>
+                            <th scope="col" onclick="sortTable(7)">Статус отгружено</th>
+                            <th scope="col" onclick="sortTable(8)">Статус отметки проверки</th>
+                            <th scope="col" onclick="sortTable(9)">Примечание</th>
+                            <th scope="col" onclick="sortTable(10)">Кем отредактировано</th>
+                            <th scope="col" onclick="sortTable(11)">Дата редактирования</th>
+                            <th scope="col" onclick="sortTable(12)">Время редактирования</th>
+                            <th scope="col" onclick="sortTable(13)">Дата отгрузки на ВК</th>
+                            <th scope="col" onclick="sortTable(14)">Время отгрузки на ВК</th>
+
+                        </tr>
+                    </thead>
+                    <tbody id="thetable">
+                        << range .GET>>
+                            <tr class="header">
+                                <!--<td>{{.ID }}</td>-->
+                                <td>
+                                    <<.ID>>
+                                </td>
+                                <td>
+                                    <<.IdMaterial>>
+                                </td>
+                                <td>
+                                    <<.SAP>>
+                                </td>
+                                <td>
+                                    <<.Lot>>
+                                </td>
+                                <td>
+                                    <<.IdRoll>>
+                                </td>
+                                <td>
+                                    <<.ProductionDate>>
+                                </td>
+                                <td>
+                                    <<.NameDebitor>>
+                                </td>
+                                <td>
+                                    <<.Location>>
+                                </td>
+                                <td>
+                                    <<.Status>>
+                                </td>
+                                <td>
+                                    <<.Note>>
+                                </td>
+                                <td>
+                                    <<.Update>>
+                                </td>
+                                <td>
+                                    <<.Dateupdate2>>
+                                </td>
+                                <td>
+                                    <<.Timeupdate2>>
+                                </td>
+                                <td>
+                                    <<.Date2>>
+                                </td>
+                                <td>
+                                    <<.Time2>>
+                                </td>
+
+                                <td>
+
+                                    <a href="/acceptinspectiontowh/<<.ID>>" class="btn btn-primary">
+                                        Принять на склад
+                                    </a>
+
+                                </td>
+
+                            </tr>
+                            << end>>
+                    </tbody>
+                </table>
+
+                << end>>
+        </div>
+
+
+        <script src="/assets/js/script.js" type="text/javascript"></script>
+        <script src="/assets/js/table-export.js" type="text/javascript"></script>
+
+    </body>
+
+    </html>
+
+    << end>>

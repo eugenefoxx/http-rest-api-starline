@@ -325,3 +325,43 @@ tr:nth-child(even) {
 
 .even{background-color: gray;} 
 
+ #okno {
+   width: 1200px;
+   height: 500px;
+   text-align: center;
+   padding: 15px;
+   border: 3px solid #0000cc;
+   border-radius: 10px;
+   color: #0000cc;
+   display: none;
+   position: absolute;
+   top: 0;
+   right: 0;
+   bottom: 0;
+   left: 0;
+   margin: auto;
+   font-size: 200%;
+   background: #d4d4d4;
+ }
+
+ #okno:target {
+   display: block;
+ }
+
+ #okno .close {
+   display: inline-block;
+   border: 1px solid #0000cc;
+   color: #0000cc;
+   padding: 0 12px;
+   margin: 300px;
+   text-decoration: none;
+   background: #f2f2f2;
+   font-size: 20pt;
+   cursor: pointer;
+ }
+
+ #okno .close:hover {
+   background: #e6e6ff;
+ }
+
+

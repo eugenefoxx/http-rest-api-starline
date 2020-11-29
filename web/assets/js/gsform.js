@@ -139,35 +139,42 @@ function getData() {
             }*/
             resultObj[`${prop}`] = resultValue;
         }
-        var validMaterial = /31\d{1,5}/;
+        var validMaterial = /\b31\d{5}\b/;
+
+
+        currentDiv = mainDiv.childNodes[i];
 
         if (
             !validMaterial.test(resultObj["material"]) ||
-            parseInt(resultObj["qty"]) < 0 ||
-            resultObj["comment"] == ""
+            parseInt(resultObj["qty"]) < 1
         ) {
             invalidResult = true;
+            //  var validMaterial = /\b31\d{5}\b/;
+            drawErrorMessage(mainDiv.childNodes[i]);
         } else {
             resultObj["qty"] = parseInt(resultObj["qty"]);
             finalData.push(resultObj);
+            drawSuccessMessage(mainDiv.childNodes[i]);
         }
     }
     console.log(finalData);
     return JSON.stringify(finalData);
 }
 
-function drawErrorMessage() {
+function drawErrorMessage(div) {
     var errorMessage = document.createElement("div");
     errorMessage.id = "error-message";
     errorMessage.innerHTML = "Ошибка при передаче данных";
-    mainDiv.appendChild(errorMessage);
+    //mainDiv.appendChild(errorMessage);
+    div.appendChild(errorMessage);
 }
 
-function drawSuccessMessage() {
+function drawSuccessMessage(div) {
     var successMessage = document.createElement("div");
     successMessage.id = "success-message";
     successMessage.innerHTML = "Данные переданы успешно";
-    mainDiv.appendChild(successMessage);
+    //mainDiv.appendChild(successMessage);
+    div.appendChild(successMessage);
 }
 
 function sendData() {
@@ -177,11 +184,12 @@ function sendData() {
     xhr.send(getData());
 
     xhr.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            drawSuccessMessage();
-        } else {
-            drawErrorMessage();
-        }
+        this.readyState == 4 && this.status == 200
+        //    if (this.readyState == 4 && this.status == 200) {
+        //        drawSuccessMessage();
+        //    } else {
+        //        drawErrorMessage();
+        //   }
     };
 
     //resetForms();

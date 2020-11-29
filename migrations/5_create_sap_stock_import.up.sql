@@ -1,4 +1,5 @@
-CREATE TABLE sap_stock_import (
+CREATE TABLE sap_stock_import
+(
     material integer NULL,
     plant varchar NULL,
     warehouse varchar NULL,
@@ -8,4 +9,4 @@ CREATE TABLE sap_stock_import (
     qty_block real NULL,
     lot varchar NULL,
     spp_element varchar NULL
-)
+);

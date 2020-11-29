@@ -9,4 +9,6 @@ type Store interface {
 	HUMOSAPStock() HUMOSAPStockRepository
 	MB52SAPStock() MB52SAPStockRepository
 	Showdateidreturn() ShowdateidreturnRepository
+	Vendor() VendorRepository
+	Inspection() InspectionRepository
 }
