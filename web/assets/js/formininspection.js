@@ -138,22 +138,22 @@ function getData() {
             resultObj[`${prop}`] = resultValue;
         }
       //  var validCodeDebitor = /\bP1\d{43}\b/;
-        let regexp = /\P1+/;
-        regexp.lastIndex = 0;
+      //  let regexp = /\P1+/;
+      //  regexp.lastIndex = 0;
 
         currentDiv = mainDiv.childNodes[i];
 
-        if (
+    /*    if (
          //  !validCodeDebitor.test(resultObj["scanid"]) 
-            !regexp.test(resultObj["scanid"])
-        //    resultObj["code_debitor"] != " "
-         //   parseInt(resultObj["qty"]) < 1
+          // !regexp.test(resultObj["scanid"]) 
+            resultObj["code_debitor"] != " "
+            parseInt(resultObj["qty"]) < 1
         ) {
             invalidResult = true;
-            //  var validMaterial = /\b31\d{5}\b/;
+           //   var validMaterial = /\b31\d{5}\b/;
             drawErrorMessage(mainDiv.childNodes[i]);
-        } else { 
-          //  resultObj["qty"] = parseInt(resultObj["qty"]);
+        } else { */ 
+         //   resultObj["qty"] = parseInt(resultObj["qty"]); 
             finalData.push(resultObj);
             drawSuccessMessage(mainDiv.childNodes[i]);
       //  }
@@ -192,7 +192,7 @@ function sendData() {
         //        drawErrorMessage();
         //   }
     };
-
+    console.log("Проверка")
     //resetForms();
     //addForm();
 }

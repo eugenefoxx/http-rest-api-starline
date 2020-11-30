@@ -18,8 +18,9 @@ import (
 	//	"github.com/eugenefoxx/http-rest-api-starline/internal/app/model"
 	//	"github.com/eugenefoxx/http-rest-api-starline/internal/app/store"
 	//	"github.com/eugenefoxx/http-rest-api-starline/internal/app/store/helper"
-	//	"github.com/google/uuid"
-	//	"github.com/gorilla/handlers"
+	"github.com/google/uuid"
+	"github.com/gorilla/handlers"
+
 	//	"github.com/gorilla/mux"
 	//	"github.com/gorilla/sessions"
 	//	_ "github.com/lib/pq"
@@ -31,8 +32,7 @@ import (
 	"github.com/skratchdot/open-golang/open"
 
 	//	"github.com/gobuffalo/packr/v2/jam/store"
-	"github.com/google/uuid"
-	"github.com/gorilla/handlers"
+
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	"github.com/sirupsen/logrus"
@@ -129,6 +129,9 @@ func (s *server) configureRouter() {
 
 	s.router.HandleFunc("/users", s.pagehandleUsersCreate()).Methods("GET")
 	s.router.HandleFunc("/users", s.handleUsersCreate()).Methods("POST")
+
+	s.router.HandleFunc("/updatepass", s.pageupdateSessionsCreate()).Methods("GET")
+	s.router.HandleFunc("/updatepass", s.updateSessionsCreate()).Methods("POST")
 
 	//	s.router.HandleFunc("/sessions", s.redirectMain(s.handleSessionsCreate())).Methods("POST")
 	//s.router.HandleFunc("/sessions", s.handleSessionsCreate(s.redirectMain())).Methods("POST")
@@ -505,6 +508,70 @@ func (s *server) handleUsersCreate() http.HandlerFunc {
 	}
 }
 
+func (s *server) pageupdateSessionsCreate() http.HandlerFunc {
+	//	tpl = template.Must(template.New("").Delims("<<", ">>").ParseFiles("web/templates/login.html"))
+	//tpl, err := template.New("").Delims("<<", ">>").ParseFiles("web/templates/login.html")
+	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "updateUser.html")
+	if err != nil {
+		panic(err)
+	}
+	return func(w http.ResponseWriter, r *http.Request) {
+		//	var body, _ = helper.LoadFile("./web/templates/login.html") // "./web/templates/login.html"
+		//	fmt.Fprintf(w, body)
+		err = tpl.ExecuteTemplate(w, "layout", nil)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
+	}
+}
+
+func (s *server) updateSessionsCreate() http.HandlerFunc {
+	type request struct {
+		Email string `json:"email"`
+		//	Tabel    string `json:"tabel"`
+		Password string `json:"password"`
+	}
+	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "updateUser.html")
+	if err != nil {
+		panic(err)
+	}
+	return func(w http.ResponseWriter, r *http.Request) {
+		req := &request{}
+		f, err := os.OpenFile(LOGFILE, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+
+		if err != nil {
+			fmt.Println(err)
+			//	return
+		}
+		defer f.Close()
+		iLog := log.New(f, "func updateSessionsCreate ", log.LstdFlags)
+		iLog.SetFlags(log.LstdFlags | log.Lshortfile)
+
+		req.Email = r.FormValue("email")
+		req.Password = r.FormValue("password")
+
+		u := &model.User{
+			Email: req.Email, //req.Email, email
+			//	Tabel:    req.Email,
+			Password: req.Password,
+		}
+
+		if err := s.store.User().UpdatePass(u); err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+		u.Sanitize()
+		fmt.Println("обновляю пароль")
+		http.Redirect(w, r, "/", 303)
+		err = tpl.ExecuteTemplate(w, "layout", nil)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
+	}
+}
+
 func (s *server) pagehandleSessionsCreate() http.HandlerFunc {
 	//	tpl = template.Must(template.New("").Delims("<<", ">>").ParseFiles("web/templates/login.html"))
 	//tpl, err := template.New("").Delims("<<", ">>").ParseFiles("web/templates/login.html")
@@ -597,9 +664,13 @@ func (s *server) handleSessionsCreate() http.HandlerFunc {
 		r.ParseForm()
 		email := r.FormValue("email")
 		password := r.FormValue("password")
+		fmt.Println("email:   ", email)
 		//	target := "/sessions"
 
 		u, err := s.store.User().FindByEmail(email, email)
+		//	fmt.Println("FindByEmail:   ", u)
+		//	match := u.ComparePassword(password)
+		//	fmt.Println("Match:   ", match)
 		if err != nil || !u.ComparePassword(password) {
 			s.error(w, r, http.StatusUnauthorized, errIncorrectEmailOrPassword)
 

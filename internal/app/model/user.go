@@ -1,6 +1,8 @@
 package model
 
 import (
+	"fmt"
+
 	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/go-ozzo/ozzo-validation/is"
 	"golang.org/x/crypto/bcrypt"
@@ -30,12 +32,15 @@ func (u *User) Validate() error {
 
 // BeforCreate ...
 func (u *User) BeforCreate() error {
+	pass := u.Password
+	fmt.Println("Password:", pass)
+
 	if len(u.Password) > 0 {
 		enc, err := encryptString(u.Password)
 		if err != nil {
 			return err
 		}
-
+		fmt.Println("Hash:    ", enc)
 		u.EncryptedPassword = enc
 	}
 	return nil
@@ -49,6 +54,8 @@ func (u *User) Sanitize() {
 // ComparePassword ...
 func (u *User) ComparePassword(password string) bool {
 	return bcrypt.CompareHashAndPassword([]byte(u.EncryptedPassword), []byte(password)) == nil
+	//	err := bcrypt.CompareHashAndPassword([]byte(u.EncryptedPassword), []byte(password))
+	//	return err == nil
 }
 
 func encryptString(s string) (string, error) {

@@ -7,6 +7,7 @@ type UserRepository interface {
 	Create(*model.User) error
 	Find(int) (*model.User, error)
 	FindByEmail(string, string) (*model.User, error)
+	UpdatePass(*model.User) error
 }
 
 // ShipmentbysapRepository ...
