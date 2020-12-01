@@ -385,4 +385,8 @@ tr:nth-child(even) {
 #okno .close:hover {
   background: #e6e6ff;
 }
+
+#fontsize-showinspection {
+  font-size: 90%;
+}
 /*# sourceMappingURL=main.css.map */

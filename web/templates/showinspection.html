@@ -57,10 +57,10 @@
                         style="margin-left:0px; width: 1000px;">Экспортировать таблицу в csv
                         файл</button>
                     <thead>
-                        <tr>
+                        <tr id="fontsize-showinspection">
                             <th scope="col" onclick="sortTable(0)">№ ID</th>
                             <!--<th>ID</th>-->
-                            <th scope="col" onclick="sortTable(1)">Полный код упаковки компонента</th>
+                            <th scope="col" onclick="sortTable(1)">QR-код</th>
                             <!--Material-->
                             <th scope="col" onclick="sortTable(2)">SAP</th>
                             <!--Qty-->
@@ -83,12 +83,12 @@
                     </thead>
                     <tbody id="thetable">
                         << range .GET>>
-                            <tr class="header">
+                            <tr class="header" id="fontsize-showinspection">
                                 <!--<td>{{.ID }}</td>-->
                                 <td>
                                     <<.ID>>
                                 </td>
-                                <td>
+                                <td style="font-size: 10%;">
                                     <<.IdMaterial>>
                                 </td>
                                 <td>
@@ -175,10 +175,10 @@
                             style="margin-left:0px; width: 1000px;">Экспортировать таблицу в csv
                             файл</button>
                         <thead>
-                            <tr>
+                            <tr id="fontsize-showinspection">
                                 <th scope="col" onclick="sortTable(0)">№ ID</th>
                                 <!--<th>ID</th>-->
-                                <th scope="col" onclick="sortTable(1)">Полный код упаковки компонента</th>
+                                <th scope="col" onclick="sortTable(1)">QR-код</th>
                                 <!--Material-->
                                 <th scope="col" onclick="sortTable(2)">SAP</th>
                                 <!--Qty-->
@@ -201,12 +201,12 @@
                         </thead>
                         <tbody id="thetable">
                             << range .GET>>
-                                <tr class="header">
+                                <tr class="header" id="fontsize-showinspection">
                                     <!--<td>{{.ID }}</td>-->
                                     <td>
                                         <<.ID>>
                                     </td>
-                                    <td>
+                                    <td style="font-size: 10%;">
                                         <<.IdMaterial>>
                                     </td>
                                     <td>
@@ -250,9 +250,6 @@
                                     </td>
                                     <td>
                                         <a href="/updateinspection/<<.ID>>" class="btn btn-primary">Изменить</a>
-
-
-
                                     </td>
                                 </tr>
                                 << end>>
@@ -269,10 +266,10 @@
                                 style="margin-left:0px; width: 1000px;">Экспортировать таблицу в csv
                                 файл</button>
                             <thead>
-                                <tr>
+                                <tr id="fontsize-showinspection">
                                     <th scope="col" onclick="sortTable(0)">№ ID</th>
                                     <!--<th>ID</th>-->
-                                    <th scope="col" onclick="sortTable(1)">Полный код упаковки компонента</th>
+                                    <th scope="col" onclick="sortTable(1)">QR-код</th>
                                     <!--Material-->
                                     <th scope="col" onclick="sortTable(2)">SAP</th>
                                     <!--Qty-->
@@ -295,12 +292,12 @@
                             </thead>
                             <tbody id="thetable">
                                 << range .GET>>
-                                    <tr class="header">
+                                    <tr class="header" id="fontsize-showinspection">
                                         <!--<td>{{.ID }}</td>-->
                                         <td>
                                             <<.ID>>
                                         </td>
-                                        <td>
+                                        <td style="font-size: 10%;">
                                             <<.IdMaterial>>
                                         </td>
                                         <td>
@@ -365,10 +362,10 @@
                                     style="margin-left:0px; width: 1000px;">Экспортировать таблицу в csv
                                     файл</button>
                                 <thead>
-                                    <tr>
+                                    <tr id="fontsize-showinspection">
                                         <th scope="col" onclick="sortTable(0)">№ ID</th>
                                         <!--<th>ID</th>-->
-                                        <th scope="col" onclick="sortTable(1)">Полный код упаковки компонента</th>
+                                        <th scope="col" onclick="sortTable(1)">QR-код</th>
                                         <!--Material-->
                                         <th scope="col" onclick="sortTable(2)">SAP</th>
                                         <!--Qty-->
@@ -391,12 +388,12 @@
                                 </thead>
                                 <tbody id="thetable">
                                     << range .GET>>
-                                        <tr class="header">
+                                        <tr class="header" id="fontsize-showinspection">
                                             <!--<td>{{.ID }}</td>-->
                                             <td>
                                                 <<.ID>>
                                             </td>
-                                            <td>
+                                            <td style="font-size: 10%;">
                                                 <<.IdMaterial>>
                                             </td>
                                             <td>
