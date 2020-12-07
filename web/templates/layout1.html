@@ -1,0 +1,133 @@
+{{define "base"}}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!--   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>-->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/assets/scss/main.css">
+
+</head>
+
+<body>
+    <div class="navbar">
+        <a class="navbar-brand text-primary" href="/">StarLine</a>
+        {{ if .GET}}
+        <div class="dropdown">
+            {{ if eq .GET.admin true}}
+            <button class="dropbtn">Логистика
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+                <a href="/shipmentbysap">Отчет по отгрузке SAP</a>
+                <a href="/showdateshipmentbysapbysearchstatic">Отчет по отгрузке SAP по поиску
+                    Static</a>
+                <a href="/insertIDReturn">Пересчет ЕО с возвратом</a>
+            </div>
+            {{ else if eq .GET.stockkeeper true}}
+            <button class="dropbtn">Логистика
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+                <a href="/shipmentbysap">Отчет по отгрузке SAP</a>
+                <a href="/showdateshipmentbysapbysearchstatic">Отчет по отгрузке SAP по поиск
+                    Static</a>
+                <a href="/insertIDReturn">Пересчет ЕО с возвратом</a>
+            </div>
+            {{ end}}
+        </div>
+        <div class="dropdown">
+            {{ if eq .GET.admin true}}
+            <button class="dropbtn">Отдел качества
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+                <a href="/insertvendor">Добавить поставщика в базу</a>
+                <a href="/showvendor">Просмотр и редактирование поставщиков</a>
+                <a href="/statusinspection">Компоненты на входном контроле</a>
+            </div>
+            {{ else if eq .GET.SuperIngenerQuality true}}
+            <button class="dropbtn">Отдел качества
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+                <a href="/insertvendor">Добавить поставщика в базу</a>
+                <a href="/showvendor">Просмотр и редактирование поставщиков</a>
+                <a href="/statusinspection">Компоненты на входном контроле</a>
+            </div>
+            {{ else if eq .GET.stockkeeperWH true}}
+            <button class="dropbtn">Отдел качества
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+                <a href="/ininspection">Отгрузка катушек на ВК</a>
+                <a href="/statusinspection">Компоненты на входном контроле</a>
+                <a href="/statusinspectionforwh">Компоненты на входном контроле для прием</a>
+            </div>
+            {{ else if eq .GET.inspector true}}
+            <button class="dropbtn">Отдел качества
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+                <a href="/statusinspection">Компоненты на входном контроле</a>
+            </div>
+            {{ end}}
+        </div>
+        {{end}}
+
+        <div class="flex-fill"></div>
+        {{ if .LoggedIn }}
+        {{.user}} {{.id}}
+        <a class="text-primary ml-3" style="margin-right: 10px;" href="/logout">Logout</a>
+        {{ else}}
+        <a class="text-primary" href="/login">Login</a>
+        <a class="text-primary ml-3" href="/users">Register</a>
+        {{ end}}
+
+    </div>
+    <div>
+        <div class="container">
+            {{ block "header" .}}{{ end}}
+        </div>
+    </div>
+
+    <!--    <div class="header bg-light border-bottom border-top py-5">
+        <div class="container">
+            {{ block "header" .}}{{ end}}
+        </div>
+    </div>-->
+
+    <div>
+        {{ block "content" .}}{{ end}}
+    </div>
+
+
+
+
+
+
+
+    <p class="img_banner"> <img src="/images/starline_banner1.jpg" width="1080" height="350" class="img-fluid"
+            alt="Цех">
+    </p>
+
+    <!--    <script>
+        $('.alert').alert();
+    </script>-->
+    <script src="/assets/js/script.js"></script>
+    <script src="/assets/js/forminsertvendor.js"></script>
+</body>
+
+</html>
+{{end}}
