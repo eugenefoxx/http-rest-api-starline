@@ -5,3 +5,4 @@ var confirmIt = function (e) {
 for (var i = 0, l = elems.length; i < l; i++) {
     elems[i].addEventListener('click', confirmIt, false);
 }
+// определяется по class confirmation

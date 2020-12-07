@@ -29,7 +29,6 @@ import (
 	"github.com/eugenefoxx/http-rest-api-starline/internal/app/model"
 	"github.com/eugenefoxx/http-rest-api-starline/internal/app/store"
 	"github.com/jmoiron/sqlx"
-	"github.com/skratchdot/open-golang/open"
 
 	//	"github.com/gobuffalo/packr/v2/jam/store"
 
@@ -135,8 +134,8 @@ func (s *server) configureRouter() {
 
 	//	s.router.HandleFunc("/sessions", s.redirectMain(s.handleSessionsCreate())).Methods("POST")
 	//s.router.HandleFunc("/sessions", s.handleSessionsCreate(s.redirectMain())).Methods("POST")
-	s.router.HandleFunc("/", s.pagehandleSessionsCreate()).Methods("GET")
-	s.router.HandleFunc("/", s.handleSessionsCreate()).Methods("POST")
+	s.router.HandleFunc("/login", s.pagehandleSessionsCreate()).Methods("GET")
+	s.router.HandleFunc("/login", s.handleSessionsCreate()).Methods("POST")
 	//	s.router.HandleFunc("/sessions", s.redirectMain())
 	//	s.router.HandleFunc("/sessions", s.pageredirectMain())
 
@@ -185,10 +184,11 @@ func (s *server) configureRouter() {
 	s.router.HandleFunc("/testIDSAP", s.authMiddleware(s.testIDSAP())).Methods("GET")
 	s.router.HandleFunc("/testMB52", s.authMiddleware(s.testMB52())).Methods("GET")
 	//	s.router.HandleFunc("/main", s.authMiddleware(s.pageredirectMain())).Methods("GET")
-	s.router.HandleFunc("/logout", s.signOut()).Methods("POST")
+	s.router.HandleFunc("/logout", s.signOut()).Methods("GET")
 
 	s.router.HandleFunc("/hello", s.authMiddleware(s.handleHello()))
 	s.router.HandleFunc("/main", s.authMiddleware(s.main())).Methods("GET")
+	s.router.HandleFunc("/", s.upload()).Methods("GET")
 	//	s.router.HandleFunc("/", s.loginPage())
 	s.router.HandleFunc("/js", s.jsPage())
 
@@ -199,7 +199,7 @@ func (s *server) configureRouter() {
 
 	s.router.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("./web"))))
 
-	fmt.Println("Webserver StarlineProduction starting...")
+	//	fmt.Println("Webserver StarlineProduction starting...")
 
 	//	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("./web/images"))))
 
@@ -209,7 +209,7 @@ func (s *server) configureRouter() {
 	//s.router.Handle("/resources/", http.StripPrefix("/resources", http.FileServer(http.Dir("./web/"))))
 	//	http.Handle("/", s.router)
 	fmt.Println("Webserver StarLine launch.")
-	open.StartWith("http://localhost:3001/", "google-chrome-stable") // chromium
+	//	open.StartWith("http://localhost:3001/", "google-chrome-stable") // chromium
 
 }
 
@@ -219,8 +219,20 @@ func (s *server) handleHello() http.HandlerFunc {
 	}
 }
 
+func (s *server) upload() http.HandlerFunc {
+	tpl, err := template.New("base").ParseFiles(s.html + "layout1.html")
+	if err != nil {
+		panic(err)
+	}
+	return func(w http.ResponseWriter, r *http.Request) {
+		tpl.ExecuteTemplate(w, "base", nil)
+	}
+}
+
 func (s *server) main() http.HandlerFunc {
-	tpl = template.Must(template.New("").Delims("<<", ">>").ParseFiles(s.html + "layout.html"))
+	//tpl = template.Must(template.New("").Delims("<<", ">>").ParseFiles(s.html + "layout.html"))
+	//tpl = template.Must(template.New("").Delims("<<", ">>").ParseFiles(s.html+"layout1.html", s.html+"login1.html"))
+	tpl = template.Must(template.New("base").ParseFiles(s.html + "layout1.html"))
 	//tpl = template.Must(template.New("").Delims("<<", ">>").ParseFiles("web/templates/layout.html"))
 	//tpl = template.Must(template.ParseFiles("web/templates/index.html"))
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -229,6 +241,8 @@ func (s *server) main() http.HandlerFunc {
 		superIngenerQuality := false
 		stockkeeperWH := false
 		inspector := false
+		LoggedIn := false
+
 		//	u := s.authenticateUser()
 		//	fmt.Println(u)
 		//	var body, _ = helper.LoadFile("./web/templates/index.html")
@@ -253,19 +267,26 @@ func (s *server) main() http.HandlerFunc {
 		fmt.Println("/main - user:", u.Email, u.ID, u.Role)
 		if u.Role == "Administrator" {
 			admin = true
+			LoggedIn = true
+
 		} else if u.Role == "кладовщик" {
 			stockkeeper = true
+			LoggedIn = true
+
 		} else if u.Role == "SuperIngenerQuality" {
 			superIngenerQuality = true
+			LoggedIn = true
+
 		} else if u.Role == "кладовщик склада" {
 			stockkeeperWH = true
+			LoggedIn = true
+
 		} else if u.Role == "контроллер качества" {
 			inspector = true
-		}
+			LoggedIn = true
 
-		data := map[string]interface{}{
-			"user":                u.LastName,
-			"id":                  u.FirstName,
+		}
+		GET := map[string]bool{
 			"admin":               admin,
 			"stockkeeper":         stockkeeper,
 			"SuperIngenerQuality": superIngenerQuality,
@@ -273,9 +294,21 @@ func (s *server) main() http.HandlerFunc {
 			"inspector":           inspector,
 		}
 
-		//	tpl.ExecuteTemplate(w, "index.html", data)
-		tpl.ExecuteTemplate(w, "layout", data)
+		data := map[string]interface{}{
+			"user": u.LastName,
+			"id":   u.FirstName,
+			"GET":  GET,
+			//	"admin":               admin,
+			//	"stockkeeper":         stockkeeper,
+			//	"SuperIngenerQuality": superIngenerQuality,
+			//	"stockkeeperWH":       stockkeeperWH,
+			//	"inspector":           inspector,
+			"LoggedIn": LoggedIn,
+		}
 
+		//tpl.ExecuteTemplate(w, "home.html", data)
+		//tpl.ExecuteTemplate(w, "layout", data)
+		tpl.ExecuteTemplate(w, "base", data)
 	}
 }
 
@@ -572,39 +605,23 @@ func (s *server) updateSessionsCreate() http.HandlerFunc {
 	}
 }
 
-func (s *server) pagehandleSessionsCreate() http.HandlerFunc {
-	//	tpl = template.Must(template.New("").Delims("<<", ">>").ParseFiles("web/templates/login.html"))
-	//tpl, err := template.New("").Delims("<<", ">>").ParseFiles("web/templates/login.html")
-	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "login.html")
-	if err != nil {
-		panic(err)
-	}
-	return func(w http.ResponseWriter, r *http.Request) {
-		//	var body, _ = helper.LoadFile("./web/templates/login.html") // "./web/templates/login.html"
-		//	fmt.Fprintf(w, body)
-		err = tpl.ExecuteTemplate(w, "layout", nil)
-		if err != nil {
-			http.Error(w, err.Error(), 400)
-			return
-		}
-	}
-}
-
 func (s *server) pageredirectMain() http.HandlerFunc {
 	//tpl = template.Must(template.New("").Delims("<<", ">>").ParseFiles("web/templates/layout.html"))
 	//tpl, err := template.New("").Delims("<<", ">>").ParseFiles("web/templates/layout.html")
-	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "layout.html")
-	if err != nil {
-		panic(err)
-	}
+	//tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "layout.html")
+	//if err != nil {
+	//	panic(err)
+	//}
+	tpl = template.Must(template.ParseFiles(s.html + "layout1.html"))
 	return func(w http.ResponseWriter, r *http.Request) {
 		//	var body, _ = helper.LoadFile("./web/templates/index.html")
 		//	fmt.Fprintf(w, body)
-		err = tpl.ExecuteTemplate(w, "layout", nil)
-		if err != nil {
-			http.Error(w, err.Error(), 400)
-			return
-		}
+		//	err = tpl.ExecuteTemplate(w, "layout", nil)
+		//	if err != nil {
+		//		http.Error(w, err.Error(), 400)
+		//		return
+		//	}
+		tpl.Execute(w, nil)
 	}
 }
 
@@ -614,19 +631,41 @@ func (s *server) redirectMain() http.HandlerFunc {
 		//	var body, _ = helper.LoadFile("./web/templates/index.html")
 		//	fmt.Fprintf(w, body)
 		//s.router.HandleFunc("/main", s.main())
-		http.Redirect(w, r, "/main", 303)
+		http.Redirect(w, r, "/", 303)
 	})
 }
 
-func (s *server) handleSessionsCreate() http.HandlerFunc {
+func (s *server) pagehandleSessionsCreate() http.HandlerFunc {
+	//	tpl = template.Must(template.New("").Delims("<<", ">>").ParseFiles("web/templates/login.html"))
+	//tpl, err := template.New("").Delims("<<", ">>").ParseFiles("web/templates/login.html")
+	//tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "login.html")
+	tpl, err := template.New("base").ParseFiles(s.html+"layout1.html", s.html+"login1.html")
+	if err != nil {
+		panic(err)
+	}
+	return func(w http.ResponseWriter, r *http.Request) {
+		//	var body, _ = helper.LoadFile("./web/templates/login.html") // "./web/templates/login.html"
+		//	fmt.Fprintf(w, body)
+		//	err = tpl.ExecuteTemplate(w, "layout", nil)
+		//	if err != nil {
+		//		http.Error(w, err.Error(), 400)
+		//		return
+		//	}
+		tpl.ExecuteTemplate(w, "base", nil)
+	}
+}
 
+func (s *server) handleSessionsCreate() http.HandlerFunc {
 	type request struct {
 		Email    string `json:"email"`
 		Password string `json:"password"`
 	}
-
 	//tpl, err := template.New("").Delims("<<", ">>").ParseFiles("web/templates/layout.html")
-	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "layout.html")
+	//tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "layout.html")
+	//if err != nil {
+	//	panic(err)
+	//}
+	tpl, err := template.New("base").ParseFiles(s.html + "layout1.html")
 	if err != nil {
 		panic(err)
 	}
@@ -660,6 +699,7 @@ func (s *server) handleSessionsCreate() http.HandlerFunc {
 		superIngenerQuality := false
 		stockkeeperWH := false
 		inspector := false
+		LoggedIn := false
 
 		r.ParseForm()
 		email := r.FormValue("email")
@@ -679,14 +719,31 @@ func (s *server) handleSessionsCreate() http.HandlerFunc {
 
 		if u.Role == "Administrator" {
 			admin = true
+			LoggedIn = true
+
 		} else if u.Role == "кладовщик" {
 			stockkeeper = true
+			LoggedIn = true
+
 		} else if u.Role == "SuperIngenerQuality" {
 			superIngenerQuality = true
+			LoggedIn = true
 		} else if u.Role == "кладовщик склада" {
 			stockkeeperWH = true
+			LoggedIn = true
+
 		} else if u.Role == "контроллер качества" {
 			inspector = true
+			LoggedIn = true
+
+		}
+
+		GET := map[string]bool{
+			"admin":               admin,
+			"stockkeeper":         stockkeeper,
+			"SuperIngenerQuality": superIngenerQuality,
+			"stockkeeperWH":       stockkeeperWH,
+			"inspector":           inspector,
 		}
 
 		session, err := s.sessionStore.Get(r, sessionName)
@@ -709,25 +766,26 @@ func (s *server) handleSessionsCreate() http.HandlerFunc {
 		//	_, ok := session.Values["user_id"]
 		//	if !ok {
 
-		http.Redirect(w, r, "/main", 303)
 		//	return
 		//	}
 		data := map[string]interface{}{
-			"user":                u.LastName,
-			"id":                  u.FirstName,
-			"admin":               admin,
-			"stockkeeper":         stockkeeper,
-			"SuperIngenerQuality": superIngenerQuality,
-			"stockkeeperWH":       stockkeeperWH,
-			"inspector":           inspector,
+			"user": u.LastName,
+			"id":   u.FirstName,
+			"GET":  GET,
+			//	"admin":               admin,
+			//	"stockkeeper":         stockkeeper,
+			//	"SuperIngenerQuality": superIngenerQuality,
+			//	"stockkeeperWH":       stockkeeperWH,
+			//	"inspector":           inspector,
+			"LoggedIn": LoggedIn,
 		}
-		//	tpl.ExecuteTemplate(w, "index.html", data) //  "index.html"
-		err = tpl.ExecuteTemplate(w, "layout", data)
-		if err != nil {
-			http.Error(w, err.Error(), 400)
-			return
-		}
-
+		tpl.ExecuteTemplate(w, "base", data) //  "index.html"
+		//err = tpl.ExecuteTemplate(w, "base", data)
+		//if err != nil {
+		//	http.Error(w, err.Error(), 400)
+		//	return
+		//}
+		http.Redirect(w, r, "/main", http.StatusFound)
 	}
 }
 
@@ -1559,26 +1617,28 @@ func (s *server) testMB52() http.HandlerFunc {
 }
 
 func (s *server) pageinsertVendor() http.HandlerFunc {
-	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "insertvendor.html")
+	/*tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "insertvendor.html")
 	if err != nil {
 		panic(err)
-	}
+	}*/
+	tpl = template.Must(template.New("base").ParseFiles(s.html+"layout1.html", s.html+"insertvendor1.html"))
 	return func(w http.ResponseWriter, r *http.Request) {
 		//	var body, _ = helper.LoadFile("./web/templates/insertsapbyship6.html")
 		//	fmt.Fprintf(w, body)
 		//data := map[string]interface{}{
 		//	"user": "Я тут",
 		//}
-		err = tpl.ExecuteTemplate(w, "layout", nil)
+		/*err = tpl.ExecuteTemplate(w, "layout", nil)
 		if err != nil {
 			http.Error(w, err.Error(), 400)
-			return
-			//	}
-			//		if err = tpl.ExecuteTemplate(w, "layout", nil); err != nil {
-			//			s.error(w, r, http.StatusUnprocessableEntity, err)
-			//			return
-			//		}
-		}
+			return*/
+		//	}
+		//		if err = tpl.ExecuteTemplate(w, "layout", nil); err != nil {
+		//			s.error(w, r, http.StatusUnprocessableEntity, err)
+		//			return
+		//		}
+		fmt.Println("Check -")
+		tpl.ExecuteTemplate(w, "base", nil)
 	}
 }
 
@@ -1594,14 +1654,16 @@ func (s *server) insertVendor() http.HandlerFunc {
 			SPPElement  string `db:"spp_element"`
 		}
 	*/
-	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "insertvendor.html")
+	/*tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "insertvendor.html")
 	if err != nil {
 		panic(err)
-	}
-
+	}*/
+	tpl = template.Must(template.New("base").ParseFiles(s.html+"layout1.html", s.html+"insertvendor1.html"))
 	return func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("Check2 -")
 		admin := false
 		superIngenerQuality := false
+		LoggedIn := false
 
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
@@ -1631,10 +1693,20 @@ func (s *server) insertVendor() http.HandlerFunc {
 			return
 		}
 
+		GET := map[string]bool{
+			"admin": admin,
+			//	"stockkeeper":         stockkeeper,
+			"SuperIngenerQuality": superIngenerQuality,
+			//	"stockkeeperWH":       stockkeeperWH,
+			//	"inspector":           inspector,
+		}
+
 		if user.Role == "Administrator" {
 			admin = true
+			LoggedIn = true
 		} else if user.Role == "SuperIngenerQuality" {
 			superIngenerQuality = true
+			LoggedIn = true
 			fmt.Println("SuperIngenerQuality - ", superIngenerQuality)
 		}
 
@@ -1653,12 +1725,15 @@ func (s *server) insertVendor() http.HandlerFunc {
 		}
 
 		data := map[string]interface{}{
-			"admin":               admin,
-			"SuperIngenerQuality": superIngenerQuality,
+			//	"admin":               admin,
+			//	"SuperIngenerQuality": superIngenerQuality,
+			"GET":      GET,
+			"LoggedIn": LoggedIn,
 		}
 
-		err = tpl.ExecuteTemplate(w, "layout", data)
+		//err = tpl.ExecuteTemplate(w, "layout", data)
 		//	err = tpl.ExecuteTemplate(w, "layout", v)
+		err = tpl.ExecuteTemplate(w, "base", data)
 		if err != nil {
 			http.Error(w, err.Error(), 400)
 			return

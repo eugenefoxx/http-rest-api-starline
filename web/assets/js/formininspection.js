@@ -124,6 +124,7 @@ function canShowDeleteButton() {
 
 function getData() {
     var usedRows = rowsAmount - formAllowedIdsArr.length;
+    var finalData = [];
     var invalidResult = false;
     for (i = 0; i < usedRows; i++) {
         var resultObj = {};

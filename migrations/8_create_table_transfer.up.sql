@@ -16,10 +16,10 @@ CREATE TABLE transfer
     time TIME DEFAULT CURRENT_TIME,
     lastname VARCHAR NOT NULL,
     update VARCHAR NULL,
-    dateupdate DATE
-    DEFAULT CURRENT_DATE,
-    timeupdate TIME DEFAULT CURRENT_TIME,
+    dateupdate DATE,
+    timeupdate TIME
+    DEFAULT,
     lastnameaccept VARCHAR NULL,
-    dateaccept DATE DEFAULT CURRENT_DATE,
-    timeaccept TIME DEFAULT CURRENT_TIME
+    dateaccept DATE,
+    timeaccept TIME
 );

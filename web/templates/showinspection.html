@@ -22,7 +22,7 @@
         <div class="container" style="padding-right: 5000px;">
 
             << if eq .SuperIngenerQuality true>>
-                <div id="okno" style="font-size: 120%;">
+                <!--    <div id="okno" style="font-size: 120%;">
 
                     Статистика по дебиторам:<br>
                     <font color="black">Oбщее количество</font>:
@@ -40,13 +40,42 @@
                                                             << .Count>>&sbquo;&nbsp;
                                                                 << end>><br>
                                                                     <a href="#" class="close">Закрыть окно</a>
-                </div>
-                <div style="margin-left:1100px; width: 1000px; margin-top: 0px; font-size: 150%;">
+                </div>-->
+                <div class="wrap" style="margin-left:1100px; width: 1000px; margin-top: 0px; font-size: 150%;">
                     <font color="white">Общее количество</font>: &nbsp;<< .CountTotal>> <br>
                         <font color="red">Задержано</font>: &nbsp;<<.HoldInspection>> <br>
                             <font color="green">Требуют проверки</font>: &nbsp;<<.NotVerifyComponents>> <br>
-                                <a href="#okno">Статистика по дебиторам</a>
+                                <br>
+                                <!--  <a href="#okno">Статистика по дебиторам</a>-->
+                                <div class="btn-box">
+                                    <button type="button" class="btn btn-default" data-modal="modal_1">Статистика по
+                                        дебиторам</button>
+                                </div>
+                                <div id="overlay" class="overlay" data-close=""></div>
+
+                                <div class="modal-outer">
+                                    <span class="closer" data-close=""></span>
+                                    <div id="modal_1" class="dlg-modal">
+                                        <h3>Статистика</h3>
+                                        <font color="black">Oбщее количество</font>:
+                                        << range.GetStatic>>
+                                            << .NameDebitor>> &ndash;&nbsp;<< .Count>>&sbquo;&nbsp;
+                                                    << end>><br>
+                                                        <font color="red">Задержано</font>:
+                                                        << range .HoldCountDebitor>>
+                                                            << .NameDebitor>> &ndash;&nbsp;<< .Count>>&sbquo;&nbsp;
+                                                                    << end>><br>
+                                                                        <font color="green">
+                                                                            Проверить</font>:
+                                                                        << range .NotVerifyDebitor>>
+                                                                            << .NameDebitor>> &ndash;&nbsp;
+                                                                                << .Count>>&sbquo;&nbsp;
+                                                                                    << end>><br>
+                                    </div>
+                                </div>
                 </div>
+
+
 
                 <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .."
                     title="Type in a name" style="margin-left:0px; width: 1000px;">
@@ -140,30 +169,37 @@
                 </table>
 
                 << else if eq .quality true>>
-                    <div id="okno" style="font-size: 120%;">
-
-                        Статистика по дебиторам:<br>
-                        <font color="black">Oбщее количество</font>:
-                        << range.GetStatic>>
-                            << .NameDebitor>> &ndash;&nbsp;<< .Count>>&sbquo;&nbsp;
-                                    << end>><br>
-                                        <font color="red">Задержано</font>:
-                                        << range .HoldCountDebitor>>
-                                            << .NameDebitor>> &ndash;&nbsp;<< .Count>>&sbquo;&nbsp;
-                                                    << end>><br>
-                                                        <font color="green">
-                                                            Проверить</font>:
-                                                        << range .NotVerifyDebitor>>
-                                                            << .NameDebitor>> &ndash;&nbsp;
-                                                                << .Count>>&sbquo;&nbsp;
-                                                                    << end>><br>
-                                                                        <a href="#" class="close">Закрыть окно</a>
-                    </div>
-                    <div style="margin-left:1100px; width: 1000px; margin-top: 0px; font-size: 150%;">
+                    <div class="wrap" style="margin-left:1100px; width: 1000px; margin-top: 0px; font-size: 150%;">
                         <font color="white">Общее количество</font>: &nbsp;<< .CountTotal>> <br>
                             <font color="red">Задержано</font>: &nbsp;<<.HoldInspection>> <br>
                                 <font color="green">Требуют проверки</font>: &nbsp;<<.NotVerifyComponents>> <br>
-                                    <a href="#okno">Статистика по дебиторам</a>
+                                    <br>
+                                    <!--  <a href="#okno">Статистика по дебиторам</a>-->
+                                    <div class="btn-box">
+                                        <button type="button" class="btn btn-default" data-modal="modal_1">Статистика по
+                                            дебиторам</button>
+                                    </div>
+                                    <div id="overlay" class="overlay" data-close=""></div>
+                                    <div class="modal-outer">
+                                        <span class="closer" data-close=""></span>
+                                        <div id="modal_1" class="dlg-modal">
+                                            <h3>Статистика</h3>
+                                            <font color="black">Oбщее количество</font>:
+                                            << range.GetStatic>>
+                                                << .NameDebitor>> &ndash;&nbsp;<< .Count>>&sbquo;&nbsp;
+                                                        << end>><br>
+                                                            <font color="red">Задержано</font>:
+                                                            << range .HoldCountDebitor>>
+                                                                << .NameDebitor>> &ndash;&nbsp;<< .Count>>&sbquo;&nbsp;
+                                                                        << end>><br>
+                                                                            <font color="green">
+                                                                                Проверить</font>:
+                                                                            << range .NotVerifyDebitor>>
+                                                                                << .NameDebitor>> &ndash;&nbsp;
+                                                                                    << .Count>>&sbquo;&nbsp;
+                                                                                        << end>><br>
+                                        </div>
+                                    </div>
                     </div>
 
                     <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .."
@@ -257,6 +293,7 @@
                     </table>
 
                     << else if eq .warehouse true>>
+
                         <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .."
                             title="Type in a name" style="margin-left:0px; width: 1000px;">
 
@@ -353,6 +390,41 @@
                             </tbody>
                         </table>
                         << else if eq .warehouse false>>
+                            <div class="wrap"
+                                style="margin-left:1100px; width: 1000px; margin-top: 0px; font-size: 150%;">
+                                <font color="white">Общее количество</font>: &nbsp;<< .CountTotal>> <br>
+                                    <font color="red">Задержано</font>: &nbsp;<<.HoldInspection>> <br>
+                                        <font color="green">Требуют проверки</font>: &nbsp;<<.NotVerifyComponents>> <br>
+                                            <br>
+                                            <!--  <a href="#okno">Статистика по дебиторам</a>-->
+                                            <div class="btn-box">
+                                                <button type="button" class="btn btn-default"
+                                                    data-modal="modal_1">Статистика по
+                                                    дебиторам</button>
+                                            </div>
+                                            <div id="overlay" class="overlay" data-close=""></div>
+                                            <div class="modal-outer">
+                                                <span class="closer" data-close=""></span>
+                                                <div id="modal_1" class="dlg-modal">
+                                                    <h3>Статистика</h3>
+                                                    <font color="black">Oбщее количество</font>:
+                                                    << range.GetStatic>>
+                                                        << .NameDebitor>> &ndash;&nbsp;<< .Count>>&sbquo;&nbsp;
+                                                                << end>><br>
+                                                                    <font color="red">Задержано</font>:
+                                                                    << range .HoldCountDebitor>>
+                                                                        << .NameDebitor>> &ndash;&nbsp;
+                                                                            << .Count>>&sbquo;&nbsp;
+                                                                                << end>><br>
+                                                                                    <font color="green">
+                                                                                        Проверить</font>:
+                                                                                    << range .NotVerifyDebitor>>
+                                                                                        << .NameDebitor>> &ndash;&nbsp;
+                                                                                            << .Count>>&sbquo;&nbsp;
+                                                                                                << end>><br>
+                                                </div>
+                                            </div>
+                            </div>
                             <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .."
                                 title="Type in a name" style="margin-left:0px; width: 1000px;">
 
@@ -447,6 +519,7 @@
         <script src="/assets/js/script.js" type="text/javascript"></script>
         <script src="/assets/js/table-export.js" type="text/javascript"></script>
         <script src="/assets/js/confirmation.js" type="text/javascript"></script>
+        <script src="/assets/js/popup-js.function.js" type="text/javascript"></script>
 
     </body>
 

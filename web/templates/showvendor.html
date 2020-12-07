@@ -17,7 +17,6 @@
             <a href="/main">
                 <h2 style="color: white;">На главную</h2>
             </a>
-
         </div>
         <div class="container">
             <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .." title="Type in a name">
@@ -35,9 +34,6 @@
                         <th scope="col" onclick="sortTable(2)">Наименование</th>
                         <!--ShipmentDate-->
                         <!--    <th scope="col" onclick="sortTable(2)">ShipmentDate2</th>-->
-
-
-
                     </tr>
                 </thead>
                 <tbody id="thetable">
@@ -54,9 +50,10 @@
                                 <<.NameDebitor>>
                             </td>
                             <td>
-                                <a href="/updatevendor/<<.ID>>" class="btn btn-primary">Edit</a>
-                                <a href="/deletevendor/<<.ID>>" class="do-delete btn btn-danger confirmation">Del</a>
-                                <!--    <a href="/deletevendor/<<.ID>>" class="do-delete btn btn-danger">Del-->
+                                <a href="/updatevendor/<<.ID>>" class="btn btn-primary">Edit </a>
+
+                                <a href="/deletevendor/<<.ID>>" class="btn btn-danger confirmation"
+                                    style="margin-left: 10px;"> Del</a>
                             </td>
                         </tr>
                         << end>>

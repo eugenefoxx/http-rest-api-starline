@@ -284,7 +284,7 @@ func (r *InspectionRepository) ListAcceptWHInspection() (*model.Inspections, err
 	listInspectionList := make(model.Inspections, 0)
 
 	rows, err := r.store.db.Query(
-		"SELECT transfer.id, transfer.idmaterial, transfer.sap, transfer.lot, transfer.idroll, transfer.productiondate, Coalesce (vendor.name_debitor, ''), transfer.location, Coalesce (transfer.status, ''), Coalesce (transfer.note, ''), Coalesce (transfer.update, ''), Coalesce(TO_CHAR(transfer.dateupdate, 'YYYY-MM-DD'), '') dateupdate2, Coalesce(TO_CHAR(transfer.timeupdate, 'HH24:MI:SS'), '') timeupdate2, TO_CHAR(transfer.date, 'YYYY-MM-DD') date2, TO_CHAR(transfer.time, 'HH24:MI:SS') time2 FROM transfer left outer join vendor on (transfer.numbervendor = vendor.code_debitor) WHERE transfer.status = 'NG' AND transfer.status = 'OK' AND transfer.location ='отгружено на ВК'",
+		"SELECT transfer.id, transfer.idmaterial, transfer.sap, transfer.lot, transfer.idroll, transfer.productiondate, Coalesce (vendor.name_debitor, ''), transfer.location, Coalesce (transfer.status, ''), Coalesce (transfer.note, ''), Coalesce (transfer.update, ''), Coalesce(TO_CHAR(transfer.dateupdate, 'YYYY-MM-DD'), '') dateupdate2, Coalesce(TO_CHAR(transfer.timeupdate, 'HH24:MI:SS'), '') timeupdate2, TO_CHAR(transfer.date, 'YYYY-MM-DD') date2, TO_CHAR(transfer.time, 'HH24:MI:SS') time2 FROM transfer left outer join vendor on (transfer.numbervendor = vendor.code_debitor) WHERE (transfer.location ='отгружено на ВК' AND transfer.status = 'OK') OR (transfer.location ='отгружено на ВК' AND transfer.status = 'NG')",
 	)
 	if err != nil {
 		return nil, err
