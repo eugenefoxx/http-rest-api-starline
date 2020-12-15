@@ -71,7 +71,10 @@ type server struct {
 }
 
 func init() {
-	//	tpl = template.Must(template.ParseGlob("./web/templates/*.html"))
+	//tpl = template.Must(tpl.ParseGlob("./web/templates/*.html"))
+	//tpl = template.Must(template.ParseFiles(html + "/*.html"))
+	//tpl = template.Must(template.ParseGlob("./web/templates/*.html"))
+	//tpl, _ = template.ParseGlob("./web/templates/*.html")
 	//	tpl = template.Must(template.New("./web/templates/*.html").Delims("<<", ">>").ParseGlob("./web/templates/*.html"))
 	//tpl = template.Must(template.ParseFiles("./web/templates/layout.html").Delims("<<", ">>").ParseGlob("./web/templates/*.html"))
 	//	tpl = template.Must(template.ParseGlob("C:/Users/Евгений/templates/*.html"))
@@ -110,6 +113,7 @@ func NewRouter() *mux.Router {
 }
 */
 func (s *server) configureRouter() {
+
 	//	connStr := "user=postgres password=123 host=localhost dbname=starline sslmode=disable"
 	//	db, err := sql.Open("postgres", connStr)
 	///	if err != nil {
@@ -121,6 +125,8 @@ func (s *server) configureRouter() {
 	// http.Handle("/resources/", http.StripPrefix("/resources", http.FileServer(http.Dir("./web/images"))))
 	//http.Handle("/resource", http.FileServer(http.Dir("./web/images")))
 	//	http.Handle("/", s.router)
+	tpl = template.Must(tpl.ParseGlob(s.html + "*.html"))
+	//tpl = template.Must(tpl.ParseGlob("web/templates/*.html"))
 
 	s.router.Use(s.setRequestID)
 	s.router.Use(s.logRequest)
@@ -220,19 +226,27 @@ func (s *server) handleHello() http.HandlerFunc {
 }
 
 func (s *server) upload() http.HandlerFunc {
-	tpl, err := template.New("base").ParseFiles(s.html + "layout1.html")
-	if err != nil {
-		panic(err)
-	}
+	//tpl, err := template.New("base").ParseFiles(s.html + "layout1.html")
+	//if err != nil {
+	//	panic(err)
+	//}
+	//tpl, err := template.ParseGlob("web/templates/*.html")
+	//if err != nil {
+	//	log.Fatal("Error loading templates:" + err.Error())
+	//}
 	return func(w http.ResponseWriter, r *http.Request) {
-		tpl.ExecuteTemplate(w, "base", nil)
+		//tpl.ExecuteTemplate(w, "base", nil)
+		//fmt.Print("Test Upload")
+		tpl.ExecuteTemplate(w, "index3.html", nil)
 	}
 }
 
 func (s *server) main() http.HandlerFunc {
 	//tpl = template.Must(template.New("").Delims("<<", ">>").ParseFiles(s.html + "layout.html"))
 	//tpl = template.Must(template.New("").Delims("<<", ">>").ParseFiles(s.html+"layout1.html", s.html+"login1.html"))
-	tpl = template.Must(template.New("base").ParseFiles(s.html + "layout1.html"))
+	//tpl = template.Must(template.New("base").ParseFiles(s.html + "layout1.html"))
+	//tpl = template.Must(template.ParseFiles(s.html+"header.html", s.html+"footer.html"))
+	//tpl = template.ParseFiles(s.html + "*.html")
 	//tpl = template.Must(template.New("").Delims("<<", ">>").ParseFiles("web/templates/layout.html"))
 	//tpl = template.Must(template.ParseFiles("web/templates/index.html"))
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -308,7 +322,8 @@ func (s *server) main() http.HandlerFunc {
 
 		//tpl.ExecuteTemplate(w, "home.html", data)
 		//tpl.ExecuteTemplate(w, "layout", data)
-		tpl.ExecuteTemplate(w, "base", data)
+		//tpl.ExecuteTemplate(w, "base", data)
+		tpl.ExecuteTemplate(w, "index3.html", data)
 	}
 }
 
@@ -639,10 +654,12 @@ func (s *server) pagehandleSessionsCreate() http.HandlerFunc {
 	//	tpl = template.Must(template.New("").Delims("<<", ">>").ParseFiles("web/templates/login.html"))
 	//tpl, err := template.New("").Delims("<<", ">>").ParseFiles("web/templates/login.html")
 	//tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "login.html")
-	tpl, err := template.New("base").ParseFiles(s.html+"layout1.html", s.html+"login1.html")
-	if err != nil {
-		panic(err)
-	}
+	//	tpl, err := template.New("base").ParseFiles(s.html+"layout1.html", s.html+"login1.html")
+	//	if err != nil {
+	//		panic(err)
+	//	}
+	//tpl = template.Must(template.ParseFiles(s.html+"header.html", s.html+"footer.html"))
+
 	return func(w http.ResponseWriter, r *http.Request) {
 		//	var body, _ = helper.LoadFile("./web/templates/login.html") // "./web/templates/login.html"
 		//	fmt.Fprintf(w, body)
@@ -651,7 +668,10 @@ func (s *server) pagehandleSessionsCreate() http.HandlerFunc {
 		//		http.Error(w, err.Error(), 400)
 		//		return
 		//	}
-		tpl.ExecuteTemplate(w, "base", nil)
+		//tpl.ExecuteTemplate(w, "base", nil)
+		fmt.Println("Test")
+		tpl.ExecuteTemplate(w, "login3.html", nil)
+
 	}
 }
 
@@ -665,11 +685,13 @@ func (s *server) handleSessionsCreate() http.HandlerFunc {
 	//if err != nil {
 	//	panic(err)
 	//}
-	tpl, err := template.New("base").ParseFiles(s.html + "layout1.html")
-	if err != nil {
-		panic(err)
-	}
+	//tpl, err := template.New("base").ParseFiles(s.html + "layout1.html")
+	//if err != nil {
+	//	panic(err)
+	//}
+	//tpl = template.Must(template.ParseFiles(s.html + "/*.html"))
 	//return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	//tpl = template.Must(template.ParseFiles(s.html+"header.html", s.html+"footer.html"))
 	return func(w http.ResponseWriter, r *http.Request) {
 		f, err := os.OpenFile(LOGFILE, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 
@@ -779,7 +801,8 @@ func (s *server) handleSessionsCreate() http.HandlerFunc {
 			//	"inspector":           inspector,
 			"LoggedIn": LoggedIn,
 		}
-		tpl.ExecuteTemplate(w, "base", data) //  "index.html"
+		//	tpl.ExecuteTemplate(w, "base", data) //  "index.html"
+		tpl.ExecuteTemplate(w, "login3.html", data)
 		//err = tpl.ExecuteTemplate(w, "base", data)
 		//if err != nil {
 		//	http.Error(w, err.Error(), 400)
@@ -1637,8 +1660,48 @@ func (s *server) pageinsertVendor() http.HandlerFunc {
 		//			s.error(w, r, http.StatusUnprocessableEntity, err)
 		//			return
 		//		}
+		admin := false
+		superIngenerQuality := false
+		LoggedIn := false
+
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+		id, ok := session.Values["user_id"]
+		if !ok {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+		user, err := s.store.User().Find(id.(int))
+		if err != nil {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+		GET := map[string]bool{
+			"admin": admin,
+			//	"stockkeeper":         stockkeeper,
+			"SuperIngenerQuality": superIngenerQuality,
+			//	"stockkeeperWH":       stockkeeperWH,
+			//	"inspector":           inspector,
+		}
+		if user.Role == "Administrator" {
+			admin = true
+			LoggedIn = true
+		} else if user.Role == "SuperIngenerQuality" {
+			superIngenerQuality = true
+			LoggedIn = true
+			fmt.Println("SuperIngenerQuality - ", superIngenerQuality)
+		}
+		data := map[string]interface{}{
+			//	"admin":               admin,
+			//	"SuperIngenerQuality": superIngenerQuality,
+			"GET":      GET,
+			"LoggedIn": LoggedIn,
+		}
 		fmt.Println("Check -")
-		tpl.ExecuteTemplate(w, "base", nil)
+		tpl.ExecuteTemplate(w, "base", data)
 	}
 }
 

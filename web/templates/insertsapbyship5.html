@@ -46,7 +46,7 @@
         <a href="/main">
             <h2 style="color: darkslategrey;">На главную</h2>
         </a>
-    
+
     </div>
     <!--   <div id="app"> @submit="shipmentBySAP"-->
     <div id="forms" action="http://localhost:3000/shipmentbysap" method="post">
@@ -61,20 +61,20 @@
             </thead>
             <tbody>
                 <!--   <form > -->
-             <!--   <tr v-for="(row, index) in rows" v-bind:refs="'ref-'+index">
+                <!--   <tr v-for="(row, index) in rows" v-bind:refs="'ref-'+index">
                     <td><input required type="number" maxlength="10" v-model="row.material" /></td>
                     <td><input type="number" v-model="row.qty" /></td>
                     <td><input type="text" v-model="row.comment" /></td>
                     <!--   <td>
                         <label class="fileContainer">
-                            {{row.file.name}}
+                            
                             <input type="file" @change="setFilename($event, row)" :id="index">
                         </label>
                     </td> -->
-                    <tr>
-                        <td><input required type="number" maxlength="10" /></td>
-                        <td><input type="number" /></td>
-                        <td><input type="text" /></td>
+                <tr>
+                    <td><input required type="number" maxlength="10" /></td>
+                    <td><input type="number" /></td>
+                    <td><input type="text" /></td>
                     <td>
                         <a class="del-btn" style="cursor: pointer">Remove</a>
                     </td>
@@ -95,7 +95,7 @@
     <p class="fig2"> <img src="/images/shipmentsap2.jpg" width="780" height="650" class="img-fluid" alt="Цех"></p>
 
     <script type="text/javascript">
-       var result = [];
+        var result = [];
 
         function addRow() {
             const row = document
@@ -127,13 +127,13 @@
             for (let i = 1; i < rows.length; i++) {
                 const columns = rows[i].getElementsByTagName('td');
 <<<<<<< HEAD
-                
+
 =======
 
 >>>>>>> 5a7c7c06121454dfdb0d39bffd1e820945464b01
                 resultArr.push({
-                    material: parseInt(columns[0].children[0].value,10),
-                    qty: parseInt(columns[1].children[0].value,10),
+                    material: parseInt(columns[0].children[0].value, 10),
+                    qty: parseInt(columns[1].children[0].value, 10),
                     comment: columns[2].children[0].value,
                 });
             }
@@ -207,7 +207,7 @@
         //             var inputs = document
         //                 .getElementsByClassName('table')[0]
         //                 .getElementsByTagName('input');
-                        
+
         //             for (let i = 0; i < inputs.length; i++) {
         //                 inputs[i].value = '';
         //             }
@@ -219,16 +219,16 @@
         //           if (this.material && this.qty) {
         //             return true;
         //           }
-      
+
         //           this.errors = [];
-      
+
         //           if (!this.name) {
         //             this.errors.push("Требуется указать material.");
         //           }
         //           if (!this.age) {
         //             this.errors.push("Требуется указать qty.");
         //           }
-      
+
         //           e.preventDefault();
         //         } */
         //         //,

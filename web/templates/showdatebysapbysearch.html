@@ -1,167 +1,170 @@
-<< define "layout" >> 
-<!DOCTYPE html>
-<html lang="en">
+<< define "layout">>
+    <!DOCTYPE html>
+    <html lang="en">
 
-<head>
-    <meta charset="UTF-8" />
-    <title>Example Dynamic Form</title>
-    <script src="https://unpkg.com/vue@2.1.10/dist/vue.js"></script>
-    <style>
-        .fileContainer {
-            overflow: hidden;
-            position: relative;
-        }
+    <head>
+        <meta charset="UTF-8" />
+        <title>Example Dynamic Form</title>
+        <script src="https://unpkg.com/vue@2.1.10/dist/vue.js"></script>
+        <style>
+            .fileContainer {
+                overflow: hidden;
+                position: relative;
+            }
 
-        .fileContainer [type="file"] {
-            cursor: inherit;
-            display: block;
-            font-size: 999px;
-            filter: alpha(opacity=0);
-            min-height: 21px;
-            min-width: 100%;
-            opacity: 0;
-            position: absolute;
-            right: 0;
-            text-align: right;
-            top: 0;
-        }
+            .fileContainer [type="file"] {
+                cursor: inherit;
+                display: block;
+                font-size: 999px;
+                filter: alpha(opacity=0);
+                min-height: 21px;
+                min-width: 100%;
+                opacity: 0;
+                position: absolute;
+                right: 0;
+                text-align: right;
+                top: 0;
+            }
 
-        .fileContainer {
-            background: #e3e3e3;
-            float: left;
-            padding: 0.5em;
-            height: 21px;
-        }
+            .fileContainer {
+                background: #e3e3e3;
+                float: left;
+                padding: 0.5em;
+                height: 21px;
+            }
 
-        .fileContainer [type="file"] {
-            cursor: pointer;
-        }
-    </style>
+            .fileContainer [type="file"] {
+                cursor: pointer;
+            }
+        </style>
 
-</head>
+    </head>
 
-<body>
-    <div class="row">
-        <a href="/showdateshipmentbysapbysearchstatic">
-            <h2 style="color: darkslategrey;">На главную</h2>
-        </a>
+    <body>
+        <div class="row">
+            <a href="/showdateshipmentbysapbysearchstatic">
+                <h2 style="color: darkslategrey;">На главную</h2>
+            </a>
 
-    </div>
-    <!--   <div id="app"> @submit="shipmentBySAP"-->
-    <div id="forms" action="http://localhost:3000/showdateshipmentbysapbysearch" method="post">
-        <table class="table">
-            <thead>
-                <tr>
-                    <td><strong>Фамилия</strong></td>
-                    <td><strong>Дата</strong></td>
-                    <td><strong>Дата</strong></td>
-                    <td><strong>Материал</strong></td>
-                    <td></td>
-                </tr>
-            </thead>
-            <tbody>
-                <!--   <form > -->
-                <tr v-for="(row, index) in rows" v-bind:refs="'ref-'+index">
-                    <td><input type="text" v-model="row.lastname" /></td>
-                    <td><input type="date" v-model="row.date1" /></td> <!--value="2015-08-06T17:52:48Z"-->
-                    <td><input type="date" v-model="row.date2" /></td><!--value="2018-07-22"-->
-                    <td><input type="number" v-model="row.material" /></td>
-                    <!--   <td>
+        </div>
+        <!--   <div id="app"> @submit="shipmentBySAP"-->
+        <div id="forms" action="http://localhost:3000/showdateshipmentbysapbysearch" method="post">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td><strong>Фамилия</strong></td>
+                        <td><strong>Дата</strong></td>
+                        <td><strong>Дата</strong></td>
+                        <td><strong>Материал</strong></td>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!--   <form > -->
+                    <tr v-for="(row, index) in rows" v-bind:refs="'ref-'+index">
+                        <td><input type="text" v-model="row.lastname" /></td>
+                        <td><input type="date" v-model="row.date1" /></td>
+                        <!--value="2015-08-06T17:52:48Z"-->
+                        <td><input type="date" v-model="row.date2" /></td>
+                        <!--value="2018-07-22"-->
+                        <td><input type="number" v-model="row.material" /></td>
+                        <!--   <td>
                         <label class="fileContainer">
-                            {{row.file.name}}
+                            
                             <input type="file" @change="setFilename($event, row)" :id="index">
                         </label>
                     </td> -->
-                    <td>
-                        <a v-on:click="removeElement(index);" style="cursor: pointer">Remove</a>
-                    </td>
-                </tr>
-                <!--   </form> -->
-            </tbody>
-        </table>
-        <div>
-            <button class="button btn-primary" @click="addRow">Add row</button>
+                        <td>
+                            <a v-on:click="removeElement(index);" style="cursor: pointer">Remove</a>
+                        </td>
+                    </tr>
+                    <!--   </form> -->
+                </tbody>
+            </table>
+            <div>
+                <button class="button btn-primary" @click="addRow">Add row</button>
+            </div>
+            <div>
+                <button @click.prevent="collectData" type="submit">
+                    Отправить
+                </button>
+            </div>
         </div>
-        <div>
-            <button @click.prevent="collectData" type="submit">
-                Отправить
-            </button>
-        </div>
-    </div>
 
-    <p class="fig2"> <img src="/images/searchforshipment.jpg" width="680" height="650" class="img-fluid" alt="Цех"></p>
+        <p class="fig2"> <img src="/images/searchforshipment.jpg" width="680" height="650" class="img-fluid" alt="Цех">
+        </p>
 
-    <script type="text/javascript">
-        var result = [];
+        <script type="text/javascript">
+            var result = [];
 
-        var app = new Vue({
-            el: "#forms",
-            data: {
-                rows: []
-            },
-            methods: {
-                addRow: function () {
-                    var elem = document.createElement("tr");
-                    this.rows.push({
-                        lastname: "",
-                        date1: "",
-                        date2: "",
-                        material: ""
-                        //  file: {
-                        //      name: 'Choose File'
-                        //  }
-                    });
+            var app = new Vue({
+                el: "#forms",
+                data: {
+                    rows: []
                 },
-                removeElement: function (index) {
-                    this.rows.splice(index, 1);
-                },
-                collectData: function () {
-                    resultArr = [];
-                    for (i = 0; i < this.rows.length; i++) {
-                        result = {
-                            lastname: this.rows[i].lastname,
-                            data1: this.rows[i].date1,
-                            data2: this.rows[i].date2,
-                            material: this.rows[i].material
-                        };
-                        resultArr.push(result);
+                methods: {
+                    addRow: function () {
+                        var elem = document.createElement("tr");
+                        this.rows.push({
+                            lastname: "",
+                            date1: "",
+                            date2: "",
+                            material: ""
+                            //  file: {
+                            //      name: 'Choose File'
+                            //  }
+                        });
+                    },
+                    removeElement: function (index) {
+                        this.rows.splice(index, 1);
+                    },
+                    collectData: function () {
+                        resultArr = [];
+                        for (i = 0; i < this.rows.length; i++) {
+                            result = {
+                                lastname: this.rows[i].lastname,
+                                data1: this.rows[i].date1,
+                                data2: this.rows[i].date2,
+                                material: this.rows[i].material
+                            };
+                            resultArr.push(result);
+                        }
+                        console.log(resultArr);
+
+                        var xhr = new XMLHttpRequest();
+                        xhr.open("POST", "http://localhost:3000/showdateshipmentbysapbysearch", true);
+                        xhr.setRequestHeader("Content-Type", "application/json");
+                        //xhr.send(resultArr);
+                        xhr.send(JSON.stringify(resultArr));
+                        //    xhr.send(123);
+                        //  console.log("data send")
                     }
-                    console.log(resultArr);
-
-                    var xhr = new XMLHttpRequest();
-                    xhr.open("POST", "http://localhost:3000/showdateshipmentbysapbysearch", true);
-                    xhr.setRequestHeader("Content-Type", "application/json");
-                    //xhr.send(resultArr);
-                    xhr.send(JSON.stringify(resultArr));
-                    //    xhr.send(123);
-                    //  console.log("data send")
+                    /* sshipmentBySAP: function(e) {
+                      console.log("test");
+                      if (this.material && this.qty) {
+                        return true;
+                      }
+          
+                      this.errors = [];
+          
+                      if (!this.name) {
+                        this.errors.push("Требуется указать material.");
+                      }
+                      if (!this.age) {
+                        this.errors.push("Требуется указать qty.");
+                      }
+          
+                      e.preventDefault();
+                    } */
+                    //,
+                    //    setFilename: function(event, row) {
+                    //       var file = event.target.files[0];
+                    //       row.file = file
+                    //   }
                 }
-                /* sshipmentBySAP: function(e) {
-                  console.log("test");
-                  if (this.material && this.qty) {
-                    return true;
-                  }
-      
-                  this.errors = [];
-      
-                  if (!this.name) {
-                    this.errors.push("Требуется указать material.");
-                  }
-                  if (!this.age) {
-                    this.errors.push("Требуется указать qty.");
-                  }
-      
-                  e.preventDefault();
-                } */
-                //,
-                //    setFilename: function(event, row) {
-                //       var file = event.target.files[0];
-                //       row.file = file
-                //   }
-            }
-        });
-    </script>
-</body>
+            });
+        </script>
+    </body>
 
-</html>
-<< end >>
+    </html>
+    << end>>

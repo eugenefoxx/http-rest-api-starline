@@ -9,7 +9,7 @@
             overflow: hidden;
             position: relative;
         }
-        
+
         .fileContainer [type=file] {
             cursor: inherit;
             display: block;
@@ -23,14 +23,14 @@
             text-align: right;
             top: 0;
         }
-        
+
         .fileContainer {
             background: #E3E3E3;
             float: left;
             padding: .5em;
             height: 21px;
         }
-        
+
         .fileContainer [type=file] {
             cursor: pointer;
         }
@@ -38,8 +38,8 @@
 </head>
 
 <body>
-<!--   <div id="app"> @submit="shipmentBySAP"-->
-  <div id="app" action="http://localhost:3000/shipmentbysap" method="post"> 
+    <!--   <div id="app"> @submit="shipmentBySAP"-->
+    <div id="app" action="http://localhost:3000/shipmentbysap" method="post">
         <table class="table">
             <thead>
                 <tr>
@@ -55,12 +55,6 @@
                     <td><input type="number" v-model="row.material"></td>
                     <td><input type="number" v-model="row.qty"></td>
                     <td><input type="text" v-model="row.comment"></td>
-                 <!--   <td>
-                        <label class="fileContainer">
-                            {{row.file.name}}
-                            <input type="file" @change="setFilename($event, row)" :id="index">
-                        </label>
-                    </td> -->
                     <td>
                         <a v-on:click="removeElement(index);" style="cursor: pointer">Remove</a>
                     </td>
@@ -72,10 +66,10 @@
         <div>
             <button class="button btn-primary" @click="addRow">Add row</button>
         </div>
-     <div>
+        <div>
             <button input @submit="shipmentBySAP" type="submit">Отправить</button>
         </div>
-</div>
+    </div>
     <script type="text/javascript">
         var app = new Vue({
             el: "#app",
@@ -83,42 +77,42 @@
                 rows: []
             },
             methods: {
-                addRow: function() {
+                addRow: function () {
                     var elem = document.createElement('tr');
                     this.rows.push({
                         title: "",
                         description: "",
                         commnet: "",
-                      //  file: {
-                      //      name: 'Choose File'
-                      //  }
+                        //  file: {
+                        //      name: 'Choose File'
+                        //  }
                     });
                 },
-                removeElement: function(index) {
+                removeElement: function (index) {
                     this.rows.splice(index, 1);
                 },
                 sshipmentBySAP: function (e) {
                     console.log("test")
-            if (this.material && this.qty) {
-                return true;
-            }
+                    if (this.material && this.qty) {
+                        return true;
+                    }
 
-            this.errors = [];
+                    this.errors = [];
 
-            if (!this.name) {
-                this.errors.push('Требуется указать material.');
-            }
-            if (!this.age) {
-                this.errors.push('Требуется указать qty.');
-            }
+                    if (!this.name) {
+                        this.errors.push('Требуется указать material.');
+                    }
+                    if (!this.age) {
+                        this.errors.push('Требуется указать qty.');
+                    }
 
-            e.preventDefault();
-        }
-    //,
-            //    setFilename: function(event, row) {
-             //       var file = event.target.files[0];
-             //       row.file = file
-             //   }
+                    e.preventDefault();
+                }
+                //,
+                //    setFilename: function(event, row) {
+                //       var file = event.target.files[0];
+                //       row.file = file
+                //   }
             }
         });
     </script>

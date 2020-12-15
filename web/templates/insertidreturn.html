@@ -65,12 +65,6 @@
                     <td><input type="number" v-model="row.qtyfact" /></td>
                     <td><input type="number" v-model="row.qtysap" /></td>
                     <td><input type="number" v-model="row.qtypanacim" /></td>
-                    <!--   <td>
-                        <label class="fileContainer">
-                            {{row.file.name}}
-                            <input type="file" @change="setFilename($event, row)" :id="index">
-                        </label>
-                    </td> -->
                     <td>
                         <a v-on:click="removeElement(index);" style="cursor: pointer">Remove</a>
                     </td>
