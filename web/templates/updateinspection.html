@@ -1,63 +1,53 @@
-<< define "layout">>
-    <!DOCTYPE html>
-    <html lang="en">
+<!DOCTYPE HTML>
+<html>
+{{template "head.html" .}}
 
-    <head>
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<body>
+    {{template "navbar.html" .}}
+    <div class="container">
+        <h1>Карточка контроля компонента</h1>
 
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
-            integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-    </head>
+        <form method="POST" action="/updateinspection/{{.GET.ID}}">
 
-    <body>
+            <div class="form-group">
+                <label for="title">Статус</label>
 
-        <div class="container">
-            <h1>Карточка контроля компонента</h1>
-
-            <form method="POST" action="/updateinspection/<<.ID>>">
-
-                <div class="form-group">
-                    <label for="title">Статус</label>
-
-                    <!--<input type="text" class="form-control" name="status" id="status" value="<<.Status>>">-->
-                    <!--  <p><input class="form-control" name="status" id="status" type="radio" value="OK">
+                <!--<input type="text" class="form-control" name="status" id="status" value="<<.Status>>">-->
+                <!--  <p><input class="form-control" name="status" id="status" type="radio" value="OK">
                         OK <<.Status>>
                     </p>
                     <p><input class="form-control" name="status" id="status" type="radio" value="NG">
                         NG <<.Status>>
                     </p>-->
-                    <select class="form-control" id="status" name="status">
-                        <option value="OK">
-                            OK - Текущий статус: <<.Status>>
-                        </option>
-                        <option value="NG">
-                            NG - Текущий статус: <<.Status>>
-                        </option>
-                    </select>
+                <select class="form-control" id="status" name="status" style="width: 25%;">
+                    <option value="OK">
+                        OK - Текущий статус: {{.GET.Status}}
+                    </option>
+                    <option value="NG">
+                        NG - Текущий статус: {{.GET.Status}}
+                    </option>
+                </select>
 
-                </div>
-                <div class="form-group">
-                    <label for="description">Примечание</label>
-                    <textarea class="form-control" name="note" id="note" rows="3"><<.Note>></textarea>
-                </div>
-                <div>
-                    <label>
-                        <<.Groups>>
-                    </label>
-                </div>
-                <!--    <div class="form-group">
+            </div>
+            <div class="form-group">
+                <label for="description">Примечание</label>
+                <textarea class="form-control" name="note" id="note" rows="3"
+                    style="width: 30%; height: 200px;">{{.GET.Note}}</textarea>
+            </div>
+            <div>
+                <label>
+                    {{.GET.Groups}}
+                </label>
+            </div>
+            <!--    <div class="form-group">
                     <label>{{.Updated}}</label>
                 </div>-->
-                <button type="submit" class="btn btn-primary">Подтвердить</button>
-            </form>
-        </div>
+            <br>
+            <button type="submit" class="btn btn-primary">Подтвердить</button>
+        </form>
+    </div>
+    {{template "footer.html" .}}
 
-    </body>
+</body>
 
-    </html>
-
-
-    << end>>
+</html>

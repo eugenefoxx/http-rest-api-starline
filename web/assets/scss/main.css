@@ -9,6 +9,31 @@
           box-sizing: border-box;
 }
 
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #f3f70c;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: #040b75;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+li a:hover {
+  background-color: #111;
+  color: white;
+}
+
 body {
   font-family: CrimsonPro;
   background-color: rgba(12, 133, 231, 0.533);
@@ -16,40 +41,94 @@ body {
 
 .navbar {
   overflow: hidden;
-  background-color: #c6c90e;
+  background-color: #333;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }
 
 .navbar a {
   float: left;
-  font-size: 30px;
-  color: white;
+  display: block;
+  color: #f2f2f2;
   text-align: center;
   padding: 14px 16px;
   text-decoration: none;
+  font-size: 17px;
+}
+
+.navbar a:hover {
+  background: #f1f1f1;
+  color: black;
+}
+
+.navbar a.active {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.main {
+  padding: 16px;
+  margin-bottom: 30px;
+}
+
+#rcorners {
+  border-radius: 15px 15px 15px 15px;
+  background: #73AD21;
+  padding: 50px;
+  width: 80%;
+  height: 20px;
+  padding: 10px;
+  -ms-flex-item-align: center;
+      -ms-grid-row-align: center;
+      align-self: center;
+  margin: auto;
+  text-align: center;
+}
+
+#msg {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/*
+.navbar {
+overflow: hidden;
+background-color: rgb(198, 201, 14);
+//height: 400px;
+}
+
+.navbar a {
+float: left;
+font-size: 30px;
+color: white;
+text-align: center;
+padding: 14px 16px;
+text-decoration: none;
 }
 
 .dropdown {
-  float: left;
-  overflow: visible;
-  position: relative;
-  display: inline;
+float: left;
+overflow: visible;
+position: relative;
+display: inline;
 }
 
 .dropdown .dropbtn {
-  font-size: 30px;
-  border: none;
-  outline: none;
-  color: white;
-  padding: 14px 16px;
-  background-color: inherit;
-  font-family: inherit;
-  margin: 0;
+font-size: 30px;  
+border: none;
+outline: none;
+color: white;
+padding: 14px 16px;
+background-color: inherit;
+font-family: inherit;
+margin: 0;
 }
 
 .navbar a:hover, .dropdown:hover .dropbtn {
-  background-color: red;
+background-color: red;
 }
-
+*/
 .dropdown-content {
   display: none;
   position: absolute;
@@ -77,33 +156,33 @@ body {
   display: block;
 }
 
+/*
 .dropdown-content2 {
-  display: none;
-  position: absolute;
-  background-color: none;
-  min-width: 160px;
-  -webkit-box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-          box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-  z-index: 1;
+display: none;
+position: absolute;
+background-color: none;
+min-width: 160px;
+box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+z-index: 1;
 }
 
 .dropdown-content2 form {
-  float: none;
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-  text-align: right;
+float: none;
+color: black;
+padding: 12px 16px;
+text-decoration: none;
+display: block;
+text-align: right;
 }
 
 .dropdown-content2 form:hover {
-  background-color: none;
+background-color: none;
 }
 
 .dropdown:hover .dropdown-content2 {
-  display: block;
+display: block;
 }
-
+*/
 .user {
   font-size: 20px;
   margin-left: 1400px;
@@ -351,44 +430,44 @@ tr:nth-child(even) {
 }
 
 /*
- #okno {
-   width: 1200px;
-   height: 500px;
-   text-align: center;
-   padding: 15px;
-   border: 3px solid #0000cc;
-   border-radius: 10px;
-   color: #0000cc;
-   display: none;
-   position: absolute;
-   top: 0;
-   right: 0;
-   bottom: 0;
-   left: 0;
-   margin: auto;
-   font-size: 200%;
-   background: #d4d4d4;
- }
+#okno {
+ width: 1200px;
+ height: 500px;
+ text-align: center;
+ padding: 15px;
+ border: 3px solid #0000cc;
+ border-radius: 10px;
+ color: #0000cc;
+ display: none;
+ position: absolute;
+ top: 0;
+ right: 0;
+ bottom: 0;
+ left: 0;
+ margin: auto;
+ font-size: 200%;
+ background: #d4d4d4;
+}
 
- #okno:target {
-   display: block;
- }
+#okno:target {
+ display: block;
+}
 
- #okno .close {
-   display: inline-block;
-   border: 1px solid #0000cc;
-   color: #0000cc;
-   padding: 0 12px;
-   margin: 300px;
-   text-decoration: none;
-   background: #f2f2f2;
-   font-size: 20pt;
-   cursor: pointer;
- }
+#okno .close {
+ display: inline-block;
+ border: 1px solid #0000cc;
+ color: #0000cc;
+ padding: 0 12px;
+ margin: 300px;
+ text-decoration: none;
+ background: #f2f2f2;
+ font-size: 20pt;
+ cursor: pointer;
+}
 
- #okno .close:hover {
-   background: #e6e6ff;
- }
+#okno .close:hover {
+ background: #e6e6ff;
+}
 */
 #fontsize-showinspection {
   font-size: 90%;
@@ -806,11 +885,11 @@ p {
   /* Internet Explorer/Edge */
   user-select: none;
   /* Non-prefixed version, currently
-                                        supported by Chrome and Opera */
+                                      supported by Chrome and Opera */
 }
 
 .block-style {
-  display: block;
+  display: inline;
 }
 
 .main {
@@ -845,7 +924,7 @@ p {
 
 .form-control {
   display: block;
-  width: 10%;
+  width: 30%;
   height: calc(1.5em + .75rem + 2px);
   padding: .375rem .75rem;
   font-size: 1rem;

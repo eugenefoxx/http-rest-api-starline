@@ -1,32 +1,15 @@
-<< define "layout" >>
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="/assets/scss/main.css">
-<!--    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">-->
-    <title>Registration</title>
-
-<!--    <style>
-        #dateform {
-            font-size: 15px;
-        }
-
-        #text {
-            text-align: center;
-        }
-    </style>-->
-
-</head>
-
+<!DOCTYPE HTML>
+<html>
+{{template "head.html" .}}
 
 <body>
+    {{template "navbar.html" .}}
     <header>
-    <h1>Регистрация</h1>
+        <h1>Регистрация</h1>
     </header>
     <form id="text" method="post" action="/users">
-        <div class="register-form">  <!--form-group-->
+        <div class="register-form">
+            <!--form-group-->
             <label for="email" id="dateform">Пользователь</label>
             <input class="register-field_user" type="text" id="email" name="email">
             <br>
@@ -44,8 +27,8 @@
             <button type="submit">Зарегистриовать</button>
         </div>
     </form>
+    {{template "footer.html" .}}
+
 </body>
 
 </html>
-
-<< end >>

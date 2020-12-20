@@ -188,7 +188,7 @@ func (r *ShipmentbysapRepository) ShowDateBySearch(lastname string, shipment_dat
 	shipmentList := make(model.Shipmentbysaps, 0)
 
 	rows, err := r.store.db.Query(
-		"SELECT material, qty, comment, TO_CHAR(shipment_date, 'YYYY-MM-DD') shipment_date2, TO_CHAR(shipment_time, 'HH24:MI:SS') shipment_time2, lastname FROM shipmentbysap WHERE lastname = $1 AND shipment_date BETWEEN $2 AND $3 AND material = $4",
+		"SELECT material, qty, comment, TO_CHAR(shipment_date, 'YYYY-MM-DD') shipment_date2, TO_CHAR(shipment_time, 'HH24:MI:SS') shipment_time2, lastname FROM shipmentbysap WHERE lastname = $1 OR shipment_date BETWEEN $2 AND $3 OR material = $4",
 		lastname, shipment_date2, shipment_date3, material)
 	if err != nil {
 		fmt.Println("ошибка в select")

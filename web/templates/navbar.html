@@ -1,0 +1,85 @@
+<ul>
+    <li><a class="active" href="/main">StarLine {{.Navbar}}</a></li>
+    <!--    <li class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">Dropdown</a>
+        <div class="dropdown-content">
+            <a href="/page2">Link 1</a>
+            <a href="/login">Link 2</a>
+            <a href="#">Link 3</a>
+        </div>
+    </li>
+    <li><a href="/test">Test</a></li>-->
+    {{ if .LoggedIn}}
+    {{ if .Admin}}
+    <li class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">Логистика</a>
+        <div class="dropdown-content">
+            <a href="/shipmentbysap">Отчет по отгрузке SAP</a>
+            <a href="/showdateshipmentbysapbysearchstatic">Отчет по отгрузке SAP по поиску
+                Static</a>
+            <a href="/insertIDReturn">Пересчет ЕО с возвратом</a>
+        </div>
+    </li>
+    {{end}}
+    {{ if .Stockkeeper}}
+    <li class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">Логистика</a>
+        <div class="dropdown-content">
+            <a href="/shipmentbysap">Отчет по отгрузке SAP</a>
+            <a href="/showdateshipmentbysapbysearchstatic">Отчет по отгрузке SAP по поиск
+                Static</a>
+        <!--    <a href="/showShipmentbysapbysearchDateStatic">Отчет по отгрузке SAP по поиск
+                Static 2</a>-->
+            <a href="/insertIDReturn">Пересчет ЕО с возвратом</a>
+        <!--    <a href="/showdateshipmentbysap">Полный отчет</a>
+            <a href="/showdateshipmentbysapbysearch">Отчет1</a>-->
+        </div>
+    </li>
+    {{ end}}
+    {{ if .Admin}}
+    <li class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">Отдел качества</a>
+        <div class="dropdown-content">
+            <a href="/ininspection">Отгрузка катушек на ВК</a>
+            <a href="/insertvendor">Добавить поставщика в базу</a>
+            <a href="/showvendor">Просмотр и редактирование поставщиков</a>
+            <a href="/statusinspection">Компоненты на входном контроле</a>
+        </div>
+    </li>
+    {{ end}}
+    {{ if .SuperIngenerQuality}}
+    <li class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">Отдел качества</a>
+        <div class="dropdown-content">
+            <a href="/insertvendor">Добавить поставщика в базу</a>
+            <a href="/showvendor">Просмотр и редактирование поставщиков</a>
+            <a href="/statusinspection">Компоненты на входном контроле</a>
+        </div>
+    </li>
+    {{ end}}
+    {{ if .StockkeeperWH}}
+    <li class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">Отдел качества</a>
+        <div class="dropdown-content">
+            <a href="/ininspection">Отгрузка катушек на ВК</a>
+            <a href="/statusinspection">Компоненты на входном контроле</a>
+            <a href="/statusinspectionforwh">Компоненты на входном контроле для прием</a>
+        </div>
+    </li>
+    {{ end}}
+    {{ if .Inspector}}
+    <li class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">Отдел качества</a>
+        <div class="dropdown-content">
+            <a href="/statusinspection">Компоненты на входном контроле</a>
+        </div>
+    </li>
+    {{ end}}
+    {{.User}} {{.Username}}
+    <li><a style="margin-right: 10px;" href="/logout">Logout</a></li>
+    {{ else}}
+    <li><a href="/login">Авторизация</a></li>
+    <li><a href="/users">Регистрация</a></li>
+    <li><a href="/updatepass">Обновить пароль</a></li>
+    {{ end}}
+</ul>

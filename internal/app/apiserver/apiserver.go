@@ -21,12 +21,13 @@ func Start(config *Config) error {
 	defer db.Close()
 	store := sqlstore.New(db)
 	sessionStore := sessions.NewCookieStore([]byte(config.SessionKey))
-	html := config.HTML
+	//html := config.HTML
 
 	//	router := mux.NewRouter()
 	//	router.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("./static"))))
 
-	srv := newServer(store, sessionStore, html)
+	//srv := newServer(store, sessionStore, html)
+	srv := newServer(store, sessionStore)
 
 	//	return http.ListenAndServe(config.BindAddr, srv)
 	// http.Handle("/resources/", http.StripPrefix("/resources", http.FileServer(http.Dir("./web/images"))))

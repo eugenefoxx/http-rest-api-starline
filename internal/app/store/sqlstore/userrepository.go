@@ -38,7 +38,7 @@ func (r *UserRepository) Find(id int) (*model.User, error) {
 
 	u := &model.User{}
 	if err := r.store.db.QueryRow(
-		"SELECT id, email, encrypted_password, firstname, lastname, Coalesce (role, ''), Coalesce (groups, '') FROM users WHERE id = $1",
+		"SELECT id, email, encrypted_password, firstname, lastname, Coalesce (role, ''), Coalesce (groups, ''), Coalesce (tabel, '') FROM users WHERE id = $1",
 		id,
 	).Scan(
 		&u.ID,
@@ -48,6 +48,7 @@ func (r *UserRepository) Find(id int) (*model.User, error) {
 		&u.LastName,
 		&u.Role,
 		&u.Groups,
+		&u.Tabel,
 	); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, store.ErrRecordNotFound
@@ -62,7 +63,7 @@ func (r *UserRepository) FindByEmail(email string, tabel string) (*model.User, e
 	fmt.Println("nikname - ", email, tabel)
 	u := &model.User{}
 	err := r.store.db.QueryRow(
-		"SELECT id, email, encrypted_password, firstname, lastname, Coalesce(role, ''), Coalesce (groups, ''), tabel FROM users WHERE email = $1 OR tabel = $2",
+		"SELECT id, email, encrypted_password, firstname, lastname, Coalesce(role, ''), Coalesce (groups, ''), Coalesce (tabel, '') FROM users WHERE email = $1 OR tabel = $2",
 		email, tabel,
 	).Scan(
 		&u.ID,

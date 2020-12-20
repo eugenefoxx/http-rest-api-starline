@@ -1,47 +1,30 @@
-<< define "layout">>
-    <!DOCTYPE html>
-    <html lang="en">
+<!DOCTYPE HTML>
+<html>
+{{template "head.html" .}}
 
-    <head>
-        <meta charset="utf-8">
-        <link rel="stylesheet" href="/assets/scss/main.css">
-        <!--    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">-->
-        <title>Update Pass</title>
+<body>
+    {{template "navbar.html" .}}
+    <header>
+        <h1>Обновление пароля</h1>
+    </header>
+    <form id="text" method="post" action="/updatepass">
+        <div class="register-form">
+            <!--form-group-->
+            <label for="email" id="dateform">Пользователь</label>
+            <input class="register-field_user" type="text" id="email" name="email">
+            <br>
+            <p></p>
+            <label for="password">Пароль</label>
+            <input class="register-field_pass" type="password" id="password" name="password">
+            <br>
+            <p></p>
 
-        <!--    <style>
-        #dateform {
-            font-size: 15px;
-        }
+            <button type="submit">Обновить</button>
+        </div>
+    </form>
 
-        #text {
-            text-align: center;
-        }
-    </style>-->
+    {{template "footer.html" .}}
 
-    </head>
+</body>
 
-
-    <body>
-        <header>
-            <h1>Обновление пароля</h1>
-        </header>
-        <form id="text" method="post" action="/updatepass">
-            <div class="register-form">
-                <!--form-group-->
-                <label for="email" id="dateform">Пользователь</label>
-                <input class="register-field_user" type="text" id="email" name="email">
-                <br>
-                <p></p>
-                <label for="password">Пароль</label>
-                <input class="register-field_pass" type="password" id="password" name="password">
-                <br>
-                <p></p>
-
-                <button type="submit">Обновить</button>
-            </div>
-        </form>
-    </body>
-
-    </html>
-
-    << end>>
+</html>

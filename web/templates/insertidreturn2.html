@@ -1,83 +1,26 @@
-<< define "layout" >>
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
-
-<head>
-    <title>Пересчет ЕО</title>
-    <meta charset="utf-8" />
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
-        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
-    <link rel="stylesheet" href="/assets/scss/main.css">
-
-    <style>
-        .noselect {
-            -webkit-touch-callout: none;
-            /* iOS Safari */
-            -webkit-user-select: none;
-            /* Safari */
-            -khtml-user-select: none;
-            /* Konqueror HTML */
-            -moz-user-select: none;
-            /* Firefox */
-            -ms-user-select: none;
-            /* Internet Explorer/Edge */
-            user-select: none;
-            /* Non-prefixed version, currently
-                                                    supported by Chrome and Opera */
-        }
-
-        .block-style {
-            display: block;
-        }
-
-        .main {
-            margin: 5px;
-        }
-
-        #main {
-            margin-top: 15px;
-        }
-
-        .apply-clear-buttons {
-            margin: 0 5px;
-        }
-
-        .fields-style {
-            margin: 5px;
-        }
-
-        .addform {
-            color: white;
-            font-size: 30px;
-        }
-    </style>
-</head>
+{{template "head.html" .}}
 
 <body>
-    <div class="row">
-        <a href="/main">
-            <h2 style="color: darkslategrey; margin-left: 100px;">На главную</h2>
-        </a>
-    </div>
-    <div>
-        <h3 style="margin-left: 10px;">Форма отправки данных по пересчету ЕО</h3>
-    </div>
-    <div class="noselect block-style" id="form"></div>
-    <div class="noselect block-style main" id="add-condition-button">
-        <button id="add-condition" class="btn btn-link addform">+ Добавить строку</button>
-    </div>
-    <hr />
-    <div class="noselect block-style main" id="apply-clear-buttons">
-        <button id="apply" class="btn btn-primary btn-sm apply-clear-buttons">
-            Отправить данные</button><button id="clear-form" class="btn btn-light btn-sm apply-clear-buttons">
-            Очистить форму
-        </button>
-    </div>
-    
-    <script src="/assets/js/jsformidreturn.js"></script>
+{{template "navbar.html" .}}
+<div>
+    <h3 style="margin-left: 10px;">Форма отправки данных по пересчету ЕО</h3>
+</div>
+<div class="noselect block-style" id="form"></div>
+<div class="noselect block-style main" id="add-condition-button">
+    <button id="add-condition" class="btn btn-link addform">+ Добавить строку</button>
+</div>
+<hr />
+<div class="noselect block-style main" id="apply-clear-buttons">
+    <button id="apply" class="btn btn-primary btn-sm apply-clear-buttons">
+        Отправить данные</button><button id="clear-form" class="btn btn-light btn-sm apply-clear-buttons">
+    Очистить форму
+</button>
+</div>
+
+{{template "footer.html" .}}
+<script src="/assets/js/jsformidreturn.js"></script>
 </body>
 
 </html>
-<< end >>

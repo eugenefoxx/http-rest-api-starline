@@ -1,97 +1,82 @@
-<< define "layout">>
-    <!DOCTYPE html>
-    <html lang="en">
+<!DOCTYPE HTML>
+<html>
+{{template "head.html" .}}
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="/assets/scss/main.css">
-        <title>Document</title>
-    </head>
-    -
+<body>
+    {{template "navbar.html" .}}
+    <div class="row">
 
-    <body>
-        <div class="row">
-            <a href="/main">
-                <h2 style="color: white; margin-left: 50px;">На главную</h2>
-            </a>
+    <!--    <div class="column">
 
+            <form method="post" action="/showShipmentbysapbysearchDateStatic">
+
+                <h2>Поиск по дате отгрузок</h2>
+                <p></p>
+                <label for="password">Дата от</label>
+                <input type="date" id="date" name="date1">
+                <br>
+                <p></p>
+                <label for="firstname" class="form-field__label">Дата по</label>
+                <input type="date" id="date" name="date2">
+                <br>
+                <br>
+                <button class="button" type="submit">Отправить</button>
+
+            </form>
+        </div>-->
+
+        <div class="column">
+
+            <form method="post" action="/showIDReturn">
+                <!--     <div class="register-form">-->
+                <!--form-group-->
+                <h2>Поиск по дате пересчет ЕО</h2>
+                <p></p>
+                <label for="password">Дата от</label>
+                <input type="date" id="date" name="date1">
+                <br>
+                <p></p>
+                <label for="firstname" class="form-field__label">Дата по</label>
+                <input type="date" id="date" name="date2">
+                <br>
+                <br>
+                <button class="button" type="submit">Отправить</button>
+                <!--   <button class="button"  type="submit">Обновить</button>
+                    </div>-->
+            </form>
         </div>
 
-        <div class="row">
+        <div class="column">
 
-            <div class="column">
-                <!--<<.user>>-->
-                <form method="post" action="/showShipmentbysapbysearchDateStatic">
-                    <!--     <div class="register-form">-->
-                    <!--form-group-->
-                    <h2>Поиск по дате отгрузок</h2>
-                    <p></p>
-                    <label for="password">Дата от</label>
-                    <input type="date" id="date" name="date1">
-                    <br>
-                    <p></p>
-                    <label for="firstname" class="form-field__label">Дата по</label>
-                    <input type="date" id="date" name="date2">
-                    <br>
-                    <br>
-                    <button class="button" type="submit">Отправить</button>
-                    <!--    </div>-->
-                </form>
-            </div>
+            <form id="text" method="post" action="/showdateshipmentbysapbysearchstatic">
+                <!--   <div class="register-form">-->
+                <!--form-group-->
+                <h2>Поиск по параметрам</h2>
+                <label for="user">Пользователь</label>
+                <input type="text" id="lastname" name="lastname">
+                <br>
+                <p></p>
+                <label for="date from">Дата от</label>
+                <input type="date" id="date" name="date1">
+                <br>
+                <p></p>
+                <label for="date on">Дата по</label>
+                <input type="date" id="date" name="date2">
+                <br>
+                <p></p>
+                <label for="material">Материал</label>
+                <input type="number" id="material" name="material">
+                <br>
 
-            <div class="column">
-
-                <form method="post" action="/showIDReturn">
-                    <!--     <div class="register-form">-->
-                    <!--form-group-->
-                    <h2>Поиск по дате пересчет ЕО</h2>
-                    <p></p>
-                    <label for="password">Дата от</label>
-                    <input type="date" id="date" name="date1">
-                    <br>
-                    <p></p>
-                    <label for="firstname" class="form-field__label">Дата по</label>
-                    <input type="date" id="date" name="date2">
-                    <br>
-                    <br>
-                    <button class="button" type="submit">Отправить</button>
-                    <!--    </div>-->
-                </form>
-            </div>
-
-            <div class="column">
-
-                <form id="text" method="post" action="/showdateshipmentbysapbysearchstatic">
-                    <!--   <div class="register-form">-->
-                    <!--form-group-->
-                    <h2>Поиск по параметрам</h2>
-                    <label for="user">Пользователь</label>
-                    <input type="text" id="lastname" name="lastname">
-                    <br>
-                    <p></p>
-                    <label for="date from">Дата от</label>
-                    <input type="date" id="date" name="date1">
-                    <br>
-                    <p></p>
-                    <label for="date on">Дата по</label>
-                    <input type="date" id="date" name="date2">
-                    <br>
-                    <p></p>
-                    <label for="material">Материал</label>
-                    <input type="number" id="material" name="material">
-                    <br>
-
-                    <br>
-                    <button class="button" type="submit">Отправить</button>
-                    <!--   </div>-->
-                </form>
-            </div>
-            <br>
+                <br>
+                <button class="button" type="submit">Отправить</button>
+                <!--   </div>-->
+            </form>
         </div>
+        <br>
+    </div>
+    {{template "footer.html" .}}
+    <script src="/assets/js/script.js"></script>
+</body>
 
-        <script src="/assets/js/script.js"></script>
-    </body>
-
-    </html>
-    << end>>
+</html>
