@@ -1844,6 +1844,7 @@ func (s *server) pageinInspection() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		Admin := false
 		StockkeeperWH := false
+		SuperIngenerQuality := false
 		LoggedIn := false
 
 		session, err := s.sessionStore.Get(r, sessionName)
@@ -1871,10 +1872,14 @@ func (s *server) pageinInspection() http.HandlerFunc {
 			StockkeeperWH = true
 			LoggedIn = true
 			fmt.Println("кладовщик склада - ", StockkeeperWH)
+		} else if user.Role == "SuperIngenerQuality" {
+			SuperIngenerQuality = true
+			LoggedIn = true
 		}
 		data := map[string]interface{}{
 			"Admin":         Admin,
 			"StockkeeperWH": StockkeeperWH,
+			"SuperIngenerQuality":  SuperIngenerQuality,
 			//	"GET":           get,
 			"LoggedIn": LoggedIn,
 			"User":     user.LastName,
