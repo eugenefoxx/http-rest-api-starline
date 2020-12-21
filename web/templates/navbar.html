@@ -77,10 +77,10 @@
     </li>
     {{ end}}
     {{.User}} {{.Username}}
-    <li><a style="margin-right: 10px;" href="/logout">Logout</a></li>
+    <li><a href="/logout">Logout</a></li>
     {{ else}}
     <li><a href="/login">Авторизация</a></li>
-    <li><a href="/users">Регистрация</a></li>
+    <li style="margin-left:70%;"><a href="/users">Регистрация</a></li>
     <li><a href="/updatepass">Обновить пароль</a></li>
     {{ end}}
 </ul>

@@ -218,6 +218,10 @@ display: block;
   margin-top: 10px;
 }
 
+.login {
+  margin-left: 5%;
+}
+
 header {
   /*  margin: auto; */
   margin-top: 10px;

@@ -4,18 +4,20 @@
 
 <body>
     {{template "navbar.html" .}}
-    <h4>Пожалуйста, авторизуйтесь.</h4>
+    <h4 style="margin-left:10%;">Пожалуйста, авторизуйтесь.</h4>
     <form action="/login" method="post">
 
-        <div class="form-group">
-            <label>Username</label>
+        <div class="login">
+            <label style="margin-left: 5%;"></label>
             <input type="text" id="email" name="email" class="form-control" placeholder="почта @starline">
         </div>
+        <br>
         <div class="form-group">
-            <label>Password</label>
+            <label style="margin-left: 5%;"></label>
             <input type="password" id="password" name="password" class="form-control" placeholder="пароль">
         </div>
-        <button type="submit" class="btn btn-primary">Login</button>
+        <br>
+        <button type="submit" class="btn btn-primary" style="margin-left: 2%;">Login</button>
     </form>
 
     {{template "footer.html" .}}
