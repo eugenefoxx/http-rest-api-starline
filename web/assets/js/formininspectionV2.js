@@ -19,7 +19,7 @@ function init() {
 var mainDiv = document.getElementById("form"); //ref to main div with forms
 
 //attributes for form fields, they will be added during the creation of forms
-var formElementsTypes = ["input", "button"];
+var formElementsTypes = ["input", "button"];https://www.jetbrains.com/idea/features/editions_comparison_matrix.html
 var formElementsIds = ["scanid", "button"];
 var formElementsClassNames = [
     "form-control form-control-sm col-lg-4",
@@ -30,8 +30,8 @@ var formAllowedIdsArr = [];
 var rowsAmount = 50;
 var finalData = [];
 var labels = ["Сканируем ЕО катушки"];
-const regexp = /\bP\d{7}L\d{10}R\d{10}Q\d{5}D\d{8}\b/;
-const regexp2 = /\bP\d{7}LK\d{9}R\d{10}Q\d{5}D\d{8}\b/;
+const regexp = /\bP\d{7}LK\d{9}R\d{10}Q\d{5}D\d{8}\b/;
+const regexp2 = /\bP\d{7}L\d{10}R\d{10}Q\d{5}D\d{8}\b/;
 
 //creating form and adding attributes
 function createForm() {

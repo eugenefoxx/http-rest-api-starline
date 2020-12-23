@@ -8,16 +8,18 @@
     <form action="/login" method="post">
 
         <div class="login">
-            <label style="margin-left: 5%;"></label>
+            <label></label>
+            <!--style="margin-left: 5%;"-->
             <input type="text" id="email" name="email" class="form-control" placeholder="почта @starline">
         </div>
         <br>
-        <div class="form-group">
-            <label style="margin-left: 5%;"></label>
+        <div class="login">
+            <label></label>
+            <!--style="margin-left: 5%;"-->
             <input type="password" id="password" name="password" class="form-control" placeholder="пароль">
         </div>
         <br>
-        <button type="submit" class="btn btn-primary" style="margin-left: 2%;">Login</button>
+        <button type="submit" class="btn btn-primary login_submit" style="margin-left: 7%;">Login</button>
     </form>
 
     {{template "footer.html" .}}

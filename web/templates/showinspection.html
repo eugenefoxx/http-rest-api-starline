@@ -35,7 +35,7 @@
             <!--  <a href="#okno">Статистика по дебиторам</a>-->
             <div class="btn-box">
                 <button type="button" class="btn btn-default" data-modal="modal_1">Статистика по
-          q          дебиторам</button>
+                    дебиторам</button>
             </div>
             <div id="overlay" class="overlay" data-close=""></div>
 
@@ -45,7 +45,7 @@
                     <h3>Статистика</h3>
                     <font color="black">Oбщее количество</font>:
                     {{ range.GetStatic}}
-                    {{ .NameDebitor}} &ndash;&nbsp;{{ .Count}}&sbquo;&nbsp;M
+                    {{ .NameDebitor}} &ndash;&nbsp;{{ .Count}}&sbquo;&nbsp;
                     {{ end}}<br>
                     <font color="red">Задержано</font>:
                     {{ range .HoldCountDebitor}}

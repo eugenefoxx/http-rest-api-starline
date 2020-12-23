@@ -1919,13 +1919,16 @@ func (s *server) inInspection() http.HandlerFunc {
 		}
 
 		var rdata []req
+		var slice []string
 		rdata1 := []string{}
 		json.Unmarshal(body, &rdata)
 		json.Unmarshal(body, &rdata1)
+		json.Unmarshal(body, &slice)
 		fmt.Printf("test ininspection %s", body)
 		fmt.Println("\nall of the rdata ininspection", rdata)
 		rdata2 := removeDuplicates(rdata1)
 		fmt.Print(rdata2)
+		fmt.Printf("slice: %q\n",slice)
 
 		session, err := s.sessionStore.Get(r, sessionName)
 		if err != nil {

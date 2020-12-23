@@ -219,7 +219,11 @@ display: block;
 }
 
 .login {
-  margin-left: 5%;
+  margin-left: 3%;
+}
+
+.login_submit {
+  margin-left: 2%;
 }
 
 header {
