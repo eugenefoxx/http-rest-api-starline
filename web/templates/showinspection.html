@@ -37,30 +37,8 @@
                 <button type="button" class="btn btn-default" data-modal="modal_1">Статистика по
                     дебиторам</button>
             </div>
-            <div id="overlay" class="overlay" data-close=""></div>
 
-            <div class="modal-outer">
-                <span class="closer" data-close=""></span>
-                <div id="modal_1" class="dlg-modal">
-                    <h3>Статистика</h3>
-                    <font color="black">Oбщее количество</font>:
-                    {{ range.GetStatic}}
-                    {{ .NameDebitor}} &ndash;&nbsp;{{ .Count}}&sbquo;&nbsp;
-                    {{ end}}<br>
-                    <font color="red">Задержано</font>:
-                    {{ range .HoldCountDebitor}}
-                    {{ .NameDebitor}} &ndash;&nbsp;{{ .Count}}&sbquo;&nbsp;
-                    {{ end}}<br>
-                    <font color="green">
-                        Проверить</font>:
-                    {{ range .NotVerifyDebitor}}
-                    {{ .NameDebitor}} &ndash;&nbsp;
-                    {{ .Count}}&sbquo;&nbsp;
-                    {{ end}}<br>
-                </div>
-            </div>
-        </div>
-
+           {{ template "popup.html" . }}
 
         <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .." title="Type in a name"
             style="margin-left:0px; width: 1000px;">

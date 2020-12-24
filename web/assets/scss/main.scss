@@ -226,7 +226,33 @@ margin-left: 1400px;
  .login_submit {
    margin-left: 2%;
  }
+// разбивка по столбцам
+ .page-wrapper {
+   display: flex;
+   justify-content: space-between;
+   font-size: 18px;
+ }
 
+ .left-panel-wrapper {
+   width: 450px;
+   background-color: orange;
+ }
+
+ .right-panel-wrapper {
+   width: 450px;
+   background-color: rgb(96, 216, 96);
+   margin-right: 1%;
+ }
+
+ .content-wrapper {
+   width: 450px;
+  // width: calc(100% - 400px);
+  background-color: rgb(231, 68, 68);
+   padding: 0 0px;
+   margin-right: 0;
+   margin-left: 0;
+ }
+// конец
   header {
     /*  margin: auto; */
       margin-top: 10px;
@@ -632,7 +658,7 @@ background: rgba(0, 0, 0, 0.87);
 
 .dlg-modal {
 width: 1576px; // границы внутреннего окна
-height: 600px;
+height: 850px;
 opacity: 0;
 visibility: hidden;
 text-align: center;
@@ -642,7 +668,7 @@ top: 180px;
 z-index: 130;
 margin-left: -288px;
 padding: 47px 36px;
-background: #efa200;
+background: #e0ded8;
 -webkit-border-radius: 6px;
 border-radius: 6px;
 -webkit-box-shadow: 0 0 20px rgba(0, 0, 0, 0.85);
@@ -661,6 +687,7 @@ opacity: 1;
 .modal-outer {
 width: 1660px;
 min-height: 460px;
+//height: 950px;
 position: fixed;
 left: 50%;
 z-index: 120;

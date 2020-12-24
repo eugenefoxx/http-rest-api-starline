@@ -5,6 +5,15 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/eugenefoxx/http-rest-api-starline/internal/app/model"
+	"github.com/eugenefoxx/http-rest-api-starline/internal/app/store"
+
+	"github.com/google/uuid"
+	"github.com/gorilla/handlers"
+	"github.com/gorilla/mux"
+	"github.com/gorilla/sessions"
+	"github.com/jmoiron/sqlx"
+	"github.com/sirupsen/logrus"
 	"html/template"
 	"io"
 	"io/ioutil"
@@ -14,15 +23,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/eugenefoxx/http-rest-api-starline/internal/app/model"
-	"github.com/eugenefoxx/http-rest-api-starline/internal/app/store"
-	"github.com/google/uuid"
-	"github.com/gorilla/handlers"
-	"github.com/gorilla/mux"
-	"github.com/gorilla/sessions"
-	"github.com/jmoiron/sqlx"
-	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -1461,6 +1461,92 @@ func (s *server) pageInspection() http.HandlerFunc {
 	}
 }
 
+/*
+func (s *server) getStatic() http.HandlerFunc {
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		getStatic, err := s.store.Inspection().CountDebitor()
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+		static := map[string]string{
+			"Static": getStatic,
+		}
+		pie := charts.NewPie()
+		pie.SetGlobalOptions(
+			charts.WithTitleOpts(opts.Title{Title: "Radius style"}),
+		)
+
+		pie.AddSeries("pie", static).
+			SetSeriesOptions(
+				charts.WithLabelOpts(opts.Label{
+					Show:      true,
+					Formatter: "{b}: {c}",
+				}),
+				charts.WithPieChartOpts(opts.PieChart{
+					Radius: []string{"40%", "75%"},
+				}),
+			)
+
+		f, err := os.Create("./web/templates/test.html")
+		if err != nil {
+			panic(err)
+		}
+		pie.Render(io.Writer(f))
+		//	Examples()
+		get := map[string]interface{}{
+			"GetStatic": getStatic,
+		}
+		tpl.ExecuteTemplate(w, "test.html", get)
+	}
+
+}
+*/
+/*
+func pieRadius(s *server) *charts.Pie {
+	pie := charts.NewPie()
+	pie.SetGlobalOptions(
+		charts.WithTitleOpts(opts.Title{Title: "Radius style"}),
+	)
+	getStatic, err := s.store.Inspection().CountDebitor()
+	if err != nil {
+		s.error(w, r, http.StatusUnprocessableEntity, err)
+		return
+	}
+	pie.AddSeries("pie", getStatic).
+		SetSeriesOptions(
+			charts.WithLabelOpts(opts.Label{
+				Show:      true,
+				Formatter: "{b}: {c}",
+			}),
+			charts.WithPieChartOpts(opts.PieChart{
+				Radius: []string{"40%", "75%"},
+			}),
+		)
+	return pie
+}
+
+type PieExamples struct{}
+
+func (PieExamples) Examples() {
+	page := components.NewPage()
+	page.AddCharts(
+		//	pieBase(),
+		//	pieShowLabel(),
+		pieRadius(),
+	//	pieRoseArea(),
+	//	pieRoseRadius(),
+	//	pieRoseAreaRadius(),
+	//	pieInPie(),
+	)
+	f, err := os.Open("./web/templates/test.html")
+	if err != nil {
+		panic(err)
+	}
+	page.Render(io.MultiWriter(f))
+}
+*/
 func (s *server) pageinsertVendor() http.HandlerFunc {
 	/*tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "insertvendor.html")
 	if err != nil {
@@ -1877,9 +1963,9 @@ func (s *server) pageinInspection() http.HandlerFunc {
 			LoggedIn = true
 		}
 		data := map[string]interface{}{
-			"Admin":         Admin,
-			"StockkeeperWH": StockkeeperWH,
-			"SuperIngenerQuality":  SuperIngenerQuality,
+			"Admin":               Admin,
+			"StockkeeperWH":       StockkeeperWH,
+			"SuperIngenerQuality": SuperIngenerQuality,
 			//	"GET":           get,
 			"LoggedIn": LoggedIn,
 			"User":     user.LastName,
@@ -1928,7 +2014,7 @@ func (s *server) inInspection() http.HandlerFunc {
 		fmt.Println("\nall of the rdata ininspection", rdata)
 		rdata2 := removeDuplicates(rdata1)
 		fmt.Print(rdata2)
-		fmt.Printf("slice: %q\n",slice)
+		fmt.Printf("slice: %q\n", slice)
 
 		session, err := s.sessionStore.Get(r, sessionName)
 		if err != nil {
