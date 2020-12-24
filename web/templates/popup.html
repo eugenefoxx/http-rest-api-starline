@@ -1,0 +1,64 @@
+<div id="overlay" class="overlay" data-close=""></div>
+
+<div class="modal-outer">
+    <span class="closer" data-close=""></span>
+    <div id="modal_1" class="dlg-modal">
+        <div class="page-wrapper">
+
+            <div class="left-panel-wrapper">
+                <font color="black" style="background: white; margin: auto;">Oбщее количество:</font>
+                <div class="left-panel">
+                    <table>
+                        <tr>
+                            <th>Наименование</th>
+                            <th>Количество</th>
+                        </tr>
+                        {{ range.GetStatic}}
+                        <tr>
+                            <td>{{ .NameDebitor}}</td>
+                            <td>{{ .Count}}</td>
+                        </tr>
+                        {{ end}}
+                    </table>
+                </div>
+            </div>
+
+            <div class="content-wrapper">
+                <font color="black" style="background: white; margin: auto;">Задержано:</font>
+                <div class="content">
+                    <table>
+                        <tr>
+                            <th>Наименование</th>
+                            <th>Количество</th>
+                        </tr>
+                        {{ range .HoldCountDebitor}}
+                        <tr>
+                            <td>{{ .NameDebitor}}</td>
+                            <td>{{ .Count}}</td>
+                        </tr>
+                        {{ end}}
+                    </table>
+                </div>
+            </div>
+
+            <div class="right-panel-wrapper">
+                <font color="black" style="background: white; margin: auto;">Проверить:</font>
+                <div class="right-panel">
+                    <table>
+                        <tr>
+                            <th>Наименование</th>
+                            <th>Количество</th>
+                        </tr>
+                        {{ range .NotVerifyDebitor}}
+                        <tr>
+                            <td>{{ .NameDebitor}}</td>
+                            <td>{{ .Count}}</td>
+                        </tr>
+                        {{ end}}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
