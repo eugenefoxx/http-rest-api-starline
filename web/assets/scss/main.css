@@ -1,3 +1,4 @@
+@charset "UTF-8";
 @font-face {
   font-family: CrimsonPro;
   src: url("/assets/fonts/CrimsonPro-BoldItalic.ttf");
@@ -7,6 +8,8 @@
   margin: 0;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
+  background-size: cover;
+  /* Масштабируем фон */
 }
 
 ul {
@@ -44,7 +47,6 @@ body {
   background-color: #333;
   position: fixed;
   bottom: 0;
-  width: 100%;
 }
 
 .navbar a {
@@ -89,6 +91,29 @@ body {
 #msg {
   display: inline-block;
   vertical-align: middle;
+}
+
+.container {
+  max-width: 1200px;
+  padding: 0px 15px;
+}
+
+@media (max-width: 1200px) {
+  .container {
+    max-width: 970px;
+  }
+}
+
+@media (max-width: 992px) {
+  .container {
+    max-width: 750px;
+  }
+}
+
+@media (max-width: 767px) {
+  .container {
+    max-width: none;
+  }
 }
 
 /*
@@ -239,6 +264,7 @@ display: block;
 .left-panel-wrapper {
   width: 450px;
   background-color: orange;
+  text-align: center;
 }
 
 .right-panel-wrapper {
@@ -560,10 +586,21 @@ body,
 }
 
 .wrap {
-  max-width: 1024px;
   position: relative;
-  margin: 0 auto;
   padding: -100px 24px 36px;
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 1000px;
+  margin-top: 10px;
+  font-size: 150%;
+}
+
+.wrap2 {
+  position: relative;
+  margin-left: 1100px;
+  width: 300px;
+  margin-top: 10px;
+  font-size: 150%;
 }
 
 /* typography */

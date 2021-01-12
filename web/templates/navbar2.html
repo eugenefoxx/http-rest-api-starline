@@ -1,0 +1,117 @@
+<nav class="navbar navbar-expand-lg navbar-warning bg-warning bg-gradient">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/main">StarLine</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+         <!--       <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Link</a>
+                </li>-->
+                {{ if .LoggedIn}}
+                {{ if .Admin}}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Логистика
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="/shipmentbysap">Отчет по отгрузке SAP</a></li>
+                        <li><a class="dropdown-item" href="/showdateshipmentbysapbysearchstatic">Отчет по отгрузке SAP по поиску
+                            Static</a></li>
+                    <!--    <li><hr class="dropdown-divider"></li>-->
+                        <li><a class="dropdown-item" href="/insertIDReturn">Пересчет ЕО с возвратом</a></li>
+                    </ul>
+                </li>
+                {{end}}
+                {{ if .Stockkeeper}}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Логистика
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="/shipmentbysap">Отчет по отгрузке SAP</a></li>
+                        <li><a class="dropdown-item" href="/showdateshipmentbysapbysearchstatic">Отчет по отгрузке SAP по поиску
+                            Static</a></li>
+                        <!--    <li><hr class="dropdown-divider"></li>-->
+                        <li><a class="dropdown-item" href="/insertIDReturn">Пересчет ЕО с возвратом</a></li>
+                    </ul>
+                </li>
+                {{ end}}
+                {{ if .Admin}}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Отдел качества
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="/ininspection">Отгрузка катушек на ВК</a></li>
+                        <li><a class="dropdown-item" href="/insertvendor">Добавить поставщика в базу</a></li>
+                        <!--    <li><hr class="dropdown-divider"></li>-->
+                        <li><a class="dropdown-item" href="/showvendor">Просмотр и редактирование поставщиков</a></li>
+                        <li><a class="dropdown-item" href="/statusinspection">Компоненты на входном контроле</a></li>
+                    </ul>
+                </li>
+                {{ end}}
+                {{ if .SuperIngenerQuality}}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Отдел качества
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="/ininspection">Отгрузка катушек на ВК</a></li>
+                        <li><a class="dropdown-item" href="/insertvendor">Добавить поставщика в базу</a></li>
+                        <!--    <li><hr class="dropdown-divider"></li>-->
+                        <li><a class="dropdown-item" href="/showvendor">Просмотр и редактирование поставщиков</a></li>
+                        <li><a class="dropdown-item" href="/statusinspection">Компоненты на входном контроле</a></li>
+                    </ul>
+                </li>
+                {{ end}}
+                {{ if .StockkeeperWH}}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Отдел качества
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="/ininspection">Отгрузка катушек на ВК</a></li>
+                        <!--    <li><hr class="dropdown-divider"></li>-->
+                        <li><a class="dropdown-item" href="/statusinspection">Компоненты на входном контроле</a></li>
+                        <li><a class="dropdown-item" href="/statusinspectionforwh">Компоненты на входном контроле для прием</a></li>
+                    </ul>
+                </li>
+                {{ end}}
+                {{ if .Inspector}}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Отдел качества
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <!--    <li><hr class="dropdown-divider"></li>-->
+                        <li><a class="dropdown-item" href="/statusinspection">Компоненты на входном контроле</a></li>
+                    </ul>
+                </li>
+                {{ end}}
+                {{.User}} {{.Username}}
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/logout">Logout</a>
+                </li>
+                {{ else}}
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/login">Авторизация</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/users">Регистрация</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/updatepass">Обновить пароль</a>
+                </li>
+                {{end}}
+            </ul>
+
+        </div>
+
+    </div>
+</nav>

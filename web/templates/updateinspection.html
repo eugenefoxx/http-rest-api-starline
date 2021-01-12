@@ -19,7 +19,7 @@
                     <p><input class="form-control" name="status" id="status" type="radio" value="NG">
                         NG <<.Status>>
                     </p>-->
-                <select class="form-control" id="status" name="status" style="width: 25%;">
+                <select class="form-control" id="status" name="status" style="width: 35%;">
                     <option value="OK">
                         OK - Текущий статус: {{.GET.Status}}
                     </option>
@@ -32,7 +32,7 @@
             <div class="form-group">
                 <label for="description" class="login">Примечание</label>
                 <textarea class="form-control" name="note" id="note" rows="3"
-                    style="width: 30%; height: 200px;">{{.GET.Note}}</textarea>
+                    style="width: 50%; height: 200px;">{{.GET.Note}}</textarea>
             </div>
             <div>
                 <label>

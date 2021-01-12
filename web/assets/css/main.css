@@ -8,6 +8,8 @@
   margin: 0;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
+  background-size: cover;
+  /* Масштабируем фон */
 }
 
 ul {
@@ -45,7 +47,6 @@ body {
   background-color: #333;
   position: fixed;
   bottom: 0;
-  width: 100%;
 }
 
 .navbar a {
@@ -90,6 +91,29 @@ body {
 #msg {
   display: inline-block;
   vertical-align: middle;
+}
+
+.container {
+  max-width: 1200px;
+  padding: 0px 15px;
+}
+
+@media (max-width: 1200px) {
+  .container {
+    max-width: 970px;
+  }
+}
+
+@media (max-width: 992px) {
+  .container {
+    max-width: 750px;
+  }
+}
+
+@media (max-width: 767px) {
+  .container {
+    max-width: none;
+  }
 }
 
 /*
@@ -217,6 +241,61 @@ display: block;
 .section_login .section_login_registration {
   margin-right: 280px;
   margin-top: 10px;
+}
+
+.login {
+  margin-left: 3%;
+}
+
+.login_submit {
+  margin-left: 2%;
+}
+
+.page-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  font-size: 18px;
+}
+
+.left-panel-wrapper-header {
+  width: 450px;
+  text-align: center;
+}
+
+.right-panel-wrapper-header {
+  width: 450px;
+  margin-right: 1%;
+}
+
+.content-wrapper-header {
+  width: 450px;
+  padding: 0 0px;
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.left-panel-wrapper {
+  width: 450px;
+  background-color: orange;
+  text-align: center;
+}
+
+.right-panel-wrapper {
+  width: 450px;
+  background-color: #60d860;
+  margin-right: 1%;
+}
+
+.content-wrapper {
+  width: 450px;
+  background-color: #e74444;
+  padding: 0 0px;
+  margin-right: 0;
+  margin-left: 0;
 }
 
 header {
@@ -524,10 +603,21 @@ body,
 }
 
 .wrap {
-  max-width: 1024px;
   position: relative;
-  margin: 0 auto;
   padding: -100px 24px 36px;
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 1000px;
+  margin-top: 10px;
+  font-size: 150%;
+}
+
+.wrap2 {
+  position: relative;
+  margin-left: 1100px;
+  width: 300px;
+  margin-top: 10px;
+  font-size: 150%;
 }
 
 /* typography */
@@ -650,7 +740,7 @@ p {
 
 .dlg-modal {
   width: 1576px;
-  height: 600px;
+  height: 850px;
   opacity: 0;
   visibility: hidden;
   text-align: center;
@@ -660,7 +750,7 @@ p {
   z-index: 130;
   margin-left: -288px;
   padding: 47px 36px;
-  background: #efa200;
+  background: #e0ded8;
   border-radius: 6px;
   -webkit-box-shadow: 0 0 20px rgba(0, 0, 0, 0.85);
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.85);
@@ -864,22 +954,6 @@ p {
     width: 300px;
     margin-left: -150px;
   }
-  div.hr {
-    margin: 0;
-    /* Обнуляем значение отступов */
-    padding: 4px;
-    /* Значение полей */
-  }
-  div.hr button {
-    display: inline;
-    /* Отображать как строчный элемент */
-    margin-right: 5px;
-    /* Отступ слева */
-    border: 1px solid #000;
-    /* Рамка вокруг текста */
-    padding: 3px;
-    /* Поля вокруг текста */
-  }
   .modal-outer {
     width: 320px;
     margin-left: -155px;
@@ -906,7 +980,7 @@ p {
 }
 
 .block-style {
-  display: block;
+  display: inline;
 }
 
 .main {

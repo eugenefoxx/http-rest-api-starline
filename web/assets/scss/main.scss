@@ -7,7 +7,7 @@
 * {
   margin: 0;
   box-sizing: border-box;
-
+  background-size: cover; /* Масштабируем фон */
 }
 
 ul {
@@ -46,7 +46,7 @@ background-color: rgba(12, 133, 231, 0.533);
   background-color: #333;
   position: fixed;
   bottom: 0;
-  width: 100%;
+//  width: 100%;
 }
       
 .navbar a {
@@ -89,6 +89,28 @@ background-color: rgba(12, 133, 231, 0.533);
 #msg {
   display: inline-block;
   vertical-align: middle;
+}
+
+.container{
+  max-width: 1200px;
+ // margin: 0px auto;
+  padding: 0px 15px;
+}
+
+@media (max-width:1200px){
+  .container{
+    max-width: 970px;
+  }
+}
+@media (max-width:992px) {
+  .container{
+    max-width: 750px;
+  }
+}
+@media (max-width:767px) {
+  .container{
+    max-width: none;
+  }
 }
 
 /*
@@ -233,9 +255,29 @@ margin-left: 1400px;
    font-size: 18px;
  }
 
+ .left-panel-wrapper-header {
+  width: 450px;
+//  background-color: white;
+  text-align: center;
+}
+.right-panel-wrapper-header {
+  width: 450px;
+ // background-color: white;
+  margin-right: 1%;
+}
+.content-wrapper-header {
+  width: 450px;
+ // width: calc(100% - 400px);
+// background-color: white;
+  padding: 0 0px;
+  margin-right: 0;
+  margin-left: 0;
+}
+
  .left-panel-wrapper {
    width: 450px;
    background-color: orange;
+   text-align: center;
  }
 
  .right-panel-wrapper {
@@ -531,10 +573,28 @@ line-height: 1;
 }
 
 .wrap {
-max-width: 1024px;
+//max-width: 1024px;
 position: relative;
-margin: 0 auto;
+//margin: 0 auto;
 padding: -100px 24px 36px;
+// style="margin-left:1100px; width: 1000px; margin-top: 0px; font-size: 150%;"
+margin-left:10px;
+margin-right:10px;
+width: 1000px;
+margin-top: 10px;
+font-size: 150%;
+}
+
+.wrap2 {
+  //max-width: 1024px;
+  position: relative;
+  //margin: 0 auto;
+ // padding: -100px 4px 6px;
+  // style="margin-left:1100px; width: 1000px; margin-top: 0px; font-size: 150%;"
+  margin-left: 1100px;
+  width: 300px;
+  margin-top: 10px;
+  font-size: 150%;
 }
 
 /* typography */
