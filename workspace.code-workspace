@@ -1,0 +1,22 @@
+{
+    "folders": [
+        {
+            "path": "/home/eugenearch/Code/github.com/eugenefoxx/http-rest-api-starline/"
+        }
+    ],
+    "settings": {
+        //	"git.ignoreLimitWarning": true
+        "liveSassCompile.settings.autoprefix": [
+            "> 1%",
+            "last 2 versions"
+        ],
+        "liveSassCompile.settings.formats": [
+            {
+                "format": "expanded",
+                "extensionName": ".css",
+                "savePath": "~/../scss/"
+            }
+        ],
+        "liveSassCompile.settings.generateMap": false
+    }
+}

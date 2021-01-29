@@ -1,0 +1,70 @@
+input {
+    border: 1px solid #c4c4c4;
+    height: 20px;
+    border-radius: 5px;
+    background-color: #fff;
+    padding: 3px 5px;
+    margin: 8px 0;
+    box-shadow: inset 0 3px 6px rgba(0,0,0,0.1);
+    width: 490px;
+    }
+
+
+    button.buttonPlus {
+        position: relative;
+        z-index: 1;
+        display: inline-block;
+        width: 1.3em;
+        height: 1.3em;
+        line-height: 1.3em;
+        vertical-align: middle;
+        text-align: center;
+        text-decoration: none;
+        text-shadow: 1px 1px rgba(255,255,255,.3);
+        font-size: 300%;
+        font-weight: 900;
+        color: #000;
+        border-radius: 100%;
+        background: rgb(144,142,105) linear-gradient(rgb(185,181,151), rgb(144,142,105));
+        box-shadow:
+         inset 0 -2px 1px rgba(0,0,0,.5),
+         inset 0 2px 1px rgba(255,255,255,.9),
+         0 4px 4px rgba(0,0,0,.9);
+      }
+      button.buttonPlus:after {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        top: 12%;
+        left: 12%;
+        right: 12%;
+        bottom: 12%;
+        border-radius: 100%;
+        background: rgb(242,203,20) linear-gradient(rgb(242,203,20), rgb(255,182,7));
+        box-shadow:
+         inset 0 2px 1px rgba(0,0,0,.5),
+         inset 0 -2px 1px rgba(255,255,255,.3);
+      }
+      
+      .button {
+          background-color: #4CAF50; /* Green */
+          border: none;
+          color: white;
+          padding: 20px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          cursor: pointer;
+          
+      }
+      
+      .button1 {border-radius: 2px;}
+      .button2 {border-radius: 4px;}
+      .button3 {border-radius: 8px;}
+      .button4red {background-color:crimson; border-radius: 12px;}
+      .button4green {border-radius: 12px;}
+      .button5 {border-radius: 50%;}
+      
+      
