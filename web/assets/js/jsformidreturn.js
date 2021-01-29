@@ -52,7 +52,7 @@ function createForm() {
             var icon = document.createElement("i");
             var deleteButton = document.getElementById(element.id);
             deleteButton.appendChild(icon);
-            icon.className = "fas fa-times";
+            icon.className = "fa fa-times";
         }
     }
 
