@@ -5,15 +5,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+
 	"github.com/eugenefoxx/http-rest-api-starline/internal/app/model"
 	"github.com/eugenefoxx/http-rest-api-starline/internal/app/store"
 
-	"github.com/google/uuid"
-	"github.com/gorilla/handlers"
-	"github.com/gorilla/mux"
-	"github.com/gorilla/sessions"
-	"github.com/jmoiron/sqlx"
-	"github.com/sirupsen/logrus"
 	"html/template"
 	"io"
 	"io/ioutil"
@@ -23,6 +18,13 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/google/uuid"
+	"github.com/gorilla/handlers"
+	"github.com/gorilla/mux"
+	"github.com/gorilla/sessions"
+	"github.com/jmoiron/sqlx"
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -208,7 +210,7 @@ func (s *server) logRequest(next http.Handler) http.Handler {
 		logger.Infof(
 			"completed witn %d %s in %v",
 			rw.code,
-			http.StatusText(rw.code),
+			http.StatusText(rw.code), //2bit.ru/media/images/items/248/247158-413538.jpgtp.StatusText(rw.code),
 			time.Now().Sub(start),
 		)
 

@@ -133,7 +133,7 @@ func (r *InspectionRepository) CountDebitor() (*model.Inspections, error) {
 	listInspection := model.Inspection{}
 	listInspectionList := make(model.Inspections, 0)
 	rows, err := r.store.db.Query(
-		"SELECT COUNT (transfer.id), Coalesce (vendor.name_debitor, '') FROM transfer left outer join vendor on (transfer.numbervendor = vendor.code_debitor) WHERE transfer.location ='отгружено на ВК' GROUP BY vendor.name_debitor",
+		"SELECT COUNT (transfer.id), Coalesce (vendor.name_debitor, '') FROM transfer left outer join vendor on (transfer.numbervendor = vendor.code_debitor) WHERE transfer.location ='отгружено на ВК' GROUP BY vendor.name_debitor ORDER BY COUNT(transfer.id) DESC",
 	)
 	if err != nil {
 		return nil, err
@@ -164,7 +164,7 @@ func (r *InspectionRepository) HoldCountDebitor() (*model.Inspections, error) {
 	listInspection := model.Inspection{}
 	listInspectionList := make(model.Inspections, 0)
 	rows, err := r.store.db.Query(
-		"SELECT COUNT (transfer.status), Coalesce (vendor.name_debitor, '') FROM transfer left outer join vendor on (transfer.numbervendor = vendor.code_debitor) WHERE transfer.location ='отгружено на ВК' AND transfer.status = 'NG' GROUP BY vendor.name_debitor",
+		"SELECT COUNT (transfer.status), Coalesce (vendor.name_debitor, '') FROM transfer left outer join vendor on (transfer.numbervendor = vendor.code_debitor) WHERE transfer.location ='отгружено на ВК' AND transfer.status = 'NG' GROUP BY vendor.name_debitor ORDER BY COUNT(transfer.id) DESC",
 	)
 	if err != nil {
 		return nil, err
@@ -196,7 +196,7 @@ func (r *InspectionRepository) NotVerifyDebitor() (*model.Inspections, error) {
 	listInspection := model.Inspection{}
 	listInspectionList := make(model.Inspections, 0)
 	rows, err := r.store.db.Query(
-		"SELECT COUNT (transfer.id), Coalesce (vendor.name_debitor, '') FROM transfer left outer join vendor on (transfer.numbervendor = vendor.code_debitor) WHERE transfer.location ='отгружено на ВК' AND transfer.status IS NULL GROUP BY vendor.name_debitor",
+		"SELECT COUNT (transfer.id), Coalesce (vendor.name_debitor, '') FROM transfer left outer join vendor on (transfer.numbervendor = vendor.code_debitor) WHERE transfer.location ='отгружено на ВК' AND transfer.status IS NULL GROUP BY vendor.name_debitor ORDER BY COUNT(transfer.id) DESC",
 	)
 	if err != nil {
 		return nil, err

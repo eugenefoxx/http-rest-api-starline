@@ -19,7 +19,7 @@ function init() {
 var mainDiv = document.getElementById("form"); //ref to main div with forms
 
 //attributes for form fields, they will be added during the creation of forms
-var formElementsTypes = ["input", "button"];https://www.jetbrains.com/idea/features/editions_comparison_matrix.html
+var formElementsTypes = ["input", "button"];//https://www.jetbrains.com/idea/features/editions_comparison_matrix.html
 var formElementsIds = ["scanid", "button"];
 var formElementsClassNames = [
     "form-control form-control-sm col-lg-4",

@@ -10,7 +10,7 @@ type Store struct {
 	userRepository *UserRepository
 }
 
-// New ...
+//New ...
 func New() *Store {
 	return &Store{}
 }

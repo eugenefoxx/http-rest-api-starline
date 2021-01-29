@@ -4,7 +4,7 @@
 
 <body>
     {{template "navbar.html" .}}
-    <div>
+    <!--    <div>
         <h3 style="margin-left: 10px;">Форма отправки катушек на ВК</h3>
     </div>
     <div class="noselect block-style hr" id="form"></div>
@@ -20,8 +20,22 @@
             Очистить форму
         </button>
     </div>
-
-
+-->
+    <div>
+        <h3 style="margin-left: 10px;">Форма отправки катушек на ВК</h3>
+    </div>
+    <div id="form"></div>
+    <div>
+        <button id="add-condition" class="buttonPlus">+</button>
+    </div>
+    <hr />
+    <div>
+        <button id="apply" class="button button4green">
+            Отправить данные</button>
+        <button id="clear-form" class="button button4red">
+            Очистить форму
+        </button>
+    </div>
     {{template "footer.html" .}}
     <script src="/assets/js/formininspectionV2.js"></script>
 </body>
