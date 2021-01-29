@@ -5,26 +5,26 @@
 <body>
     {{template "navbar.html" .}}
 
-<div class="container">
-    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .." title="Type in a name">
+    <div class="container">
+        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .." title="Type in a name">
 
-    <table id="myTable" onload="alternate('thetable')">
-        <caption style="color: white; font-size: 22px;">Список поставщиков</caption>
-        <button onclick="exportTableToCSV('export_shipment_sap.csv')">Экспортировать таблицу в csv файл</button>
-        <thead>
-            <tr>
-                <!--<th>ID</th>-->
-                <th scope="col" onclick="sortTable(0)">№ ID</th>
-                <!--Material-->
-                <th scope="col" onclick="sortTable(1)">Код дебитора</th>
-                <!--Qty-->
-                <th scope="col" onclick="sortTable(2)">Наименование</th>
-                <!--ShipmentDate-->
-                <!--    <th scope="col" onclick="sortTable(2)">ShipmentDate2</th>-->
-            </tr>
-        </thead>
-        <tbody id="thetable">
-            {{ range .GET}}
+        <table id="myTable" onload="alternate('thetable')">
+            <caption style="color: white; font-size: 22px;">Список поставщиков</caption>
+            <button onclick="exportTableToCSV('export_shipment_sap.csv')">Экспортировать таблицу в csv файл</button>
+            <thead>
+                <tr>
+                    <!--<th>ID</th>-->
+                    <th scope="col" onclick="sortTable(0)">№ ID</th>
+                    <!--Material-->
+                    <th scope="col" onclick="sortTable(1)">Код дебитора</th>
+                    <!--Qty-->
+                    <th scope="col" onclick="sortTable(2)">Наименование</th>
+                    <!--ShipmentDate-->
+                    <!--    <th scope="col" onclick="sortTable(2)">ShipmentDate2</th>-->
+                </tr>
+            </thead>
+            <tbody id="thetable">
+                {{ range .GET}}
                 <tr class="header">
                     <!--<td>{{.ID }}</td>-->
                     <td>
@@ -37,18 +37,19 @@
                         {{.NameDebitor}}
                     </td>
                     <td>
-                        <a href="/updatevendor/{{.ID}}" class="btn btn-primary">Edit </a>
+                        <a href="/updatevendor/{{.ID}}" class="btnfortable btn-primary">Edit </a>
 
-                        <a href="/deletevendor/{{.ID}}" class="btn btn-danger confirmation" style="margin-left: 10px;">
+                        <a href="/deletevendor/{{.ID}}" class="btnfortable btn-danger confirmation"
+                            style="margin-left: 10px;">
                             Del</a>
                     </td>
                 </tr>
                 {{ end}}
-        </tbody>
-    </table>
-</div>
+            </tbody>
+        </table>
+    </div>
 
-{{template "footer.html" .}}
+    {{template "footer.html" .}}
 </body>
 
 </html>
