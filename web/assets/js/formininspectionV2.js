@@ -79,6 +79,8 @@ function createForm() {
     input.onblur = function () {
         errorMsg = createError("Введён некорректный номер");
         addRemoveError(this, errorMsg);
+
+        toggleSubmitBtn();
     };
 
     // check for an errors if user push enter and add new input
@@ -91,12 +93,18 @@ function createForm() {
                 addForm();
             }
         }
+
+        toggleSubmitBtn();
     });
 
     deleteCross.addEventListener("click", deleteForm);
 
     canShowAddButton(); //check if we can show add button
     canShowDeleteButton(); //check if we can show delete button
+}
+
+function toggleSubmitBtn() {
+    document.getElementById("apply").disabled = !checkAllValues();
 }
 
 //check if we can add form and add it
@@ -175,6 +183,7 @@ function deleteForm() {
     this.parentNode.parentNode.removeChild(this.parentNode);
     canShowAddButton();
     canShowDeleteButton();
+    toggleSubmitBtn();
 }
 
 // generate array of acceptable form ids
@@ -219,7 +228,7 @@ function getData() {
         if (forms[i].value) {
             resultData.push({ scanid: forms[i].value });
         }
-    }
+    }     
     return JSON.stringify(resultData);
 }
 
@@ -241,6 +250,7 @@ function drawSuccessMessage(div) {
 }
 
 function sendData() {
+ //   if (checkCanAddValueOnContext(context) == true) {
     dataToSend = getData();
     resetForms();
     createForm();
@@ -264,6 +274,7 @@ function sendData() {
         console.log("There is no data to send");
     }
 }
+//}
 
 //let's go
 init();

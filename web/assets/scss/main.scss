@@ -1028,6 +1028,10 @@ p {
   margin-top: 15px;
 }
 
+#apply:disabled {
+  opacity: 0.5;
+}
+
 .apply-clear-buttons {
   margin: 2px 4px;
   margin-left: 35px;
@@ -1065,4 +1069,14 @@ p {
   border-radius: 0.25rem;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   margin-left: 20px;
+}
+
+.text-danger {
+  color: red;
+  font-size: medium;
+}
+
+.is-invalid {
+  background-color: #ffdddd;
+  border: 5px solid #ddffdd;
 }
