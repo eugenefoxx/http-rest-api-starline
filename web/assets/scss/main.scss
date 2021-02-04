@@ -38,6 +38,10 @@ body {
   // font-family: Arial, Helvetica, sans-serif;
   font-family: CrimsonPro;
   background-color: rgba(12, 133, 231, 0.533);
+  margin: 200px;
+  //  padding: 20px;
+  // display: flex;
+  flex-direction: row;
 }
 
 .navbar {
@@ -1098,4 +1102,17 @@ p {
 .formSendEO {
   // flex-basis: 50px;
   width: 3000px;
+}
+
+.content {
+  flex: 1 0 auto;
+  padding: 20px;
+}
+
+.footer {
+  flex-shrink: 0;
+  padding: 20px;
+  // width: 100%;
+  background: red;
+  font: xx-large;
 }

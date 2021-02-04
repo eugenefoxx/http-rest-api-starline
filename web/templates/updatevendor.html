@@ -5,7 +5,9 @@
 <body>
     {{template "navbar.html" .}}
     <div class="container">
-        <h1>Редактирование списка поставщиков</h1>
+        <div class="fromSendTitle">
+            <h1>Редактирование списка поставщиков</h1>
+        </div>
 
         <form method="POST" action="/updatevendor/{{.GET.ID}}">
 

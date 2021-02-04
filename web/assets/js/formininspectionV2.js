@@ -32,6 +32,7 @@ var finalData = [];
 var labels = ["Сканируем ЕО катушки"];
 const regexp = /\bP\d{7}LK\d{9}R\d{10}Q\d{5}D\d{8}\b/;
 const regexp2 = /\bP\d{7}L\d{10}R\d{10}Q\d{5}D\d{8}\b/;
+// P1016624L1000037226R1000317938Q00550D20200311
 
 //creating form and adding attributes
 function createForm() {
@@ -104,7 +105,8 @@ function createForm() {
 }
 
 function toggleSubmitBtn() {
-    document.getElementById("apply").disabled = !checkAllValues();
+    // кнопка не активна, если 
+    document.getElementById("apply").disabled = !checkAllValues();  
 }
 
 //check if we can add form and add it
@@ -152,7 +154,15 @@ function addFormButton() {
 function checkCanAddValueOnContext(e) {
     var numberToCheck = checkValue(e.value);
     var result = true;
-    if (!regexp.test(e.value) || numberToCheck > 1) {
+
+ //   console.log(e.value);
+ //   console.log(regexp.test(e.value));
+ //   console.log(regexp2.test(e.value));
+
+    if (
+        !(regexp.test(e.value) || regexp2.test(e.value) )
+        || numberToCheck > 1
+    ) {
         result = false;
     } else {
         result = true;

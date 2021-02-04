@@ -40,6 +40,11 @@ li a:hover {
 body {
   font-family: CrimsonPro;
   background-color: rgba(12, 133, 231, 0.533);
+  margin: 200px;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
 }
 
 .navbar {
@@ -1153,4 +1158,19 @@ p {
 
 .formSendEO {
   width: 3000px;
+}
+
+.content {
+  -webkit-box-flex: 1;
+      -ms-flex: 1 0 auto;
+          flex: 1 0 auto;
+  padding: 20px;
+}
+
+.footer {
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  padding: 20px;
+  background: red;
+  font: xx-large;
 }
