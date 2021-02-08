@@ -305,9 +305,30 @@ display: block;
 
 header {
   /*  margin: auto; */
-  margin-top: 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+  margin-top: 0;
   background-color: yellow;
   text-align: center;
+}
+
+.nav {
+  list-style: none;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  padding-right: 100px;
+}
+
+.out {
+  margin-left: auto;
 }
 
 .register-form {

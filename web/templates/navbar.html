@@ -1,4 +1,4 @@
-<ul>
+<ul class="nav">
     <li><a class="active" href="/main">StarLine {{.Navbar}}</a></li>
     <!--    <li class="dropdown">
         <a href="javascript:void(0)" class="dropbtn">Dropdown</a>
@@ -28,10 +28,10 @@
             <a href="/shipmentbysap">Отчет по отгрузке SAP</a>
             <a href="/showdateshipmentbysapbysearchstatic">Отчет по отгрузке SAP по поиск
                 Static</a>
-        <!--    <a href="/showShipmentbysapbysearchDateStatic">Отчет по отгрузке SAP по поиск
+            <!--    <a href="/showShipmentbysapbysearchDateStatic">Отчет по отгрузке SAP по поиск
                 Static 2</a>-->
             <a href="/insertIDReturn">Пересчет ЕО с возвратом</a>
-        <!--    <a href="/showdateshipmentbysap">Полный отчет</a>
+            <!--    <a href="/showdateshipmentbysap">Полный отчет</a>
             <a href="/showdateshipmentbysapbysearch">Отчет1</a>-->
         </div>
     </li>
@@ -77,7 +77,7 @@
     </li>
     {{ end}}
     {{.User}} {{.Username}}
-    <li><a href="/logout">Logout</a></li>
+    <li class="out"><a href="/logout">Logout</a></li>
     {{ else}}
     <li><a href="/login">Авторизация</a></li>
     <li style="margin-left:70%;"><a href="/users">Регистрация</a></li>

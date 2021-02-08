@@ -297,9 +297,23 @@ display: block;
 // конец
 header {
   /*  margin: auto; */
-  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 0;
   background-color: yellow;
   text-align: center;
+}
+
+.nav {
+  list-style: none;
+  display: flex;
+  padding-right: 100px;
+  //width: auto;
+}
+
+.out {
+  margin-left: auto;
 }
 
 .register-form {
