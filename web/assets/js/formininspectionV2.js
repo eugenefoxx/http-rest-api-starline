@@ -134,7 +134,7 @@ function checkAllValues() {
     var result = true;
     var forms = document.getElementsByClassName("form-control");
     for (i = 0; i < forms.length; i++) {
-        if (forms[i].className.includes("is-invalid")) {
+        if (forms[i].className.includes("is-invalid") && forms[i].value != '') {
             result = false;
             break;
         }
@@ -154,10 +154,6 @@ function addFormButton() {
 function checkCanAddValueOnContext(e) {
     var numberToCheck = checkValue(e.value);
     var result = true;
-
- //   console.log(e.value);
- //   console.log(regexp.test(e.value));
- //   console.log(regexp2.test(e.value));
 
     if (
         !(regexp.test(e.value) || regexp2.test(e.value) )
@@ -260,6 +256,10 @@ function drawSuccessMessage(div) {
 }
 
 function sendData() {
+    for (el of document.getElementsByClassName('is-invalid')) {
+        el.parentNode.remove();
+    }
+
  //   if (checkCanAddValueOnContext(context) == true) {
     dataToSend = getData();
     resetForms();
