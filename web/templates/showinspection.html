@@ -28,428 +28,483 @@
                                                                     <a href="#" class="close">Закрыть окно</a>
                 </div>-->
         <div class="wrap2">
-            <!--style="margin-left:1100px; width: 1000px; margin-top: 0px; font-size: 150%;"-->
-            <font color="white">Общее количество</font>: &nbsp;{{ .CountTotal}} <br>
-            <font color="red">Задержано</font>: &nbsp;{{.HoldInspection}} <br>
-            <font color="green">Требуют проверки</font>: &nbsp;{{.NotVerifyComponents}} <br>
-            <br>
-            <!--  <a href="#okno">Статистика по дебиторам</a>-->
-            <div class="btn-box">
-
-                <button type="button" class="btn btn-default" data-modal="modal_1">Статистика по
-                    дебиторам</button>
-
-                <!--    <button type="button" class="btn btn-primary btn-lg" data-modal="modal_1">Статистика по
-                   дебиторам</button>-->
+            <div class="columninspection1">
+                <a href="#modal-1" class="js-modal-open link">Отгрузка на ВК</a>
             </div>
-        </div>
-        {{ template "popup.html" . }}
-        <div class="wrap">
-            <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .." title="Type in a name">
-            <!--style="margin-left:0px; width: 1000px;"-->
+            <div class="columninspection2">
+                <!--style="margin-left:1100px; width: 1000px; margin-top: 0px; font-size: 150%;"-->
+                <font color="white">Общее количество</font>: &nbsp;{{ .CountTotal}} <br>
+                <font color="red">Задержано</font>: &nbsp;{{.HoldInspection}} <br>
+                <font color="green">Требуют проверки</font>: &nbsp;{{.NotVerifyComponents}} <br>
+                <br>
+                <!--  <a href="#okno">Статистика по дебиторам</a>-->
+                <div class="btn-box">
 
-            <table id="myTable" onload="alternate('thetable')">
-                <caption style="color: white; font-size: 22px;">Список на инспекции</caption>
-                <button onclick="exportTableToCSV('export_shipment_sap.csv')"
-                    style="margin-left:0px; width: 1000px;">Экспортировать таблицу в csv
-                    файл</button>
-                <thead>
-                    <tr id="fontsize-showinspection">
-                        <th scope="col" onclick="sortTable(0)">№ ID</th>
-                        <!--<th>ID</th>-->
-                        <th scope="col" onclick="sortTable(1)">QR-код</th>
-                        <!--Material-->
-                        <th scope="col" onclick="sortTable(2)">SAP</th>
-                        <!--Qty-->
-                        <th scope="col" onclick="sortTable(3)">Партия</th>
-                        <!--ShipmentDate-->
-                        <!--    <th scope="col" onclick="sortTable(2)">ShipmentDate2</th>-->
-                        <th scope="col" onclick="sortTable(4)">ЕО катушки</th>
-                        <th scope="col" onclick="sortTable(5)">Дата производства</th>
-                        <th scope="col" onclick="sortTable(6)">Имя дебитора</th>
-                        <th scope="col" onclick="sortTable(7)">Статус отгружено</th>
-                        <th scope="col" onclick="sortTable(8)">Статус отметки проверки</th>
-                        <th scope="col" onclick="sortTable(9)">Примечание</th>
-                        <th scope="col" onclick="sortTable(10)">Кем отредактировано</th>
-                        <th scope="col" onclick="sortTable(11)">Дата редактирования</th>
-                        <th scope="col" onclick="sortTable(12)">Время редактирования</th>
-                        <th scope="col" onclick="sortTable(13)">Дата отгрузки на ВК</th>
-                        <th scope="col" onclick="sortTable(14)">Время отгрузки на ВК</th>
+                    <button type="button" class="btn btn-default" style="width: 300px;" data-modal="modal_1">Статистика
+                        по
+                        дебиторам</button>
 
-                    </tr>
-                </thead>
-                <tbody id="thetable">
-                    {{ range .GET}}
-                    <tr class="header" id="fontsize-showinspection">
-                        <!--<td>{{.ID }}</td>-->
-                        <td>
-                            {{.ID}}
-                        </td>
-                        <td style="font-size: 10%;">
-                            {{.IdMaterial}}
-                        </td>
-                        <td>
-                            {{.SAP}}
-                        </td>
-                        <td>
-                            {{.Lot}}
-                        </td>
-                        <td>
-                            {{.IdRoll}}
-                        </td>
-                        <td>
-                            {{.ProductionDate}}
-                        </td>
-                        <td>
-                            {{.NameDebitor}}
-                        </td>
-                        <td>
-                            {{.Location}}
-                        </td>
-                        <td>
-                            {{.Status}}
-                        </td>
-                        <td>
-                            {{.Note}}
-                        </td>
-                        <td>
-                            {{.Update}}
-                        </td>
-                        <td>
-                            {{.Dateupdate2}}
-                        </td>
-                        <td>
-                            {{.Timeupdate2}}
-                        </td>
-                        <td>
-                            {{.Date2}}
-                        </td>
-                        <td>
-                            {{.Time2}}
-                        </td>
-                        <td style="width: 100%;">
-                            <a href="/updateinspection/{{.ID}}" class="btnfortable btn-primary">Изменить</a>
-                            <a href="/deleteinspection/{{.ID}}" class="btnfortable btn-danger confirmation">Удалить</a>
-                        </td>
-                    </tr>
-                    {{ end}}
-                </tbody>
-            </table>
-        </div>
-        {{ else if eq .Quality true}}
-        <div class="wrap2">
-            <!--style="margin-left:1100px; width: 1000px; margin-top: 0px; font-size: 150%;"-->
-            <font color="white">Общее количество</font>: &nbsp;{{ .CountTotal}} <br>
-            <font color="red">Задержано</font>: &nbsp;{{.HoldInspection}} <br>
-            <font color="green">Требуют проверки</font>: &nbsp;{{.NotVerifyComponents}} <br>
-            <br>
-            <!--  <a href="#okno">Статистика по дебиторам</a>-->
-            <div class="btn-box">
-                <button type="button" class="btn btn-default" data-modal="modal_1">Статистика по
-                    дебиторам</button>
-                <!--    <button type="button" class="btn btn-primary btn-lg" data-modal="modal_1">Статистика п
+                    <!--    <button type="button" class="btn btn-primary btn-lg" data-modal="modal_1">Статистика по
                    дебиторам</button>-->
+                </div>
             </div>
-        </div>
-        {{ template "popup.html" . }}
-        <div class="wrap">
-            <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .." title="Type in a name"
-                style="margin-left:0px; width: 1000px;">
+            {{ template "popup.html" . }}
+            <div class="wrap">
+                <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .."
+                    title="Type in a name">
+                <!--style="margin-left:0px; width: 1000px;"-->
 
-            <table id="myTable" onload="alternate('thetable')">
-                <caption style="color: white; font-size: 22px;">Список на инспекции</caption>
-                <button onclick="exportTableToCSV('export_shipment_sap.csv')"
-                    style="margin-left:0px; width: 1000px;">Экспортировать таблицу в csv
-                    файл</button>
-                <thead>
-                    <tr id="fontsize-showinspection">
-                        <th scope="col" onclick="sortTable(0)">№ ID</th>
-                        <!--<th>ID</th>-->
-                        <th scope="col" onclick="sortTable(1)">QR-код</th>
-                        <!--Material-->
-                        <th scope="col" onclick="sortTable(2)">SAP</th>
-                        <!--Qty-->
-                        <th scope="col" onclick="sortTable(3)">Партия</th>
-                        <!--ShipmentDate-->
-                        <!--    <th scope="col" onclick="sortTable(2)">ShipmentDate2</th>-->
-                        <th scope="col" onclick="sortTable(4)">ЕО катушки</th>
-                        <th scope="col" onclick="sortTable(5)">Дата производства</th>
-                        <th scope="col" onclick="sortTable(6)">Имя дебитора</th>
-                        <th scope="col" onclick="sortTable(7)">Статус отгружено</th>
-                        <th scope="col" onclick="sortTable(8)">Статус отметки проверки</th>
-                        <th scope="col" onclick="sortTable(9)">Примечание</th>
-                        <th scope="col" onclick="sortTable(10)">Кем отредактировано</th>
-                        <th scope="col" onclick="sortTable(11)">Дата редактирования</th>
-                        <th scope="col" onclick="sortTable(12)">Время редактирования</th>
-                        <th scope="col" onclick="sortTable(13)">Дата отгрузки на ВК</th>
-                        <th scope="col" onclick="sortTable(14)">Время отгрузки на ВК</th>
+                <table id="myTable" onload="alternate('thetable')">
+                    <caption style="color: white; font-size: 22px;">Список на инспекции</caption>
+                    <button onclick="exportTableToCSV('export_shipment_sap.csv')"
+                        style="margin-left:0px; width: 1000px;">Экспортировать таблицу в csv
+                        файл</button>
+                    <thead>
+                        <tr id="fontsize-showinspection">
+                            <th scope="col" onclick="sortTable(0)">№ ID</th>
+                            <!--<th>ID</th>-->
+                            <th scope="col" onclick="sortTable(1)">QR-код</th>
+                            <!--Material-->
+                            <th scope="col" onclick="sortTable(2)">SAP</th>
+                            <!--Qty-->
+                            <th scope="col" onclick="sortTable(3)">Партия</th>
+                            <!--ShipmentDate-->
+                            <!--    <th scope="col" onclick="sortTable(2)">ShipmentDate2</th>-->
+                            <th scope="col" onclick="sortTable(4)">ЕО катушки</th>
+                            <th scope="col" onclick="sortTable(5)">Дата производства</th>
+                            <th scope="col" onclick="sortTable(6)">Имя дебитора</th>
+                            <th scope="col" onclick="sortTable(7)">Статус отгружено</th>
+                            <th scope="col" onclick="sortTable(8)">Статус отметки проверки</th>
+                            <th scope="col" onclick="sortTable(9)">Примечание</th>
+                            <th scope="col" onclick="sortTable(10)">Кем отредактировано</th>
+                            <th scope="col" onclick="sortTable(11)">Дата редактирования</th>
+                            <th scope="col" onclick="sortTable(12)">Время редактирования</th>
+                            <th scope="col" onclick="sortTable(13)">Дата отгрузки на ВК</th>
+                            <th scope="col" onclick="sortTable(14)">Время отгрузки на ВК</th>
 
-                    </tr>
-                </thead>
-                <tbody id="thetable">
-                    {{ range .GET}}
-                    <tr class="header" id="fontsize-showinspection">
-                        <!--<td>{{.ID }}</td>-->
-                        <td>
-                            {{.ID}}
-                        </td>
-                        <td style="font-size: 10%;">
-                            {{.IdMaterial}}
-                        </td>
-                        <td>
-                            {{.SAP}}
-                        </td>
-                        <td>
-                            {{.Lot}}
-                        </td>
-                        <td>
-                            {{.IdRoll}}
-                        </td>
-                        <td>
-                            {{.ProductionDate}}
-                        </td>
-                        <td>
-                            {{.NameDebitor}}
-                        </td>
-                        <td>
-                            {{.Location}}
-                        </td>
-                        <td>
-                            {{.Status}}
-                        </td>
-                        <td>
-                            {{.Note}}
-                        </td>
-                        <td>
-                            {{.Update}}
-                        </td>
-                        <td>
-                            {{.Dateupdate2}}
-                        </td>
-                        <td>
-                            {{.Timeupdate2}}
-                        </td>
-                        <td>
-                            {{.Date2}}
-                        </td>
-                        <td>
-                            {{.Time2}}
-                        </td>
-                        <td>
-                            <a href="/updateinspection/{{.ID}}" class="btnfortable btn-primary">Изменить</a>
-                        </td>
-                    </tr>
-                    {{ end}}
-                </tbody>
-            </table>
-        </div>
-        {{ else if eq .Warehouse true}}
+                        </tr>
+                    </thead>
+                    <tbody id="thetable">
+                        {{ range .GET}}
+                        <tr class="header" id="fontsize-showinspection">
+                            <!--<td>{{.ID }}</td>-->
+                            <td>
+                                {{.ID}}
+                            </td>
+                            <td style="font-size: 10%;">
+                                {{.IdMaterial}}
+                            </td>
+                            <td>
+                                {{.SAP}}
+                            </td>
+                            <td>
+                                {{.Lot}}
+                            </td>
+                            <td>
+                                {{.IdRoll}}
+                            </td>
+                            <td>
+                                {{.ProductionDate}}
+                            </td>
+                            <td>
+                                {{.NameDebitor}}
+                            </td>
+                            <td>
+                                {{.Location}}
+                            </td>
+                            <td>
+                                {{.Status}}
+                            </td>
+                            <td>
+                                {{.Note}}
+                            </td>
+                            <td>
+                                {{.Update}}
+                            </td>
+                            <td>
+                                {{.Dateupdate2}}
+                            </td>
+                            <td>
+                                {{.Timeupdate2}}
+                            </td>
+                            <td>
+                                {{.Date2}}
+                            </td>
+                            <td>
+                                {{.Time2}}
+                            </td>
+                            <td style="width: 100%;">
+                                <a href="/updateinspection/{{.ID}}" class="btnfortable btn-primary">Изменить</a>
+                                <a href="/deleteinspection/{{.ID}}"
+                                    class="btnfortable btn-danger confirmation">Удалить</a>
+                            </td>
+                        </tr>
+                        {{ end}}
+                    </tbody>
+                </table>
+            </div>
+            {{ else if eq .Quality true}}
+            <div class="wrap2">
+                <div class="columninspection1">
 
-        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .." title="Type in a name"
-            style="margin-left:0px; width: 1000px;">
-
-        <table id="myTable" onload="alternate('thetable')">
-            <caption style="color: white; font-size: 22px;">Список на инспекции</caption>
-            <button onclick="exportTableToCSV('export_shipment_sap.csv')"
-                style="margin-left:0px; width: 1000px;">Экспортировать таблицу в csv
-                файл</button>
-            <thead>
-                <tr id="fontsize-showinspection">
-                    <th scope="col" onclick="sortTable(0)">№ ID</th>
-                    <!--<th>ID</th>-->
-                    <th scope="col" onclick="sortTable(1)">QR-код</th>
-                    <!--Material-->
-                    <th scope="col" onclick="sortTable(2)">SAP</th>
-                    <!--Qty-->
-                    <th scope="col" onclick="sortTable(3)">Партия</th>
-                    <!--ShipmentDate-->
-                    <!--    <th scope="col" onclick="sortTable(2)">ShipmentDate2</th>-->
-                    <th scope="col" onclick="sortTable(4)">ЕО катушки</th>
-                    <th scope="col" onclick="sortTable(5)">Дата производства</th>
-                    <th scope="col" onclick="sortTable(6)">Имя дебитора</th>
-                    <th scope="col" onclick="sortTable(7)">Статус отгружено</th>
-                    <th scope="col" onclick="sortTable(8)">Статус отметки проверки</th>
-                    <th scope="col" onclick="sortTable(9)">Примечание</th>
-                    <th scope="col" onclick="sortTable(10)">Кем отредактировано</th>
-                    <th scope="col" onclick="sortTable(11)">Дата редактирования</th>
-                    <th scope="col" onclick="sortTable(12)">Время редактирования</th>
-                    <th scope="col" onclick="sortTable(13)">Дата отгрузки на ВК</th>
-                    <th scope="col" onclick="sortTable(14)">Время отгрузки на ВК</th>
-
-                </tr>
-            </thead>
-            <tbody id="thetable">
-                {{ range .GET}}
-                <tr class="header" id="fontsize-showinspection">
-                    <!--<td>{{.ID }}</td>-->
-                    <td>
-                        {{.ID}}
-                    </td>
-                    <td style="font-size: 10%;">
-                        {{.IdMaterial}}
-                    </td>
-                    <td>
-                        {{.SAP}}
-                    </td>
-                    <td>
-                        {{.Lot}}
-                    </td>
-                    <td>
-                        {{.IdRoll}}
-                    </td>
-                    <td>
-                        {{.ProductionDate}}
-                    </td>
-                    <td>
-                        {{.NameDebitor}}
-                    </td>
-                    <td>
-                        {{.Location}}
-                    </td>
-                    <td>
-                        {{.Status}}
-                    </td>
-                    <td>
-                        {{.Note}}
-                    </td>
-                    <td>
-                        {{.Update}}
-                    </td>
-                    <td>
-                        {{.Dateupdate2}}
-                    </td>
-                    <td>
-                        {{.Timeupdate2}}
-                    </td>
-                    <td>
-                        {{.Date2}}
-                    </td>
-                    <td>
-                        {{.Time2}}
-                    </td>
-
-                    <td>
-
-                        <a href="/acceptinspectiontowh/{{.ID}}" class="btnfortable btn-primary">
-                            Принять на склад
-                        </a>
-
-                    </td>
-
-                </tr>
-                {{ end}}
-            </tbody>
-        </table>
-        {{ else if eq .Warehouse false}}
-        <div class="wrap2">
-            <!--style="margin-left:1100px; width: 1000px; margin-top: 0px; font-size: 150%;"-->
-            <font color="white">Общее количество</font>: &nbsp;{{ .CountTotal}} <br>
-            <font color="red">Задержано</font>: &nbsp;{{.HoldInspection}} <br>
-            <font color="green">Требуют проверки</font>: &nbsp;{{.NotVerifyComponents}} <br>
-            <br>
-            <!--  <a href="#okno">Статистика по дебиторам</a>-->
-            <div class="btn-box">
-                <button type="button" class="btn btn-default" data-modal="modal_1">Статистика по
-                    дебиторам</button>
-                <!--    <button type="button" class="btn btn-primary btn-lg" data-modal="modal_1">Статистика по
+                </div>
+                <div class="columninspection2">
+                    <!--style="margin-left:1100px; width: 1000px; margin-top: 0px; font-size: 150%;"-->
+                    <font color="white">Общее количество</font>: &nbsp;{{ .CountTotal}} <br>
+                    <font color="red">Задержано</font>: &nbsp;{{.HoldInspection}} <br>
+                    <font color="green">Требуют проверки</font>: &nbsp;{{.NotVerifyComponents}} <br>
+                    <br>
+                    <!--  <a href="#okno">Статистика по дебиторам</a>-->
+                    <div class="btn-box">
+                        <button type="button" class="btn btn-default" style="width: 300px;"
+                            data-modal="modal_1">Статистика
+                            по
+                            дебиторам</button>
+                        <!--    <button type="button" class="btn btn-primary btn-lg" data-modal="modal_1">Статистика п
                    дебиторам</button>-->
-            </div>
-        </div>
-        {{ template "popup.html" . }}
-        <div class="wrap">
-            <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .." title="Type in a name"
-                style="margin-left:0px; width: 1000px;">
+                    </div>
+                </div>
+                {{ template "popup.html" . }}
+                <div class="wrap">
+                    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .."
+                        title="Type in a name" style="margin-left:0px; width: 1000px;">
 
-            <table id="myTable" onload="alternate('thetable')">
-                <caption style="color: white; font-size: 22px;">Список на инспекции</caption>
-                <button onclick="exportTableToCSV('export_shipment_sap.csv')"
-                    style="margin-left:0px; width: 1000px;">Экспортировать таблицу в csv
-                    файл</button>
-                <thead>
-                    <tr id="fontsize-showinspection">
-                        <th scope="col" onclick="sortTable(0)">№ ID</th>
-                        <!--<th>ID</th>-->
-                        <th scope="col" onclick="sortTable(1)">QR-код</th>
-                        <!--Material-->
-                        <th scope="col" onclick="sortTable(2)">SAP</th>
-                        <!--Qty-->
-                        <th scope="col" onclick="sortTable(3)">Партия</th>
-                        <!--ShipmentDate-->
-                        <!--    <th scope="col" onclick="sortTable(2)">ShipmentDate2</th>-->
-                        <th scope="col" onclick="sortTable(4)">ЕО катушки</th>
-                        <th scope="col" onclick="sortTable(5)">Дата производства</th>
-                        <th scope="col" onclick="sortTable(6)">Имя дебитора</th>
-                        <th scope="col" onclick="sortTable(7)">Статус отгружено</th>
-                        <th scope="col" onclick="sortTable(8)">Статус отметки проверки</th>
-                        <th scope="col" onclick="sortTable(9)">Примечание</th>
-                        <th scope="col" onclick="sortTable(10)">Кем отредактировано</th>
-                        <th scope="col" onclick="sortTable(11)">Дата редактирования</th>
-                        <th scope="col" onclick="sortTable(12)">Время редактирования</th>
-                        <th scope="col" onclick="sortTable(13)">Дата отгрузки на ВК</th>
-                        <th scope="col" onclick="sortTable(14)">Время отгрузки на ВК</th>
+                    <table id="myTable" onload="alternate('thetable')">
+                        <caption style="color: white; font-size: 22px;">Список на инспекции</caption>
+                        <button onclick="exportTableToCSV('export_shipment_sap.csv')"
+                            style="margin-left:0px; width: 1000px;">Экспортировать таблицу в csv
+                            файл</button>
+                        <thead>
+                            <tr id="fontsize-showinspection">
+                                <th scope="col" onclick="sortTable(0)">№ ID</th>
+                                <!--<th>ID</th>-->
+                                <th scope="col" onclick="sortTable(1)">QR-код</th>
+                                <!--Material-->
+                                <th scope="col" onclick="sortTable(2)">SAP</th>
+                                <!--Qty-->
+                                <th scope="col" onclick="sortTable(3)">Партия</th>
+                                <!--ShipmentDate-->
+                                <!--    <th scope="col" onclick="sortTable(2)">ShipmentDate2</th>-->
+                                <th scope="col" onclick="sortTable(4)">ЕО катушки</th>
+                                <th scope="col" onclick="sortTable(5)">Дата производства</th>
+                                <th scope="col" onclick="sortTable(6)">Имя дебитора</th>
+                                <th scope="col" onclick="sortTable(7)">Статус отгружено</th>
+                                <th scope="col" onclick="sortTable(8)">Статус отметки проверки</th>
+                                <th scope="col" onclick="sortTable(9)">Примечание</th>
+                                <th scope="col" onclick="sortTable(10)">Кем отредактировано</th>
+                                <th scope="col" onclick="sortTable(11)">Дата редактирования</th>
+                                <th scope="col" onclick="sortTable(12)">Время редактирования</th>
+                                <th scope="col" onclick="sortTable(13)">Дата отгрузки на ВК</th>
+                                <th scope="col" onclick="sortTable(14)">Время отгрузки на ВК</th>
 
-                    </tr>
-                </thead>
-                <tbody id="thetable">
-                    {{ range .GET}}
-                    <tr class="header" id="fontsize-showinspection">
-                        <!--<td>{{.ID }}</td>-->
-                        <td>
-                            {{.ID}}
-                        </td>
-                        <td style="font-size: 10%;">
-                            {{.IdMaterial}}
-                        </td>
-                        <td>
-                            {{.SAP}}
-                        </td>
-                        <td>
-                            {{.Lot}}
-                        </td>
-                        <td>
-                            {{.IdRoll}}
-                        </td>
-                        <td>
-                            {{.ProductionDate}}
-                        </td>
-                        <td>
-                            {{.NameDebitor}}
-                        </td>
-                        <td>
-                            {{.Location}}
-                        </td>
-                        <td>
-                            {{.Status}}
-                        </td>
-                        <td>
-                            {{.Note}}
-                        </td>
-                        <td>
-                            {{.Update}}
-                        </td>
-                        <td>
-                            {{.Dateupdate2}}
-                        </td>
-                        <td>
-                            {{.Timeupdate2}}
-                        </td>
-                        <td>
-                            {{.Date2}}
-                        </td>
-                        <td>
-                            {{.Time2}}
-                        </td>
+                            </tr>
+                        </thead>
+                        <tbody id="thetable">
+                            {{ range .GET}}
+                            <tr class="header" id="fontsize-showinspection">
+                                <!--<td>{{.ID }}</td>-->
+                                <td>
+                                    {{.ID}}
+                                </td>
+                                <td style="font-size: 10%;">
+                                    {{.IdMaterial}}
+                                </td>
+                                <td>
+                                    {{.SAP}}
+                                </td>
+                                <td>
+                                    {{.Lot}}
+                                </td>
+                                <td>
+                                    {{.IdRoll}}
+                                </td>
+                                <td>
+                                    {{.ProductionDate}}
+                                </td>
+                                <td>
+                                    {{.NameDebitor}}
+                                </td>
+                                <td>
+                                    {{.Location}}
+                                </td>
+                                <td>
+                                    {{.Status}}
+                                </td>
+                                <td>
+                                    {{.Note}}
+                                </td>
+                                <td>
+                                    {{.Update}}
+                                </td>
+                                <td>
+                                    {{.Dateupdate2}}
+                                </td>
+                                <td>
+                                    {{.Timeupdate2}}
+                                </td>
+                                <td>
+                                    {{.Date2}}
+                                </td>
+                                <td>
+                                    {{.Time2}}
+                                </td>
+                                <td>
+                                    <a href="/updateinspection/{{.ID}}" class="btnfortable btn-primary">Изменить</a>
+                                </td>
+                            </tr>
+                            {{ end}}
+                        </tbody>
+                    </table>
+                </div>
+                {{ else if eq .Warehouse true}}
 
-                    </tr>
-                    {{ end}}
-                </tbody>
-            </table>
-            {{ end}}
-        </div>
-    </div>
+                <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .."
+                    title="Type in a name" style="margin-left:0px; width: 1000px;">
+
+                <table id="myTable" onload="alternate('thetable')">
+                    <caption style="color: white; font-size: 22px;">Список на инспекции</caption>
+                    <button onclick="exportTableToCSV('export_shipment_sap.csv')"
+                        style="margin-left:0px; width: 1000px;">Экспортировать таблицу в csv
+                        файл</button>
+                    <thead>
+                        <tr id="fontsize-showinspection">
+                            <th scope="col" onclick="sortTable(0)">№ ID</th>
+                            <!--<th>ID</th>-->
+                            <th scope="col" onclick="sortTable(1)">QR-код</th>
+                            <!--Material-->
+                            <th scope="col" onclick="sortTable(2)">SAP</th>
+                            <!--Qty-->
+                            <th scope="col" onclick="sortTable(3)">Партия</th>
+                            <!--ShipmentDate-->
+                            <!--    <th scope="col" onclick="sortTable(2)">ShipmentDate2</th>-->
+                            <th scope="col" onclick="sortTable(4)">ЕО катушки</th>
+                            <th scope="col" onclick="sortTable(5)">Дата производства</th>
+                            <th scope="col" onclick="sortTable(6)">Имя дебитора</th>
+                            <th scope="col" onclick="sortTable(7)">Статус отгружено</th>
+                            <th scope="col" onclick="sortTable(8)">Статус отметки проверки</th>
+                            <th scope="col" onclick="sortTable(9)">Примечание</th>
+                            <th scope="col" onclick="sortTable(10)">Кем отредактировано</th>
+                            <th scope="col" onclick="sortTable(11)">Дата редактирования</th>
+                            <th scope="col" onclick="sortTable(12)">Время редактирования</th>
+                            <th scope="col" onclick="sortTable(13)">Дата отгрузки на ВК</th>
+                            <th scope="col" onclick="sortTable(14)">Время отгрузки на ВК</th>
+
+                        </tr>
+                    </thead>
+                    <tbody id="thetable">
+                        {{ range .GET}}
+                        <tr class="header" id="fontsize-showinspection">
+                            <!--<td>{{.ID }}</td>-->
+                            <td>
+                                {{.ID}}
+                            </td>
+                            <td style="font-size: 10%;">
+                                {{.IdMaterial}}
+                            </td>
+                            <td>
+                                {{.SAP}}
+                            </td>
+                            <td>
+                                {{.Lot}}
+                            </td>
+                            <td>
+                                {{.IdRoll}}
+                            </td>
+                            <td>
+                                {{.ProductionDate}}
+                            </td>
+                            <td>
+                                {{.NameDebitor}}
+                            </td>
+                            <td>
+                                {{.Location}}
+                            </td>
+                            <td>
+                                {{.Status}}
+                            </td>
+                            <td>
+                                {{.Note}}
+                            </td>
+                            <td>
+                                {{.Update}}
+                            </td>
+                            <td>
+                                {{.Dateupdate2}}
+                            </td>
+                            <td>
+                                {{.Timeupdate2}}
+                            </td>
+                            <td>
+                                {{.Date2}}
+                            </td>
+                            <td>
+                                {{.Time2}}
+                            </td>
+
+                            <td>
+
+                                <a href="/acceptinspectiontowh/{{.ID}}" class="btnfortable btn-primary">
+                                    Принять на склад
+                                </a>
+
+                            </td>
+
+                        </tr>
+                        {{ end}}
+                    </tbody>
+                </table>
+                {{ else if eq .Warehouse false}}
+                <div class="wrap2">
+                    <div class="columninspection1">
+                        <a href="#modal-1" class="js-modal-open link">Отгрузка на ВК</a>
+                    </div>
+                    <div class="columninspection2">
+                        <!--style="margin-left:1100px; width: 1000px; margin-top: 0px; font-size: 150%;"-->
+                        <font color="white">Общее количество</font>: &nbsp;{{ .CountTotal}} <br>
+                        <font color="red">Задержано</font>: &nbsp;{{.HoldInspection}} <br>
+                        <font color="green">Требуют проверки</font>: &nbsp;{{.NotVerifyComponents}} <br>
+                        <br>
+                        <!--  <a href="#okno">Статистика по дебиторам</a>-->
+                        <div class="btn-box">
+                            <button type="button" class="btn btn-default" style="width: 300px;"
+                                data-modal="modal_1">Статистика
+                                по
+                                дебиторам</button>
+                            <!--    <button type="button" class="btn btn-primary btn-lg" data-modal="modal_1">Статистика по
+               дебиторам</button>-->
+                        </div>
+                    </div>
+                    {{ template "popup.html" . }}
+                    <div class="wrap">
+                        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .."
+                            title="Type in a name" style="margin-left:0px; width: 1000px;">
+
+                        <table id="myTable" onload="alternate('thetable')">
+                            <caption style="color: white; font-size: 22px;">Список на инспекции</caption>
+                            <button onclick="exportTableToCSV('export_shipment_sap.csv')"
+                                style="margin-left:0px; width: 1000px;">Экспортировать таблицу в csv
+                                файл</button>
+                            <thead>
+                                <tr id="fontsize-showinspection">
+                                    <th scope="col" onclick="sortTable(0)">№ ID</th>
+                                    <!--<th>ID</th>-->
+                                    <th scope="col" onclick="sortTable(1)">QR-код</th>
+                                    <!--Material-->
+                                    <th scope="col" onclick="sortTable(2)">SAP</th>
+                                    <!--Qty-->
+                                    <th scope="col" onclick="sortTable(3)">Партия</th>
+                                    <!--ShipmentDate-->
+                                    <!--    <th scope="col" onclick="sortTable(2)">ShipmentDate2</th>-->
+                                    <th scope="col" onclick="sortTable(4)">ЕО катушки</th>
+                                    <th scope="col" onclick="sortTable(5)">Дата производства</th>
+                                    <th scope="col" onclick="sortTable(6)">Имя дебитора</th>
+                                    <th scope="col" onclick="sortTable(7)">Статус отгружено</th>
+                                    <th scope="col" onclick="sortTable(8)">Статус отметки проверки</th>
+                                    <th scope="col" onclick="sortTable(9)">Примечание</th>
+                                    <th scope="col" onclick="sortTable(10)">Кем отредактировано</th>
+                                    <th scope="col" onclick="sortTable(11)">Дата редактирования</th>
+                                    <th scope="col" onclick="sortTable(12)">Время редактирования</th>
+                                    <th scope="col" onclick="sortTable(13)">Дата отгрузки на ВК</th>
+                                    <th scope="col" onclick="sortTable(14)">Время отгрузки на ВК</th>
+
+                                </tr>
+                            </thead>
+                            <tbody id="thetable">
+                                {{ range .GET}}
+                                <tr class="header" id="fontsize-showinspection">
+                                    <!--<td>{{.ID }}</td>-->
+                                    <td>
+                                        {{.ID}}
+                                    </td>
+                                    <td style="font-size: 10%;">
+                                        {{.IdMaterial}}
+                                    </td>
+                                    <td>
+                                        {{.SAP}}
+                                    </td>
+                                    <td>
+                                        {{.Lot}}
+                                    </td>
+                                    <td>
+                                        {{.IdRoll}}
+                                    </td>
+                                    <td>
+                                        {{.ProductionDate}}
+                                    </td>
+                                    <td>
+                                        {{.NameDebitor}}
+                                    </td>
+                                    <td>
+                                        {{.Location}}
+                                    </td>
+                                    <td>
+                                        {{.Status}}
+                                    </td>
+                                    <td>
+                                        {{.Note}}
+                                    </td>
+                                    <td>
+                                        {{.Update}}
+                                    </td>
+                                    <td>
+                                        {{.Dateupdate2}}
+                                    </td>
+                                    <td>
+                                        {{.Timeupdate2}}
+                                    </td>
+                                    <td>
+                                        {{.Date2}}
+                                    </td>
+                                    <td>
+                                        {{.Time2}}
+                                    </td>
+
+                                </tr>
+                                {{ end}}
+                            </tbody>
+                        </table>
+                        {{ end}}
+                    </div>
+
+                    <div class="modal modal--l" id="modal-1">
+                        <div class="modal__dialog">
+                            <div class="modal__dialog-header">
+                                <div class="modal__dialog-header-content">
+                                    <h3>Форма отправки катушек на ВК</h3>
+                                </div>
+                                <div class="modal__dialog-header-close">
+                                    <button
+                                        class="js-modal-close modal__dialog-header-close-btn"><span>&times;</span></button>
+                                </div>
+                            </div>
+                            <div class="modal__dialog-body">
+                                <!--    <div>modal__dialog-body</div>
+                        <button id="js-add-content-temp">Add content</button>-->
+                                <!--   <div class="formSendTitle">
+                            <h3>Форма отправки катушек на ВК</h3>-->
+
+                                <div class="formSendEO" id="form"></div>
+                                <div>
+                                    <button id="add-condition" class="buttonPlus">+</button>
+                                    <hr />
+                                    <div>
+                                        <button id="apply" class="button button4green">
+                                            Отправить данные</button>
+                                        <button id="clear-form" class="button button4red">
+                                            Очистить форму
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal__dialog-footer">
+                                <button class="js-modal-close modal__dialog-footer-close-btn">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
 
-    {{template "footer.html" .}}
+                {{template "footer.html" .}}
 
 </body>
 
