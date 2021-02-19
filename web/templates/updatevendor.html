@@ -1,36 +1,11 @@
-<!DOCTYPE HTML>
-<html>
-{{template "head.html" .}}
-
-<body>
-    {{template "navbar.html" .}}
-    <div class="container">
-        <div class="fromSendTitle">
-            <h1>Редактирование списка поставщиков</h1>
-        </div>
-
-        <form method="POST" action="/updatevendor/{{.GET.ID}}">
-
-            <div class="form-group">
-                <label for="title">Код дебитора</label>
-                <input type="text" class="form-control" name="codedebitor" id="codedebitor"
-                    value="{{.GET.CodeDebitor}}">
-            </div>
-            <div class="form-group">
-                <label for="description">Наименование</label>
-                <input type="text" class="form-control" name="namedebitor" id="namedebitor"
-                    value="{{.GET.NameDebitor}}">
-            </div>
-
-            <!--    <div class="form-group">
-                    <label>{{.Updated}}</label>
-                </div>-->
-            <button type="submit" class="btn btn-primary">Подтвердить</button>
-        </form>
-
+<form method="POST" action="/updatevendor/{{.GET.ID}}">
+    <div class="form-group">
+        <label for="title">Код дебитора</label>
+        <input type="text" class="form-control" name="codedebitor" id="codedebitor" value="{{.GET.CodeDebitor}}">
     </div>
-
-    {{template "footer.html" .}}
-</body>
-
-</html>
+    <div class="form-group">
+        <label for="description">Наименование</label>
+        <input type="text" class="form-control" name="namedebitor" id="namedebitor" value="{{.GET.NameDebitor}}">
+    </div>
+    <button type="submit" class="btn btn-primary">Подтвердить</button>
+</form>

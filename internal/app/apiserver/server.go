@@ -1871,7 +1871,6 @@ func (s *server) updateVendor() http.HandlerFunc {
 			s.error(w, r, http.StatusUnprocessableEntity, err)
 			return
 		}
-
 		http.Redirect(w, r, "/showvendor", 303)
 
 	}

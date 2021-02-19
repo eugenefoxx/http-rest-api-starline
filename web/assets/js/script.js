@@ -108,5 +108,23 @@ function alternate(id) {
 
 }
 
+function editVendor(id) {
+    axios.get('/updatevendor/' + id)
+        .then(function (response) {
+            document
+                .getElementById('modal-2')
+                .getElementsByClassName('modal__dialog-body')[0].innerHTML = response.data;
+
+        });
+}
 
 
+function editInspection(id) {
+    axios.get('/updateinspection/' + id)
+        .then(function (response) {
+            document
+                .getElementById('modal-2')
+                .getElementsByClassName('modal__dialog-body')[0].innerHTML = response.data;
+
+        });
+}

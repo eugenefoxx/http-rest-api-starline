@@ -1,54 +1,39 @@
-<!DOCTYPE HTML>
-<html>
-{{template "head.html" .}}
-
-<body>
-    {{template "navbar.html" .}}
-    <div class="container">
-        <h1 class="login">Карточка контроля компонента</h1>
-
-        <form method="POST" action="/updateinspection/{{.GET.ID}}">
-            <label for="title" class="login">Статус</label>
-            <div class="form-group">
+<form method="POST" action="/updateinspection/{{.GET.ID}}">
+    <label for="title" class="login">Статус</label>
+    <div class="form-group">
 
 
-                <!--<input type="text" class="form-control" name="status" id="status" value="<<.Status>>">-->
-                <!--  <p><input class="form-control" name="status" id="status" type="radio" value="OK">
+        <!--<input type="text" class="form-control" name="status" id="status" value="<<.Status>>">-->
+        <!--  <p><input class="form-control" name="status" id="status" type="radio" value="OK">
                         OK <<.Status>>
                     </p>
                     <p><input class="form-control" name="status" id="status" type="radio" value="NG">
                         NG <<.Status>>
                     </p>-->
-                <select class="form-control" id="status" name="status" style="width: 35%;">
-                    <option value="OK">
-                        OK - Текущий статус: {{.GET.Status}}
-                    </option>
-                    <option value="NG">
-                        NG - Текущий статус: {{.GET.Status}}
-                    </option>
-                </select>
+        <select class="form-control" id="status" name="status" style="width: 35%;">
+            <option value="OK">
+                OK - Текущий статус: {{.GET.Status}}
+            </option>
+            <option value="NG">
+                NG - Текущий статус: {{.GET.Status}}
+            </option>
+        </select>
 
-            </div>
-            <label for="description" class="login">Примечание</label>
-            <div class="form-group">
+    </div>
+    <label for="description" class="login">Примечание</label>
+    <div class="form-group">
 
-                <textarea class="form-control" name="note" id="note" rows="3"
-                    style="width: 50%; height: 200px;">{{.GET.Note}}</textarea>
-            </div>
-            <div>
-                <label>
-                    {{.GET.Groups}}
-                </label>
-            </div>
-            <!--    <div class="form-group">
+        <textarea class="form-control" name="note" id="note" rows="3"
+            style="width: 50%; height: 200px;">{{.GET.Note}}</textarea>
+    </div>
+    <div>
+        <label>
+            {{.GET.Groups}}
+        </label>
+    </div>
+    <!--    <div class="form-group">
                     <label>{{.Updated}}</label>
                 </div>-->
-            <br>
-            <button type="submit" class="btn btn-primary" style="margin-left: 2%;">Подтвердить</button>
-        </form>
-    </div>
-    {{template "footer.html" .}}
-
-</body>
-
-</html>
+    <br>
+    <button type="submit" class="btn btn-primary" style="margin-left: 2%;">Подтвердить</button>
+</form>

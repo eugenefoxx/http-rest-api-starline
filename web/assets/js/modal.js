@@ -1,4 +1,6 @@
 let resizeObserver = null;
+console.log('I AM MODAL');
+
 const CLASS_LIST = {
     MODAL: 'modal',
     MODAL_ACTIVE: 'modal--active',
@@ -17,8 +19,12 @@ const showScroll = (event) => {
     }
 }
 
+//debugger;
+
 document.addEventListener('click', (event) => {
     // open
+   // debugger;
+
     if (event.target.closest(`.${CLASS_LIST.TRIGGER_OPEN}`)) {
         console.log('open');
         event.preventDefault();
@@ -92,9 +98,9 @@ const unbindResizeObserver = (modal) => {
     resizeObserver = null;
 };
 
-document.getElementById('js-add-content-temp').addEventListener('click', (event) => {
-    const div = document.createElement('div');
-    div.textContent = 'Text content';
-    div.style.height = '1000px';
-    document.querySelector(`.${CLASS_LIST.MODAL_DIALOG_BODY}`).appendChild(div);
-});
+// document.getElementById('js-add-content-temp').addEventListener('click', (event) => {
+    // const div = document.createElement('div');
+    // div.textContent = 'Text content';
+    // div.style.height = '1000px';
+    // document.querySelector(`.${CLASS_LIST.MODAL_DIALOG_BODY}`).appendChild(div);
+// });
