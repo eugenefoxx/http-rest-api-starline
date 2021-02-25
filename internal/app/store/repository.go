@@ -69,4 +69,7 @@ type InspectionRepository interface {
 	CountDebitor() (*model.Inspections, error)
 	HoldCountDebitor() (*model.Inspections, error)
 	NotVerifyDebitor() (*model.Inspections, error)
+	ListShowDataByDate(string, string) (*model.Inspections, error)
+	ListShowDataByDateAndSAP(string, string, int) (*model.Inspections, error)
+	ListShowDataByDateAndEO(string, string, string) (*model.Inspections, error)
 }

@@ -1227,6 +1227,15 @@ p {
   text-decoration: none;
 }
 
+.linkblack {
+  color: #050505;
+  margin: 10px;
+}
+
+.linkblack:hover {
+  text-decoration: none;
+}
+
 .modal {
   display: -webkit-box;
   display: -ms-flexbox;

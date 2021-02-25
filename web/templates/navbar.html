@@ -20,6 +20,9 @@
             <a href="/insertIDReturn">Пересчет ЕО с возвратом</a>
         </div>
     </li>
+    <div>
+        <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе</a>
+    </div>
     {{end}}
     {{ if .Stockkeeper}}
     <li class="dropdown">
@@ -46,6 +49,9 @@
             <a href="/statusinspection">Компоненты на входном контроле</a>
         </div>
     </li>
+    <div>
+        <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе</a>
+    </div>
     {{ end}}
     {{ if .SuperIngenerQuality}}
     <li class="dropdown">
@@ -57,6 +63,9 @@
             <a href="/statusinspection">Компоненты на входном контроле</a>
         </div>
     </li>
+    <div>
+        <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе</a>
+    </div>
     {{ end}}
     {{ if .StockkeeperWH}}
     <li class="dropdown">
@@ -67,6 +76,9 @@
             <a href="/statusinspectionforwh">Компоненты на входном контроле для прием</a>
         </div>
     </li>
+    <div>
+        <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе</a>
+    </div>
     {{ end}}
     {{ if .Inspector}}
     <li class="dropdown">
@@ -75,6 +87,9 @@
             <a href="/statusinspection">Компоненты на входном контроле</a>
         </div>
     </li>
+    <div>
+        <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе</a>
+    </div>
     {{ end}}
     {{.User}} {{.Username}}
     <li class="out"><a href="/logout">Logout</a></li>
@@ -83,4 +98,57 @@
     <li style="margin-left:70%;"><a href="/users">Регистрация</a></li>
     <li><a href="/updatepass">Обновить пароль</a></li>
     {{ end}}
+
+    <div class="modal modal--l" id="modal-3">
+        <div class="modal__dialog">
+            <div class="modal__dialog-header">
+                <div class="modal__dialog-header-content">
+                    <h3>Поиск в базе</h3>
+                </div>
+                <div class="modal__dialog-header-close">
+                    <button class="js-modal-close modal__dialog-header-close-btn"><span>&times;</span></button>
+                </div>
+            </div>
+            <div class="modal__dialog-body">
+                <!--    <div>modal__dialog-body</div>
+        <button id="js-add-content-temp">Add content</button>-->
+                <!--   <div class="formSendTitle">
+            <h3>Форма отправки катушек на ВК</h3>-->
+
+                <form id="text" method="post" action="/historyinspection">
+                    <!--   <div class="register-form">-->
+                    <!--form-group-->
+                    <h2>Поиск по параметрам</h2>
+                    <label for="date from">Дата от</label>
+                    <input type="date" class="form-control" style="width: 174px;" id="date" name="date1"
+                        placeholder="Дата от">
+                    <br>
+                    <p></p>
+                    <label for="date on">Дата по</label>
+                    <input type="date" class="form-control" style="width: 174px;" id="date" name="date2"
+                        placeholder="Дата от">
+                    <br>
+                    <p></p>
+                    <label for="material"></label>
+                    <input type="number" class="form-control" style="margin-left: 78px;" id="material" name="material"
+                        placeholder="Материал">
+                    <br>
+                    <p></p>
+                    <label for="eo"></label>
+                    <input type="text" class="form-control" style="margin-left: 78px;" id="eo" name="eo"
+                        placeholder="ЕО компонента">
+                    <br>
+
+                    <br>
+                    <button class="button" type="submit">Отправить</button>
+                    <!--   </div>-->
+                </form>
+            </div>
+            <div class="modal__dialog-footer">
+                <button class="js-modal-close modal__dialog-footer-close-btn">Close</button>
+            </div>
+        </div>
+    </div>
 </ul>
+
+<script src="/assets/js/modal.js" type="text/javascript"></script>

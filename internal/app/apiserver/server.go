@@ -110,6 +110,8 @@ func (s *server) configureRouter() {
 
 	s.router.HandleFunc("/ininspection", s.authMiddleware(s.pageinInspection())).Methods("GET")
 	s.router.HandleFunc("/ininspection", s.authMiddleware(s.inInspection())).Methods("POST")
+	s.router.HandleFunc("/historyinspection", s.authMiddleware(s.pagehistoryInspection())).Methods("GET")
+	s.router.HandleFunc("/historyinspection", s.authMiddleware(s.historyInspection())).Methods("POST")
 
 	s.router.HandleFunc("/statusinspection", s.authMiddleware(s.pageInspection())).Methods("GET")
 	s.router.HandleFunc("/updateinspection/{ID:[0-9]+}", s.authMiddleware(s.pageupdateInspection())).Methods("GET")
@@ -2289,6 +2291,231 @@ func (s *server) deleteInspection() http.HandlerFunc {
 		}
 
 		http.Redirect(w, r, "/statusinspection", 303)
+	}
+}
+
+//historyInspection
+func (s *server) pagehistoryInspection() http.HandlerFunc {
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		Admin := false
+		StockkeeperWH := false
+		SuperIngenerQuality := false
+		Quality := false
+		Inspector := false
+		LoggedIn := false
+
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		id, ok := session.Values["user_id"]
+		if !ok {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		user, err := s.store.User().Find(id.(int))
+		if err != nil {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		if user.Role == "Administrator" {
+			Admin = true
+			LoggedIn = true
+		} else if user.Role == "кладовщик склада" {
+			StockkeeperWH = true
+			LoggedIn = true
+			fmt.Println("кладовщик склада - ", StockkeeperWH)
+		} else if user.Role == "SuperIngenerQuality" {
+			SuperIngenerQuality = true
+			LoggedIn = true
+		} else if user.Groups == "качество" {
+			Quality = true
+			Inspector = true
+			LoggedIn = true
+			fmt.Println("pageInspection quality - ", Quality)
+		}
+		data := map[string]interface{}{
+			"Admin":               Admin,
+			"StockkeeperWH":       StockkeeperWH,
+			"SuperIngenerQuality": SuperIngenerQuality,
+			"Quality": Quality,
+			"Inspector": Inspector,
+			//	"GET":           get,
+			"LoggedIn": LoggedIn,
+			"User":     user.LastName,
+			"Username": user.FirstName,
+		}
+
+		tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
+	}
+}
+
+func (s *server) historyInspection() http.HandlerFunc {
+	type req struct {
+		Date1    string `json:"date1"`
+		Date2    string `json:"date2"`
+		Material int    `json:"material"`
+		EO       string `json:"eo"`
+	}
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		Admin := false
+		StockkeeperWH := false
+		SuperIngenerQuality := false
+		Quality := false
+		Inspector := false
+		LoggedIn := false
+
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		id, ok := session.Values["user_id"]
+		if !ok {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		user, err := s.store.User().Find(id.(int))
+		if err != nil {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		if user.Role == "Administrator" {
+			Admin = true
+			LoggedIn = true
+		} else if user.Role == "кладовщик склада" {
+			StockkeeperWH = true
+			LoggedIn = true
+			fmt.Println("кладовщик склада - ", StockkeeperWH)
+		} else if user.Role == "SuperIngenerQuality" {
+			SuperIngenerQuality = true
+			LoggedIn = true
+		} else if user.Groups == "качество" {
+			Quality = true
+			Inspector = true
+			LoggedIn = true
+			fmt.Println("pageInspection quality - ", Quality)
+		}
+
+		search := &req{}
+		materialInt, err := strconv.Atoi(r.FormValue("material"))
+		if err != nil {
+			fmt.Println(err)
+		}
+		search.Date1 = r.FormValue("date1")
+		fmt.Println("date1 - ", search.Date1)
+		search.Date2 = r.FormValue("date2")
+		fmt.Println("date2 - ", search.Date2)
+		search.Material = materialInt
+		fmt.Println("material - ", search.Material)
+		search.EO = r.FormValue("eo")
+
+		if search.Material != 0 {
+			fmt.Println("OK Material")
+			get, err := s.store.Inspection().ListShowDataByDateAndSAP(search.Date1, search.Date2, search.Material)
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+			data := map[string]interface{}{
+				"TitleDOC":            "Отчет по истроии ВК",
+				"User":                user.LastName,
+				"Username":            user.FirstName,
+				"Admin":               Admin,
+				"StockkeeperWH":       StockkeeperWH,
+				"SuperIngenerQuality": SuperIngenerQuality,
+				"Quality":             Quality,
+				"Inspector":           Inspector,
+				"LoggedIn":            LoggedIn,
+				"GET":                 get,
+			}
+
+			err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
+			if err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}
+		} else if search.EO != "" {
+			fmt.Println("OK EO")
+			
+			get, err := s.store.Inspection().ListShowDataByDateAndEO(search.Date1, search.Date2, search.EO)
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+			data := map[string]interface{}{
+				"TitleDOC":            "Отчет по истроии ВК",
+				"User":                user.LastName,
+				"Username":            user.FirstName,
+				"Admin":               Admin,
+				"StockkeeperWH":       StockkeeperWH,
+				"SuperIngenerQuality": SuperIngenerQuality,
+				"Quality":             Quality,
+				"Inspector":           Inspector,
+				"LoggedIn":            LoggedIn,
+				"GET":                 get,
+			}
+
+			err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
+			if err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}
+
+		} else {
+			get, err := s.store.Inspection().ListShowDataByDate(search.Date1, search.Date2)
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			data := map[string]interface{}{
+				"TitleDOC":            "Отчет по истроии ВК",
+				"User":                user.LastName,
+				"Username":            user.FirstName,
+				"Admin":               Admin,
+				"StockkeeperWH":       StockkeeperWH,
+				"SuperIngenerQuality": SuperIngenerQuality,
+				"Quality":             Quality,
+				"Inspector":           Inspector,
+				"LoggedIn":            LoggedIn,
+				"GET":                 get,
+			}
+
+			err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
+			if err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}
+		}
+		/*
+				data := map[string]interface{}{
+					"TitleDOC":            "Отчет по истроии ВК",
+					"User":                user.LastName,
+					"Username":            user.FirstName,
+					"Admin":               Admin,
+					"StockkeeperWH":       StockkeeperWH,
+					"SuperIngenerQuality": SuperIngenerQuality,
+					"Quality":             Quality,
+					"LoggedIn":            LoggedIn,
+					"GET":                 get,
+				}
+
+			err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", nil)
+			if err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}
+		*/
 	}
 }
 

@@ -1160,6 +1160,14 @@ $transition: 0.2s;
   }
 }
 
+.linkblack {
+  color: #050505;
+  margin: 10px;
+  &:hover {
+    text-decoration: none;
+  }
+}
+
 .modal {
   $screen-height: 80vh;
   $parent: &;
