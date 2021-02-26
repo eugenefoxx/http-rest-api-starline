@@ -20,9 +20,6 @@
             <a href="/insertIDReturn">Пересчет ЕО с возвратом</a>
         </div>
     </li>
-    <div>
-        <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе</a>
-    </div>
     {{end}}
     {{ if .Stockkeeper}}
     <li class="dropdown">
@@ -43,42 +40,33 @@
     <li class="dropdown">
         <a href="javascript:void(0)" class="dropbtn">Отдел качества</a>
         <div class="dropdown-content">
-            <a href="/ininspection">Отгрузка катушек на ВК</a>
-            <a href="/insertvendor">Добавить поставщика в базу</a>
+            <!--    <a href="/ininspection">Отгрузка катушек на ВК</a>
+            <a href="/insertvendor">Добавить поставщика в базу</a>-->
             <a href="/showvendor">Просмотр и редактирование поставщиков</a>
             <a href="/statusinspection">Компоненты на входном контроле</a>
         </div>
     </li>
-    <div>
-        <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе</a>
-    </div>
     {{ end}}
     {{ if .SuperIngenerQuality}}
     <li class="dropdown">
         <a href="javascript:void(0)" class="dropbtn">Отдел качества</a>
         <div class="dropdown-content">
-            <a href="/ininspection">Отгрузка катушек на ВК</a>
-            <a href="/insertvendor">Добавить поставщика в базу</a>
+            <!--    <a href="/ininspection">Отгрузка катушек на ВК</a>
+            <a href="/insertvendor">Добавить поставщика в базу</a>-->
             <a href="/showvendor">Просмотр и редактирование поставщиков</a>
             <a href="/statusinspection">Компоненты на входном контроле</a>
         </div>
     </li>
-    <div>
-        <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе</a>
-    </div>
     {{ end}}
     {{ if .StockkeeperWH}}
     <li class="dropdown">
         <a href="javascript:void(0)" class="dropbtn">Отдел качества</a>
         <div class="dropdown-content">
-            <a href="/ininspection">Отгрузка катушек на ВК</a>
+            <!--    <a href="/ininspection">Отгрузка катушек на ВК</a>-->
             <a href="/statusinspection">Компоненты на входном контроле</a>
             <a href="/statusinspectionforwh">Компоненты на входном контроле для прием</a>
         </div>
     </li>
-    <div>
-        <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе</a>
-    </div>
     {{ end}}
     {{ if .Inspector}}
     <li class="dropdown">
@@ -87,13 +75,38 @@
             <a href="/statusinspection">Компоненты на входном контроле</a>
         </div>
     </li>
-    <div>
-        <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе</a>
-    </div>
     {{ end}}
+
     {{.User}} {{.Username}}
+
+    {{ if .Admin}}
+    <div>
+        <a href="#modal-3" class="js-modal-open linkblack" style="margin-left: 700px;">Поиск по базе</a>
+    </div>
+    {{end}}
+    {{ if .Stockkeeper}}
+    <div>
+        <a href="#modal-3" class="js-modal-open linkblack" style="margin-left: 700px;">Поиск по базе</a>
+    </div>
+    {{end}}
+    {{ if .SuperIngenerQuality}}
+    <div>
+        <a href="#modal-3" class="js-modal-open linkblack" style="margin-left: 700px;">Поиск по базе</a>
+    </div>
+    {{end}}
+    {{ if .StockkeeperWH}}
+    <div>
+        <a href="#modal-3" class="js-modal-open linkblack" style="margin-left: 700px;">Поиск по базе</a>
+    </div>
+    {{end}}
+    {{ if .Inspector}}
+    <div>
+        <a href="#modal-3" class="js-modal-open linkblack" style="margin-left: 700px;">Поиск по базе</a>
+    </div>
+    {{end}}
     <li class="out"><a href="/logout">Logout</a></li>
     {{ else}}
+
     <li><a href="/login">Авторизация</a></li>
     <li style="margin-left:70%;"><a href="/users">Регистрация</a></li>
     <li><a href="/updatepass">Обновить пароль</a></li>
