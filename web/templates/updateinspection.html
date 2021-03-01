@@ -1,4 +1,7 @@
 <form method="POST" action="/updateinspection/{{.GET.ID}}">
+    <!--   <div>
+        ID - {{.GET.IdRoll}}
+    </div>-->
     <label for="title" class="login">Статус</label>
     <div class="form-group">
 
@@ -11,6 +14,7 @@
                         NG <<.Status>>
                     </p>-->
         <select class="form-control" id="status" name="status" style="width: 35%;">
+
             <option value="OK">
                 OK - Текущий статус: {{.GET.Status}}
             </option>

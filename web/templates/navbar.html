@@ -42,8 +42,10 @@
         <div class="dropdown-content">
             <!--    <a href="/ininspection">Отгрузка катушек на ВК</a>
             <a href="/insertvendor">Добавить поставщика в базу</a>-->
+            <a href="/showusersquality">Управление пользователями отдела качества</a>
             <a href="/showvendor">Просмотр и редактирование поставщиков</a>
             <a href="/statusinspection">Компоненты на входном контроле</a>
+            <a href="/statusinspectionforwh">Компоненты на входном контроле для приема</a>
         </div>
     </li>
     {{ end}}
@@ -53,6 +55,7 @@
         <div class="dropdown-content">
             <!--    <a href="/ininspection">Отгрузка катушек на ВК</a>
             <a href="/insertvendor">Добавить поставщика в базу</a>-->
+            <a href="/showusersquality">Управление пользователями отдела качества</a>
             <a href="/showvendor">Просмотр и редактирование поставщиков</a>
             <a href="/statusinspection">Компоненты на входном контроле</a>
         </div>
@@ -64,7 +67,7 @@
         <div class="dropdown-content">
             <!--    <a href="/ininspection">Отгрузка катушек на ВК</a>-->
             <a href="/statusinspection">Компоненты на входном контроле</a>
-            <a href="/statusinspectionforwh">Компоненты на входном контроле для прием</a>
+            <a href="/statusinspectionforwh">Компоненты на входном контроле для приема</a>
         </div>
     </li>
     {{ end}}
@@ -77,34 +80,39 @@
     </li>
     {{ end}}
 
-    {{.User}} {{.Username}}
+
 
     {{ if .Admin}}
-    <div>
-        <a href="#modal-3" class="js-modal-open linkblack" style="margin-left: 700px;">Поиск по базе</a>
+    <div style="margin-top: 10px;">
+        <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля</a>
     </div>
     {{end}}
     {{ if .Stockkeeper}}
-    <div>
-        <a href="#modal-3" class="js-modal-open linkblack" style="margin-left: 700px;">Поиск по базе</a>
+    <div style="margin-top: 10px;">
+        <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля</a>
     </div>
     {{end}}
     {{ if .SuperIngenerQuality}}
-    <div>
-        <a href="#modal-3" class="js-modal-open linkblack" style="margin-left: 700px;">Поиск по базе</a>
+    <div style="margin-top: 10px;">
+        <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля</a>
     </div>
     {{end}}
     {{ if .StockkeeperWH}}
-    <div>
-        <a href="#modal-3" class="js-modal-open linkblack" style="margin-left: 700px;">Поиск по базе</a>
+    <div style="margin-top: 10px;">
+        <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля</a>
     </div>
     {{end}}
     {{ if .Inspector}}
-    <div>
+    <div style="margin-top: 10px;">
         <a href="#modal-3" class="js-modal-open linkblack" style="margin-left: 700px;">Поиск по базе</a>
     </div>
     {{end}}
-    <li class="out"><a href="/logout">Logout</a></li>
+
+    <div style="margin-left:200px; margin-top: 10px;">
+        Пользователь: {{.User}} {{.Username}}
+    </div>
+
+    <li class="out"><a href="/logout">Выход</a></li>
     {{ else}}
 
     <li><a href="/login">Авторизация</a></li>
@@ -116,7 +124,7 @@
         <div class="modal__dialog">
             <div class="modal__dialog-header">
                 <div class="modal__dialog-header-content">
-                    <h3>Поиск в базе</h3>
+                    <h3>Поиск в базе ВК</h3>
                 </div>
                 <div class="modal__dialog-header-close">
                     <button class="js-modal-close modal__dialog-header-close-btn"><span>&times;</span></button>

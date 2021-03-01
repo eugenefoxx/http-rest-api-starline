@@ -8,6 +8,11 @@ type UserRepository interface {
 	Find(int) (*model.User, error)
 	FindByEmail(string, string) (*model.User, error)
 	UpdatePass(*model.User) error
+	CreateUserBySuperIngenerQuality(*model.User) error
+	ListUsersQuality() (*model.Users, error)
+	EditUserBySuperIngenerQuality(int) (*model.User, error)
+	UpdateUserBySuperIngenerQuality(*model.User) error
+	DeleteUserBySuperIngenerQuality(*model.User) error
 }
 
 // ShipmentbysapRepository ...

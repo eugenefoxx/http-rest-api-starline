@@ -8,6 +8,11 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// MainUser The function will return a pointer to the array of type User
+func MainUser() *Users {
+	return &Users{}
+}
+
 // User ...
 type User struct {
 	ID                int    `json:"id"`
@@ -20,6 +25,9 @@ type User struct {
 	Groups            string `json:"groups"`
 	Tabel             string `json:"tabel"`
 }
+
+// Users ...
+type Users []User
 
 // Validate ...
 func (u *User) Validate() error {

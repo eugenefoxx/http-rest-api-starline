@@ -39,7 +39,7 @@ func (r *InspectionRepository) ListInspection() (*model.Inspections, error) {
 	listInspectionList := make(model.Inspections, 0)
 
 	rows, err := r.store.db.Query(
-		"SELECT transfer.id, transfer.idmaterial, transfer.sap, transfer.lot, transfer.idroll, transfer.productiondate, Coalesce (vendor.name_debitor, ''), transfer.location, Coalesce (transfer.status, ''), Coalesce (transfer.note, ''), Coalesce (transfer.update, ''), Coalesce(TO_CHAR(transfer.dateupdate, 'YYYY-MM-DD'), '') dateupdate2, Coalesce(TO_CHAR(transfer.timeupdate, 'HH24:MI:SS'), '') timeupdate2, TO_CHAR(transfer.date, 'YYYY-MM-DD') date2, TO_CHAR(transfer.time, 'HH24:MI:SS') time2 FROM transfer left outer join vendor on (transfer.numbervendor = vendor.code_debitor) WHERE transfer.location ='отгружено на ВК'",
+		"SELECT transfer.id, transfer.idmaterial, transfer.sap, transfer.lot, transfer.idroll, transfer.productiondate, Coalesce (vendor.name_debitor, ''), transfer.location, transfer.lastname, Coalesce (transfer.status, ''), Coalesce (transfer.note, ''), Coalesce (transfer.update, ''), Coalesce(TO_CHAR(transfer.dateupdate, 'YYYY-MM-DD'), '') dateupdate2, Coalesce(TO_CHAR(transfer.timeupdate, 'HH24:MI:SS'), '') timeupdate2, TO_CHAR(transfer.date, 'YYYY-MM-DD') date2, TO_CHAR(transfer.time, 'HH24:MI:SS') time2 FROM transfer left outer join vendor on (transfer.numbervendor = vendor.code_debitor) WHERE transfer.location ='отгружено на ВК'",
 	)
 	if err != nil {
 		return nil, err
@@ -56,6 +56,7 @@ func (r *InspectionRepository) ListInspection() (*model.Inspections, error) {
 			&listInspection.ProductionDate,
 			&listInspection.NameDebitor,
 			&listInspection.Location,
+			&listInspection.Lastname,
 			&listInspection.Status,
 			&listInspection.Note,
 			&listInspection.Update,
@@ -232,6 +233,7 @@ func (r *InspectionRepository) EditInspection(id int, groups string) (*model.Ins
 			id,
 		).Scan(
 			&u.ID,
+			//	&u.IdRoll,
 			&u.Status,
 			&u.Note,
 		); err != nil {
@@ -371,7 +373,7 @@ func (r *InspectionRepository) ListShowDataByDate(updateDate1 string, updateDate
 	showDataByDateList := make(model.Inspections, 0)
 
 	selectDate := `SELECT transfer.id, transfer.idmaterial, transfer.sap, transfer.lot, transfer.idroll, 
-		transfer.productiondate, Coalesce (vendor.name_debitor, ''), transfer.location, Coalesce (transfer.status, ''), 
+		transfer.productiondate, Coalesce (vendor.name_debitor, ''), transfer.location, transfer.lastname, Coalesce (transfer.status, ''), 
 		Coalesce (transfer.note, ''), Coalesce (transfer.update, ''), 
 		Coalesce(TO_CHAR(transfer.dateupdate, 'YYYY-MM-DD'), '') dateupdate2, 
 		Coalesce(TO_CHAR(transfer.timeupdate, 'HH24:MI:SS'), '') timeupdate2, 
@@ -402,6 +404,7 @@ func (r *InspectionRepository) ListShowDataByDate(updateDate1 string, updateDate
 			&showDataByDate.ProductionDate,
 			&showDataByDate.NameDebitor,
 			&showDataByDate.Location,
+			&showDataByDate.Lastname,
 			&showDataByDate.Status,
 			&showDataByDate.Note,
 			&showDataByDate.Update,
@@ -434,7 +437,7 @@ func (r *InspectionRepository) ListShowDataByDateAndSAP(updateDate1 string, upda
 	showDataByDateList := make(model.Inspections, 0)
 
 	selectDate := `SELECT transfer.id, transfer.idmaterial, transfer.sap, transfer.lot, transfer.idroll, 
-		transfer.productiondate, Coalesce (vendor.name_debitor, ''), transfer.location, Coalesce (transfer.status, ''), 
+		transfer.productiondate, Coalesce (vendor.name_debitor, ''), transfer.location, transfer.lastname, Coalesce (transfer.status, ''), 
 		Coalesce (transfer.note, ''), Coalesce (transfer.update, ''), 
 		Coalesce(TO_CHAR(transfer.dateupdate, 'YYYY-MM-DD'), '') dateupdate2, 
 		Coalesce(TO_CHAR(transfer.timeupdate, 'HH24:MI:SS'), '') timeupdate2, 
@@ -465,6 +468,7 @@ func (r *InspectionRepository) ListShowDataByDateAndSAP(updateDate1 string, upda
 			&showDataByDate.ProductionDate,
 			&showDataByDate.NameDebitor,
 			&showDataByDate.Location,
+			&showDataByDate.Lastname,
 			&showDataByDate.Status,
 			&showDataByDate.Note,
 			&showDataByDate.Update,
@@ -497,7 +501,7 @@ func (r *InspectionRepository) ListShowDataByDateAndEO(updateDate1 string, updat
 	showDataByDateList := make(model.Inspections, 0)
 
 	selectDate := `SELECT transfer.id, transfer.idmaterial, transfer.sap, transfer.lot, transfer.idroll, 
-		transfer.productiondate, Coalesce (vendor.name_debitor, ''), transfer.location, Coalesce (transfer.status, ''), 
+		transfer.productiondate, Coalesce (vendor.name_debitor, ''), transfer.location, transfer.lastname, Coalesce (transfer.status, ''), 
 		Coalesce (transfer.note, ''), Coalesce (transfer.update, ''), 
 		Coalesce(TO_CHAR(transfer.dateupdate, 'YYYY-MM-DD'), '') dateupdate2, 
 		Coalesce(TO_CHAR(transfer.timeupdate, 'HH24:MI:SS'), '') timeupdate2, 
@@ -528,6 +532,7 @@ func (r *InspectionRepository) ListShowDataByDateAndEO(updateDate1 string, updat
 			&showDataByDate.ProductionDate,
 			&showDataByDate.NameDebitor,
 			&showDataByDate.Location,
+			&showDataByDate.Lastname,
 			&showDataByDate.Status,
 			&showDataByDate.Note,
 			&showDataByDate.Update,

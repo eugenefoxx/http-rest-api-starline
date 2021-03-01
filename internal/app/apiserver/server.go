@@ -85,6 +85,13 @@ func (s *server) configureRouter() {
 	s.router.HandleFunc("/users", s.pagehandleUsersCreate()).Methods("GET")
 	s.router.HandleFunc("/users", s.handleUsersCreate()).Methods("POST")
 
+	s.router.HandleFunc("/showusersquality", s.pageshowUsersQuality()).Methods("GET")
+	//s.router.HandleFunc("/showusersquality", s.showUsersQuality()).Methods("POST")
+	s.router.HandleFunc("/createusersquality", s.createUserQuality()).Methods("POST")
+	s.router.HandleFunc("/updateuserquality/{ID:[0-9]+}", s.authMiddleware(s.pageupdateUserQuality())).Methods("GET")
+	s.router.HandleFunc("/updateuserquality/{ID:[0-9]+}", s.authMiddleware(s.updateUserQuality())).Methods("POST")
+	s.router.HandleFunc("/deleteuserquality/{ID:[0-9]+}", s.authMiddleware(s.deleteUserQuality()))
+
 	s.router.HandleFunc("/updatepass", s.pageupdateSessionsCreate()).Methods("GET")
 	s.router.HandleFunc("/updatepass", s.updateSessionsCreate()).Methods("POST")
 
@@ -1356,6 +1363,7 @@ func (s *server) pageInspection() http.HandlerFunc {
 	///		panic(err)
 	///	}
 	return func(w http.ResponseWriter, r *http.Request) {
+		//	Admin := true
 		Warehouse := true
 		StockkeeperWH := false
 		Quality := false
@@ -1396,7 +1404,10 @@ func (s *server) pageInspection() http.HandlerFunc {
 			StockkeeperWH = true
 			Warehouse = false
 			LoggedIn = true
-		}
+		} /* else if user.Role == "Administrator" {
+			Admin = true
+			LoggedIn = true
+		}*/
 
 		get, err := s.store.Inspection().ListInspection()
 		if err != nil {
@@ -1441,9 +1452,10 @@ func (s *server) pageInspection() http.HandlerFunc {
 		}
 
 		groups := map[string]interface{}{
-			"TitleDOC":             "Список ВК",
-			"User":                 user.LastName,
-			"Username":             user.FirstName,
+			"TitleDOC": "Список ВК",
+			"User":     user.LastName,
+			"Username": user.FirstName,
+			//	"Admin":                Admin,
 			"Quality":              Quality,
 			"Inspector":            Inspector,
 			"Warehouse":            Warehouse,
@@ -2343,8 +2355,8 @@ func (s *server) pagehistoryInspection() http.HandlerFunc {
 			"Admin":               Admin,
 			"StockkeeperWH":       StockkeeperWH,
 			"SuperIngenerQuality": SuperIngenerQuality,
-			"Quality": Quality,
-			"Inspector": Inspector,
+			"Quality":             Quality,
+			"Inspector":           Inspector,
 			//	"GET":           get,
 			"LoggedIn": LoggedIn,
 			"User":     user.LastName,
@@ -2446,7 +2458,7 @@ func (s *server) historyInspection() http.HandlerFunc {
 			}
 		} else if search.EO != "" {
 			fmt.Println("OK EO")
-			
+
 			get, err := s.store.Inspection().ListShowDataByDateAndEO(search.Date1, search.Date2, search.EO)
 			if err != nil {
 				s.error(w, r, http.StatusUnprocessableEntity, err)
@@ -2724,6 +2736,289 @@ func (s *server) acceptWarehouseInspection() http.HandlerFunc {
 				return
 			}*/
 		http.Redirect(w, r, "/statusinspectionforwh", 303)
+	}
+}
+
+// showUsersQuality
+func (s *server) pageshowUsersQuality() http.HandlerFunc {
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		Admin := false
+		SuperIngenerQuality := false
+		LoggedIn := false
+
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		id, ok := session.Values["user_id"]
+		if !ok {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		user, err := s.store.User().Find(id.(int))
+		if err != nil {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		if user.Role == "Administrator" {
+			Admin = true
+			LoggedIn = true
+		} else if user.Role == "SuperIngenerQuality" {
+			SuperIngenerQuality = true
+			LoggedIn = true
+		}
+
+		get, err := s.store.User().ListUsersQuality()
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+		data := map[string]interface{}{
+			"TitleDOC":            "Сотрудники качества",
+			"User":                user.LastName,
+			"Username":            user.FirstName,
+			"Admin":               Admin,
+			"SuperIngenerQuality": SuperIngenerQuality,
+			"LoggedIn":            LoggedIn,
+			"GET":                 get,
+		}
+		err = tpl.ExecuteTemplate(w, "showUsersQuality.html", data)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
+	}
+}
+
+func (s *server) showUsersQuality() http.HandlerFunc {
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		Admin := false
+		SuperIngenerQuality := false
+		LoggedIn := false
+
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		id, ok := session.Values["user_id"]
+		if !ok {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		user, err := s.store.User().Find(id.(int))
+		if err != nil {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+		if user.Role == "Administrator" {
+			Admin = true
+			LoggedIn = true
+		} else if user.Role == "SuperIngenerQuality" {
+			SuperIngenerQuality = true
+			LoggedIn = true
+		}
+
+		get, err := s.store.User().ListUsersQuality()
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+		data := map[string]interface{}{
+			"TitleDOC":            "Сотрудники качества",
+			"User":                user.LastName,
+			"Username":            user.FirstName,
+			"Admin":               Admin,
+			"SuperIngenerQuality": SuperIngenerQuality,
+			"LoggedIn":            LoggedIn,
+			"GET":                 get,
+		}
+		err = tpl.ExecuteTemplate(w, "showUsersQuality.html", data)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
+	}
+}
+
+func (s *server) createUserQuality() http.HandlerFunc {
+	type requestFrom struct {
+		Email     string `json:"email"`
+		Password  string `json:"password"`
+		FirstName string `json:"firstName"`
+		LastName  string `json:"lastName"`
+		Role      string `json:"role"`
+		Tabel     string `json:"tabel"`
+	}
+
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			log.Fatal(err)
+		}
+		var hdata []requestFrom
+		json.Unmarshal(body, &hdata)
+		fmt.Printf("body json: %s", body)
+		fmt.Println("\njson  struct hdata", hdata)
+
+		Group := "качество"
+
+		for _, v := range hdata {
+			fmt.Println(v.Email, v.FirstName, v.LastName, v.Password, v.Role, v.Tabel)
+
+			u := &model.User{
+				Email:     v.Email,
+				Password:  v.Password,
+				FirstName: v.FirstName,
+				LastName:  v.LastName,
+				Role:      v.Role,
+				Groups:    Group,
+				Tabel:     v.Tabel,
+			}
+
+			if err := s.store.User().CreateUserBySuperIngenerQuality(u); err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+		}
+
+	}
+}
+
+func (s *server) pageupdateUserQuality() http.HandlerFunc {
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		Admin := false
+		SuperIngenerQuality := false
+		LoggedIn := false
+
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		idd, ok := session.Values["user_id"]
+		if !ok {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		user, err := s.store.User().Find(idd.(int))
+		if err != nil {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		if user.Role == "Administrator" {
+			Admin = true
+			LoggedIn = true
+		} else if user.Role == "SuperIngenerQuality" {
+			SuperIngenerQuality = true
+			LoggedIn = true
+			fmt.Println("SuperIngenerQuality pageupdateUserQuality - ", SuperIngenerQuality)
+		}
+
+		vars := mux.Vars(r)
+		id, err := strconv.Atoi(vars["ID"])
+		fmt.Println("var id - ", id)
+		if err != nil {
+			log.Println(err)
+		}
+		get, err := s.store.User().EditUserBySuperIngenerQuality(id)
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+		data := map[string]interface{}{
+			"GET":                 get,
+			"Admin":               Admin,
+			"SuperIngenerQuality": SuperIngenerQuality,
+			"LoggedIn":            LoggedIn,
+			"User":                user.LastName,
+			"Username":            user.FirstName,
+		}
+
+		//	fmt.Println("Get.email" - get.id)
+		tpl.ExecuteTemplate(w, "updateuserquality.html", data)
+	}
+}
+
+func (s *server) updateUserQuality() http.HandlerFunc {
+	type request struct {
+		ID        int    `json:"ID"`
+		Email     string `json:"email"`
+		Firstname string `json:"firstname"`
+		Lastname  string `json:"lastname"`
+		Role      string `json:"role"`
+		Tabel     string `json:"tabel"`
+	}
+
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		req := &request{}
+		vars := mux.Vars(r)
+		id, err := strconv.Atoi(vars["ID"])
+		if err != nil {
+			log.Println(err)
+		}
+		req.ID = id
+		req.Email = r.FormValue("email")
+		req.Firstname = r.FormValue("firstname")
+		req.Lastname = r.FormValue("lastname")
+		req.Role = r.FormValue("role")
+		req.Tabel = r.FormValue("tabel")
+		fmt.Println("ID - ", req.ID)
+		u := &model.User{
+			ID:        req.ID,
+			Email:     req.Email,
+			FirstName: req.Firstname,
+			LastName:  req.Lastname,
+			Role:      req.Role,
+			Tabel:     req.Tabel,
+		}
+
+		if err := s.store.User().UpdateUserBySuperIngenerQuality(u); err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+		http.Redirect(w, r, "/showusersquality", 303)
+	}
+
+}
+
+func (s *server) deleteUserQuality() http.HandlerFunc {
+	type request struct {
+		ID int `json:"ID"`
+	}
+	return func(w http.ResponseWriter, r *http.Request) {
+		req := &request{}
+		vars := mux.Vars(r)
+		id, err := strconv.Atoi(vars["ID"])
+		if err != nil {
+			log.Println(err)
+		}
+		req.ID = id
+
+		u := &model.User{
+			ID: req.ID,
+		}
+
+		if err := s.store.User().DeleteUserBySuperIngenerQuality(u); err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		http.Redirect(w, r, "/showusersquality", 303)
 	}
 }
 

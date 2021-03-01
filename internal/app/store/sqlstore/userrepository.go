@@ -116,3 +116,127 @@ func (r *UserRepository) UpdatePass(s *model.User) error {
 	}
 	return nil
 }
+
+// SuperIngenerQuality
+func (r *UserRepository) CreateUserBySuperIngenerQuality(u *model.User) error {
+	if err := u.Validate(); err != nil {
+		return err
+	}
+
+	if err := u.BeforCreate(); err != nil {
+		return err
+	}
+
+	return r.store.db.QueryRow(
+		"INSERT INTO users (email, encrypted_password, firstname, lastname, role, groups, tabel) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id",
+		u.Email,
+		u.EncryptedPassword,
+		u.FirstName,
+		u.LastName,
+		u.Role,
+		u.Groups,
+		u.Tabel,
+	).Scan(&u.ID)
+}
+
+func (r *UserRepository) ListUsersQuality() (u *model.Users, err error) {
+	showUsersQuality := model.User{}
+	showUsersQualityList := make(model.Users, 0)
+
+	selectUsers := `SELECT id, email, firstname, lastname, 
+	role, groups, tabel from users where groups = 'качество';`
+
+	rows, err := r.store.db.Query(
+		selectUsers,
+	)
+
+	if err != nil {
+		fmt.Println(err, "error in func ListUsersQuality()")
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		err := rows.Scan(
+			&showUsersQuality.ID,
+			&showUsersQuality.Email,
+			&showUsersQuality.FirstName,
+			&showUsersQuality.LastName,
+			&showUsersQuality.Role,
+			&showUsersQuality.Groups,
+			&showUsersQuality.Tabel,
+		)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				return nil, store.ErrRecordNotFound
+			}
+			return nil, err
+		}
+		showUsersQualityList = append(showUsersQualityList, showUsersQuality)
+	}
+	err = rows.Err()
+	if err != nil {
+		return nil, err
+	}
+	return &showUsersQualityList, nil
+}
+
+func (r *UserRepository) EditUserBySuperIngenerQuality(id int) (*model.User, error) {
+
+	u := &model.User{}
+	//	selectEdit := `SELECT email, firstname, lastname,
+	//	role, tabel from users where id = $1;`
+	if err := r.store.db.QueryRow(
+		//		selectEdit,
+		"SELECT id, email, firstname, lastname, role, tabel from users where id = $1",
+		id,
+	).Scan(
+		&u.ID,
+		&u.Email,
+		&u.FirstName,
+		&u.LastName,
+		&u.Role,
+		&u.Tabel,
+	); err != nil {
+		if err == sql.ErrNoRows {
+			return nil, store.ErrRecordNotFound
+		}
+		return nil, err
+	}
+	return u, nil
+}
+
+func (r *UserRepository) UpdateUserBySuperIngenerQuality(s *model.User) error {
+
+	updateUser := `UPDATE users SET email = $1, firstname = $2,
+	lastname = $3, role = $4, tabel = $5 WHERE id = $6;`
+	_, err := r.store.db.Exec(
+		updateUser,
+		s.Email,
+		s.FirstName,
+		s.LastName,
+		s.Role,
+		s.Tabel,
+		s.ID,
+	)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return nil
+}
+
+func (r *UserRepository) DeleteUserBySuperIngenerQuality(s *model.User) error {
+
+	deleteUser := `DELETE FROM users WHERE id = $1;`
+	_, err := r.store.db.Exec(
+		deleteUser,
+		s.ID,
+	)
+	if err != nil {
+		panic(err)
+	}
+
+	return nil
+}

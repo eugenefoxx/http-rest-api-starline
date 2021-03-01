@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html>
+{{template "head.html" .}}
+
+<body>
+    {{template "navbar.html" .}}
+    <div class="container">
+        <div class="fromSendTitle">
+            <h1>Редактирование сотрудника</h1>
+        </div>
+
+        <form method="POST" action="/updateuserquality/{{.GET.ID}}">
+            <div class="form-group">
+                <label for="title">Email</label>
+                <input type="text" class="form-control" name="email" id="email" value="{{.GET.Email}}">
+            </div>
+            <div class="form-group">
+                <label for="description">Имя</label>
+                <input type="text" class="form-control" name="firstname" id="firstname" value="{{.GET.FirstName}}">
+            </div>
+            <div class="form-group">
+                <label for="description">Фамилия</label>
+                <input type="text" class="form-control" name="lastname" id="lastname" value="{{.GET.LastName}}">
+            </div>
+            <div class="form-group">
+                <label for="description">Позиция</label>
+                <input type="text" class="form-control" name="role" id="role" value="{{.GET.Role}}">
+            </div>
+            <div class="form-group">
+                <label for="description">Табель</label>
+                <input type="text" class="form-control" name="tabel" id="tabel" value="{{.GET.Tabel}}">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Подтвердить</button>
+        </form>
+
+    </div>
+
+    {{template "footer.html" .}}
+</body>
+
+</html>
