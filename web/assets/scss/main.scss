@@ -309,7 +309,7 @@ header {
 .nav {
   list-style: none;
   display: flex;
-  padding-right: 100px;
+  // padding-right: 100px;
   //width: auto;
 }
 
@@ -519,7 +519,7 @@ th {
 th,
 td {
   text-align: left;
-  padding: 16px;
+  padding: 10px;
 }
 
 tr:nth-child(even) {
@@ -1164,7 +1164,7 @@ $transition: 0.2s;
 
 .linkblack {
   color: #050505;
-  margin-left: 700px;
+  margin-left: 500px;
   // margin-top: 10px;
   &:hover {
     text-decoration: none;

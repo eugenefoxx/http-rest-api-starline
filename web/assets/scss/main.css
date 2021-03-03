@@ -323,7 +323,6 @@ header {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  padding-right: 100px;
 }
 
 .out {
@@ -563,7 +562,7 @@ th {
 th,
 td {
   text-align: left;
-  padding: 16px;
+  padding: 10px;
 }
 
 tr:nth-child(even) {
@@ -1227,7 +1226,7 @@ p {
 
 .linkblack {
   color: #050505;
-  margin-left: 700px;
+  margin-left: 500px;
 }
 
 .linkblack:hover {
