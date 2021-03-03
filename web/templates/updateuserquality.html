@@ -16,7 +16,12 @@
     </div>
     <div class="form-group">
         <label for="description">Позиция</label>
-        <input type="text" style="margin-left:75px;" class="form-control" name="role" id="role" value="{{.GET.Role}}">
+        <select style="margin-left:75px;" class="form-control" name="role">
+            <option disabled selected>Выберите позицию</option>
+            <option type="text" id="role" value="главный инженер по качеству">главный инженер по качеству</option>
+            <option type="text" id="role" value="инженер по качеству">инженер по качеству</option>
+            <option type="text" id="role" value="контролер качества">контролер качества</option>
+        </select>
     </div>
     <div class="form-group">
         <label for="description">Табель</label>

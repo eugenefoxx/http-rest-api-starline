@@ -41,7 +41,7 @@
                         файл</button>
                     <thead>
                         <tr id="fontsize-showinspection">
-                            <th scope="col" onclick="sortTable(0)">№ ID</th>
+                            <th scope="col" onclick="sortTable(0)" style="visibility: hidden;">№ ID</th>
                             <!--<th>ID</th>-->
                             <th scope="col" onclick="sortTable(1)">QR-код</th>
                             <!--Material-->
@@ -69,7 +69,7 @@
                         {{ range .GET}}
                         <tr class="header" id="fontsize-showinspection">
                             <!--<td>{{.ID }}</td>-->
-                            <td>
+                            <td style="visibility: hidden;">
                                 {{.ID}}
                             </td>
                             <td style="font-size: 10%;">
@@ -133,7 +133,7 @@
         </div>
 
 
-        {{ else if eq .Quality true}}
+        {{ else if eq .IngenerQuality true}}
         <div class="wrap2">
             <div class="columninspection1">
 
@@ -165,7 +165,7 @@
                         файл</button>
                     <thead>
                         <tr id="fontsize-showinspection">
-                            <th scope="col" onclick="sortTable(0)">№ ID</th>
+                            <th scope="col" onclick="sortTable(0)" style="visibility: hidden;">№ ID</th>
                             <!--<th>ID</th>-->
                             <th scope="col" onclick="sortTable(1)">QR-код</th>
                             <!--Material-->
@@ -193,7 +193,127 @@
                         {{ range .GET}}
                         <tr class="header" id="fontsize-showinspection">
                             <!--<td>{{.ID }}</td>-->
+                            <td style="visibility: hidden;">
+                                {{.ID}}
+                            </td>
+                            <td style="font-size: 10%;">
+                                {{.IdMaterial}}
+                            </td>
                             <td>
+                                {{.SAP}}
+                            </td>
+                            <td>
+                                {{.Lot}}
+                            </td>
+                            <td>
+                                {{.IdRoll}}
+                            </td>
+                            <td>
+                                {{.ProductionDate}}
+                            </td>
+                            <td>
+                                {{.NameDebitor}}
+                            </td>
+                            <td>
+                                {{.Location}}
+                            </td>
+                            <td>
+                                {{.Lastname}}
+                            </td>
+                            <td>
+                                {{.Status}}
+                            </td>
+                            <td>
+                                {{.Note}}
+                            </td>
+                            <td>
+                                {{.Update}}
+                            </td>
+                            <td>
+                                {{.Dateupdate2}}
+                            </td>
+                            <td>
+                                {{.Timeupdate2}}
+                            </td>
+                            <td>
+                                {{.Date2}}
+                            </td>
+                            <td>
+                                {{.Time2}}
+                            </td>
+                            <td>
+                                <!--   <a href="/updateinspection/{{.ID}}" class="btnfortable btn-primary">Изменить</a>-->
+                                <a href="#modal-2" onclick="editInspection({{.ID}});"
+                                    class="js-modal-open btnfortable btn-primary">Изменить</a>
+                            </td>
+                        </tr>
+                        {{ end}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {{ else if eq .Inspector true}}
+        <div class="wrap2">
+            <div class="columninspection1">
+
+            </div>
+            <div class="columninspection2">
+                <!--style="margin-left:1100px; width: 1000px; margin-top: 0px; font-size: 150%;"-->
+                <font color="white">Общее количество</font>: &nbsp;{{ .CountTotal}} <br>
+                <font color="red">Задержано</font>: &nbsp;{{.HoldInspection}} <br>
+                <font color="green">Требуют проверки</font>: &nbsp;{{.NotVerifyComponents}} <br>
+                <br>
+                <!--  <a href="#okno">Статистика по дебиторам</a>-->
+                <div class="btn-box">
+                    <button type="button" class="btn btn-default" style="width: 300px;" data-modal="modal_1">Статистика
+                        по
+                        дебиторам</button>
+                    <!--    <button type="button" class="btn btn-primary btn-lg" data-modal="modal_1">Статистика п
+               дебиторам</button>-->
+                </div>
+            </div>
+            {{ template "popup.html" . }}
+            <div class="wrap">
+                <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .."
+                    title="Type in a name" style="margin-left:0px; width: 1000px;">
+
+                <table id="myTable" onload="alternate('thetable')">
+                    <caption style="color: white; font-size: 22px;">Список на инспекции</caption>
+                    <button onclick="exportTableToCSV('export_shipment_sap.csv')"
+                        style="margin-left:0px; width: 1000px;">Экспортировать таблицу в csv
+                        файл</button>
+                    <thead>
+                        <tr id="fontsize-showinspection">
+                            <th scope="col" onclick="sortTable(0)" style="visibility: hidden;">№ ID</th>
+                            <!--<th>ID</th>-->
+                            <th scope="col" onclick="sortTable(1)">QR-код</th>
+                            <!--Material-->
+                            <th scope="col" onclick="sortTable(2)">SAP</th>
+                            <!--Qty-->
+                            <th scope="col" onclick="sortTable(3)">Партия</th>
+                            <!--ShipmentDate-->
+                            <!--    <th scope="col" onclick="sortTable(2)">ShipmentDate2</th>-->
+                            <th scope="col" onclick="sortTable(4)">ЕО катушки</th>
+                            <th scope="col" onclick="sortTable(5)">Дата пр-ва</th>
+                            <th scope="col" onclick="sortTable(6)">Имя дебитора</th>
+                            <th scope="col" onclick="sortTable(7)">Статус отгружено</th>
+                            <th scope="col" onclick="sortTable(8)">Кем отгружено</th>
+                            <th scope="col" onclick="sortTable(9)">Статус отметки проверки</th>
+                            <th scope="col" onclick="sortTable(10)">Примечание</th>
+                            <th scope="col" onclick="sortTable(11)">Кем отред-но</th>
+                            <th scope="col" onclick="sortTable(12)">Дата ред-я</th>
+                            <th scope="col" onclick="sortTable(13)">Время ред-я</th>
+                            <th scope="col" onclick="sortTable(14)">Дата отгрузки на ВК</th>
+                            <th scope="col" onclick="sortTable(15)">Время отгрузки на ВК</th>
+
+                        </tr>
+                    </thead>
+                    <tbody id="thetable">
+                        {{ range .GET}}
+                        <tr class="header" id="fontsize-showinspection">
+                            <!--<td>{{.ID }}</td>-->
+                            <td style="visibility: hidden;">
                                 {{.ID}}
                             </td>
                             <td style="font-size: 10%;">
@@ -286,7 +406,7 @@
                         файл</button>
                     <thead>
                         <tr id="fontsize-showinspection">
-                            <th scope="col" onclick="sortTable(0)">№ ID</th>
+                            <th scope="col" onclick="sortTable(0)" style="visibility: hidden;">№ ID</th>
                             <!--<th>ID</th>-->
                             <th scope="col" onclick="sortTable(1)">QR-код</th>
                             <!--Material-->
@@ -314,7 +434,7 @@
                         {{ range .GET}}
                         <tr class="header" id="fontsize-showinspection">
                             <!--<td>{{.ID }}</td>-->
-                            <td>
+                            <td style="visibility: hidden;">
                                 {{.ID}}
                             </td>
                             <td style="font-size: 10%;">
@@ -410,7 +530,7 @@
                         файл</button>
                     <thead>
                         <tr id="fontsize-showinspection">
-                            <th scope="col" onclick="sortTable(0)">№ ID</th>
+                            <th scope="col" onclick="sortTable(0)" style="visibility: hidden;">№ ID</th>
                             <!--<th>ID</th>-->
                             <th scope="col" onclick="sortTable(1)">QR-код</th>
                             <!--Material-->
@@ -438,7 +558,7 @@
                         {{ range .GET}}
                         <tr class="header" id="fontsize-showinspection">
                             <!--<td>{{.ID }}</td>-->
-                            <td>
+                            <td style="visibility: hidden;">
                                 {{.ID}}
                             </td>
                             <td style="font-size: 10%;">

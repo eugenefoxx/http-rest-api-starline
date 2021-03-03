@@ -144,7 +144,7 @@ func (r *UserRepository) ListUsersQuality() (u *model.Users, err error) {
 	showUsersQualityList := make(model.Users, 0)
 
 	selectUsers := `SELECT id, email, firstname, lastname, 
-	role, groups, tabel from users where groups = 'качество';`
+	role, groups, tabel FROM users WHERE groups = 'качество';`
 
 	rows, err := r.store.db.Query(
 		selectUsers,
@@ -188,7 +188,7 @@ func (r *UserRepository) EditUserBySuperIngenerQuality(id int) (*model.User, err
 	//	role, tabel from users where id = $1;`
 	if err := r.store.db.QueryRow(
 		//		selectEdit,
-		"SELECT id, email, firstname, lastname, role, tabel from users where id = $1",
+		"SELECT id, email, firstname, lastname, role, tabel FROM users WHERE id = $1",
 		id,
 	).Scan(
 		&u.ID,

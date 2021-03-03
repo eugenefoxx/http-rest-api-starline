@@ -99,7 +99,6 @@ body {
 }
 
 .container {
-  max-width: 1200px;
   padding: 0px 15px;
 }
 
@@ -717,7 +716,6 @@ body,
       -ms-flex-direction: row;
           flex-direction: row;
   margin-left: 10px;
-  width: 300px;
   margin-top: 10px;
   font-size: 150%;
 }
@@ -1211,8 +1209,8 @@ p {
       -ms-flex-align: start;
           align-items: flex-start;
   padding-left: 2px;
-  margin-right: 20px;
-  width: 100px;
+  margin-right: 0px;
+  margin-top: 20px;
 }
 
 .columninspection2 {

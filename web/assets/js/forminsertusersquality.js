@@ -17,7 +17,7 @@ function init() {
 var mainDiv = document.getElementById("form"); //ref to main div with forms
 
 //attributes for form fields, they will be added during the creation of forms
-var formElementsTypes = ["input", "input", "input", "input", "input", "input", "button"];
+var formElementsTypes = ["input", "input", "input", "input", "select", "input", "button"];
 var formElementsIds = ["email", "password", "firstName", "lastName", "role", "tabel"];
 var formElementsClassNames = [
     "form-control form-control-sm",
@@ -33,6 +33,25 @@ var formAllowedIdsArr = [];
 var rowsAmount = 50;
 var finalData = [];
 var labels = ["email", "Пароль", "Имя", "Фамилия", "Роль", "Табель"];
+var roles = [
+    {
+        
+        id: 'Выберите позицию',
+        title: 'Выберите позицию'
+    },
+    {
+        id: 'главный инженер по качеству',
+        title: 'главный инженер по качеству'
+    },
+    {
+        id: 'инженер по качеству',
+        title: 'инженер по качеству'
+    },
+    {
+        id: 'контролер качества',
+        title: 'контролер качества'
+    }
+];
 
 //creating form and adding attributes
 function createForm() {
@@ -48,6 +67,13 @@ function createForm() {
         if (i != 6) {
             element.placeholder = labels[i];
         }
+
+        if (formElementsTypes[i] === 'select' && formElementsIds[i] === 'role') {
+            roles.forEach((role) => {
+                element.innerHTML += `<option value="${role.id}">${role.title}</option>`;
+            });
+        }
+
         form.appendChild(element);
 
         if (i == 6) {
@@ -188,12 +214,12 @@ function sendData() {
     xhr.send(getData());
 
     xhr.onreadystatechange = function () {
-        this.readyState == 4 && this.status == 200
-     /*   //    if (this.readyState == 4 && this.status == 200) {
-        //        drawSuccessMessage();
-        //    } else {
-        //        drawErrorMessage();
-        //   }*/
+      //  this.readyState == 4 && this.status == 200
+            if (this.readyState == 4 && this.status == 200) {
+                drawSuccessMessage();
+            } else {
+                drawErrorMessage();
+           }
     };
 }
 

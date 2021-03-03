@@ -79,7 +79,14 @@
         </div>
     </li>
     {{ end}}
-
+    {{ if .IngenerQuality}}
+    <li class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">Отдел качества</a>
+        <div class="dropdown-content">
+            <a href="/statusinspection">Компоненты на входном контроле</a>
+        </div>
+    </li>
+    {{ end}}
 
 
     {{ if .Admin}}
@@ -102,9 +109,15 @@
         <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля</a>
     </div>
     {{end}}
+    {{ if .IngenerQuality}}
+    <div style="margin-top: 10px;">
+        <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля</a>
+    </div>
+    {{end}}
     {{ if .Inspector}}
     <div style="margin-top: 10px;">
-        <a href="#modal-3" class="js-modal-open linkblack" style="margin-left: 700px;">Поиск по базе</a>
+        <a href="#modal-3" class="js-modal-open linkblack" style="margin-left: 700px;">Поиск по базе Входного
+            Контроля</a>
     </div>
     {{end}}
 

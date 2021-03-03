@@ -96,7 +96,7 @@ body {
 
 .container {
   // display: flex;
-  max-width: 1200px;
+  //  max-width: 1200px;
   // margin: 0px auto;
   padding: 0px 15px;
 }
@@ -677,7 +677,7 @@ body,
   // padding: -100px 4px 6px;
   // style="margin-left:1100px; width: 1000px; margin-top: 0px; font-size: 150%;"
   margin-left: 10px;
-  width: 300px;
+  //  width: 300px;
   margin-top: 10px;
   font-size: 150%;
 }
@@ -1141,8 +1141,9 @@ p {
   align-self: center;
   align-items: flex-start;
   padding-left: 2px;
-  margin-right: 20px;
-  width: 100px;
+  margin-right: 0px;
+  margin-top: 20px;
+  //  width: 100px;
 }
 
 .columninspection2 {

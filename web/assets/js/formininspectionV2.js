@@ -86,7 +86,7 @@ function createForm() {
 
     // check for an errors if user push enter and add new input
     input.addEventListener("keyup", function (event) {
-        if (event.keyCode === 13) {
+        if (event.keyCode === 13 || 40) {
             event.preventDefault();
             errorMsg = createError("Введён некорректный номер");
             addRemoveError(this, errorMsg);
