@@ -15,6 +15,8 @@ var (
 
 func init() {
 	flag.StringVar(&configPath, "config-path", "configs/apiserver.toml", "path to config file")
+
+	//flag.StringVar(&configPath, "config-path", "/home/eugenearch/Code/github.com/eugenefoxx/http-rest-api-starline/configs/apiserver.toml", "path to config file")
 }
 
 func main() {

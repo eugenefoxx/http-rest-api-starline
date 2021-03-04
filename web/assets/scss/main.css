@@ -513,7 +513,7 @@ button.buttonPlus:after {
   /* Position the search icon */
   background-repeat: no-repeat;
   /* Do not repeat the icon image */
-  width: 100%;
+  width: 50%;
   /* Full-width */
   font-size: 16px;
   /* Increase font-size */

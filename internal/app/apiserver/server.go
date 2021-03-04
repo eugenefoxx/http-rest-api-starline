@@ -53,6 +53,7 @@ type server struct {
 
 func init() {
 	tpl = template.Must(tpl.ParseGlob("web/templates/*.html"))
+	//tpl = template.Must(tpl.ParseGlob("/home/eugenearch/Code/github.com/eugenefoxx/http-rest-api-starline/web/templates/*.html"))
 }
 
 //func newServer(store store.Store, sessionStore sessions.Store, html string) *server {

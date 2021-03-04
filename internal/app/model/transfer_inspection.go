@@ -14,7 +14,7 @@ type Inspection struct {
 	SAP            int       `json:"sap"`
 	Lot            string    `json:"lot"`
 	IdRoll         int       `json:"idroll"`
-	Qty            int       `json:"qty"`
+	Qty            int       `json:"qty"` // initial qty
 	ProductionDate string    `json:"productiondate"`
 	NumberVendor   string    `json:"numbervendor"`
 	NameDebitor    string    `json:"name_debitor"`
