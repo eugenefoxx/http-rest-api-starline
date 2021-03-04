@@ -67,7 +67,7 @@
                     </thead>
                     <tbody id="thetable">
                         {{ range .GET}}
-                        <tr class="header" id="fontsize-showinspection">
+                        <tr class="header {{.Status}}">
                             <!--<td>{{.ID }}</td>-->
                             <td style="visibility: hidden;">
                                 {{.ID}}
@@ -191,7 +191,7 @@
                     </thead>
                     <tbody id="thetable">
                         {{ range .GET}}
-                        <tr class="header" id="fontsize-showinspection">
+                        <tr class="header {{.Status}}">
                             <!--<td>{{.ID }}</td>-->
                             <td style="visibility: hidden;">
                                 {{.ID}}
@@ -311,7 +311,7 @@
                     </thead>
                     <tbody id="thetable">
                         {{ range .GET}}
-                        <tr class="header" id="fontsize-showinspection">
+                        <tr class="header {{.Status}}">
                             <!--<td>{{.ID }}</td>-->
                             <td style="visibility: hidden;">
                                 {{.ID}}
@@ -433,7 +433,7 @@
                     </thead>
                     <tbody id="thetable">
                         {{ range .GET}}
-                        <tr class="header" id="fontsize-showinspection">
+                        <tr class="header {{.Status}}">
                             <!--<td>{{.ID }}</td>-->
                             <td style="visibility: hidden;">
                                 {{.ID}}
@@ -523,8 +523,8 @@
             <div class="wrap">
                 <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .."
                     title="Type in a name" style="margin-left:0px; width: 1000px;">
-                <!--   <input type="text" id="myInput2" onkeyup="myFunctionT()" placeholder="Search2 for .."
-                    title="Type in a name" style="margin-left:0px; width: 1000px;">-->
+                <input type="text" id="myInput2" onkeyup="myFunctionT()" placeholder="Search2 for .."
+                    title="Type in a name" style="margin-left:0px; width: 1000px;">
                 <br>
                 <table id="myTable" id="myTable2" onload="alternate('thetable')">
                     <caption style="color: white; font-size: 22px;">Список на инспекции</caption>
@@ -560,7 +560,7 @@
                     </thead>
                     <tbody id="thetable">
                         {{ range .GET}}
-                        <tr class="header" id="fontsize-showinspection">
+                        <tr class="header {{.Status}}">
                             <!--<td>{{.ID }}</td>-->
                             <td style="visibility: hidden;">
                                 {{.ID}}
@@ -684,6 +684,7 @@
     {{template "footer.html" .}}
     <script src="/assets/js/formininspectionV2.js"></script>
     <script src="/assets/js/modal.js" type="text/javascript"></script>
+
 </body>
 
 </html>

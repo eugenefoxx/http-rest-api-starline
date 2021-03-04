@@ -102,7 +102,7 @@ function sortTable(n) {
         }
     }
 }
-
+/*
 function alternate(id) {
 
     if (document.getElementsByTagName) {
@@ -129,7 +129,7 @@ function alternate(id) {
 
     }
 
-}
+}*/
 
 function editVendor(id) {
     axios.get('/updatevendor/' + id)

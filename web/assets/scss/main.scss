@@ -523,7 +523,8 @@ td {
 }
 
 tr:nth-child(even) {
-  background-color: #f2f2f2;
+  // odd even
+  background-color: #f7f0f0;
 }
 
 .box {
@@ -559,6 +560,12 @@ tr:nth-child(even) {
 .even {
   background-color: gray;
 }
+
+// если статус / status NG в списке на инспекцию
+tr.NG td {
+  background-color: rgba(235, 36, 36, 0.459);
+}
+
 /*
 #okno {
  width: 1200px;
@@ -656,7 +663,7 @@ body,
 
 .wrap {
   //max-width: 1024px;
-  position: relative;
+  // position: relative;
   //margin: 0 auto;
   padding: -100px 24px 36px;
   // style="margin-left:1100px; width: 1000px; margin-top: 0px; font-size: 150%;"
@@ -669,7 +676,7 @@ body,
 
 .wrap2 {
   //max-width: 1024px;
-  position: relative;
+  // position: relative;
   display: flex;
   flex-direction: row;
 

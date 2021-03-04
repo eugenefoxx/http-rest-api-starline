@@ -566,7 +566,7 @@ td {
 }
 
 tr:nth-child(even) {
-  background-color: #f2f2f2;
+  background-color: #f7f0f0;
 }
 
 .box {
@@ -600,6 +600,10 @@ tr:nth-child(even) {
 
 .even {
   background-color: gray;
+}
+
+tr.NG td {
+  background-color: rgba(235, 36, 36, 0.459);
 }
 
 /*
@@ -696,7 +700,6 @@ body,
 }
 
 .wrap {
-  position: relative;
   padding: -100px 24px 36px;
   margin-left: 10px;
   margin-right: 10px;
@@ -706,7 +709,6 @@ body,
 }
 
 .wrap2 {
-  position: relative;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
