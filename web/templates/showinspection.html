@@ -39,7 +39,7 @@
                     <button onclick="exportTableToCSV('export_shipment_sap.csv')"
                         style="margin-left:0px; width: 300px;">Экспортировать таблицу в csv
                         файл</button>
-                    <thead>
+                    <thead style="background: #908e69ba;">
                         <tr id="fontsize-showinspection">
                             <th scope="col" onclick="sortTable(0)" style="visibility: hidden;">№ ID</th>
                             <!--<th>ID</th>-->
@@ -62,7 +62,7 @@
                             <th scope="col" onclick="sortTable(13)">Время ред-я</th>
                             <th scope="col" onclick="sortTable(14)">Дата отгрузки на ВК</th>
                             <th scope="col" onclick="sortTable(15)">Время отгрузки на ВК</th>
-
+                            <th scope="col" onclick="sortTable(16)">Внести запись</th>
                         </tr>
                     </thead>
                     <tbody id="thetable">
@@ -163,7 +163,7 @@
                     <button onclick="exportTableToCSV('export_shipment_sap.csv')"
                         style="margin-left:0px; width: 300px;">Экспортировать таблицу в csv
                         файл</button>
-                    <thead>
+                    <thead style="background: #908e69ba;">
                         <tr id="fontsize-showinspection">
                             <th scope="col" onclick="sortTable(0)" style="visibility: hidden;">№ ID</th>
                             <!--<th>ID</th>-->
@@ -186,7 +186,7 @@
                             <th scope="col" onclick="sortTable(13)">Время ред-я</th>
                             <th scope="col" onclick="sortTable(14)">Дата отгрузки на ВК</th>
                             <th scope="col" onclick="sortTable(15)">Время отгрузки на ВК</th>
-
+                            <th scope="col" onclick="sortTable(16)">Внести запись</th>
                         </tr>
                     </thead>
                     <tbody id="thetable">
@@ -283,7 +283,7 @@
                     <button onclick="exportTableToCSV('export_shipment_sap.csv')"
                         style="margin-left:0px; width: 300px;">Экспортировать таблицу в csv
                         файл</button>
-                    <thead>
+                    <thead style="background: #908e69ba;">
                         <tr id="fontsize-showinspection">
                             <th scope="col" onclick="sortTable(0)" style="visibility: hidden;">№ ID</th>
                             <!--<th>ID</th>-->
@@ -306,7 +306,7 @@
                             <th scope="col" onclick="sortTable(13)">Время ред-я</th>
                             <th scope="col" onclick="sortTable(14)">Дата отгрузки на ВК</th>
                             <th scope="col" onclick="sortTable(15)">Время отгрузки на ВК</th>
-
+                            <th scope="col" onclick="sortTable(16)">Внести запись</th>
                         </tr>
                     </thead>
                     <tbody id="thetable">
@@ -523,15 +523,15 @@
             <div class="wrap">
                 <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .."
                     title="Type in a name" style="margin-left:0px; width: 1000px;">
-                <input type="text" id="myInput2" onkeyup="myFunctionT()" placeholder="Search2 for .."
-                    title="Type in a name" style="margin-left:0px; width: 1000px;">
+                <!--    <input type="text" id="myInput2" onkeyup="myFunctionT()" placeholder="Search2 for .."
+                    title="Type in a name" style="margin-left:0px; width: 1000px;">-->
                 <br>
                 <table id="myTable" id="myTable2" onload="alternate('thetable')">
                     <caption style="color: white; font-size: 22px;">Список на инспекции</caption>
                     <button onclick="exportTableToCSV('export_shipment_sap.csv')"
                         style="margin-left:0px; width: 300px;">Экспортировать таблицу в csv
                         файл</button>
-                    <thead>
+                    <thead style="background: #908e69ba;">
                         <tr id="fontsize-showinspection">
                             <th scope="col" onclick="sortTable(0)" style="visibility: hidden;">№ ID</th>
                             <!--<th>ID</th>-->
@@ -555,7 +555,7 @@
                             <th scope="col" onclick="sortTable(14)">Время ред-я</th>
                             <th scope="col" onclick="sortTable(15)">Дата отгрузки на ВК</th>
                             <th scope="col" onclick="sortTable(16)">Время отгрузки на ВК</th>
-
+                            <th scope="col" onclick="sortTable(17)">Принять на склад</th>
                         </tr>
                     </thead>
                     <tbody id="thetable">
@@ -614,6 +614,26 @@
                                 {{.Time2}}
                             </td>
 
+                            <td nowrap>
+                                {{ if eq .Status "OK" }}
+                                <a href="#modal-4" onclick="acceptInspection({{.ID}});"
+                                    class="js-modal-open btnfortable btn-primary">Принять на склад</a>
+
+                                <!--    <a href="/acceptinspectiontowh/{{.ID}}" class="btnfortable btn-primary">
+                                    Принять на склад
+                                </a>-->
+                            </td>
+
+                            <td nowrap>
+                                {{ else if eq .Status "NG" }}
+                                <a href="#modal-4" onclick="acceptInspection({{.ID}});"
+                                    class="js-modal-open btnfortable btn-primary">Принять на склад</a>
+                                <!--   <a href="/acceptinspectiontowh/{{.ID}}" class="btnfortable btn-primary">
+                                    Принять на склад
+                                </a>-->
+                                {{ end }}
+                            </td>
+
                         </tr>
                         {{ end}}
                     </tbody>
@@ -660,6 +680,27 @@
         </div>
 
         <div class="modal modal--l" id="modal-2">
+            <div class="modal__dialog">
+                <div class="modal__dialog-header">
+                    <div class="modal__dialog-header-content">
+                        <h3>Карточка контроля компонента</h3>
+                    </div>
+                    <div class="modal__dialog-header-close">
+                        <button class="js-modal-close modal__dialog-header-close-btn">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="modal__dialog-body">
+                </div>
+                <div class="modal__dialog-footer">
+                    <button class="js-modal-close modal__dialog-footer-close-btn">Close</button>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="modal modal--l" id="modal-4">
             <div class="modal__dialog">
                 <div class="modal__dialog-header">
                     <div class="modal__dialog-header-content">

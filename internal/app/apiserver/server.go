@@ -2772,7 +2772,8 @@ func (s *server) acceptWarehouseInspection() http.HandlerFunc {
 				http.Error(w, err.Error(), 400)
 				return
 			}*/
-		http.Redirect(w, r, "/statusinspectionforwh", 303)
+		//http.Redirect(w, r, "/statusinspectionforwh", 303)
+		http.Redirect(w, r, "/statusinspection", 303)
 	}
 }
 

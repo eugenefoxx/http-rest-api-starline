@@ -492,7 +492,8 @@ button.buttonPlus:after {
   border-collapse: collapse; /* Collapse borders */
   width: 100%; /* Full-width */
   border: 1px solid #ddd; /* Add a grey border */
-  font-size: 18px; /* Increase font-size */
+  font-size: 17px; /* Increase font-size */
+  background: white;
 }
 
 #myTable th,
@@ -509,7 +510,7 @@ button.buttonPlus:after {
 #myTable tr.header,
 .myTable tr:hover {
   /* Add a grey background color to the table header and on hover */
-  background-color: #f1f1f1;
+  //  background-color: #f1f1f1;
 }
 
 th {
@@ -519,12 +520,12 @@ th {
 th,
 td {
   text-align: left;
-  padding: 10px;
+  padding: 10px 10px 10px 0px;
 }
 
 tr:nth-child(even) {
   // odd even
-  background-color: #f7f0f0;
+  background-color: #f8f5f5fb;
 }
 
 .box {
@@ -558,12 +559,12 @@ tr:nth-child(even) {
 }
 
 .even {
-  background-color: gray;
+  background-color: green; // gray
 }
 
 // если статус / status NG в списке на инспекцию
 tr.NG td {
-  background-color: rgba(235, 36, 36, 0.459);
+  background-color: rgba(241, 10, 10, 0.192);
 }
 
 /*
@@ -665,7 +666,7 @@ body,
   //max-width: 1024px;
   // position: relative;
   //margin: 0 auto;
-  padding: -100px 24px 36px;
+  //  padding: -100px 24px 36px;
   // style="margin-left:1100px; width: 1000px; margin-top: 0px; font-size: 150%;"
   margin-left: 10px;
   margin-right: 10px;
@@ -768,7 +769,7 @@ p {
   color: #fff;
   font-family: "Roboto", sans-serif;
   // float: left;
-  // margin: 0 20px 12px 0;
+  margin: 0 20px 12px 0;
   margin: 4px 2px;
   padding: 0 24px;
   text-decoration: none;
