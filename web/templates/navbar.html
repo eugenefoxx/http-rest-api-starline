@@ -87,6 +87,17 @@
         </div>
     </li>
     {{ end}}
+    {{ if .WarehouseManager}}
+    <li class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">Отдел качества</a>
+        <div class="dropdown-content">
+            <a href="/showuserswarehouse">Управление пользователями склада</a>
+            <!--    <a href="/ininspection">Отгрузка катушек на ВК</a>-->
+            <a href="/statusinspection">Компоненты на входном контроле</a>
+            <!--   <a href="/statusinspectionforwh">Компоненты на входном контроле для приема</a>-->
+        </div>
+    </li>
+    {{ end}}
 
 
     {{ if .Admin}}
@@ -120,6 +131,13 @@
             Контроля</a>
     </div>
     {{end}}
+    {{ if .WarehouseManager}}
+    <div style="margin-top: 10px;">
+        <a href="#modal-3" class="js-modal-open linkblack" style="margin-left: 700px;">Поиск по базе Входного
+            Контроля</a>
+    </div>
+    {{end}}
+
 
     <div style="margin-left:200px; margin-top: 10px;">
         Пользователь: {{.User}} {{.Username}}

@@ -118,7 +118,7 @@ func (r *UserRepository) UpdatePass(s *model.User) error {
 }
 
 // SuperIngenerQuality
-func (r *UserRepository) CreateUserBySuperIngenerQuality(u *model.User) error {
+func (r *UserRepository) CreateUserByManager(u *model.User) error {
 	if err := u.Validate(); err != nil {
 		return err
 	}
@@ -181,7 +181,49 @@ func (r *UserRepository) ListUsersQuality() (u *model.Users, err error) {
 	return &showUsersQualityList, nil
 }
 
-func (r *UserRepository) EditUserBySuperIngenerQuality(id int) (*model.User, error) {
+func (r *UserRepository) ListUsersWarehouse() (u *model.Users, err error) {
+	showUsersWarehouse := model.User{}
+	showUsersWarehouseList := make(model.Users, 0)
+
+	selectUsers := `SELECT id, email, firstname, lastname, 
+	role, groups, tabel FROM users WHERE groups = 'склад';`
+
+	rows, err := r.store.db.Query(
+		selectUsers,
+	)
+
+	if err != nil {
+		fmt.Println(err, "error in func ListUsersWarehouse()")
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		err := rows.Scan(
+			&showUsersWarehouse.ID,
+			&showUsersWarehouse.Email,
+			&showUsersWarehouse.FirstName,
+			&showUsersWarehouse.LastName,
+			&showUsersWarehouse.Role,
+			&showUsersWarehouse.Groups,
+			&showUsersWarehouse.Tabel,
+		)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				return nil, store.ErrRecordNotFound
+			}
+			return nil, err
+		}
+		showUsersWarehouseList = append(showUsersWarehouseList, showUsersWarehouse)
+	}
+	err = rows.Err()
+	if err != nil {
+		return nil, err
+	}
+	return &showUsersWarehouseList, nil
+}
+
+func (r *UserRepository) EditUserByManager(id int) (*model.User, error) {
 
 	u := &model.User{}
 	//	selectEdit := `SELECT email, firstname, lastname,
@@ -206,7 +248,7 @@ func (r *UserRepository) EditUserBySuperIngenerQuality(id int) (*model.User, err
 	return u, nil
 }
 
-func (r *UserRepository) UpdateUserBySuperIngenerQuality(s *model.User) error {
+func (r *UserRepository) UpdateUserByManager(s *model.User) error {
 
 	updateUser := `UPDATE users SET email = $1, firstname = $2,
 	lastname = $3, role = $4, tabel = $5 WHERE id = $6;`
@@ -227,7 +269,7 @@ func (r *UserRepository) UpdateUserBySuperIngenerQuality(s *model.User) error {
 	return nil
 }
 
-func (r *UserRepository) DeleteUserBySuperIngenerQuality(s *model.User) error {
+func (r *UserRepository) DeleteUserByManager(s *model.User) error {
 
 	deleteUser := `DELETE FROM users WHERE id = $1;`
 	_, err := r.store.db.Exec(

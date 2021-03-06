@@ -522,6 +522,109 @@
             </tbody>
         </table>
         {{ end}}
+
+        {{ if eq .WarehouseManager true}}
+        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .." title="Type in a name">
+        <br>
+        <table id="myTable" onload="alternate('thetable')">
+            <caption style="color: white; font-size: 22px;">История ВК по базе</caption>
+            <button onclick="exportTableToCSV('export_shipment_sap.csv')"
+                style="margin-left:0px; width: 300px;">Экспортировать таблицу в csv файл</button>
+            <thead>
+                <tr id="fontsize-showinspection">
+                    <th scope="col" onclick="sortTable(0)" style="visibility: hidden;">№ ID</th>
+                    <!--<th>ID</th>-->
+                    <th scope="col" onclick="sortTable(1)">QR-код</th>
+                    <!--Material-->
+                    <th scope="col" onclick="sortTable(2)">SAP</th>
+                    <!--Qty-->
+                    <th scope="col" onclick="sortTable(3)">Партия</th>
+                    <!--ShipmentDate-->
+                    <!--    <th scope="col" onclick="sortTable(2)">ShipmentDate2</th>-->
+                    <th scope="col" onclick="sortTable(4)">ЕО катушки</th>
+                    <th scope="col" onclick="sortTable(5)">Дата пр-ва</th>
+                    <th scope="col" onclick="sortTable(6)">Имя дебитора</th>
+                    <th scope="col" onclick="sortTable(7)">Статус трансфера</th>
+                    <th scope="col" onclick="sortTable(8)">Кем отгружено</th>
+                    <th scope="col" onclick="sortTable(9)">Статус отметки проверки</th>
+                    <th scope="col" onclick="sortTable(10)">Примечание</th>
+                    <th scope="col" onclick="sortTable(11)">Кем отред-но</th>
+                    <th scope="col" onclick="sortTable(12)">Дата ред-я</th>
+                    <th scope="col" onclick="sortTable(13)">Время ред-я</th>
+                    <th scope="col" onclick="sortTable(14)">Дата отгрузки на ВК</th>
+                    <th scope="col" onclick="sortTable(15)">Время отгрузки на ВК</th>
+                    <th scope="col" onclick="sortTable(16)">Принял на склад</th>
+                    <th scope="col" onclick="sortTable(17)">Дата приема на склад</th>
+                    <th scope="col" onclick="sortTable(18)">Время приема на склад</th>
+                </tr>
+            </thead>
+            <tbody id="thetable">
+                {{ range .GET}}
+                <tr class="header {{.Status}}">
+                    <!--<td>{{.ID }}</td>-->
+                    <td style="visibility: hidden;">
+                        {{.ID}}
+                    </td>
+                    <td style="font-size: 10%;">
+                        {{.IdMaterial}}
+                    </td>
+                    <td>
+                        {{.SAP}}
+                    </td>
+                    <td>
+                        {{.Lot}}
+                    </td>
+                    <td>
+                        {{.IdRoll}}
+                    </td>
+                    <td>
+                        {{.ProductionDate}}
+                    </td>
+                    <td>
+                        {{.NameDebitor}}
+                    </td>
+                    <td>
+                        {{.Location}}
+                    </td>
+                    <td>
+                        {{.Lastname}}
+                    </td>
+                    <td>
+                        {{.Status}}
+                    </td>
+                    <td>
+                        {{.Note}}
+                    </td>
+                    <td>
+                        {{.Update}}
+                    </td>
+                    <td nowrap>
+                        {{.Dateupdate2}}
+                    </td>
+                    <td nowrap>
+                        {{.Timeupdate2}}
+                    </td>
+                    <td nowrap>
+                        {{.Date2}}
+                    </td>
+                    <td nowrap>
+                        {{.Time2}}
+                    </td>
+                    <td>
+                        {{.Lastnameaccept}}
+                    </td>
+                    <td>
+                        {{.Dateaccept2}}
+                    </td>
+                    <td>
+                        {{.Dateaccept2}}
+                    </td>
+                </tr>
+                {{ end}}
+            </tbody>
+        </table>
+        {{ end}}
+
     </div>
 
     {{template "footer.html" .}}

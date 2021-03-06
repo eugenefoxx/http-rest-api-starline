@@ -148,3 +148,13 @@ function editUserQuality(id) {
 
         });
   }
+
+  function editUserWarehouse(id) {
+    axios.get('/updateuserwarehouse/' + id)
+        .then(function (response) {
+            document
+                .getElementById('modal-6')
+                .getElementsByClassName('modal__dialog-body')[0].innerHTML = response.data;
+
+        });
+  }

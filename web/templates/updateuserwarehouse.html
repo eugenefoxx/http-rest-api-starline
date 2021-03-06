@@ -1,0 +1,33 @@
+<form method="POST" action="/updateuserwarehouse/{{.GET.ID}}">
+    <div class="form-group">
+        <label for="title">Email</label>
+        <input type="text" style="margin-left:100px;" class="form-control" name="email" id="email"
+            value="{{.GET.Email}}">
+    </div>
+    <div class="form-group">
+        <label for="description">Имя</label>
+        <input type="text" style="margin-left:110px;" class="form-control" name="firstname" id="firstname"
+            value="{{.GET.FirstName}}">
+    </div>
+    <div class="form-group">
+        <label for="description">Фамилия</label>
+        <input type="text" style="margin-left:75px;" class="form-control" name="lastname" id="lastname"
+            value="{{.GET.LastName}}">
+    </div>
+    <div class="form-group">
+        <label for="description">Позиция</label>
+        <select style="margin-left:75px;" class="form-control" name="role">
+            <option disabled selected>Выберите позицию</option>
+            <option type="text" id="role" value="старший кладовщик склада">старший кладовщик склада</option>
+            <option type="text" id="role" value="кладовщик склада">кладовщик склада</option>
+
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="description">Табель</label>
+        <input type="text" style="margin-left:85px;" class="form-control" name="tabel" id="tabel"
+            value="{{.GET.Tabel}}">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Подтвердить</button>
+</form>
