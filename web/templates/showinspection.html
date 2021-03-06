@@ -505,6 +505,16 @@
                                 <!--   <a href="/acceptinspectiontowh/{{.ID}}" class="btnfortable btn-primary">
                                     Принять на склад
                                 </a>-->
+
+                            </td>
+
+                            <td nowrap>
+                                {{ else if eq .Status "" }}
+                                <a href="/deleteinspection/{{.ID}}"
+                                    class="btnfortable btn-danger confirmation">Удалить</a>
+                                <!--   <a href="/acceptinspectiontowh/{{.ID}}" class="btnfortable btn-primary">
+                                    Принять на склад
+                                </a>-->
                                 {{ end }}
                             </td>
 
@@ -647,6 +657,16 @@
                                 {{ else if eq .Status "NG" }}
                                 <a href="#modal-4" onclick="acceptInspection({{.ID}});"
                                     class="js-modal-open btnfortable btn-primary">Принять на склад</a>
+                                <!--   <a href="/acceptinspectiontowh/{{.ID}}" class="btnfortable btn-primary">
+                                    Принять на склад
+                                </a>-->
+
+                            </td>
+
+                            <td nowrap>
+                                {{ else if eq .Status "" }}
+                                <a href="/deleteinspection/{{.ID}}"
+                                    class="btnfortable btn-danger confirmation">Удалить</a>
                                 <!--   <a href="/acceptinspectiontowh/{{.ID}}" class="btnfortable btn-primary">
                                     Принять на склад
                                 </a>-->
