@@ -1392,7 +1392,7 @@ func (s *server) pageInspection() http.HandlerFunc {
 	///	}
 	return func(w http.ResponseWriter, r *http.Request) {
 		//	Admin := true
-		Warehouse := true
+		//	Warehouse := true
 		StockkeeperWH := false
 		WarehouseManager := false
 		//	Quality := false
@@ -1425,9 +1425,9 @@ func (s *server) pageInspection() http.HandlerFunc {
 			SuperIngenerQuality2 = true
 			LoggedIn = true
 			fmt.Println("pageInspection SuperIngenerQuality - ", SuperIngenerQuality)
-		} else if user.Groups == "склад" {
+		} else if user.Role == "кладовщик склада" {
 			StockkeeperWH = true
-			Warehouse = false
+			//	Warehouse = false
 			//	WarehouseManager = true
 			LoggedIn = true
 		} else if user.Role == "инженер по качеству" {
@@ -1496,10 +1496,10 @@ func (s *server) pageInspection() http.HandlerFunc {
 			"Username": user.FirstName,
 			//	"Admin":                Admin,
 			//	"Quality":              Quality,
-			"Inspector":            Inspector,
-			"IngenerQuality":       IngenerQuality,
-			"WarehouseManager":     WarehouseManager,
-			"Warehouse":            Warehouse,
+			"Inspector":        Inspector,
+			"IngenerQuality":   IngenerQuality,
+			"WarehouseManager": WarehouseManager,
+			//	"Warehouse":            Warehouse,
 			"StockkeeperWH":        StockkeeperWH,
 			"SuperIngenerQuality":  SuperIngenerQuality,
 			"SuperIngenerQuality2": SuperIngenerQuality2,
