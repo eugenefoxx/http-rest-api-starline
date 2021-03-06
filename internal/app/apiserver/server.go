@@ -2501,88 +2501,145 @@ func (s *server) historyInspection() http.HandlerFunc {
 		fmt.Println("material - ", search.Material)
 		search.EO = r.FormValue("eo")
 
-		if search.Material != 0 {
-			fmt.Println("OK Material")
-			get, err := s.store.Inspection().ListShowDataByDateAndSAP(search.Date1, search.Date2, search.Material)
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-			data := map[string]interface{}{
-				"TitleDOC":            "Отчет по истроии ВК",
-				"User":                user.LastName,
-				"Username":            user.FirstName,
-				"Admin":               Admin,
-				"WarehouseManager":    WarehouseManager,
-				"StockkeeperWH":       StockkeeperWH,
-				"SuperIngenerQuality": SuperIngenerQuality,
-				"IngenerQuality":      IngenerQuality,
-				"Quality":             Quality,
-				"Inspector":           Inspector,
-				"LoggedIn":            LoggedIn,
-				"GET":                 get,
-			}
+		if search.Date1 == "" && search.Date2 == "" {
+			if search.EO != "" {
+				get, err := s.store.Inspection().ListShowDataByEO(search.EO)
+				if err != nil {
+					s.error(w, r, http.StatusUnprocessableEntity, err)
+					return
+				}
+				data := map[string]interface{}{
+					"TitleDOC":            "Отчет по истроии ВК",
+					"User":                user.LastName,
+					"Username":            user.FirstName,
+					"Admin":               Admin,
+					"WarehouseManager":    WarehouseManager,
+					"StockkeeperWH":       StockkeeperWH,
+					"SuperIngenerQuality": SuperIngenerQuality,
+					"IngenerQuality":      IngenerQuality,
+					"Quality":             Quality,
+					"Inspector":           Inspector,
+					"LoggedIn":            LoggedIn,
+					"GET":                 get,
+				}
 
-			err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
-			if err != nil {
-				http.Error(w, err.Error(), 400)
-				return
-			}
-		} else if search.EO != "" {
-			fmt.Println("OK EO")
+				err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
+				if err != nil {
+					http.Error(w, err.Error(), 400)
+					return
+				}
+			} else if search.Material != 0 {
+				get, err := s.store.Inspection().ListShowDataBySap(search.Material)
+				if err != nil {
+					s.error(w, r, http.StatusUnprocessableEntity, err)
+					return
+				}
+				data := map[string]interface{}{
+					"TitleDOC":            "Отчет по истроии ВК",
+					"User":                user.LastName,
+					"Username":            user.FirstName,
+					"Admin":               Admin,
+					"WarehouseManager":    WarehouseManager,
+					"StockkeeperWH":       StockkeeperWH,
+					"SuperIngenerQuality": SuperIngenerQuality,
+					"IngenerQuality":      IngenerQuality,
+					"Quality":             Quality,
+					"Inspector":           Inspector,
+					"LoggedIn":            LoggedIn,
+					"GET":                 get,
+				}
 
-			get, err := s.store.Inspection().ListShowDataByDateAndEO(search.Date1, search.Date2, search.EO)
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
+				err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
+				if err != nil {
+					http.Error(w, err.Error(), 400)
+					return
+				}
 			}
-			data := map[string]interface{}{
-				"TitleDOC":            "Отчет по истроии ВК",
-				"User":                user.LastName,
-				"Username":            user.FirstName,
-				"Admin":               Admin,
-				"WarehouseManager":    WarehouseManager,
-				"StockkeeperWH":       StockkeeperWH,
-				"SuperIngenerQuality": SuperIngenerQuality,
-				"IngenerQuality":      IngenerQuality,
-				"Quality":             Quality,
-				"Inspector":           Inspector,
-				"LoggedIn":            LoggedIn,
-				"GET":                 get,
-			}
-
-			err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
-			if err != nil {
-				http.Error(w, err.Error(), 400)
-				return
-			}
-
 		} else {
-			get, err := s.store.Inspection().ListShowDataByDate(search.Date1, search.Date2)
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
 
-			data := map[string]interface{}{
-				"TitleDOC":            "Отчет по истроии ВК",
-				"User":                user.LastName,
-				"Username":            user.FirstName,
-				"Admin":               Admin,
-				"WarehouseManager":    WarehouseManager,
-				"StockkeeperWH":       StockkeeperWH,
-				"SuperIngenerQuality": SuperIngenerQuality,
-				"IngenerQuality":      IngenerQuality,
-				"Quality":             Quality,
-				"Inspector":           Inspector,
-				"LoggedIn":            LoggedIn,
-				"GET":                 get,
-			}
+			if search.Material != 0 {
+				fmt.Println("OK Material")
+				get, err := s.store.Inspection().ListShowDataByDateAndSAP(search.Date1, search.Date2, search.Material)
+				if err != nil {
+					s.error(w, r, http.StatusUnprocessableEntity, err)
+					return
+				}
+				data := map[string]interface{}{
+					"TitleDOC":            "Отчет по истроии ВК",
+					"User":                user.LastName,
+					"Username":            user.FirstName,
+					"Admin":               Admin,
+					"WarehouseManager":    WarehouseManager,
+					"StockkeeperWH":       StockkeeperWH,
+					"SuperIngenerQuality": SuperIngenerQuality,
+					"IngenerQuality":      IngenerQuality,
+					"Quality":             Quality,
+					"Inspector":           Inspector,
+					"LoggedIn":            LoggedIn,
+					"GET":                 get,
+				}
 
-			err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
-			if err != nil {
-				http.Error(w, err.Error(), 400)
-				return
+				err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
+				if err != nil {
+					http.Error(w, err.Error(), 400)
+					return
+				}
+			} else if search.EO != "" {
+				fmt.Println("OK EO")
+
+				get, err := s.store.Inspection().ListShowDataByDateAndEO(search.Date1, search.Date2, search.EO)
+				if err != nil {
+					s.error(w, r, http.StatusUnprocessableEntity, err)
+					return
+				}
+				data := map[string]interface{}{
+					"TitleDOC":            "Отчет по истроии ВК",
+					"User":                user.LastName,
+					"Username":            user.FirstName,
+					"Admin":               Admin,
+					"WarehouseManager":    WarehouseManager,
+					"StockkeeperWH":       StockkeeperWH,
+					"SuperIngenerQuality": SuperIngenerQuality,
+					"IngenerQuality":      IngenerQuality,
+					"Quality":             Quality,
+					"Inspector":           Inspector,
+					"LoggedIn":            LoggedIn,
+					"GET":                 get,
+				}
+
+				err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
+				if err != nil {
+					http.Error(w, err.Error(), 400)
+					return
+				}
+
+			} else {
+				get, err := s.store.Inspection().ListShowDataByDate(search.Date1, search.Date2)
+				if err != nil {
+					s.error(w, r, http.StatusUnprocessableEntity, err)
+					return
+				}
+
+				data := map[string]interface{}{
+					"TitleDOC":            "Отчет по истроии ВК",
+					"User":                user.LastName,
+					"Username":            user.FirstName,
+					"Admin":               Admin,
+					"WarehouseManager":    WarehouseManager,
+					"StockkeeperWH":       StockkeeperWH,
+					"SuperIngenerQuality": SuperIngenerQuality,
+					"IngenerQuality":      IngenerQuality,
+					"Quality":             Quality,
+					"Inspector":           Inspector,
+					"LoggedIn":            LoggedIn,
+					"GET":                 get,
+				}
+
+				err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
+				if err != nil {
+					http.Error(w, err.Error(), 400)
+					return
+				}
 			}
 		}
 		/*

@@ -369,6 +369,134 @@ func (r *InspectionRepository) AcceptWarehouseInspection(s *model.Inspection, gr
 	return nil
 }
 
+func (r *InspectionRepository) ListShowDataByEO(eo string) (s *model.Inspections, err error) {
+	showDataByDate := model.Inspection{}
+	showDataByDateList := make(model.Inspections, 0)
+
+	selectDate := `SELECT transfer.id, transfer.idmaterial, transfer.sap, transfer.lot, transfer.idroll, 
+		transfer.productiondate, Coalesce (vendor.name_debitor, ''), transfer.location, transfer.lastname, Coalesce (transfer.status, ''), 
+		Coalesce (transfer.note, ''), Coalesce (transfer.update, ''), 
+		Coalesce(TO_CHAR(transfer.dateupdate, 'YYYY-MM-DD'), '') dateupdate2, 
+		Coalesce(TO_CHAR(transfer.timeupdate, 'HH24:MI:SS'), '') timeupdate2, 
+		TO_CHAR(transfer.date, 'YYYY-MM-DD') date2, TO_CHAR(transfer.time, 'HH24:MI:SS') time2, 
+		Coalesce (transfer.lastnameaccept, ''), Coalesce(TO_CHAR(transfer.dateaccept, 'YYYY-MM-DD'), '') dateaccept2,  
+		Coalesce(TO_CHAR(transfer.timeaccept, 'HH24:MI:SS'), '') timeaccept2
+		FROM transfer left outer join vendor on (transfer.numbervendor = vendor.code_debitor) 
+		WHERE idroll = $1;`
+
+	rows, err := r.store.db.Query(
+		//	"SELECT * FROM transfer WHERE dateupdate BETWEEN $1 AND $2",
+		selectDate,
+		eo)
+
+	if err != nil {
+		fmt.Println("ошибка в select")
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		err := rows.Scan(
+			&showDataByDate.ID,
+			&showDataByDate.IdMaterial,
+			&showDataByDate.SAP,
+			&showDataByDate.Lot,
+			&showDataByDate.IdRoll,
+			&showDataByDate.ProductionDate,
+			&showDataByDate.NameDebitor,
+			&showDataByDate.Location,
+			&showDataByDate.Lastname,
+			&showDataByDate.Status,
+			&showDataByDate.Note,
+			&showDataByDate.Update,
+			&showDataByDate.Dateupdate2,
+			&showDataByDate.Timeupdate2,
+			&showDataByDate.Date2,
+			&showDataByDate.Time2,
+			&showDataByDate.Lastnameaccept,
+			&showDataByDate.Dateaccept2,
+			&showDataByDate.Timeaccept2,
+		)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				return nil, store.ErrRecordNotFound
+			}
+			return nil, err
+		}
+		showDataByDateList = append(showDataByDateList, showDataByDate)
+	}
+	err = rows.Err()
+	if err != nil {
+		return nil, err
+	}
+
+	return &showDataByDateList, nil
+}
+
+func (r *InspectionRepository) ListShowDataBySap(sap int) (s *model.Inspections, err error) {
+	showDataByDate := model.Inspection{}
+	showDataByDateList := make(model.Inspections, 0)
+
+	selectDate := `SELECT transfer.id, transfer.idmaterial, transfer.sap, transfer.lot, transfer.idroll, 
+		transfer.productiondate, Coalesce (vendor.name_debitor, ''), transfer.location, transfer.lastname, Coalesce (transfer.status, ''), 
+		Coalesce (transfer.note, ''), Coalesce (transfer.update, ''), 
+		Coalesce(TO_CHAR(transfer.dateupdate, 'YYYY-MM-DD'), '') dateupdate2, 
+		Coalesce(TO_CHAR(transfer.timeupdate, 'HH24:MI:SS'), '') timeupdate2, 
+		TO_CHAR(transfer.date, 'YYYY-MM-DD') date2, TO_CHAR(transfer.time, 'HH24:MI:SS') time2, 
+		Coalesce (transfer.lastnameaccept, ''), Coalesce(TO_CHAR(transfer.dateaccept, 'YYYY-MM-DD'), '') dateaccept2,  
+		Coalesce(TO_CHAR(transfer.timeaccept, 'HH24:MI:SS'), '') timeaccept2
+		FROM transfer left outer join vendor on (transfer.numbervendor = vendor.code_debitor) 
+		WHERE sap = $1;`
+
+	rows, err := r.store.db.Query(
+		//	"SELECT * FROM transfer WHERE dateupdate BETWEEN $1 AND $2",
+		selectDate,
+		sap)
+
+	if err != nil {
+		fmt.Println("ошибка в select")
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		err := rows.Scan(
+			&showDataByDate.ID,
+			&showDataByDate.IdMaterial,
+			&showDataByDate.SAP,
+			&showDataByDate.Lot,
+			&showDataByDate.IdRoll,
+			&showDataByDate.ProductionDate,
+			&showDataByDate.NameDebitor,
+			&showDataByDate.Location,
+			&showDataByDate.Lastname,
+			&showDataByDate.Status,
+			&showDataByDate.Note,
+			&showDataByDate.Update,
+			&showDataByDate.Dateupdate2,
+			&showDataByDate.Timeupdate2,
+			&showDataByDate.Date2,
+			&showDataByDate.Time2,
+			&showDataByDate.Lastnameaccept,
+			&showDataByDate.Dateaccept2,
+			&showDataByDate.Timeaccept2,
+		)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				return nil, store.ErrRecordNotFound
+			}
+			return nil, err
+		}
+		showDataByDateList = append(showDataByDateList, showDataByDate)
+	}
+	err = rows.Err()
+	if err != nil {
+		return nil, err
+	}
+
+	return &showDataByDateList, nil
+}
+
 func (r *InspectionRepository) ListShowDataByDate(updateDate1 string, updateDate2 string) (s *model.Inspections, err error) {
 	showDataByDate := model.Inspection{}
 	showDataByDateList := make(model.Inspections, 0)
