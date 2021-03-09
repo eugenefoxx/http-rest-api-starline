@@ -11,15 +11,20 @@
         <div class="register-form">
             <!--form-group-->
             <label for="email" id="dateform">Пользователь</label>
-            <input class="register-field_user" type="text" id="email" name="email">
+            <input class="form-control" type="text" id="email" name="email" style="margin-left: 35px;"
+                placeholder="укажите почту @starline.ru">
             <br>
             <p></p>
-            <label for="password">Пароль</label>
-            <input class="register-field_pass" type="password" id="password" name="password">
+            <label for="passwordold">Старый пароль</label>
+            <input class="form-control" type="password" id="passwordold" name="passwordold">
+            <br>
+            <p></p>
+            <label for="password">Новый пароль</label>
+            <input class="form-control" type="password" id="password" name="password" style="margin-left: 32px;">
             <br>
             <p></p>
 
-            <button type="submit">Обновить</button>
+            <button type="submit" class="btn btn-primary login_submit" style="width: 15%;">Обновить</button>
         </div>
     </form>
 

@@ -11,20 +11,21 @@
         <div class="register-form">
             <!--form-group-->
             <label for="email" id="dateform">Пользователь</label>
-            <input class="register-field_user" type="text" id="email" name="email">
+            <input class="form-control" type="text" id="email" name="email">
             <br>
             <p></p>
             <label for="password">Пароль</label>
-            <input class="register-field_pass" type="password" id="password" name="password">
+            <input class="form-control" type="password" id="password" name="password" style="margin-left:100px;">
             <br>
             <p></p>
             <label for="firstname">Имя</label>
-            <input class="register-field_name" type="text" id="firstname" name="firstname">
+            <input class="form-control" type="text" id="firstname" name="firstname" style="margin-left:140px;">
             <br>
             <p></p>
             <label for="lastname">Фамилия</label>
-            <input class="register-field_lastname" type="text" id="lastname" name="lastname">
-            <button type="submit">Зарегистриовать</button>
+            <input class="form-control" type="text" id="lastname" name="lastname" style="margin-left:80px;">
+            <br>
+            <button type="submit" class="btn btn-primary login_submit">Зарегистриовать</button>
         </div>
     </form>
     {{template "footer.html" .}}

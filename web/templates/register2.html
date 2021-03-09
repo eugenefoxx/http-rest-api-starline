@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html>
+{{template "head.html" .}}
+
+<body>
+    {{template "navbar.html" .}}
+    <header>
+        <h1>Регистрация</h1>
+    </header>
+    <form id="text" method="post" action="/users">
+        <div class="register-form">
+            <!--form-group-->
+            <label for="email" id="dateform">Пользователь</label>
+            <input class="register-field_user" type="text" id="email" name="email">
+            <br>
+            <p></p>
+            <label for="password">Пароль</label>
+            <input class="register-field_pass" type="password" id="password" name="password">
+            <br>
+            <p></p>
+            <label for="firstname">Имя</label>
+            <input class="register-field_name" type="text" id="firstname" name="firstname">
+            <br>
+            <p></p>
+            <label for="lastname">Фамилия</label>
+            <input class="register-field_lastname" type="text" id="lastname" name="lastname">
+            <button type="submit">Зарегистриовать</button>
+        </div>
+    </form>
+    {{template "footer.html" .}}
+
+</body>
+
+</html>
