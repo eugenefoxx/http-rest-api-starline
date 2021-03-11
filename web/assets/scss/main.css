@@ -17,7 +17,7 @@ ul {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background-color: #f3f70c;
+  background-color: #dae0e5;
 }
 
 li {
@@ -464,15 +464,15 @@ button.buttonPlus:after {
 }
 
 .button {
-  background-color: #4caf50;
-  /* Green */
+  background-color: #428bca;
+  /* Green  #428bca; #4caf50}*/
   border: none;
   color: white;
   padding: 20px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 16px;
+  font-size: 18px;
   margin: 10px 10px;
   cursor: pointer;
 }
@@ -773,7 +773,7 @@ p {
 
 .btn {
   height: 36px;
-  font-size: 13px;
+  font-size: 18px;
   line-height: 36px;
   color: #fff;
   font-family: "Roboto", sans-serif;
