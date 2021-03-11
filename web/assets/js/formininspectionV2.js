@@ -283,6 +283,7 @@ function sendData() {
     } else {
         console.log("There is no data to send");
     }
+   
 }
 //}
 

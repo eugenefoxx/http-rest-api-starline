@@ -190,13 +190,14 @@ func (s *Server) InInspection() http.HandlerFunc {
 			//			fmt.Println("Значения совпадают:\n" + idMaterial + "\n")
 			//		}
 			//	}
+			http.Redirect(w, r, "/statusinspection", 303)
 		}
-
-		err = tpl.ExecuteTemplate(w, "ininspection.html", nil)
-		if err != nil {
-			http.Error(w, err.Error(), 400)
-			return
-		}
+		/*
+			err = tpl.ExecuteTemplate(w, "ininspection.html", nil)
+			if err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}*/
 
 	}
 }
