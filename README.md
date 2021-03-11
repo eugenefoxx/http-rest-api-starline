@@ -1,5 +1,11 @@
 # http-rest-api-starline
 
+git add .
+git commit -a -m "v1.1.979 modify style"
+git push
+git tag v1.1.979
+git push -q origin v1.1.979
+
 pgweb --host localhost --user postgres --db starline
 /\***\*\*\*\*\*\*\***\*\*\*\*\***\*\*\*\*\*\*\***\*\*\***\*\*\*\*\*\*\***\*\*\*\*\***\*\*\*\*\*\*\***/
 deploy systemd

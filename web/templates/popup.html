@@ -6,17 +6,17 @@
         <div class="page-wrapper">
             <div class="left-panel-wrapper-header">
                 <h3>
-                    <font color="black" style="margin-left: 120px;">Oбщее количество:</font>
+                    <font color="black" style="margin-left: 0px;">Oбщее количество:</font>
                 </h3>
             </div>
             <div class="content-wrapper-header">
                 <h3>
-                    <font color="black" style="margin-left: 20px;">Задержано:</font>
+                    <font color="black" style="margin-left: 0px;">Задержано:</font>
                 </h3>
             </div>
             <div class="right-panel-wrapper-header">
                 <h3>
-                    <font color="black" style="margin-right: 200px;">Проверить:</font>
+                    <font color="black" style="margin-right: 0px;">Проверить:</font>
                 </h3>
             </div>
         </div>
@@ -25,15 +25,15 @@
             <div class="left-panel-wrapper">
                 <!--    <font color="black" style="background: white; margin: auto;">Oбщее количество:</font>-->
                 <div class="left-panel">
-                    <table>
+                    <table style="padding-left:12.5%;">
                         <tr>
                             <th>Наименование</th>
                             <th>Количество</th>
                         </tr>
                         {{ range.GetStatic}}
                         <tr>
-                            <td>{{ .NameDebitor}}</td>
-                            <td>{{ .Count}}</td>
+                            <td style="padding-left:5%;">{{ .NameDebitor}}</td>
+                            <td style="padding-left:16%;">{{ .Count}}</td>
                         </tr>
                         {{ end}}
                     </table>
@@ -43,15 +43,15 @@
             <div class="content-wrapper">
                 <!--    <font color="black" style="background: white; margin: auto;">Задержано:</font>-->
                 <div class="content">
-                    <table>
+                    <table style="padding-left:12.5%;">
                         <tr>
                             <th>Наименование</th>
                             <th>Количество</th>
                         </tr>
                         {{ range .HoldCountDebitor}}
                         <tr>
-                            <td>{{ .NameDebitor}}</td>
-                            <td>{{ .Count}}</td>
+                            <td style="padding-left:5%;">{{ .NameDebitor}}</td>
+                            <td style="padding-left:16%;">{{ .Count}}</td>
                         </tr>
                         {{ end}}
                     </table>
@@ -61,15 +61,15 @@
             <div class="right-panel-wrapper">
                 <!--    <font color="black" style="background: white; margin: auto;">Проверить:</font>-->
                 <div class="right-panel">
-                    <table>
+                    <table style="padding-left:12.5%;">
                         <tr>
                             <th>Наименование</th>
                             <th>Количество</th>
                         </tr>
                         {{ range .NotVerifyDebitor}}
                         <tr>
-                            <td>{{ .NameDebitor}}</td>
-                            <td>{{ .Count}}</td>
+                            <td style="padding-left:5%;">{{ .NameDebitor}}</td>
+                            <td style="padding-left:16%;">{{ .Count}}</td>
                         </tr>
                         {{ end}}
                     </table>

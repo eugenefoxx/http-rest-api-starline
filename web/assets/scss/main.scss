@@ -14,7 +14,7 @@ ul {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background-color: #dae0e5;
+  background-color: #bec5ca;
 }
 
 li {
@@ -38,10 +38,16 @@ body {
   // font-family: Arial, Helvetica, sans-serif;
   font-family: CrimsonPro;
   background-color: rgba(12, 133, 231, 0.533);
+  //background-color: #83878a;
   margin: 200px;
   //  padding: 20px;
   //  display: flex;
   flex-direction: row;
+}
+
+thead {
+  // background-color: rgba(4, 106, 119, 0.726);
+  background-color: #b7bdc4;
 }
 
 .navbar {
@@ -769,14 +775,14 @@ p {
   color: #fff;
   font-family: "Roboto", sans-serif;
   // float: left;
-  margin: 0 20px 12px 0;
+  // margin: 0 20px 12px 0;
   margin: 4px 2px;
-  padding: 0 24px;
+  padding: 8px 24px;
   text-decoration: none;
   text-transform: uppercase;
   text-align: center;
   border-radius: 6px;
-  border-radius: 6px;
+  //border-radius: 6px;
   border: 0;
   background: transparent;
   cursor: pointer;
@@ -1133,7 +1139,7 @@ p {
 
 .content {
   flex: 1 0 auto;
-  padding: 20px;
+  padding: 0px; /* 20px */
 }
 
 .footer {
