@@ -38,6 +38,16 @@ func (r *InspectionRepository) ListInspection() (*model.Inspections, error) {
 	listInspection := model.Inspection{}
 	listInspectionList := make(model.Inspections, 0)
 
+	deleteDuble := `DELETE FROM transfer a USING transfer b WHERE a.id < b.id AND a.idmaterial = b.idmaterial
+	AND a.status IS NULL;`
+
+	_, err := r.store.db.Exec(
+		deleteDuble,
+	)
+	if err != nil {
+		panic(err)
+	}
+
 	rows, err := r.store.db.Query(
 		"SELECT transfer.id, transfer.idmaterial, transfer.sap, transfer.lot, transfer.idroll, transfer.qty, transfer.productiondate, Coalesce (vendor.name_debitor, ''), transfer.location, transfer.lastname, Coalesce (transfer.status, ''), Coalesce (transfer.note, ''), Coalesce (transfer.update, ''), Coalesce(TO_CHAR(transfer.dateupdate, 'YYYY-MM-DD'), '') dateupdate2, Coalesce(TO_CHAR(transfer.timeupdate, 'HH24:MI:SS'), '') timeupdate2, TO_CHAR(transfer.date, 'YYYY-MM-DD') date2, TO_CHAR(transfer.time, 'HH24:MI:SS') time2 FROM transfer left outer join vendor on (transfer.numbervendor = vendor.code_debitor) WHERE transfer.location ='отгружено на ВК'",
 	)

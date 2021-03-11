@@ -1,7 +1,7 @@
 # http-rest-api-starline
 
 pgweb --host localhost --user postgres --db starline
-/************\*\*\*\*************\*\*************\*\*\*\*************/
+/\***\*\*\*\*\*\*\***\*\*\*\*\***\*\*\*\*\*\*\***\*\*\***\*\*\*\*\*\*\***\*\*\*\*\***\*\*\*\*\*\*\***/
 deploy systemd
 vim /etc/systemd/system/appstarlineprod.service
 [Unit]
@@ -17,7 +17,13 @@ WantedBy=multi-user.target
 systemctl status appstarlineprod.service
 systemctl start appstarlineprod.service
 systemctl start appstarlineprod.service
-/************\*\*\*\*************\*************\*\*\*\*************/
+/\***\*\*\*\*\*\*\***\*\*\*\*\***\*\*\*\*\*\*\***\*\***\*\*\*\*\*\*\***\*\*\*\*\***\*\*\*\*\*\*\***/
+
+/\***\*\*\*\*\*\*\***\*\*\*\*\***\*\*\*\*\*\*\***\*\*\***\*\*\*\*\*\*\***\*\*\*\*\***\*\*\*\*\*\*\***
+// удаление дублирующихся ЕО, до присвоения статус OK or NG
+delete from transfer a using transfer b where a.id < b.id and a.idmaterial = b.idmaterial
+and a.status is null;
+//\***\*\*\*\*\*\*\***\*\*\*\*\***\*\*\*\*\*\*\***\*\*\***\*\*\*\*\*\*\***\*\*\*\*\***\*\*\*\*\*\*\***
 
 select \* from shipmentbysap where lastname = 'Коновалов' and shipment_date between '2020-02-15' and '2020-05-01';
 select material, qty, to_char (shipment_date, 'YYYY-MON-DD') shipment_date2, to_char (shipment_time, 'HH24:MI:SS') shipment_time2, lastname from shipmentbysap shipment_date;select material, qty, to_char (shipment_date, 'YYYY-MON-DD') shipment_date2, to_char (shipment_time, 'HH24:MI:SS') shipment_time2, lastname from shipmentbysap shipment_date;
