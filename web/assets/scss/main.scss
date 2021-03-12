@@ -282,19 +282,19 @@ display: block;
 }
 
 .left-panel-wrapper {
-  width: 450px;
+  width: 480px;
   background-color: orange;
   text-align: center;
 }
 
 .right-panel-wrapper {
-  width: 450px;
+  width: 480px;
   background-color: rgb(96, 216, 96);
   margin-right: 1%;
 }
 
 .content-wrapper {
-  width: 450px;
+  width: 480px;
   // width: calc(100% - 400px);
   background-color: rgb(231, 68, 68);
   padding: 0 0px;
@@ -526,7 +526,7 @@ th {
 th,
 td {
   text-align: left;
-  padding: 10px 10px 10px 0px;
+  padding: 10px 10px 10px 0%;
 }
 
 tr:nth-child(even) {
@@ -809,13 +809,29 @@ p {
 }
 
 .btn-primary {
-  border-color: #285e8e;
-  background: #285e8e;
+  &--s {
+    border-color: #285e8e;
+    background: #285e8e;
+    padding: 2px 31px;
+  }
+  &--ss {
+    border-color: #285e8e;
+    background: #285e8e;
+    padding: 8px 31px;
+  }
+  &--l {
+    border-color: #285e8e;
+    background: #285e8e;
+    padding: 8px 61px;
+  }
 }
 
 .btn-danger {
-  border-color: #e60f0f;
-  background: #e60f0f;
+  &--s {
+    border-color: #e60f0f;
+    background: #e60f0f;
+    padding: 8px 67px;
+  }
 }
 
 .btn-light {
@@ -872,8 +888,8 @@ p {
   position: fixed;
   left: 50%;
   z-index: 120;
-  margin-left: -830px; // отступ внешнего обвода
-  padding: 100px 0;
+  margin-left: -830px; // отступ внешнего обвода -830
+  padding: 50px 0; // 100px 0 отступ для внешнего крестика
   background: #81bef7;
 }
 

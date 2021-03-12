@@ -121,9 +121,9 @@
                             <td style="width: 100%;">
                                 <!--   <a href="/updateinspection/{{.ID}}" class="btnfortable btn-primary">Изменить</a>-->
                                 <a href="#modal-2" onclick="editInspection({{.ID}});"
-                                    class="js-modal-open btnfortable btn-primary">Изменить</a>
+                                    class="js-modal-open btnfortable btn-primary--l">Изменить</a>
                                 <a href="/deleteinspection/{{.ID}}"
-                                    class="btnfortable btn-danger confirmation">Удалить</a>
+                                    class="btnfortable btn-danger--s confirmation">Удалить</a>
                             </td>
                         </tr>
                         {{ end}}
@@ -246,7 +246,7 @@
                             <td>
                                 <!--   <a href="/updateinspection/{{.ID}}" class="btnfortable btn-primary">Изменить</a>-->
                                 <a href="#modal-2" onclick="editInspection({{.ID}});"
-                                    class="js-modal-open btnfortable btn-primary">Изменить</a>
+                                    class="js-modal-open btnfortable btn-primary--l">Изменить</a>
                             </td>
                         </tr>
                         {{ end}}
@@ -367,7 +367,7 @@
                             <td>
                                 <!--   <a href="/updateinspection/{{.ID}}" class="btnfortable btn-primary">Изменить</a>-->
                                 <a href="#modal-2" onclick="editInspection({{.ID}});"
-                                    class="js-modal-open btnfortable btn-primary">Изменить</a>
+                                    class="js-modal-open btnfortable btn-primary--l">Изменить</a>
                             </td>
                         </tr>
                         {{ end}}
@@ -495,7 +495,7 @@
                             <td nowrap>
                                 {{ if eq .Status "OK" }}
                                 <a href="#modal-4" onclick="acceptInspection({{.ID}});"
-                                    class="js-modal-open btnfortable btn-primary">Принять на склад</a>
+                                    class="js-modal-open btnfortable btn-primary--ss">Принять на склад</a>
 
                                 <!--    <a href="/acceptinspectiontowh/{{.ID}}" class="btnfortable btn-primary">
                                     Принять на склад
@@ -505,7 +505,7 @@
                             <td nowrap>
                                 {{ else if eq .Status "NG" }}
                                 <a href="#modal-4" onclick="acceptInspection({{.ID}});"
-                                    class="js-modal-open btnfortable btn-primary">Принять на склад</a>
+                                    class="js-modal-open btnfortable btn-primary--ss">Принять на склад</a>
                                 <!--   <a href="/acceptinspectiontowh/{{.ID}}" class="btnfortable btn-primary">
                                     Принять на склад
                                 </a>-->
@@ -515,7 +515,7 @@
                             <td nowrap>
                                 {{ else if eq .Status "" }}
                                 <a href="/deleteinspection/{{.ID}}"
-                                    class="btnfortable btn-danger confirmation">Удалить</a>
+                                    class="btnfortable btn-danger--s confirmation">Удалить</a>
                                 <!--   <a href="/acceptinspectiontowh/{{.ID}}" class="btnfortable btn-primary">
                                     Принять на склад
                                 </a>-->
@@ -651,7 +651,7 @@
                             <td nowrap>
                                 {{ if eq .Status "OK" }}
                                 <a href="#modal-4" onclick="acceptInspection({{.ID}});"
-                                    class="js-modal-open btnfortable btn-primary">Принять на склад</a>
+                                    class="js-modal-open btnfortable btn-primary--ss">Принять на склад</a>
 
                                 <!--    <a href="/acceptinspectiontowh/{{.ID}}" class="btnfortable btn-primary">
                                     Принять на склад
@@ -661,7 +661,7 @@
                             <td nowrap>
                                 {{ else if eq .Status "NG" }}
                                 <a href="#modal-4" onclick="acceptInspection({{.ID}});"
-                                    class="js-modal-open btnfortable btn-primary">Принять на склад</a>
+                                    class="js-modal-open btnfortable btn-primary--ss">Принять на склад</a>
                                 <!--   <a href="/acceptinspectiontowh/{{.ID}}" class="btnfortable btn-primary">
                                     Принять на склад
                                 </a>-->
@@ -671,7 +671,7 @@
                             <td nowrap>
                                 {{ else if eq .Status "" }}
                                 <a href="/deleteinspection/{{.ID}}"
-                                    class="btnfortable btn-danger confirmation">Удалить</a>
+                                    class="btnfortable btn-danger--s confirmation">Удалить</a>
                                 <!--   <a href="/acceptinspectiontowh/{{.ID}}" class="btnfortable btn-primary">
                                     Принять на склад
                                 </a>-->

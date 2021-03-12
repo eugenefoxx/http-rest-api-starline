@@ -13,7 +13,7 @@
         <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .." title="Type in a name">
         <br>
         <table id="myTable" onload="alternate('thetable')" class="tableexport">
-            <caption style="color: white; font-size: 22px;">Сотрудники отдела качества</caption>
+            <caption style="color: white; font-size: 22px; padding-bottom: 10px;">Сотрудники отдела качества</caption>
             <button onclick="exportTableToCSV('export_shipment_sap.csv')"
                 style="margin-left:0px; width: 300px;">Экспортировать таблицу в csv файл</button>
             <thead>
@@ -31,6 +31,7 @@
                     <th scope="col" onclick="sortTable(5)">Группа</th>
 
                     <th scope="col" onclick="sortTable(6)">Табель</th>
+                    <th scope="col" onclick="sortTable(7)">Редактирование</th>
 
                 </tr>
             </thead>
@@ -62,8 +63,8 @@
                     <td>
                         <!-- <a href="/updateuserquality/{{.ID}}" class="btnfortable btn-primary">Edit </a>-->
                         <a href="#modal-2" onclick="editUserQuality({{.ID}});"
-                            class="js-modal-open btnfortable btn-primary">Edit</a>
-                        <a href="/deleteuserquality/{{.ID}}" class="btnfortable btn-danger confirmation"
+                            class="js-modal-open btnfortable btn-primary--l">Edit</a>
+                        <a href="/deleteuserquality/{{.ID}}" class="btnfortable btn-danger--s confirmation"
                             style="margin-left: 10px;">
                             Del</a>
                     </td>
@@ -81,7 +82,7 @@
         <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .." title="Type in a name">
         <br>
         <table id="myTable" onload="alternate('thetable')" class="tableexport">
-            <caption style="color: white; font-size: 22px;">Сотрудники отдела качества</caption>
+            <caption style="color: white; font-size: 22px; padding-bottom: 10px;">Сотрудники отдела качества</caption>
             <button onclick="exportTableToCSV('export_shipment_sap.csv')"
                 style="margin-left:0px; width: 300px;">Экспортировать таблицу в csv файл</button>
             <thead>
@@ -98,7 +99,7 @@
                     <th scope="col" onclick="sortTable(4)">Позиция</th>
                     <th scope="col" onclick="sortTable(5)">Группа</th>
                     <th scope="col" onclick="sortTable(6)">Табель</th>
-
+                    <th scope="col" onclick="sortTable(7)">Редактирование</th>
                 </tr>
             </thead>
             <tbody id="thetable">
@@ -128,8 +129,8 @@
                     </td>
                     <td>
                         <a href="#modal-2" onclick="editUserQuality({{.ID}});"
-                            class="js-modal-open btnfortable btn-primary">Edit</a>
-                        <a href="/deleteuserquality/{{.ID}}" class="btnfortable btn-danger confirmation"
+                            class="js-modal-open btnfortable btn-primary--l">Edit</a>
+                        <a href="/deleteuserquality/{{.ID}}" class="btnfortable btn-danger--s confirmation"
                             style="margin-left: 10px;">
                             Del</a>
                     </td>
@@ -179,7 +180,7 @@
                     </div>
                     <hr />
                     <div class="noselect block-style main" id="apply-clear-buttons">
-                        <button id="apply" class="btn btn-primary btn-sm apply-clear-buttons">
+                        <button id="apply" class="btn btn-primary--l btn-sm apply-clear-buttons">
                             Отправить данные</button>
                         <button id="clear-form" class="btn btn-light btn-sm apply-clear-buttons">
                             Очистить форму

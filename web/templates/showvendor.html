@@ -12,7 +12,7 @@
         <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .." title="Type in a name">
         <br>
         <table id="myTable" onload="alternate('thetable')" class="tableexport">
-            <caption style="color: white; font-size: 22px;">Список поставщиков</caption>
+            <caption style="color: white; font-size: 22px; padding-bottom: 10px;">Список поставщиков</caption>
             <button onclick="exportTableToCSV('export_shipment_sap.csv')">Экспортировать таблицу в csv файл</button>
             <thead>
                 <tr>
@@ -22,6 +22,7 @@
                     <th scope="col" onclick="sortTable(1)">Код дебитора</th>
                     <!--Qty-->
                     <th scope="col" onclick="sortTable(2)">Наименование</th>
+                    <th scope="col" onclick="sortTable(3)">Редактирование</th>
                     <!--ShipmentDate-->
                     <!--    <th scope="col" onclick="sortTable(2)">ShipmentDate2</th>-->
                 </tr>
@@ -41,8 +42,8 @@
                     </td>
                     <td>
                         <a href="#modal-2" onclick="editVendor({{.ID}});"
-                            class="js-modal-open btnfortable btn-primary">Edit</a>
-                        <a href="/deletevendor/{{.ID}}" class="btnfortable btn-danger confirmation"
+                            class="js-modal-open btnfortable btn-primary--l">Edit</a>
+                        <a href="/deletevendor/{{.ID}}" class="btnfortable btn-danger--s confirmation"
                             style="margin-left: 10px;">
                             Del</a>
                     </td>
@@ -91,7 +92,7 @@
                     </div>
                     <hr />
                     <div class="noselect block-style main" id="apply-clear-buttons">
-                        <button id="apply" class="btn btn-primary btn-sm apply-clear-buttons">
+                        <button id="apply" class="btn btn-primary--l btn-sm apply-clear-buttons">
                             Отправить данные</button>
                         <button id="clear-form" class="btn btn-light btn-sm apply-clear-buttons">
                             Очистить форму
