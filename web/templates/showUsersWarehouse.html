@@ -14,8 +14,8 @@
         <br>
         <table id="myTable" onload="alternate('thetable')" class="tableexport">
             <caption style="color: white; font-size: 22px; padding-bottom: 10px;">Сотрудники склада</caption>
-            <button onclick="exportTableToCSV('export_shipment_sap.csv')"
-                style="margin-left:0px; width: 300px;">Экспортировать таблицу в csv файл</button>
+            <button onclick="exportTableToCSV('export.csv')" style="margin-left:0px; width: 300px;">Экспортировать
+                таблицу в csv файл</button>
             <thead>
                 <tr id="fontsize-showinspection">
                     <th scope="col" onclick="sortTable(0)">№ ID</th>
@@ -62,10 +62,10 @@
                     <td>
                         <!-- <a href="/updateuserquality/{{.ID}}" class="btnfortable btn-primary">Edit </a>-->
                         <a href="#modal-6" onclick="editUserWarehouse({{.ID}});"
-                            class="js-modal-open btnfortable btn-primary--l">Edit</a>
+                            class="js-modal-open btnfortable btn-primary--l">Править</a>
                         <a href="/deleteuserwarehouse/{{.ID}}" class="btnfortable btn-danger--s confirmation"
                             style="margin-left: 10px;">
-                            Del</a>
+                            Удалить</a>
                     </td>
                 </tr>
                 {{ end}}
@@ -82,8 +82,8 @@
         <br>
         <table id="myTable" onload="alternate('thetable')" class="tableexport">
             <caption style="color: white; font-size: 22px; padding-bottom: 10px;">Сотрудники склада</caption>
-            <button onclick="exportTableToCSV('export_shipment_sap.csv')"
-                style="margin-left:0px; width: 300px;">Экспортировать таблицу в csv файл</button>
+            <button onclick="exportTableToCSV('export.csv')" style="margin-left:0px; width: 300px;">Экспортировать
+                таблицу в csv файл</button>
             <thead>
                 <tr id="fontsize-showinspection">
                     <th scope="col" onclick="sortTable(0)">№ ID</th>
@@ -128,10 +128,10 @@
                     </td>
                     <td>
                         <a href="#modal-6" onclick="editUserWarehouse({{.ID}});"
-                            class="js-modal-open btnfortable btn-primary--l">Edit</a>
+                            class="js-modal-open btnfortable btn-primary--l">Править</a>
                         <a href="/deleteuserwarehouse/{{.ID}}" class="btnfortable btn-danger--s confirmation"
                             style="margin-left: 10px;">
-                            Del</a>
+                            Удалить</a>
                     </td>
                 </tr>
                 {{ end}}
@@ -154,7 +154,7 @@
                 <div class="modal__dialog-body">
                 </div>
                 <div class="modal__dialog-footer">
-                    <button class="js-modal-close modal__dialog-footer-close-btn">Close</button>
+                    <button class="js-modal-close modal__dialog-footer-close-btn">Закрыть</button>
                 </div>
 
             </div>
@@ -188,7 +188,7 @@
 
                 </div>
                 <div class="modal__dialog-footer">
-                    <button class="js-modal-close modal__dialog-footer-close-btn">Close</button>
+                    <button class="js-modal-close modal__dialog-footer-close-btn">Закрыть</button>
                 </div>
             </div>
         </div>
