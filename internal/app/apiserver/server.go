@@ -775,7 +775,7 @@ func (s *Server) handleSessionsCreate() http.HandlerFunc {
 		//	http.Error(w, err.Error(), 400)
 		//	return
 		//}
-		http.Redirect(w, r, "/main", http.StatusFound)
+		http.Redirect(w, r, "/", http.StatusFound)
 	}
 }
 
