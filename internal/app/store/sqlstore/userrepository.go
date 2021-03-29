@@ -98,6 +98,10 @@ func (r *UserRepository) FindByEmail(email string, tabel string) (*model.User, e
 }
 
 func (r *UserRepository) UpdatePass(s *model.User) error {
+	tx, err := r.store.db.Begin()
+	if err != nil {
+		return err
+	}
 	if err := s.Validate(); err != nil {
 		return err
 	}
@@ -105,16 +109,17 @@ func (r *UserRepository) UpdatePass(s *model.User) error {
 	if err := s.BeforCreate(); err != nil {
 		return err
 	}
-	_, err := r.store.db.Exec(
+	_, errTx := tx.Exec(
 		"UPDATE users SET encrypted_password = $1 WHERE email = $2",
 		s.EncryptedPassword,
 		s.Email,
 	//	s.Tabel,
 	)
-	if err != nil {
+	if errTx != nil {
+		tx.Rollback()
 		panic(err)
 	}
-	return nil
+	return tx.Commit()
 }
 
 // SuperIngenerQuality

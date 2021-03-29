@@ -4,6 +4,8 @@ import (
 
 	//	"fmt"
 	"net/http"
+	"time"
+
 	//	"os"
 
 	"github.com/eugenefoxx/http-rest-api-starline/internal/app/store/sqlstore"
@@ -29,9 +31,17 @@ func Start(config *Config) error {
 	//srv := newServer(store, sessionStore, html)
 	srv := newServer(store, sessionStore)
 
+	srvv := &http.Server{
+		Addr: config.BindAddr,
+		// Good practice to set timeouts to avoid Slowloris attacks.
+		WriteTimeout: time.Second * 15,
+		ReadTimeout:  time.Second * 15,
+		IdleTimeout:  time.Second * 60,
+	}
+
 	//	return http.ListenAndServe(config.BindAddr, srv)
 	// http.Handle("/resources/", http.StripPrefix("/resources", http.FileServer(http.Dir("./web/images"))))
-	return http.ListenAndServe(config.BindAddr, srv)
+	return http.ListenAndServe(srvv.Addr, srv)
 }
 
 func newDB(databaseURL string) (*sqlx.DB, error) {

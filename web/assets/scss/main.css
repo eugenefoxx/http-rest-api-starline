@@ -1227,12 +1227,14 @@ p {
       -ms-flex-align: start;
           align-items: flex-start;
   padding-left: 2px;
+  padding-right: 300px;
   margin-right: 0px;
   margin-top: 20px;
 }
 
 .columninspection2 {
-  padding-left: 1000px;
+  padding-left: 500px;
+  padding-right: 300px;
 }
 
 .link {

@@ -49,6 +49,7 @@ type Server struct {
 	sessionStore sessions.Store
 	database     *sqlx.DB
 	//	html         string
+
 }
 
 func init() {
@@ -63,7 +64,6 @@ func newServer(store store.Store, sessionStore sessions.Store) *Server {
 		logger:       logrus.New(),
 		store:        store,
 		sessionStore: sessionStore,
-		//	html:         html,
 	}
 
 	s.configureRouter()

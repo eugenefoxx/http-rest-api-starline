@@ -34,11 +34,11 @@ var rowsAmount = 50;
 var finalData = [];
 var labels = ["email", "Пароль", "Имя", "Фамилия", "Роль", "Табель"];
 var roles = [
-    {
+/*{
         
         id: 'Выберите позицию',
         title: 'Выберите позицию'
-    },
+    },*/
     {
         id: 'старший кладовщик склада',
         title: 'старший кладовщик склада'
@@ -64,10 +64,17 @@ function createForm() {
             element.placeholder = labels[i];
         }
 
-        if (formElementsTypes[i] === 'select' && formElementsIds[i] === 'role') {
-            roles.forEach((role) => {
-                element.innerHTML += `<option value="${role.id}">${role.title}</option>`;
-            });
+        if (formElementsTypes[i] === 'select' && formElementsIds[i] === 'role') { // && formElementsTypes[i] === 'required'
+         //   if (formElementsTypes[i] === 'label') {
+         //     roles.forEach((label) => {
+         //           element.innerHTML += `<option label="TTTTTT"</option>`;
+                    roles.forEach((role) => {
+                
+                        element.innerHTML += `<option value="${role.id}">${role.title}</option>`;
+                    });
+         //       });
+            
+        //}
         }
 
         form.appendChild(element);

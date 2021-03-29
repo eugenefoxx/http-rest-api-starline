@@ -9,6 +9,7 @@ type Config struct {
 	DatabaseURL string `toml:"database_url"`
 	SessionKey  string `toml:"session_key"`
 	//	HTML        string `toml:"html"`
+
 }
 
 // NewConfig ...
