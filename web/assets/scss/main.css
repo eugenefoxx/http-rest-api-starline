@@ -1397,3 +1397,9 @@ p {
   -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
           box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
 }
+
+.tableInfo {
+  background-color: #e6e8eb;
+  border-radius: 5%;
+  width: 300px;
+}

@@ -1,7 +1,7 @@
-function init() {
+function initAccept() {
     resetForms();
     createForm();
-
+    
     document.addEventListener(
         "DOMContentLoaded",
         function () {
@@ -15,7 +15,7 @@ function init() {
 //global variables
 //
 //
-
+debugger;
 var mainDiv = document.getElementById("form"); //ref to main div with forms
 
 //attributes for form fields, they will be added during the creation of forms
@@ -42,6 +42,7 @@ function createForm() {
     formAllowedIdsArr = formAllowedIdsArr.slice(1);
     mainDiv.appendChild(form);
     for (var i = 0; i < formElementsTypes.length; i++) {
+        
         var element = document.createElement(formElementsTypes[i]);
         element.id = `${formElementsIds[i]}-${form.id}`;
         element.className = formElementsClassNames[i].concat(" ", "fields-style");
@@ -155,16 +156,28 @@ function checkCanAddValueOnContext(e) {
     var numberToCheck = checkValue(e.value);
     var result = true;
 
+    var table = document.getElementById('thetable');
+    let rows = table.querySelectorAll('tr');
+    let check = e.value;
+    let check2 = check.toLowerCase();
+
+    for (var i = 0; i < rows.length; i++) {
+        var fullname = rows[i].querySelectorAll('td');
+    fullname = fullname[1].innerHTML.toLowerCase();
+    let status = rows[i].querySelectorAll('td');
+    status = status[10].innerHTML.toUpperCase();
     if (
-        !(regexp.test(e.value) || regexp2.test(e.value) )
+        !(regexp.test(e.value) || regexp2.test(e.value) ) || (check2 == fullname)
         || numberToCheck > 1
     ) {
+        if (status == 'OK' || status == 'NG') {
         result = false;
     } else {
         result = true;
     }
-
+    }
     return result;
+}
 }
 
 // add or remove error message
@@ -267,10 +280,12 @@ function sendData() {
     if (dataToSend != "[]") {
         var xhr = new XMLHttpRequest();
         //   xhr.open("POST", "http://10.1.20.110:3001/ininspection", true);
-        xhr.open("POST", "http://localhost:3001/ininspection", true);
+       // xhr.open("POST", "http://localhost:3001/ininspection", true);
+        xhr.open("POST", "http://*", true);
         xhr.setRequestHeader("Content-Type", "application/json");
 
         xhr.send(dataToSend);
+        console.log(dataToSend);
         xhr.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
                 //mainDiv.innerHTML = drawSuccessMessage();
