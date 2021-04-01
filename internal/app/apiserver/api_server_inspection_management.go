@@ -613,6 +613,12 @@ func (s *Server) PageInspection() http.HandlerFunc {
 			return
 		}
 
+		listVendor, err := s.store.Vendor().ListVendor()
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
 		groups := map[string]interface{}{
 			"TitleDOC": "Список ВК",
 			"User":     user.LastName,
@@ -627,6 +633,7 @@ func (s *Server) PageInspection() http.HandlerFunc {
 			"SuperIngenerQuality":  SuperIngenerQuality,
 			"SuperIngenerQuality2": SuperIngenerQuality2,
 			"GET":                  get,
+			"ListVendor":           listVendor,
 			"CountTotal":           countTotal,
 			"HoldInspection":       holdInspection,
 			"NotVerifyComponents":  notVerifyComponents,

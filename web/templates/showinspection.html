@@ -9,7 +9,11 @@
         {{ if eq .SuperIngenerQuality2 true}}
         <div class="wrap2">
             <div class="columninspection1">
-                <a href="#modal-1" class="js-modal-open link button button3">ОТГРУЗКА НА ВК</a>
+                <ul>
+                    <li><a href="#modal-1" class="js-modal-open link button button3">ОТГРУЗКА НА ВК</a></li>
+                    <li><a href="#modal-8" class="js-modal-open link button button3">КАТАЛОГ ДЕБИТОРОВ</a></li>
+                </ul>
+                <!--    <a href="#modal-1" class="js-modal-open link button button3">ОТГРУЗКА НА ВК</a>-->
                 <br>
                 <div class="btn-box">
                     <button type="button" class="btn btn-default" style="width: 300px;"
@@ -17,6 +21,7 @@
                         Обновить страницу
                     </button>
                 </div>
+                <!--    <a href="#modal-8" class="js-modal-open link button button3">Каталог дебиторов</a>-->
             </div>
             <div class="columninspection2">
                 <!--style="margin-left:1100px; width: 1000px; margin-top: 0px; font-size: 150%;"-->
@@ -89,7 +94,7 @@
                             <th scope="col" onclick="sortTable(4)">ЕО катушки</th>
                             <th scope="col" onclick="sortTable(5)">Дата пр-ва</th>
                             <th scope="col" onclick="sortTable(6)">Имя дебитора</th>
-                            <th scope="col" onclick="sortTable(7)">Статус отгружено</th>
+                            <th scope="col" onclick="sortTable(7)">Статус трансфера</th>
                             <th scope="col" onclick="sortTable(8)">Кем отгружено</th>
                             <th scope="col" onclick="sortTable(9)">Статус отметки проверки</th>
                             <th scope="col" onclick="sortTable(10)">Примечание</th>
@@ -172,6 +177,11 @@
         {{ else if eq .IngenerQuality true}}
         <div class="wrap2">
             <div class="columninspection1">
+                <ul>
+                    <!--    <li><a href="#modal-1" class="js-modal-open link button button3">ОТГРУЗКА НА ВК</a></li>-->
+                    <li><a href="#modal-8" class="js-modal-open link button button3">КАТАЛОГ ДЕБИТОРОВ</a></li>
+                </ul>
+                <!--    <a href="#modal-1" class="js-modal-open link button button3">ОТГРУЗКА НА ВК</a>-->
                 <br>
                 <div class="btn-box">
                     <button type="button" class="btn btn-default" style="width: 300px;"
@@ -247,7 +257,7 @@
                             <th scope="col" onclick="sortTable(4)">ЕО катушки</th>
                             <th scope="col" onclick="sortTable(5)">Дата пр-ва</th>
                             <th scope="col" onclick="sortTable(6)">Имя дебитора</th>
-                            <th scope="col" onclick="sortTable(7)">Статус отгружено</th>
+                            <th scope="col" onclick="sortTable(7)">Статус трансфера</th>
                             <th scope="col" onclick="sortTable(8)">Кем отгружено</th>
                             <th scope="col" onclick="sortTable(9)">Статус отметки проверки</th>
                             <th scope="col" onclick="sortTable(10)">Примечание</th>
@@ -326,12 +336,17 @@
         {{ else if eq .Inspector true}}
         <div class="wrap2">
             <div class="columninspection1">
-                <p>
+                <!--    <p>
                     "Ты спросишь: - что такое качество?
                     Как объяснить тебе попроще?
                     Послушай соловья чудачество,
                     когда взахлеб поет он в роще…"
-                </p>
+                </p>-->
+                <ul>
+                    <!--    <li><a href="#modal-1" class="js-modal-open link button button3">ОТГРУЗКА НА ВК</a></li>-->
+                    <li><a href="#modal-8" class="js-modal-open link button button3">КАТАЛОГ ДЕБИТОРОВ</a></li>
+                </ul>
+                <!--    <a href="#modal-1" class="js-modal-open link button button3">ОТГРУЗКА НА ВК</a>-->
                 <br>
                 <div class="btn-box">
                     <button type="button" class="btn btn-default" style="width: 300px;"
@@ -406,7 +421,7 @@
                         <th scope="col" onclick="sortTable(4)">ЕО катушки</th>
                         <th scope="col" onclick="sortTable(5)">Дата пр-ва</th>
                         <th scope="col" onclick="sortTable(6)">Имя дебитора</th>
-                        <th scope="col" onclick="sortTable(7)">Статус отгружено</th>
+                        <th scope="col" onclick="sortTable(7)">Статус трансфера</th>
                         <th scope="col" onclick="sortTable(8)">Кем отгружено</th>
                         <th scope="col" onclick="sortTable(9)">Статус отметки проверки</th>
                         <th scope="col" onclick="sortTable(10)">Примечание</th>
@@ -485,7 +500,12 @@
     {{ else if eq .WarehouseManager true}}
     <div class="wrap2">
         <div class="columninspection1">
-            <a href="#modal-1" class="js-modal-open link button button3">ОТГРУЗКА НА ВК</a>
+            <ul style="width:660px;">
+                <li><a href="#modal-1" class="js-modal-open link button button3">ОТГРУЗКА НА ВК</a></li>
+                <li><a href="#modal-7" class="js-modal-open link button button3">ПРИЕМКА С ВК</a></li>
+                <li><a href="#modal-8" class="js-modal-open link button button3">КАТАЛОГ ДЕБИТОРОВ</a></li>
+            </ul>
+            <!--    <a href="#modal-1" class="js-modal-open link button button3">ОТГРУЗКА НА ВК</a>-->
             <br>
             <div class="btn-box">
                 <button type="button" class="btn btn-default" style="width: 300px;"
@@ -564,7 +584,7 @@
                         <th scope="col" onclick="sortTable(5)">Нач кол-во</th>
                         <th scope="col" onclick="sortTable(6)">Дата пр-ва</th>
                         <th scope="col" onclick="sortTable(7)">Имя дебитора</th>
-                        <th scope="col" onclick="sortTable(8)">Статус отгружено</th>
+                        <th scope="col" onclick="sortTable(8)">Статус трансфера</th>
                         <th scope="col" onclick="sortTable(9)">Кем отгружено</th>
                         <th scope="col" onclick="sortTable(10)">Статус отметки проверки</th>
                         <th scope="col" onclick="sortTable(11)">Примечание</th>
@@ -675,9 +695,16 @@
     {{ else if eq .StockkeeperWH true}}
     <div class="wrap2">
         <div class="columninspection1">
-            <a href="#modal-1" class="js-modal-open link button button3">ОТГРУЗКА НА ВК</a>
-            <a href="#modal-7" class="js-modal-open link button button3">ПРИЕМКА С ВК</a>
+            <ul style="width: 660px;">
+                <li><a href="#modal-1" class="js-modal-open link button button3">ОТГРУЗКА НА ВК</a></li>
+                <li><a href="#modal-7" class="js-modal-open link button button3">ПРИЕМКА С ВК</a></li>
+                <li><a href="#modal-8" class="js-modal-open link button button3">КАТАЛОГ ДЕБИТОРОВ</a></li>
+            </ul>
+            <!--    <a href="#modal-1" class="js-modal-open link button button3">ОТГРУЗКА НА ВК</a>-->
             <br>
+            <!--    <a href="#modal-1" class="js-modal-open link button button3">ОТГРУЗКА НА ВК</a>
+            <a href="#modal-7" class="js-modal-open link button button3">ПРИЕМКА С ВК</a>
+            <br>-->
             <div class="btn-box">
                 <button type="button" class="btn btn-default" style="width: 300px;"
                     onclick="redirectTostatusinspection();">
@@ -755,7 +782,7 @@
                         <th scope="col" onclick="sortTable(5)">Нач кол-во</th>
                         <th scope="col" onclick="sortTable(6)">Дата пр-ва</th>
                         <th scope="col" onclick="sortTable(7)">Имя дебитора</th>
-                        <th scope="col" onclick="sortTable(8)">Статус отгружено</th>
+                        <th scope="col" onclick="sortTable(8)">Статус трансфера</th>
                         <th scope="col" onclick="sortTable(9)">Кем отгружено</th>
                         <th scope="col" onclick="sortTable(10)">Статус отметки проверки</th>
                         <th scope="col" onclick="sortTable(11)">Примечание</th>
@@ -967,6 +994,64 @@
                 </div>
             </div>
             <div class="modal__dialog-body">
+            </div>
+            <div class="modal__dialog-footer">
+                <button class="js-modal-close modal__dialog-footer-close-btn">Закрыть</button>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal modal--l" id="modal-8">
+        <div class="modal__dialog">
+            <div class="modal__dialog-header">
+                <div class="modal__dialog-header-content">
+                    <h3>Каталог дебиторов</h3>
+                </div>
+                <div class="modal__dialog-header-close">
+                    <button class="js-modal-close modal__dialog-header-close-btn">
+                        <span>&times;</span>
+                    </button>
+                </div>
+            </div>
+            <div class="modal__dialog-body">
+                <input type="text" id="debitorModalInput" onkeyup="searchDebitorModalWindow()" placeholder="Поиск ..."
+                    title="Type in a name" style="height: 40px;">
+                <br>
+                <table id="debitorModalTable" onload="alternate('thetable')">
+                    <caption style="color: white; font-size: 22px; padding-bottom: 10px;">Список поставщиков</caption>
+
+                    <thead>
+                        <tr>
+                            <!--<th>ID</th>-->
+                            <th scope="col" onclick="sortDebitorModalTable(0)">№ ID</th>
+                            <!--Material-->
+                            <th scope="col" onclick="sortDebitorModalTable(1)">Код дебитора</th>
+                            <!--Qty-->
+                            <th scope="col" onclick="sortDebitorModalTable(2)">Наименование</th>
+                            <!--    <th scope="col" onclick="sortTable(3)">Редактирование</th>-->
+                            <!--ShipmentDate-->
+                            <!--    <th scope="col" onclick="sortTable(2)">ShipmentDate2</th>-->
+                        </tr>
+                    </thead>
+                    <tbody id="thetable">
+                        {{ range .ListVendor}}
+                        <tr class="header">
+                            <!--<td>{{.ID }}</td>-->
+                            <td>
+                                {{.ID}}
+                            </td>
+                            <td>
+                                {{.CodeDebitor}}
+                            </td>
+                            <td>
+                                {{.NameDebitor}}
+                            </td>
+
+                        </tr>
+                        {{ end}}
+                    </tbody>
+                </table>
             </div>
             <div class="modal__dialog-footer">
                 <button class="js-modal-close modal__dialog-footer-close-btn">Закрыть</button>
