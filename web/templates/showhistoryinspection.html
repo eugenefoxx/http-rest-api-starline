@@ -17,39 +17,39 @@
                 таблицу в csv файл</button>
             <thead>
                 <tr id="fontsize-showinspection">
-                    <th scope="col" onclick="sortTable(0)" style="visibility: hidden;">№ ID</th>
+                    <!--    <th scope="col" onclick="sortTable(0)" style="visibility: hidden;">№ ID</th>-->
                     <!--<th>ID</th>-->
-                    <th scope="col" onclick="sortTable(1)">QR-код</th>
+                    <th scope="col" onclick="sortTable(0)">QR-код</th>
                     <!--Material-->
-                    <th scope="col" onclick="sortTable(2)">SAP</th>
+                    <th scope="col" onclick="sortTable(1)">SAP</th>
                     <!--Qty-->
-                    <th scope="col" onclick="sortTable(3)">Партия</th>
+                    <th scope="col" onclick="sortTable(2)">Партия</th>
                     <!--ShipmentDate-->
                     <!--    <th scope="col" onclick="sortTable(2)">ShipmentDate2</th>-->
-                    <th scope="col" onclick="sortTable(4)">ЕО катушки</th>
-                    <th scope="col" onclick="sortTable(5)">Дата пр-ва</th>
-                    <th scope="col" onclick="sortTable(6)">Имя дебитора</th>
-                    <th scope="col" onclick="sortTable(7)">Статус трансфера</th>
-                    <th scope="col" onclick="sortTable(8)">Кем отгружено</th>
-                    <th scope="col" onclick="sortTable(9)">Статус отметки проверки</th>
-                    <th scope="col" onclick="sortTable(10)">Примечание</th>
-                    <th scope="col" onclick="sortTable(11)">Кем отред-но</th>
-                    <th scope="col" onclick="sortTable(12)">Дата ред-я</th>
-                    <th scope="col" onclick="sortTable(13)">Время ред-я</th>
-                    <th scope="col" onclick="sortTable(14)">Дата отгрузки на ВК</th>
-                    <th scope="col" onclick="sortTable(15)">Время отгрузки на ВК</th>
-                    <th scope="col" onclick="sortTable(16)">Принял на склад</th>
-                    <th scope="col" onclick="sortTable(17)">Дата приема на склад</th>
-                    <th scope="col" onclick="sortTable(18)">Время приема на склад</th>
+                    <th scope="col" onclick="sortTable(3)">ЕО катушки</th>
+                    <th scope="col" onclick="sortTable(4)">Дата пр-ва</th>
+                    <th scope="col" onclick="sortTable(5)">Имя дебитора</th>
+                    <th scope="col" onclick="sortTable(6)">Статус трансфера</th>
+                    <th scope="col" onclick="sortTable(7)">Кем отгружено</th>
+                    <th scope="col" onclick="sortTable(8)">Статус отметки проверки</th>
+                    <th scope="col" onclick="sortTable(9)">Примечание</th>
+                    <th scope="col" onclick="sortTable(10)">Кем отред-но</th>
+                    <th scope="col" onclick="sortTable(11)">Дата ред-я</th>
+                    <th scope="col" onclick="sortTable(12)">Время ред-я</th>
+                    <th scope="col" onclick="sortTable(13)">Дата отгрузки на ВК</th>
+                    <th scope="col" onclick="sortTable(14)">Время отгрузки на ВК</th>
+                    <th scope="col" onclick="sortTable(15)">Принял на склад</th>
+                    <th scope="col" onclick="sortTable(16)">Дата приема на склад</th>
+                    <th scope="col" onclick="sortTable(17)">Время приема на склад</th>
                 </tr>
             </thead>
             <tbody id="thetable">
                 {{ range .GET}}
                 <tr class="header {{.Status}}">
                     <!--<td>{{.ID }}</td>-->
-                    <td style="visibility: hidden;">
+                    <!--    <td style="visibility: hidden;">
                         {{.ID}}
-                    </td>
+                    </td>-->
                     <td style="font-size: 10%;">
                         {{.IdMaterial}}
                     </td>
@@ -121,39 +121,39 @@
                 таблицу в csv файл</button>
             <thead>
                 <tr id="fontsize-showinspection">
-                    <th scope="col" onclick="sortTable(0)" style="visibility: hidden;">№ ID</th>
+                    <!--    <th scope="col" onclick="sortTable(0)" style="visibility: hidden;">№ ID</th>-->
                     <!--<th>ID</th>-->
-                    <th scope="col" onclick="sortTable(1)">QR-код</th>
+                    <th scope="col" onclick="sortTable(0)">QR-код</th>
                     <!--Material-->
-                    <th scope="col" onclick="sortTable(2)">SAP</th>
+                    <th scope="col" onclick="sortTable(1)">SAP</th>
                     <!--Qty-->
-                    <th scope="col" onclick="sortTable(3)">Партия</th>
+                    <th scope="col" onclick="sortTable(2)">Партия</th>
                     <!--ShipmentDate-->
                     <!--    <th scope="col" onclick="sortTable(2)">ShipmentDate2</th>-->
-                    <th scope="col" onclick="sortTable(4)">ЕО катушки</th>
-                    <th scope="col" onclick="sortTable(5)">Дата пр-ва</th>
-                    <th scope="col" onclick="sortTable(6)">Имя дебитора</th>
-                    <th scope="col" onclick="sortTable(7)">Статус трансфера</th>
-                    <th scope="col" onclick="sortTable(8)">Кем отгружено</th>
-                    <th scope="col" onclick="sortTable(9)">Статус отметки проверки</th>
-                    <th scope="col" onclick="sortTable(10)">Примечание</th>
-                    <th scope="col" onclick="sortTable(11)">Кем отред-но</th>
-                    <th scope="col" onclick="sortTable(12)">Дата ред-я</th>
-                    <th scope="col" onclick="sortTable(13)">Время ред-я</th>
-                    <th scope="col" onclick="sortTable(14)">Дата отгрузки на ВК</th>
-                    <th scope="col" onclick="sortTable(15)">Время отгрузки на ВК</th>
-                    <th scope="col" onclick="sortTable(16)">Принял на склад</th>
-                    <th scope="col" onclick="sortTable(17)">Дата приема на склад</th>
-                    <th scope="col" onclick="sortTable(18)">Время приема на склад</th>
+                    <th scope="col" onclick="sortTable(3)">ЕО катушки</th>
+                    <th scope="col" onclick="sortTable(4)">Дата пр-ва</th>
+                    <th scope="col" onclick="sortTable(5)">Имя дебитора</th>
+                    <th scope="col" onclick="sortTable(6)">Статус трансфера</th>
+                    <th scope="col" onclick="sortTable(7)">Кем отгружено</th>
+                    <th scope="col" onclick="sortTable(8)">Статус отметки проверки</th>
+                    <th scope="col" onclick="sortTable(9)">Примечание</th>
+                    <th scope="col" onclick="sortTable(10)">Кем отред-но</th>
+                    <th scope="col" onclick="sortTable(11)">Дата ред-я</th>
+                    <th scope="col" onclick="sortTable(12)">Время ред-я</th>
+                    <th scope="col" onclick="sortTable(13)">Дата отгрузки на ВК</th>
+                    <th scope="col" onclick="sortTable(14)">Время отгрузки на ВК</th>
+                    <th scope="col" onclick="sortTable(15)">Принял на склад</th>
+                    <th scope="col" onclick="sortTable(16)">Дата приема на склад</th>
+                    <th scope="col" onclick="sortTable(17)">Время приема на склад</th>
                 </tr>
             </thead>
             <tbody id="thetable">
                 {{ range .GET}}
                 <tr class="header {{.Status}}">
                     <!--<td>{{.ID }}</td>-->
-                    <td style="visibility: hidden;">
+                    <!--    <td style="visibility: hidden;">
                         {{.ID}}
-                    </td>
+                    </td>-->
                     <td style="font-size: 10%;">
                         {{.IdMaterial}}
                     </td>
@@ -225,39 +225,39 @@
                 таблицу в csv файл</button>
             <thead>
                 <tr id="fontsize-showinspection">
-                    <th scope="col" onclick="sortTable(0)" style="visibility: hidden;">№ ID</th>
+                    <!--    <th scope="col" onclick="sortTable(0)" style="visibility: hidden;">№ ID</th>-->
                     <!--<th>ID</th>-->
-                    <th scope="col" onclick="sortTable(1)">QR-код</th>
+                    <th scope="col" onclick="sortTable(0)">QR-код</th>
                     <!--Material-->
-                    <th scope="col" onclick="sortTable(2)">SAP</th>
+                    <th scope="col" onclick="sortTable(1)">SAP</th>
                     <!--Qty-->
-                    <th scope="col" onclick="sortTable(3)">Партия</th>
+                    <th scope="col" onclick="sortTable(2)">Партия</th>
                     <!--ShipmentDate-->
                     <!--    <th scope="col" onclick="sortTable(2)">ShipmentDate2</th>-->
-                    <th scope="col" onclick="sortTable(4)">ЕО катушки</th>
-                    <th scope="col" onclick="sortTable(5)">Дата пр-ва</th>
-                    <th scope="col" onclick="sortTable(6)">Имя дебитора</th>
-                    <th scope="col" onclick="sortTable(7)">Статус трансфера</th>
-                    <th scope="col" onclick="sortTable(8)">Кем отгружено</th>
-                    <th scope="col" onclick="sortTable(9)">Статус отметки проверки</th>
-                    <th scope="col" onclick="sortTable(10)">Примечание</th>
-                    <th scope="col" onclick="sortTable(11)">Кем отред-но</th>
-                    <th scope="col" onclick="sortTable(12)">Дата ред-я</th>
-                    <th scope="col" onclick="sortTable(13)">Время ред-я</th>
-                    <th scope="col" onclick="sortTable(14)">Дата отгрузки на ВК</th>
-                    <th scope="col" onclick="sortTable(15)">Время отгрузки на ВК</th>
-                    <th scope="col" onclick="sortTable(16)">Принял на склад</th>
-                    <th scope="col" onclick="sortTable(17)">Дата приема на склад</th>
-                    <th scope="col" onclick="sortTable(18)">Время приема на склад</th>
+                    <th scope="col" onclick="sortTable(3)">ЕО катушки</th>
+                    <th scope="col" onclick="sortTable(4)">Дата пр-ва</th>
+                    <th scope="col" onclick="sortTable(5)">Имя дебитора</th>
+                    <th scope="col" onclick="sortTable(6)">Статус трансфера</th>
+                    <th scope="col" onclick="sortTable(7)">Кем отгружено</th>
+                    <th scope="col" onclick="sortTable(8)">Статус отметки проверки</th>
+                    <th scope="col" onclick="sortTable(9)">Примечание</th>
+                    <th scope="col" onclick="sortTable(10)">Кем отред-но</th>
+                    <th scope="col" onclick="sortTable(11)">Дата ред-я</th>
+                    <th scope="col" onclick="sortTable(12)">Время ред-я</th>
+                    <th scope="col" onclick="sortTable(13)">Дата отгрузки на ВК</th>
+                    <th scope="col" onclick="sortTable(14)">Время отгрузки на ВК</th>
+                    <th scope="col" onclick="sortTable(15)">Принял на склад</th>
+                    <th scope="col" onclick="sortTable(16)">Дата приема на склад</th>
+                    <th scope="col" onclick="sortTable(17)">Время приема на склад</th>
                 </tr>
             </thead>
             <tbody id="thetable">
                 {{ range .GET}}
                 <tr class="header {{.Status}}">
                     <!--<td>{{.ID }}</td>-->
-                    <td style="visibility: hidden;">
+                    <!--    <td style="visibility: hidden;">
                         {{.ID}}
-                    </td>
+                    </td>-->
                     <td style="font-size: 10%;">
                         {{.IdMaterial}}
                     </td>
@@ -327,39 +327,39 @@
                 таблицу в csv файл</button>
             <thead>
                 <tr id="fontsize-showinspection">
-                    <th scope="col" onclick="sortTable(0)" style="visibility: hidden;">№ ID</th>
+                    <!--    <th scope="col" onclick="sortTable(0)" style="visibility: hidden;">№ ID</th>-->
                     <!--<th>ID</th>-->
-                    <th scope="col" onclick="sortTable(1)">QR-код</th>
+                    <th scope="col" onclick="sortTable(0)">QR-код</th>
                     <!--Material-->
-                    <th scope="col" onclick="sortTable(2)">SAP</th>
+                    <th scope="col" onclick="sortTable(1)">SAP</th>
                     <!--Qty-->
-                    <th scope="col" onclick="sortTable(3)">Партия</th>
+                    <th scope="col" onclick="sortTable(2)">Партия</th>
                     <!--ShipmentDate-->
                     <!--    <th scope="col" onclick="sortTable(2)">ShipmentDate2</th>-->
-                    <th scope="col" onclick="sortTable(4)">ЕО катушки</th>
-                    <th scope="col" onclick="sortTable(5)">Дата пр-ва</th>
-                    <th scope="col" onclick="sortTable(6)">Имя дебитора</th>
-                    <th scope="col" onclick="sortTable(7)">Статус трансфера</th>
-                    <th scope="col" onclick="sortTable(8)">Кем отгружено</th>
-                    <th scope="col" onclick="sortTable(9)">Статус отметки проверки</th>
-                    <th scope="col" onclick="sortTable(10)">Примечание</th>
-                    <th scope="col" onclick="sortTable(11)">Кем отред-но</th>
-                    <th scope="col" onclick="sortTable(12)">Дата ред-я</th>
-                    <th scope="col" onclick="sortTable(13)">Время ред-я</th>
-                    <th scope="col" onclick="sortTable(14)">Дата отгрузки на ВК</th>
-                    <th scope="col" onclick="sortTable(15)">Время отгрузки на ВК</th>
-                    <th scope="col" onclick="sortTable(16)">Принял на склад</th>
-                    <th scope="col" onclick="sortTable(17)">Дата приема на склад</th>
-                    <th scope="col" onclick="sortTable(18)">Время приема на склад</th>
+                    <th scope="col" onclick="sortTable(3)">ЕО катушки</th>
+                    <th scope="col" onclick="sortTable(4)">Дата пр-ва</th>
+                    <th scope="col" onclick="sortTable(5)">Имя дебитора</th>
+                    <th scope="col" onclick="sortTable(6)">Статус трансфера</th>
+                    <th scope="col" onclick="sortTable(7)">Кем отгружено</th>
+                    <th scope="col" onclick="sortTable(8)">Статус отметки проверки</th>
+                    <th scope="col" onclick="sortTable(9)">Примечание</th>
+                    <th scope="col" onclick="sortTable(10)">Кем отред-но</th>
+                    <th scope="col" onclick="sortTable(11)">Дата ред-я</th>
+                    <th scope="col" onclick="sortTable(12)">Время ред-я</th>
+                    <th scope="col" onclick="sortTable(13)">Дата отгрузки на ВК</th>
+                    <th scope="col" onclick="sortTable(14)">Время отгрузки на ВК</th>
+                    <th scope="col" onclick="sortTable(15)">Принял на склад</th>
+                    <th scope="col" onclick="sortTable(16)">Дата приема на склад</th>
+                    <th scope="col" onclick="sortTable(17)">Время приема на склад</th>
                 </tr>
             </thead>
             <tbody id="thetable">
                 {{ range .GET}}
                 <tr class="header {{.Status}}">
                     <!--<td>{{.ID }}</td>-->
-                    <td style="visibility: hidden;">
+                    <!--    <td style="visibility: hidden;">
                         {{.ID}}
-                    </td>
+                    </td>-->
                     <td style="font-size: 10%;">
                         {{.IdMaterial}}
                     </td>
@@ -430,39 +430,39 @@
                 таблицу в csv файл</button>
             <thead>
                 <tr id="fontsize-showinspection">
-                    <th scope="col" onclick="sortTable(0)" style="visibility: hidden;">№ ID</th>
+                    <!--    <th scope="col" onclick="sortTable(0)" style="visibility: hidden;">№ ID</th>-->
                     <!--<th>ID</th>-->
-                    <th scope="col" onclick="sortTable(1)">QR-код</th>
+                    <th scope="col" onclick="sortTable(0)">QR-код</th>
                     <!--Material-->
-                    <th scope="col" onclick="sortTable(2)">SAP</th>
+                    <th scope="col" onclick="sortTable(1)">SAP</th>
                     <!--Qty-->
-                    <th scope="col" onclick="sortTable(3)">Партия</th>
+                    <th scope="col" onclick="sortTable(2)">Партия</th>
                     <!--ShipmentDate-->
                     <!--    <th scope="col" onclick="sortTable(2)">ShipmentDate2</th>-->
-                    <th scope="col" onclick="sortTable(4)">ЕО катушки</th>
-                    <th scope="col" onclick="sortTable(5)">Дата пр-ва</th>
-                    <th scope="col" onclick="sortTable(6)">Имя дебитора</th>
-                    <th scope="col" onclick="sortTable(7)">Статус трансфера</th>
-                    <th scope="col" onclick="sortTable(8)">Кем отгружено</th>
-                    <th scope="col" onclick="sortTable(9)">Статус отметки проверки</th>
-                    <th scope="col" onclick="sortTable(10)">Примечание</th>
-                    <th scope="col" onclick="sortTable(11)">Кем отред-но</th>
-                    <th scope="col" onclick="sortTable(12)">Дата ред-я</th>
-                    <th scope="col" onclick="sortTable(13)">Время ред-я</th>
-                    <th scope="col" onclick="sortTable(14)">Дата отгрузки на ВК</th>
-                    <th scope="col" onclick="sortTable(15)">Время отгрузки на ВК</th>
-                    <th scope="col" onclick="sortTable(16)">Принял на склад</th>
-                    <th scope="col" onclick="sortTable(17)">Дата приема на склад</th>
-                    <th scope="col" onclick="sortTable(18)">Время приема на склад</th>
+                    <th scope="col" onclick="sortTable(3)">ЕО катушки</th>
+                    <th scope="col" onclick="sortTable(4)">Дата пр-ва</th>
+                    <th scope="col" onclick="sortTable(5)">Имя дебитора</th>
+                    <th scope="col" onclick="sortTable(6)">Статус трансфера</th>
+                    <th scope="col" onclick="sortTable(7)">Кем отгружено</th>
+                    <th scope="col" onclick="sortTable(8)">Статус отметки проверки</th>
+                    <th scope="col" onclick="sortTable(9)">Примечание</th>
+                    <th scope="col" onclick="sortTable(10)">Кем отред-но</th>
+                    <th scope="col" onclick="sortTable(11)">Дата ред-я</th>
+                    <th scope="col" onclick="sortTable(12)">Время ред-я</th>
+                    <th scope="col" onclick="sortTable(13)">Дата отгрузки на ВК</th>
+                    <th scope="col" onclick="sortTable(14)">Время отгрузки на ВК</th>
+                    <th scope="col" onclick="sortTable(15)">Принял на склад</th>
+                    <th scope="col" onclick="sortTable(16)">Дата приема на склад</th>
+                    <th scope="col" onclick="sortTable(17)">Время приема на склад</th>
                 </tr>
             </thead>
             <tbody id="thetable">
                 {{ range .GET}}
                 <tr class="header {{.Status}}">
                     <!--<td>{{.ID }}</td>-->
-                    <td style="visibility: hidden;">
+                    <!--   <td style="visibility: hidden;">
                         {{.ID}}
-                    </td>
+                    </td>-->
                     <td style="font-size: 10%;">
                         {{.IdMaterial}}
                     </td>
@@ -532,39 +532,39 @@
                 таблицу в csv файл</button>
             <thead>
                 <tr id="fontsize-showinspection">
-                    <th scope="col" onclick="sortTable(0)" style="visibility: hidden;">№ ID</th>
+                    <!--    <th scope="col" onclick="sortTable(0)" style="visibility: hidden;">№ ID</th>-->
                     <!--<th>ID</th>-->
-                    <th scope="col" onclick="sortTable(1)">QR-код</th>
+                    <th scope="col" onclick="sortTable(0)">QR-код</th>
                     <!--Material-->
-                    <th scope="col" onclick="sortTable(2)">SAP</th>
+                    <th scope="col" onclick="sortTable(1)">SAP</th>
                     <!--Qty-->
-                    <th scope="col" onclick="sortTable(3)">Партия</th>
+                    <th scope="col" onclick="sortTable(2)">Партия</th>
                     <!--ShipmentDate-->
                     <!--    <th scope="col" onclick="sortTable(2)">ShipmentDate2</th>-->
-                    <th scope="col" onclick="sortTable(4)">ЕО катушки</th>
-                    <th scope="col" onclick="sortTable(5)">Дата пр-ва</th>
-                    <th scope="col" onclick="sortTable(6)">Имя дебитора</th>
-                    <th scope="col" onclick="sortTable(7)">Статус трансфера</th>
-                    <th scope="col" onclick="sortTable(8)">Кем отгружено</th>
-                    <th scope="col" onclick="sortTable(9)">Статус отметки проверки</th>
-                    <th scope="col" onclick="sortTable(10)">Примечание</th>
-                    <th scope="col" onclick="sortTable(11)">Кем отред-но</th>
-                    <th scope="col" onclick="sortTable(12)">Дата ред-я</th>
-                    <th scope="col" onclick="sortTable(13)">Время ред-я</th>
-                    <th scope="col" onclick="sortTable(14)">Дата отгрузки на ВК</th>
-                    <th scope="col" onclick="sortTable(15)">Время отгрузки на ВК</th>
-                    <th scope="col" onclick="sortTable(16)">Принял на склад</th>
-                    <th scope="col" onclick="sortTable(17)">Дата приема на склад</th>
-                    <th scope="col" onclick="sortTable(18)">Время приема на склад</th>
+                    <th scope="col" onclick="sortTable(3)">ЕО катушки</th>
+                    <th scope="col" onclick="sortTable(4)">Дата пр-ва</th>
+                    <th scope="col" onclick="sortTable(5)">Имя дебитора</th>
+                    <th scope="col" onclick="sortTable(6)">Статус трансфера</th>
+                    <th scope="col" onclick="sortTable(7)">Кем отгружено</th>
+                    <th scope="col" onclick="sortTable(8)">Статус отметки проверки</th>
+                    <th scope="col" onclick="sortTable(9)">Примечание</th>
+                    <th scope="col" onclick="sortTable(10)">Кем отред-но</th>
+                    <th scope="col" onclick="sortTable(11)">Дата ред-я</th>
+                    <th scope="col" onclick="sortTable(12)">Время ред-я</th>
+                    <th scope="col" onclick="sortTable(13)">Дата отгрузки на ВК</th>
+                    <th scope="col" onclick="sortTable(14)">Время отгрузки на ВК</th>
+                    <th scope="col" onclick="sortTable(15)">Принял на склад</th>
+                    <th scope="col" onclick="sortTable(16)">Дата приема на склад</th>
+                    <th scope="col" onclick="sortTable(17)">Время приема на склад</th>
                 </tr>
             </thead>
             <tbody id="thetable">
                 {{ range .GET}}
                 <tr class="header {{.Status}}">
                     <!--<td>{{.ID }}</td>-->
-                    <td style="visibility: hidden;">
+                    <!--    <td style="visibility: hidden;">
                         {{.ID}}
-                    </td>
+                    </td>-->
                     <td style="font-size: 10%;">
                         {{.IdMaterial}}
                     </td>
