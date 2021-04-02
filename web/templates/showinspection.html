@@ -113,9 +113,7 @@
                             <!--    <td style="visibility: hidden;">
                                 {{.ID}}
                             </td>-->
-                            <td style="font-size: 10%;">
-                                {{.IdMaterial}}
-                            </td>
+                            <td style="font-size: 10%;" data-material-id="{{.IdMaterial}}">{{.IdMaterial}}</td>
                             <td>
                                 {{.SAP}}
                             </td>
@@ -272,13 +270,7 @@
                     <tbody id="thetable">
                         {{ range .GET}}
                         <tr class="header {{.Status}}">
-                            <!--<td>{{.ID }}</td>-->
-                            <!--    <td style="visibility: hidden;">
-                                {{.ID}}
-                            </td>-->
-                            <td style="font-size: 10%;">
-                                {{.IdMaterial}}
-                            </td>
+                            <td style="font-size: 10%;" data-material-id="{{.IdMaterial}}">{{.IdMaterial}}</td>
                             <td>
                                 {{.SAP}}
                             </td>
@@ -436,13 +428,7 @@
                 <tbody id="thetable">
                     {{ range .GET}}
                     <tr class="header {{.Status}}">
-                        <!--<td>{{.ID }}</td>-->
-                        <!--    <td style="visibility: hidden;">
-                            {{.ID}}
-                        </td>-->
-                        <td style="font-size: 10%;">
-                            {{.IdMaterial}}
-                        </td>
+                        <td style="font-size: 10%;" data-material-id="{{.IdMaterial}}">{{.IdMaterial}}</td>
                         <td>
                             {{.SAP}}
                         </td>
@@ -599,13 +585,7 @@
                 <tbody id="thetable">
                     {{ range .GET}}
                     <tr class="header {{.Status}}">
-                        <!--<td>{{.ID }}</td>-->
-                        <!--    <td style="visibility: hidden;">
-                            {{.ID}}
-                        </td>-->
-                        <td style="font-size: 10%;">
-                            {{.IdMaterial}}
-                        </td>
+                        <td style="font-size: 10%;" data-material-id="{{.IdMaterial}}">{{.IdMaterial}}</td>
                         <td>
                             {{.SAP}}
                         </td>
@@ -801,9 +781,7 @@
                         <!--    <td style="visibility: hidden;">
                             {{.ID}}
                         </td>-->
-                        <td style="font-size: 10%;">
-                            {{.IdMaterial}}
-                        </td>
+                        <td style="font-size: 10%;" data-material-id="{{.IdMaterial}}">{{.IdMaterial}}</td>
                         <td>
                             {{.SAP}}
                         </td>
@@ -941,14 +919,15 @@
                 <!--   <div class="formSendTitle">
                         <h3>Форма отправки катушек на ВК</h3>-->
 
-                <div class="formSendEO" id="form"></div>
+                <div class="formSendEO" id="formAccept"></div>
                 <div>
-                    <button id="add-condition" class="buttonPlus">+</button>
+                    <!--   <input type="text" id="qr-code-value" />-->
+                    <button id="add-conditionAccept" class="buttonPlus">+</button>
                     <hr />
                     <div>
-                        <button id="apply" class="button button4green">
+                        <button id="applyAccept" class="button button4green">
                             Отправить данные</button>
-                        <button id="clear-form" class="button button4red">
+                        <button id="clear-formAccept" class="button button4red">
                             Очистить форму
                         </button>
                     </div>
@@ -1063,8 +1042,8 @@
 
     {{template "footer.html" .}}
     <script src="/assets/js/formininspectionV2.js"></script>
-    <script src="/assets/js/acceptfrominspection.js"></script>
-    <script src="/assets/js/modal.js" type="text/javascript"></script>
+    <!--    <script src="/assets/js/acceptfrominspection.js"></script>-->
+
     <script>
         var table = document.getElementById('myTable'),
             cells = table.getElementsByTagName('td');

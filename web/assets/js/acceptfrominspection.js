@@ -1,13 +1,14 @@
+/*
 function initAccept() {
-    resetForms();
-    createForm();
+    resetFormsAccept();
+    createFormAccept();
     
     document.addEventListener(
         "DOMContentLoaded",
         function () {
-            document.getElementById("add-condition").onclick = addFormButton; //addForm
-            document.getElementById("clear-form").onclick = init;
-            document.getElementById("apply").onclick = sendData;
+            document.getElementById("add-conditionAccept").onclick = addFormButtonAccept; //addForm
+            document.getElementById("clear-formAccept").onclick = initAccept;
+            document.getElementById("applyAccept").onclick = sendDataAccept;
         },
         false
     );
@@ -15,27 +16,27 @@ function initAccept() {
 //global variables
 //
 //
-debugger;
-var mainDiv = document.getElementById("form"); //ref to main div with forms
+//debugger;
+var mainDiv = document.getElementById("formAccept"); //ref to main div with forms
 
 //attributes for form fields, they will be added during the creation of forms
 var formElementsTypes = ["input", "button"];//https://www.jetbrains.com/idea/features/editions_comparison_matrix.html
-var formElementsIds = ["scanid", "button"];
+var formElementsIds = ["scanidAccept", "button"];
 var formElementsClassNames = [
     "form-control form-control-sm col-lg-4",
-    "deleteForm btn",
+    "deleteFormAccept btn",
 ];
 
 var formAllowedIdsArr = [];
 var rowsAmount = 50;
 var finalData = [];
 var labels = ["Сканируем QR-code катушки"];
-const regexp = /\bP\d{7}LK\d{9}R\d{10}Q\d{5}D\d{8}\b/;
-const regexp2 = /\bP\d{7}L\d{10}R\d{10}Q\d{5}D\d{8}\b/;
+const regexpAccept = /\bP\d{7}LK\d{9}R\d{10}Q\d{5}D\d{8}\b/;
+const regexp2Accept = /\bP\d{7}L\d{10}R\d{10}Q\d{5}D\d{8}\b/;
 // P1016624L1000037226R1000317938Q00550D20200311
 
 //creating form and adding attributes
-function createForm() {
+function createFormAccept() {
     var form = document.createElement("div");
     form.className = "form-inline";
     form.id = formAllowedIdsArr[0];
@@ -55,7 +56,7 @@ function createForm() {
             var icon = document.createElement("i");
             var deleteButton = document.getElementById(element.id);
             deleteButton.appendChild(icon);
-            icon.className = "fa fa-times";
+            icon.className = "fa fa-times2";
         }
     }
     form.childNodes[0].focus();
@@ -80,7 +81,7 @@ function createForm() {
     // check for an errors if user change activity to another element
     input.onblur = function () {
         errorMsg = createError("Введён некорректный номер");
-        addRemoveError(this, errorMsg);
+        addRemoveErrorAccept(this, errorMsg);
 
         toggleSubmitBtn();
     };
@@ -90,35 +91,35 @@ function createForm() {
         if (event.keyCode === 13 || 40) {
             event.preventDefault();
             errorMsg = createError("Введён некорректный номер");
-            addRemoveError(this, errorMsg);
-            if (checkCanAddValueOnContext(this)) {
-                addForm();
+            addRemoveErrorAccept(this, errorMsg);
+            if (checkCanAddValueOnContextAccept(this)) {
+                addFormAccept();
             }
         }
 
-        toggleSubmitBtn();
+        toggleSubmitBtnAccept();
     });
 
-    deleteCross.addEventListener("click", deleteForm);
+    deleteCross.addEventListener("click", deleteFormAccept);
 
-    canShowAddButton(); //check if we can show add button
-    canShowDeleteButton(); //check if we can show delete button
+    canShowAddButtonAccept(); //check if we can show add button
+    canShowDeleteButtonAccept(); //check if we can show delete button
 }
 
-function toggleSubmitBtn() {
+function toggleSubmitBtnAccept() {
     // кнопка не активна, если 
-    document.getElementById("apply").disabled = !checkAllValues();  
+    document.getElementById("applyAccept").disabled = !checkAllValuesAccept();  
 }
 
 //check if we can add form and add it
-function addForm() {
+function addFormAccept() {
     if (formAllowedIdsArr.length > 0) {
         createForm();
     }
 }
 
 // count similar strings entered in all input fields
-function checkValue(inputValue) {
+function checkValueAccept(inputValue) {
     var forms = document.getElementsByClassName("form-control");
     var counter = 0;
     for (i = 0; i < forms.length; i++) {
@@ -131,7 +132,7 @@ function checkValue(inputValue) {
 }
 
 // check if we have any invalid string
-function checkAllValues() {
+function checkAllValuesAccept() {
     var result = true;
     var forms = document.getElementsByClassName("form-control");
     for (i = 0; i < forms.length; i++) {
@@ -144,7 +145,7 @@ function checkAllValues() {
 }
 
 // add new input if we didn't have duplicates
-function addFormButton() {
+function addFormButtonAccept() {
     var check = checkAllValues();
     if (check) {
         addForm();
@@ -152,10 +153,10 @@ function addFormButton() {
 }
 
 // check input value on context
-function checkCanAddValueOnContext(e) {
-    var numberToCheck = checkValue(e.value);
+function checkCanAddValueOnContextAccept(e) {
+    var numberToCheck = checkValueAccept(e.value);
     var result = true;
-
+   // debugger;
     var table = document.getElementById('thetable');
     let rows = table.querySelectorAll('tr');
     let check = e.value;
@@ -163,26 +164,29 @@ function checkCanAddValueOnContext(e) {
 
     for (var i = 0; i < rows.length; i++) {
         var fullname = rows[i].querySelectorAll('td');
-    fullname = fullname[1].innerHTML.toLowerCase();
+    fullname = fullname[0].innerHTML.toLowerCase();
     let status = rows[i].querySelectorAll('td');
-    status = status[10].innerHTML.toUpperCase();
+    status = status[9].innerHTML.toUpperCase();
+    
     if (
-        !(regexp.test(e.value) || regexp2.test(e.value) ) || (check2 == fullname)
+        !(regexpAccept.test(e.value) || regexp2Accept.test(e.value) ) || (check2 == fullname)
         || numberToCheck > 1
     ) {
+        console.log(status)
         if (status == 'OK' || status == 'NG') {
         result = false;
     } else {
         result = true;
     }
     }
+    debugger;
     return result;
 }
 }
 
 // add or remove error message
-function addRemoveError(context, errorMsg) {
-    if (!checkCanAddValueOnContext(context)) {
+function addRemoveErrorAccept(context, errorMsg) {
+    if (!checkCanAddValueOnContextAccept(context)) {
         if (!context.className.includes("is-invalid")) {
             context.className = context.className.concat(" is-invalid");
         }
@@ -197,16 +201,16 @@ function addRemoveError(context, errorMsg) {
     }
 }
 
-function deleteForm() {
+function deleteFormAccept() {
     formAllowedIdsArr.push(this.parentNode.id);
     this.parentNode.parentNode.removeChild(this.parentNode);
-    canShowAddButton();
-    canShowDeleteButton();
-    toggleSubmitBtn();
+    canShowAddButtonAccept();
+    canShowDeleteButtonAccept();
+    toggleSubmitBtnAccept();
 }
 
 // generate array of acceptable form ids
-function formIdGenerator(num) {
+function formIdGeneratorAccept(num) {
     var formIdArray = [];
     for (i = 0; i < num; i++) {
         formIdArray.push(`form-${i + 1}`);
@@ -215,8 +219,8 @@ function formIdGenerator(num) {
 }
 
 //reset all forms, fields, console and generate new allowed IDs array
-function resetForms() {
-    formAllowedIdsArr = formIdGenerator(rowsAmount);
+function resetFormsAccept() {
+    formAllowedIdsArr = formIdGeneratorAccept(rowsAmount);
     while (mainDiv.firstChild) {
         mainDiv.removeChild(mainDiv.firstChild);
     }
@@ -224,28 +228,28 @@ function resetForms() {
     //console.clear();
 }
 
-function canShowAddButton() {
+function canShowAddButtonAccept() {
     if (formAllowedIdsArr.length == 0) {
-        document.getElementById("add-condition").disabled = true;
+        document.getElementById("add-conditionAccept").disabled = true;
     } else {
-        document.getElementById("add-condition").disabled = false;
+        document.getElementById("add-conditionAccept").disabled = false;
     }
 }
 
-function canShowDeleteButton() {
+function canShowDeleteButtonAccept() {
     if (formAllowedIdsArr.length < rowsAmount - 1) {
-        document.getElementsByClassName("deleteForm")[0].disabled = false;
+        document.getElementsByClassName("deleteFormAccept")[0].disabled = false;
     } else {
-        document.getElementsByClassName("deleteForm")[0].disabled = true;
+        document.getElementsByClassName("deleteFormAccept")[0].disabled = true;
     }
 }
 
-function getData() {
+function getDataAccept() {
     var resultData = [];
     var forms = document.getElementsByClassName("form-control");
     for (i = 0; i < forms.length; i++) {
         if (forms[i].value) {
-            resultData.push({ scanid: forms[i].value });
+            resultData.push({ scanidAccept: forms[i].value });
         }
     }     
     return JSON.stringify(resultData);
@@ -268,20 +272,20 @@ function drawSuccessMessage(div) {
     return successMessage;
 }
 
-function sendData() {
+function sendDataAccept() {
     for (el of document.getElementsByClassName('is-invalid')) {
         el.parentNode.remove();
     }
 
  //   if (checkCanAddValueOnContext(context) == true) {
-    dataToSend = getData();
-    resetForms();
-    createForm();
+    dataToSend = getDataAccept();
+    resetFormsAccept();
+    createFormAccept();
     if (dataToSend != "[]") {
         var xhr = new XMLHttpRequest();
         //   xhr.open("POST", "http://10.1.20.110:3001/ininspection", true);
        // xhr.open("POST", "http://localhost:3001/ininspection", true);
-        xhr.open("POST", "http://*", true);
+      //  xhr.open("POST", "http://*", true);
         xhr.setRequestHeader("Content-Type", "application/json");
 
         xhr.send(dataToSend);
@@ -303,4 +307,5 @@ function sendData() {
 //}
 
 //let's go
-init();
+initAccept();
+*/

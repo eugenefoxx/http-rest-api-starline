@@ -135,62 +135,122 @@ func (s *Server) InInspection() http.HandlerFunc {
 		const statusTransfer = "отгружено на ВК"
 
 		for _, v := range rdata {
-			idMaterial := v.ScanID[0:45]
-
-			//	fmt.Println("Пропускаем:\n" + idMaterial + "\n")
-			sapStr := v.ScanID[1:8]
-			sap := v.SAP
-			sap, err := strconv.Atoi(sapStr)
-			if err != nil {
-				fmt.Println(err)
-			}
-			idrollStr := v.ScanID[20:30]
-			idrollIns := v.Roll
-			idrollIns, err = strconv.Atoi(idrollStr)
-			if err != nil {
-				fmt.Println(err)
-			}
-			v.Lot = v.ScanID[9:19]
-			qtyStr := v.ScanID[31:36]
-			qtyIns := v.Qty
-			qtyIns, err2 := strconv.Atoi(qtyStr)
-			if err != nil {
-				fmt.Println(err2)
-			}
-			v.ProductionDate = v.ScanID[37:45]
-			v.NumberVendor = v.ScanID[9:15]
-			fmt.Println("v.NumberVendor", v.NumberVendor)
 			if (strings.Contains(v.ScanID[0:1], "P") == true) && (len(v.ScanID) == 45) {
-				u := &model.Inspection{
-					IdMaterial:     idMaterial,
-					SAP:            sap,
-					Lot:            v.Lot,
-					IdRoll:         idrollIns,
-					Qty:            qtyIns,
-					ProductionDate: v.ProductionDate,
-					NumberVendor:   v.NumberVendor,
-					Location:       statusTransfer,
-					Lastname:       user.LastName,
-				}
-				if err := s.store.Inspection().InInspection(u); err != nil {
-					s.error(w, r, http.StatusUnprocessableEntity, err)
+				idMaterial := v.ScanID[0:45]
 
+				//	fmt.Println("Пропускаем:\n" + idMaterial + "\n")
+				sapStr := v.ScanID[1:8]
+				sap := v.SAP
+				sap, err := strconv.Atoi(sapStr)
+				if err != nil {
+					fmt.Println(err)
+				}
+				idrollStr := v.ScanID[20:30]
+				idrollIns := v.Roll
+				idrollIns, err = strconv.Atoi(idrollStr)
+				if err != nil {
+					fmt.Println(err)
+				}
+				v.Lot = v.ScanID[9:19]
+				qtyStr := v.ScanID[31:36]
+				qtyIns := v.Qty
+				qtyIns, err2 := strconv.Atoi(qtyStr)
+				if err != nil {
+					fmt.Println(err2)
+				}
+				v.ProductionDate = v.ScanID[37:45]
+				v.NumberVendor = v.ScanID[9:15]
+				fmt.Println("v.NumberVendor", v.NumberVendor)
+				if (strings.Contains(v.ScanID[0:1], "P") == true) && (len(v.ScanID) == 45) {
+					u := &model.Inspection{
+						IdMaterial:     idMaterial,
+						SAP:            sap,
+						Lot:            v.Lot,
+						IdRoll:         idrollIns,
+						Qty:            qtyIns,
+						ProductionDate: v.ProductionDate,
+						NumberVendor:   v.NumberVendor,
+						Location:       statusTransfer,
+						Lastname:       user.LastName,
+					}
+					if err := s.store.Inspection().InInspection(u); err != nil {
+						s.error(w, r, http.StatusUnprocessableEntity, err)
+
+						return
+					}
+				} else {
+					if (strings.Contains(v.ScanID[0:1], "P") == false) && (len(v.ScanID) != 45) {
+						fmt.Println("не верное сканирование :\n" + v.ScanID + "\n")
+						//	fmt.Fprintf(w, "не верное сканирование :"+v.ScanID)
+					}
+					//	tpl.Execute(w, data)
 					return
 				}
-			} else {
-				if (strings.Contains(v.ScanID[0:1], "P") == false) && (len(v.ScanID) != 45) {
-					fmt.Println("не верное сканирование :\n" + v.ScanID + "\n")
-					//	fmt.Fprintf(w, "не верное сканирование :"+v.ScanID)
-				}
-				//	tpl.Execute(w, data)
-				return
+				//	} else {
+				//		if idMaterial == idMaterial {
+				//			fmt.Println("Значения совпадают:\n" + idMaterial + "\n")
+				//		}
+				//	}
+				http.Redirect(w, r, "/statusinspection", 303)
 			}
-			//	} else {
-			//		if idMaterial == idMaterial {
-			//			fmt.Println("Значения совпадают:\n" + idMaterial + "\n")
-			//		}
-			//	}
-			http.Redirect(w, r, "/statusinspection", 303)
+			if (strings.Contains(v.ScanID[0:1], "P") == true) && (len(v.ScanID) == 35) {
+				idMaterial := v.ScanID[0:35]
+
+				//	fmt.Println("Пропускаем:\n" + idMaterial + "\n")
+				sapStr := v.ScanID[1:8]
+				sap := v.SAP
+				sap, err := strconv.Atoi(sapStr)
+				if err != nil {
+					fmt.Println(err)
+				}
+				idrollStr := v.ScanID[10:20]
+				idrollIns := v.Roll
+				idrollIns, err = strconv.Atoi(idrollStr)
+				if err != nil {
+					fmt.Println(err)
+				}
+				v.Lot = "без партии" //v.ScanID[9:19]
+				qtyStr := v.ScanID[21:26]
+				qtyIns := v.Qty
+				qtyIns, err2 := strconv.Atoi(qtyStr)
+				if err != nil {
+					fmt.Println(err2)
+				}
+				v.ProductionDate = v.ScanID[27:35]
+				v.NumberVendor = "без поставщика" //v.ScanID[9:15]
+				fmt.Println("v.NumberVendor", v.NumberVendor)
+				if (strings.Contains(v.ScanID[0:1], "P") == true) && (len(v.ScanID) == 35) {
+					u := &model.Inspection{
+						IdMaterial:     idMaterial,
+						SAP:            sap,
+						Lot:            v.Lot,
+						IdRoll:         idrollIns,
+						Qty:            qtyIns,
+						ProductionDate: v.ProductionDate,
+						NumberVendor:   v.NumberVendor,
+						Location:       statusTransfer,
+						Lastname:       user.LastName,
+					}
+					if err := s.store.Inspection().InInspection(u); err != nil {
+						s.error(w, r, http.StatusUnprocessableEntity, err)
+
+						return
+					}
+				} else {
+					if (strings.Contains(v.ScanID[0:1], "P") == false) && (len(v.ScanID) != 45) {
+						fmt.Println("не верное сканирование :\n" + v.ScanID + "\n")
+						//	fmt.Fprintf(w, "не верное сканирование :"+v.ScanID)
+					}
+					//	tpl.Execute(w, data)
+					return
+				}
+				//	} else {
+				//		if idMaterial == idMaterial {
+				//			fmt.Println("Значения совпадают:\n" + idMaterial + "\n")
+				//		}
+				//	}
+				http.Redirect(w, r, "/statusinspection", 303)
+			}
 		}
 		/*
 			err = tpl.ExecuteTemplate(w, "ininspection.html", nil)

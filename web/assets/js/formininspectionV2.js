@@ -32,6 +32,7 @@ var finalData = [];
 var labels = ["Сканируем QR-code катушки"];
 const regexp = /\bP\d{7}LK\d{9}R\d{10}Q\d{5}D\d{8}\b/;
 const regexp2 = /\bP\d{7}L\d{10}R\d{10}Q\d{5}D\d{8}\b/;
+const regexpCart = /\bP\d{7}LR\d{10}Q\d{5}D\d{8}\b/;
 // P1016624L1000037226R1000317938Q00550D20200311
 
 //creating form and adding attributes
@@ -135,6 +136,7 @@ function checkAllValues() {
     var forms = document.getElementsByClassName("form-control");
     for (i = 0; i < forms.length; i++) {
         if (forms[i].className.includes("is-invalid") && forms[i].value != '') {
+     //   if (forms[i].className.includes("is-invalid")) {
             result = false;
             break;
         }
@@ -156,7 +158,7 @@ function checkCanAddValueOnContext(e) {
     var result = true;
 
     if (
-        !(regexp.test(e.value) || regexp2.test(e.value) )
+        !(regexp.test(e.value) || regexp2.test(e.value) || regexpCart.test(e.value))
         || numberToCheck > 1
     ) {
         result = false;

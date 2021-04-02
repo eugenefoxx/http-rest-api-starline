@@ -34,9 +34,8 @@ var rowsAmount = 50;
 var finalData = [];
 var labels = ["email", "Пароль", "Имя", "Фамилия", "Роль", "Табель"];
 var roles = [
-/*{
-        
-        id: 'Выберите позицию',
+    /*{
+        id: null,
         title: 'Выберите позицию'
     },*/
     {

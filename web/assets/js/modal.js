@@ -97,10 +97,27 @@ const unbindResizeObserver = (modal) => {
     resizeObserver.unobserve(content);
     resizeObserver = null;
 };
+/*
+function validateQrCode(code) {
+    const regexp = /\bP\d{7}LK\d{9}R\d{10}Q\d{5}D\d{8}\b/;
+    const regexp2 = /\bP\d{7}L\d{10}R\d{10}Q\d{5}D\d{8}\b/;
 
-// document.getElementById('js-add-content-temp').addEventListener('click', (event) => {
-    // const div = document.createElement('div');
-    // div.textContent = 'Text content';
-    // div.style.height = '1000px';
-    // document.querySelector(`.${CLASS_LIST.MODAL_DIALOG_BODY}`).appendChild(div);
-// });
+    return (
+        (regexp.test(code) || regexp2.test(code))
+        && document.querySelector('td[data-material-id="'+code+'"]') !== null
+    );
+}
+
+function onQrCodeChange(e) {
+    const qrCode = e.target.value;
+
+    if (event.keyCode === 13 && validateQrCode(qrCode)) {
+        // 1. 
+        // 2.
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById('qr-code-value').onkeyup = onQrCodeChange;
+});
+*/
