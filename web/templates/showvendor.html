@@ -11,18 +11,18 @@
         </div>
         <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .." title="Type in a name">
         <br>
-        <table id="myTable" onload="alternate('thetable')" class="tableexport">
+        <table id="myTable" onload="alternate('thetable')" class="tableexport" style="width: 1200px;">
             <caption style="color: white; font-size: 22px; padding-bottom: 10px;">Список поставщиков</caption>
             <button onclick="exportTableToCSV('export.csv')">Экспортировать таблицу в csv файл</button>
             <thead>
                 <tr>
                     <!--<th>ID</th>-->
-                    <th scope="col" onclick="sortTable(0)">№ ID</th>
+                    <!--    <th scope="col" onclick="sortTable(0)">№ ID</th>-->
                     <!--Material-->
-                    <th scope="col" onclick="sortTable(1)">Код дебитора</th>
+                    <th scope="col" onclick="sortTable(0)">Код дебитора</th>
                     <!--Qty-->
-                    <th scope="col" onclick="sortTable(2)">Наименование</th>
-                    <th scope="col" onclick="sortTable(3)">Редактирование</th>
+                    <th scope="col" onclick="sortTable(1)">Наименование</th>
+                    <th scope="col" onclick="sortTable(2)">Редактирование</th>
                     <!--ShipmentDate-->
                     <!--    <th scope="col" onclick="sortTable(2)">ShipmentDate2</th>-->
                 </tr>
@@ -31,9 +31,9 @@
                 {{ range .GET}}
                 <tr class="header">
                     <!--<td>{{.ID }}</td>-->
-                    <td>
+                    <!--    <td>
                         {{.ID}}
-                    </td>
+                    </td>-->
                     <td>
                         {{.CodeDebitor}}
                     </td>

@@ -18,20 +18,20 @@
                 таблицу в csv файл</button>
             <thead>
                 <tr id="fontsize-showinspection">
-                    <th scope="col" onclick="sortTable(0)">№ ID</th>
+                    <!--   <th scope="col" onclick="sortTable(0)">№ ID</th>-->
                     <!--<th>ID</th>-->
-                    <th scope="col" onclick="sortTable(1)">email</th>
+                    <th scope="col" onclick="sortTable(0)">email</th>
                     <!--Material-->
-                    <th scope="col" onclick="sortTable(2)">Имя</th>
+                    <th scope="col" onclick="sortTable(1)">Имя</th>
                     <!--Qty-->
-                    <th scope="col" onclick="sortTable(3)">Фамилия</th>
+                    <th scope="col" onclick="sortTable(2)">Фамилия</th>
                     <!--ShipmentDate-->
                     <!--    <th scope="col" onclick="sortTable(2)">ShipmentDate2</th>-->
-                    <th scope="col" onclick="sortTable(4)">Позиция</th>
-                    <th scope="col" onclick="sortTable(5)">Группа</th>
+                    <th scope="col" onclick="sortTable(3)">Позиция</th>
+                    <th scope="col" onclick="sortTable(4)">Группа</th>
 
-                    <th scope="col" onclick="sortTable(6)">Табель</th>
-                    <th scope="col" onclick="sortTable(7)">Редактирование</th>
+                    <th scope="col" onclick="sortTable(5)">Табель</th>
+                    <th scope="col" onclick="sortTable(6)">Редактирование</th>
 
                 </tr>
             </thead>
@@ -39,9 +39,9 @@
                 {{ range .GET}}
                 <tr class="header" id="fontsize-showinspection">
                     <!--<td>{{.ID }}</td>-->
-                    <td>
+                    <!--    <td>
                         {{.ID}}
-                    </td>
+                    </td>-->
                     <td style="font-size: 100%;">
                         {{.Email}}
                     </td>
@@ -87,28 +87,28 @@
                 таблицу в csv файл</button>
             <thead>
                 <tr id="fontsize-showinspection">
-                    <th scope="col" onclick="sortTable(0)">№ ID</th>
+                    <!--    <th scope="col" onclick="sortTable(0)">№ ID</th>-->
                     <!--<th>ID</th>-->
-                    <th scope="col" onclick="sortTable(1)">email</th>
+                    <th scope="col" onclick="sortTable(0)">email</th>
                     <!--Material-->
-                    <th scope="col" onclick="sortTable(2)">Имя</th>
+                    <th scope="col" onclick="sortTable(1)">Имя</th>
                     <!--Qty-->
-                    <th scope="col" onclick="sortTable(3)">Фамилия</th>
+                    <th scope="col" onclick="sortTable(2)">Фамилия</th>
                     <!--ShipmentDate-->
                     <!--    <th scope="col" onclick="sortTable(2)">ShipmentDate2</th>-->
-                    <th scope="col" onclick="sortTable(4)">Позиция</th>
-                    <th scope="col" onclick="sortTable(5)">Группа</th>
-                    <th scope="col" onclick="sortTable(6)">Табель</th>
-                    <th scope="col" onclick="sortTable(7)">Редактирование</th>
+                    <th scope="col" onclick="sortTable(3)">Позиция</th>
+                    <th scope="col" onclick="sortTable(4)">Группа</th>
+                    <th scope="col" onclick="sortTable(5)">Табель</th>
+                    <th scope="col" onclick="sortTable(6)">Редактирование</th>
                 </tr>
             </thead>
             <tbody id="thetable">
                 {{ range .GET}}
                 <tr class="header" id="fontsize-showinspection">
                     <!--<td>{{.ID }}</td>-->
-                    <td>
+                    <!--    <td>
                         {{.ID}}
-                    </td>
+                    </td>-->
                     <td style="font-size: 100%;">
                         {{.Email}}
                     </td>
