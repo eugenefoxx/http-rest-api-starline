@@ -553,6 +553,7 @@ button.buttonPlus:after {
   font-size: 16px;
   /* Increase font-size */
   background: white;
+  min-width: 1800px;
 }
 
 #myTable th,
