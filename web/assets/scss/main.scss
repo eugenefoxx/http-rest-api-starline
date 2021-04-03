@@ -45,6 +45,11 @@ body {
   flex-direction: row;
 }
 
+html,
+body {
+  height: 100%;
+}
+
 thead {
   // background-color: rgba(4, 106, 119, 0.726);
   background-color: #b7bdc4;
@@ -681,6 +686,8 @@ body,
 .wrap {
   height: 100%;
   line-height: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .wrap {
@@ -717,6 +724,8 @@ body {
   line-height: 24px;
   font-family: "Roboto", sans-serif;
   color: #333;
+  display: flex;
+  flex-direction: column;
 }
 
 h1 {
@@ -1175,9 +1184,9 @@ p {
 
 .footer {
   flex-shrink: 0;
-  padding: 20px;
+  padding: 10px;
   // width: 100%;
-  background: red;
+  background: whitesmoke;
   font: xx-large;
 }
 

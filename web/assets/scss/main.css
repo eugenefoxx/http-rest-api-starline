@@ -47,6 +47,11 @@ body {
           flex-direction: row;
 }
 
+html,
+body {
+  height: 100%;
+}
+
 thead {
   background-color: #b7bdc4;
 }
@@ -716,6 +721,13 @@ body,
 .wrap {
   height: 100%;
   line-height: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
 }
 
 .wrap {
@@ -745,6 +757,13 @@ body {
   line-height: 24px;
   font-family: "Roboto", sans-serif;
   color: #333;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
 }
 
 h1 {
@@ -1229,8 +1248,8 @@ p {
 .footer {
   -ms-flex-negative: 0;
       flex-shrink: 0;
-  padding: 20px;
-  background: red;
+  padding: 10px;
+  background: whitesmoke;
   font: xx-large;
 }
 

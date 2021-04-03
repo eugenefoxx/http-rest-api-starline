@@ -3,36 +3,38 @@
 {{template "head.html" .}}
 
 <body>
-    {{template "navbar.html" .}}
-    <header>
-        <h1>Регистрация</h1>
-    </header>
-    <form id="text" method="post" action="/users">
-        <div class="register-form">
-            <!--form-group-->
-            <label for="email" id="dateform">Пользователь</label>
-            <input class="form-control" type="text" id="email" name="email" style="margin-left:80px; width:20%;"
-                placeholder="@starline.ru">
-            <br>
-            <p></p>
-            <label for="password">Пароль</label>
-            <input class="form-control" type="password" id="password" name="password"
-                style="margin-left:160px; width:20%;" placeholder="Пароль">
-            <br>
-            <p></p>
-            <label for="firstname">Имя</label>
-            <input class="form-control" type="text" id="firstname" name="firstname"
-                style="margin-left:200px; width:20%;" placeholder="Имя">
-            <br>
-            <p></p>
-            <label for="lastname">Фамилия</label>
-            <input class="form-control" type="text" id="lastname" name="lastname" style="margin-left:135px; width:20%;"
-                placeholder="Фамилия">
-            <br>
-            <button type="submit" class="btn btn-primary--s login_submit">Зарегистриовать</button>
-        </div>
-    </form>
-    {{template "footer.html" .}}
+    <div class="content">
+
+        {{template "navbar.html" .}}
+        <header>
+            <h1>Регистрация</h1>
+        </header>
+        <form id="text" method="post" action="/users">
+            <div class="register-form">
+                <!--form-group-->
+                <label for="email" id="dateform">Пользователь</label>
+                <input class="form-control" type="text" id="email" name="email" style="margin-left:80px; width:20%;"
+                    placeholder="@starline.ru">
+                <br>
+                <p></p>
+                <label for="password">Пароль</label>
+                <input class="form-control" type="password" id="password" name="password"
+                    style="margin-left:160px; width:20%;" placeholder="Пароль">
+                <br>
+                <p></p>
+                <label for="firstname">Имя</label>
+                <input class="form-control" type="text" id="firstname" name="firstname"
+                    style="margin-left:200px; width:20%;" placeholder="Имя">
+                <br>
+                <p></p>
+                <label for="lastname">Фамилия</label>
+                <input class="form-control" type="text" id="lastname" name="lastname"
+                    style="margin-left:135px; width:20%;" placeholder="Фамилия">
+                <br>
+                <button type="submit" class="btn btn-primary--s login_submit">Зарегистриовать</button>
+            </div>
+        </form>
+        {{template "footer.html" .}}
 
 </body>
 

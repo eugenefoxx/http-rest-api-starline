@@ -3,28 +3,30 @@
 {{template "head.html" .}}
 
 <body>
-    {{template "navbar.html" .}}
-    <h4 style="margin-left:10%;">Пожалуйста, авторизуйтесь.</h4>
-    <form action="/login" method="post">
+    <div class="content">
+        {{template "navbar.html" .}}
+        <h4 style="margin-left:10%;">Пожалуйста, авторизуйтесь.</h4>
+        <form action="/login" method="post">
 
-        <div class="login">
-            <label></label>
-            <!--style="margin-left: 5%;"-->
-            <input type="text" id="email" name="email" class="form-control" style="width:20%;"
-                placeholder="почта @starline.ru">
-        </div>
-        <br>
-        <div class="login">
-            <label></label>
-            <!--style="margin-left: 5%;"-->
-            <input type="password" id="password" name="password" class="form-control" style="width:20%;"
-                placeholder="пароль">
-        </div>
-        <br>
-        <button type="submit" class="btn btn-primary--s login_submit" style="margin-left: 4%; width: 10%">Войти</button>
-    </form>
+            <div class="login">
+                <label></label>
+                <!--style="margin-left: 5%;"-->
+                <input type="text" id="email" name="email" class="form-control" style="width:20%;"
+                    placeholder="почта @starline.ru">
+            </div>
+            <br>
+            <div class="login">
+                <label></label>
+                <!--style="margin-left: 5%;"-->
+                <input type="password" id="password" name="password" class="form-control" style="width:20%;"
+                    placeholder="пароль">
+            </div>
+            <br>
+            <button type="submit" class="btn btn-primary--s login_submit"
+                style="margin-left: 4%; width: 10%">Войти</button>
+        </form>
 
-    {{template "footer.html" .}}
+        {{template "footer.html" .}}
 </body>
 
 </html>

@@ -3,203 +3,206 @@
 {{template "head.html" .}}
 
 <body>
-    {{template "navbar.html" .}}
-    <div class="container">
-        {{ if eq .SuperIngenerQuality true}}
+    <div class="content">
+        {{template "navbar.html" .}}
+        <div class="container">
+            {{ if eq .SuperIngenerQuality true}}
 
-        <div class="wrap2">
-            <a href="#modal-1" class="js-modal-open link">Добавить сотрудника</a>
-        </div>
-        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .." title="Type in a name">
-        <br>
-        <table id="myTable" onload="alternate('thetable')" class="tableexport">
-            <caption style="color: white; font-size: 22px; padding-bottom: 10px;">Сотрудники отдела качества</caption>
-            <button onclick="exportTableToCSV('export.csv')" style="margin-left:0px; width: 300px;">Экспортировать
-                таблицу в csv файл</button>
-            <thead>
-                <tr id="fontsize-showinspection">
-                    <!--   <th scope="col" onclick="sortTable(0)">№ ID</th>-->
-                    <!--<th>ID</th>-->
-                    <th scope="col" onclick="sortTable(0)">email</th>
-                    <!--Material-->
-                    <th scope="col" onclick="sortTable(1)">Имя</th>
-                    <!--Qty-->
-                    <th scope="col" onclick="sortTable(2)">Фамилия</th>
-                    <!--ShipmentDate-->
-                    <!--    <th scope="col" onclick="sortTable(2)">ShipmentDate2</th>-->
-                    <th scope="col" onclick="sortTable(3)">Позиция</th>
-                    <th scope="col" onclick="sortTable(4)">Группа</th>
+            <div class="wrap2">
+                <a href="#modal-1" class="js-modal-open link">Добавить сотрудника</a>
+            </div>
+            <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .." title="Type in a name">
+            <br>
+            <table id="myTable" onload="alternate('thetable')" class="tableexport">
+                <caption style="color: white; font-size: 22px; padding-bottom: 10px;">Сотрудники отдела качества
+                </caption>
+                <button onclick="exportTableToCSV('export.csv')" style="margin-left:0px; width: 300px;">Экспортировать
+                    таблицу в csv файл</button>
+                <thead>
+                    <tr id="fontsize-showinspection">
+                        <!--   <th scope="col" onclick="sortTable(0)">№ ID</th>-->
+                        <!--<th>ID</th>-->
+                        <th scope="col" onclick="sortTable(0)">email</th>
+                        <!--Material-->
+                        <th scope="col" onclick="sortTable(1)">Имя</th>
+                        <!--Qty-->
+                        <th scope="col" onclick="sortTable(2)">Фамилия</th>
+                        <!--ShipmentDate-->
+                        <!--    <th scope="col" onclick="sortTable(2)">ShipmentDate2</th>-->
+                        <th scope="col" onclick="sortTable(3)">Позиция</th>
+                        <th scope="col" onclick="sortTable(4)">Группа</th>
 
-                    <th scope="col" onclick="sortTable(5)">Табель</th>
-                    <th scope="col" onclick="sortTable(6)">Редактирование</th>
+                        <th scope="col" onclick="sortTable(5)">Табель</th>
+                        <th scope="col" onclick="sortTable(6)">Редактирование</th>
 
-                </tr>
-            </thead>
-            <tbody id="thetable">
-                {{ range .GET}}
-                <tr class="header" id="fontsize-showinspection">
-                    <!--<td>{{.ID }}</td>-->
-                    <!--    <td>
+                    </tr>
+                </thead>
+                <tbody id="thetable">
+                    {{ range .GET}}
+                    <tr class="header" id="fontsize-showinspection">
+                        <!--<td>{{.ID }}</td>-->
+                        <!--    <td>
                         {{.ID}}
                     </td>-->
-                    <td style="font-size: 100%;">
-                        {{.Email}}
-                    </td>
-                    <td>
-                        {{.FirstName}}
-                    </td>
-                    <td>
-                        {{.LastName}}
-                    </td>
-                    <td>
-                        {{.Role}}
-                    </td>
-                    <td>
-                        {{.Groups}}
-                    </td>
-                    <td>
-                        {{.Tabel}}
-                    </td>
-                    <td>
-                        <!-- <a href="/updateuserquality/{{.ID}}" class="btnfortable btn-primary">Edit </a>-->
-                        <a href="#modal-2" onclick="editUserQuality({{.ID}});"
-                            class="js-modal-open btnfortable btn-primary--l">Править</a>
-                        <a href="/deleteuserquality/{{.ID}}" class="btnfortable btn-danger--s confirmation"
-                            style="margin-left: 10px;">
-                            Удалить</a>
-                    </td>
-                </tr>
-                {{ end}}
-            </tbody>
-        </table>
-        {{ end}}
+                        <td style="font-size: 100%;">
+                            {{.Email}}
+                        </td>
+                        <td>
+                            {{.FirstName}}
+                        </td>
+                        <td>
+                            {{.LastName}}
+                        </td>
+                        <td>
+                            {{.Role}}
+                        </td>
+                        <td>
+                            {{.Groups}}
+                        </td>
+                        <td>
+                            {{.Tabel}}
+                        </td>
+                        <td>
+                            <!-- <a href="/updateuserquality/{{.ID}}" class="btnfortable btn-primary">Edit </a>-->
+                            <a href="#modal-2" onclick="editUserQuality({{.ID}});"
+                                class="js-modal-open btnfortable btn-primary--l">Править</a>
+                            <a href="/deleteuserquality/{{.ID}}" class="btnfortable btn-danger--s confirmation"
+                                style="margin-left: 10px;">
+                                Удалить</a>
+                        </td>
+                    </tr>
+                    {{ end}}
+                </tbody>
+            </table>
+            {{ end}}
 
-        {{ if eq .Admin true}}
+            {{ if eq .Admin true}}
 
-        <div class="wrap2">
-            <a href="#modal-1" class="js-modal-open link">Добавить сотрудника</a>
-        </div>
-        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .." title="Type in a name">
-        <br>
-        <table id="myTable" onload="alternate('thetable')" class="tableexport">
-            <caption style="color: white; font-size: 22px; padding-bottom: 10px;">Сотрудники отдела качества</caption>
-            <button onclick="exportTableToCSV('export.csv')" style="margin-left:0px; width: 300px;">Экспортировать
-                таблицу в csv файл</button>
-            <thead>
-                <tr id="fontsize-showinspection">
-                    <!--    <th scope="col" onclick="sortTable(0)">№ ID</th>-->
-                    <!--<th>ID</th>-->
-                    <th scope="col" onclick="sortTable(0)">email</th>
-                    <!--Material-->
-                    <th scope="col" onclick="sortTable(1)">Имя</th>
-                    <!--Qty-->
-                    <th scope="col" onclick="sortTable(2)">Фамилия</th>
-                    <!--ShipmentDate-->
-                    <!--    <th scope="col" onclick="sortTable(2)">ShipmentDate2</th>-->
-                    <th scope="col" onclick="sortTable(3)">Позиция</th>
-                    <th scope="col" onclick="sortTable(4)">Группа</th>
-                    <th scope="col" onclick="sortTable(5)">Табель</th>
-                    <th scope="col" onclick="sortTable(6)">Редактирование</th>
-                </tr>
-            </thead>
-            <tbody id="thetable">
-                {{ range .GET}}
-                <tr class="header" id="fontsize-showinspection">
-                    <!--<td>{{.ID }}</td>-->
-                    <!--    <td>
+            <div class="wrap2">
+                <a href="#modal-1" class="js-modal-open link">Добавить сотрудника</a>
+            </div>
+            <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .." title="Type in a name">
+            <br>
+            <table id="myTable" onload="alternate('thetable')" class="tableexport">
+                <caption style="color: white; font-size: 22px; padding-bottom: 10px;">Сотрудники отдела качества
+                </caption>
+                <button onclick="exportTableToCSV('export.csv')" style="margin-left:0px; width: 300px;">Экспортировать
+                    таблицу в csv файл</button>
+                <thead>
+                    <tr id="fontsize-showinspection">
+                        <!--    <th scope="col" onclick="sortTable(0)">№ ID</th>-->
+                        <!--<th>ID</th>-->
+                        <th scope="col" onclick="sortTable(0)">email</th>
+                        <!--Material-->
+                        <th scope="col" onclick="sortTable(1)">Имя</th>
+                        <!--Qty-->
+                        <th scope="col" onclick="sortTable(2)">Фамилия</th>
+                        <!--ShipmentDate-->
+                        <!--    <th scope="col" onclick="sortTable(2)">ShipmentDate2</th>-->
+                        <th scope="col" onclick="sortTable(3)">Позиция</th>
+                        <th scope="col" onclick="sortTable(4)">Группа</th>
+                        <th scope="col" onclick="sortTable(5)">Табель</th>
+                        <th scope="col" onclick="sortTable(6)">Редактирование</th>
+                    </tr>
+                </thead>
+                <tbody id="thetable">
+                    {{ range .GET}}
+                    <tr class="header" id="fontsize-showinspection">
+                        <!--<td>{{.ID }}</td>-->
+                        <!--    <td>
                         {{.ID}}
                     </td>-->
-                    <td style="font-size: 100%;">
-                        {{.Email}}
-                    </td>
-                    <td>
-                        {{.FirstName}}
-                    </td>
-                    <td>
-                        {{.LastName}}
-                    </td>
-                    <td>
-                        {{.Role}}
-                    </td>
-                    <td>
-                        {{.Groups}}
-                    </td>
-                    <td>
-                        {{.Tabel}}
-                    </td>
-                    <td>
-                        <a href="#modal-2" onclick="editUserQuality({{.ID}});"
-                            class="js-modal-open btnfortable btn-primary--l">Править</a>
-                        <a href="/deleteuserquality/{{.ID}}" class="btnfortable btn-danger--s confirmation"
-                            style="margin-left: 10px;">
-                            Удалить</a>
-                    </td>
-                </tr>
-                {{ end}}
-            </tbody>
-        </table>
-        {{ end}}
+                        <td style="font-size: 100%;">
+                            {{.Email}}
+                        </td>
+                        <td>
+                            {{.FirstName}}
+                        </td>
+                        <td>
+                            {{.LastName}}
+                        </td>
+                        <td>
+                            {{.Role}}
+                        </td>
+                        <td>
+                            {{.Groups}}
+                        </td>
+                        <td>
+                            {{.Tabel}}
+                        </td>
+                        <td>
+                            <a href="#modal-2" onclick="editUserQuality({{.ID}});"
+                                class="js-modal-open btnfortable btn-primary--l">Править</a>
+                            <a href="/deleteuserquality/{{.ID}}" class="btnfortable btn-danger--s confirmation"
+                                style="margin-left: 10px;">
+                                Удалить</a>
+                        </td>
+                    </tr>
+                    {{ end}}
+                </tbody>
+            </table>
+            {{ end}}
 
-        <div class="modal modal--l" id="modal-2">
-            <div class="modal__dialog">
-                <div class="modal__dialog-header">
-                    <div class="modal__dialog-header-content">
-                        <h3>Редактирование данных сотрудника</h3>
+            <div class="modal modal--l" id="modal-2">
+                <div class="modal__dialog">
+                    <div class="modal__dialog-header">
+                        <div class="modal__dialog-header-content">
+                            <h3>Редактирование данных сотрудника</h3>
+                        </div>
+                        <div class="modal__dialog-header-close">
+                            <button class="js-modal-close modal__dialog-header-close-btn">
+                                <span>&times;</span>
+                            </button>
+                        </div>
                     </div>
-                    <div class="modal__dialog-header-close">
-                        <button class="js-modal-close modal__dialog-header-close-btn">
-                            <span>&times;</span>
-                        </button>
+                    <div class="modal__dialog-body">
                     </div>
-                </div>
-                <div class="modal__dialog-body">
-                </div>
-                <div class="modal__dialog-footer">
-                    <button class="js-modal-close modal__dialog-footer-close-btn">Закрыть</button>
-                </div>
-
-            </div>
-        </div>
-
-        <div class="modal modal--l" id="modal-1">
-            <div class="modal__dialog">
-                <div class="modal__dialog-header">
-                    <div class="modal__dialog-header-content">
-                        <h3>Форма добавления сотрудника качества</h3>
-                    </div>
-                    <div class="modal__dialog-header-close">
-                        <button class="js-modal-close modal__dialog-header-close-btn">
-                            <span>&times;</span>
-                        </button>
-                    </div>
-                </div>
-                <div class="modal__dialog-body">
-                    <div class="noselect block-style" id="form"></div>
-                    <div class="noselect block-style main" id="add-condition-button">
-                        <button id="add-condition" class="btn btn-link addform">+ Добавить строку</button>
-                    </div>
-                    <hr />
-                    <div class="noselect block-style main" id="apply-clear-buttons">
-                        <button id="apply" class="btn btn-primary--s btn-sm apply-clear-buttons">
-                            Отправить данные</button>
-                        <button id="clear-form" class="btn btn-light btn-sm apply-clear-buttons">
-                            Очистить форму
-                        </button>
+                    <div class="modal__dialog-footer">
+                        <button class="js-modal-close modal__dialog-footer-close-btn">Закрыть</button>
                     </div>
 
-                </div>
-                <div class="modal__dialog-footer">
-                    <button class="js-modal-close modal__dialog-footer-close-btn">Закрыть</button>
                 </div>
             </div>
+
+            <div class="modal modal--l" id="modal-1">
+                <div class="modal__dialog">
+                    <div class="modal__dialog-header">
+                        <div class="modal__dialog-header-content">
+                            <h3>Форма добавления сотрудника качества</h3>
+                        </div>
+                        <div class="modal__dialog-header-close">
+                            <button class="js-modal-close modal__dialog-header-close-btn">
+                                <span>&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="modal__dialog-body">
+                        <div class="noselect block-style" id="form"></div>
+                        <div class="noselect block-style main" id="add-condition-button">
+                            <button id="add-condition" class="btn btn-link addform">+ Добавить строку</button>
+                        </div>
+                        <hr />
+                        <div class="noselect block-style main" id="apply-clear-buttons">
+                            <button id="apply" class="btn btn-primary--s btn-sm apply-clear-buttons">
+                                Отправить данные</button>
+                            <button id="clear-form" class="btn btn-light btn-sm apply-clear-buttons">
+                                Очистить форму
+                            </button>
+                        </div>
+
+                    </div>
+                    <div class="modal__dialog-footer">
+                        <button class="js-modal-close modal__dialog-footer-close-btn">Закрыть</button>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
 
-
-    </div>
-
-    {{template "footer.html" .}}
-    <script src="/assets/js/forminsertusersquality.js"></script>
-    <script src="/assets/js/modal.js" type="text/javascript"></script>
+        {{template "footer.html" .}}
+        <script src="/assets/js/forminsertusersquality.js"></script>
+        <script src="/assets/js/modal.js" type="text/javascript"></script>
 </body>
 
 </html>
