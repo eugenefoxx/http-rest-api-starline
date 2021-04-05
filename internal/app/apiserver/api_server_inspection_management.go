@@ -405,7 +405,32 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 		fmt.Println("material - ", search.Material)
 		search.EO = r.FormValue("eo")
 
-		if search.Date1 == "" && search.Date2 == "" {
+		currentData := time.Now()
+		searchDateNow := currentData.Format("2006-01-02")
+
+		if search.Date1 == "" && search.Date2 == "" && search.Material == 0 && search.EO == "" {
+			fmt.Println("Не заполнены поля ввода")
+			data := map[string]interface{}{
+				"TitleDOC":            "Отчет по истроии ВК",
+				"User":                user.LastName,
+				"Username":            user.FirstName,
+				"Admin":               Admin,
+				"WarehouseManager":    WarehouseManager,
+				"StockkeeperWH":       StockkeeperWH,
+				"SuperIngenerQuality": SuperIngenerQuality,
+				"IngenerQuality":      IngenerQuality,
+				"Quality":             Quality,
+				"Inspector":           Inspector,
+				"LoggedIn":            LoggedIn,
+				//	"GET":                 get,
+			}
+
+			err = tpl.ExecuteTemplate(w, "errorSearchHistoryInspection.html", data)
+			if err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}
+		} else if search.Date1 == "" && search.Date2 == "" {
 			if search.EO != "" {
 				get, err := s.store.Inspection().ListShowDataByEO(search.EO)
 				if err != nil {
@@ -459,8 +484,93 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 					return
 				}
 			}
-		} else {
+		} else if search.Date1 != "" && search.Date2 == "" {
 
+			if search.Material != 0 {
+				fmt.Println("OK Material")
+				get, err := s.store.Inspection().ListShowDataByDateAndSAP(search.Date1, searchDateNow, search.Material)
+				if err != nil {
+					s.error(w, r, http.StatusUnprocessableEntity, err)
+					return
+				}
+				data := map[string]interface{}{
+					"TitleDOC":            "Отчет по истроии ВК",
+					"User":                user.LastName,
+					"Username":            user.FirstName,
+					"Admin":               Admin,
+					"WarehouseManager":    WarehouseManager,
+					"StockkeeperWH":       StockkeeperWH,
+					"SuperIngenerQuality": SuperIngenerQuality,
+					"IngenerQuality":      IngenerQuality,
+					"Quality":             Quality,
+					"Inspector":           Inspector,
+					"LoggedIn":            LoggedIn,
+					"GET":                 get,
+				}
+
+				err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
+				if err != nil {
+					http.Error(w, err.Error(), 400)
+					return
+				}
+			} else if search.EO != "" {
+				fmt.Println("OK EO")
+
+				get, err := s.store.Inspection().ListShowDataByDateAndEO(search.Date1, searchDateNow, search.EO)
+				if err != nil {
+					s.error(w, r, http.StatusUnprocessableEntity, err)
+					return
+				}
+				data := map[string]interface{}{
+					"TitleDOC":            "Отчет по истроии ВК",
+					"User":                user.LastName,
+					"Username":            user.FirstName,
+					"Admin":               Admin,
+					"WarehouseManager":    WarehouseManager,
+					"StockkeeperWH":       StockkeeperWH,
+					"SuperIngenerQuality": SuperIngenerQuality,
+					"IngenerQuality":      IngenerQuality,
+					"Quality":             Quality,
+					"Inspector":           Inspector,
+					"LoggedIn":            LoggedIn,
+					"GET":                 get,
+				}
+
+				err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
+				if err != nil {
+					http.Error(w, err.Error(), 400)
+					return
+				}
+
+			} else {
+				get, err := s.store.Inspection().ListShowDataByDate(search.Date1, searchDateNow)
+				if err != nil {
+					s.error(w, r, http.StatusUnprocessableEntity, err)
+					return
+				}
+
+				data := map[string]interface{}{
+					"TitleDOC":            "Отчет по истроии ВК",
+					"User":                user.LastName,
+					"Username":            user.FirstName,
+					"Admin":               Admin,
+					"WarehouseManager":    WarehouseManager,
+					"StockkeeperWH":       StockkeeperWH,
+					"SuperIngenerQuality": SuperIngenerQuality,
+					"IngenerQuality":      IngenerQuality,
+					"Quality":             Quality,
+					"Inspector":           Inspector,
+					"LoggedIn":            LoggedIn,
+					"GET":                 get,
+				}
+
+				err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
+				if err != nil {
+					http.Error(w, err.Error(), 400)
+					return
+				}
+			}
+		} else {
 			if search.Material != 0 {
 				fmt.Println("OK Material")
 				get, err := s.store.Inspection().ListShowDataByDateAndSAP(search.Date1, search.Date2, search.Material)

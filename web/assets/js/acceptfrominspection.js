@@ -1,4 +1,4 @@
-/*
+
 function initAccept() {
     resetFormsAccept();
     createFormAccept();
@@ -17,20 +17,20 @@ function initAccept() {
 //
 //
 //debugger;
-var mainDiv = document.getElementById("formAccept"); //ref to main div with forms
+var mainDivAccept = document.getElementById("formAccept"); //ref to main div with forms
 
 //attributes for form fields, they will be added during the creation of forms
-var formElementsTypes = ["input", "button"];//https://www.jetbrains.com/idea/features/editions_comparison_matrix.html
-var formElementsIds = ["scanidAccept", "button"];
-var formElementsClassNames = [
+var formElementsTypesAccept = ["input", "button"];//https://www.jetbrains.com/idea/features/editions_comparison_matrix.html
+var formElementsIdsAccept = ["scanidAccept", "button"];
+var formElementsClassNamesAccept = [
     "form-control form-control-sm col-lg-4",
     "deleteFormAccept btn",
 ];
 
-var formAllowedIdsArr = [];
-var rowsAmount = 50;
-var finalData = [];
-var labels = ["Сканируем QR-code катушки"];
+var formAllowedIdsArrAccept = [];
+var rowsAmountAccept = 50;
+var finalDataAccept = [];
+var labelsAccept = ["Сканируем QR-code катушки"];
 const regexpAccept = /\bP\d{7}LK\d{9}R\d{10}Q\d{5}D\d{8}\b/;
 const regexp2Accept = /\bP\d{7}L\d{10}R\d{10}Q\d{5}D\d{8}\b/;
 // P1016624L1000037226R1000317938Q00550D20200311
@@ -39,16 +39,16 @@ const regexp2Accept = /\bP\d{7}L\d{10}R\d{10}Q\d{5}D\d{8}\b/;
 function createFormAccept() {
     var form = document.createElement("div");
     form.className = "form-inline";
-    form.id = formAllowedIdsArr[0];
-    formAllowedIdsArr = formAllowedIdsArr.slice(1);
-    mainDiv.appendChild(form);
-    for (var i = 0; i < formElementsTypes.length; i++) {
+    form.id = formAllowedIdsArrAccept[0];
+    formAllowedIdsArrAccept = formAllowedIdsArrAccept.slice(1);
+    mainDivAccept.appendChild(form);
+    for (var i = 0; i < formElementsTypesAccept.length; i++) {
         
-        var element = document.createElement(formElementsTypes[i]);
-        element.id = `${formElementsIds[i]}-${form.id}`;
-        element.className = formElementsClassNames[i].concat(" ", "fields-style");
+        var element = document.createElement(formElementsTypesAccept[i]);
+        element.id = `${formElementsIdsAccept[i]}-${form.id}`;
+        element.className = formElementsClassNamesAccept[i].concat(" ", "fields-style");
         if (i != 1) {
-            element.placeholder = labels[i];
+            element.placeholder = labelsAccept[i];
         }
         form.appendChild(element);
 
@@ -63,8 +63,8 @@ function createFormAccept() {
 
     //add eventlisteners to newly created elements
 
-    var input = document.getElementById(`${formElementsIds[0]}-${form.id}`);
-    var deleteCross = document.getElementById(`${formElementsIds[1]}-${form.id}`);
+    var input = document.getElementById(`${formElementsIdsAccept[0]}-${form.id}`);
+    var deleteCross = document.getElementById(`${formElementsIdsAccept[1]}-${form.id}`);
 
     // create error if incorrect data were entered
     function createError(errorText) {
@@ -83,7 +83,7 @@ function createFormAccept() {
         errorMsg = createError("Введён некорректный номер");
         addRemoveErrorAccept(this, errorMsg);
 
-        toggleSubmitBtn();
+        toggleSubmitBtnAccept();
     };
 
     // check for an errors if user push enter and add new input
@@ -113,8 +113,8 @@ function toggleSubmitBtnAccept() {
 
 //check if we can add form and add it
 function addFormAccept() {
-    if (formAllowedIdsArr.length > 0) {
-        createForm();
+    if (formAllowedIdsArrAccept.length > 0) {
+        createFormAccept();
     }
 }
 
@@ -146,9 +146,9 @@ function checkAllValuesAccept() {
 
 // add new input if we didn't have duplicates
 function addFormButtonAccept() {
-    var check = checkAllValues();
+    var check = checkAllValuesAccept();
     if (check) {
-        addForm();
+        addFormAccept();
     }
 }
 
@@ -160,28 +160,31 @@ function checkCanAddValueOnContextAccept(e) {
     var table = document.getElementById('thetable');
     let rows = table.querySelectorAll('tr');
     let check = e.value;
-    let check2 = check.toLowerCase();
+    let check2 = check.toUpperCase();
 
     for (var i = 0; i < rows.length; i++) {
         var fullname = rows[i].querySelectorAll('td');
-    fullname = fullname[0].innerHTML.toLowerCase();
-    let status = rows[i].querySelectorAll('td');
-    status = status[9].innerHTML.toUpperCase();
+        fullname = fullname[0].innerHTML.toUpperCase();
+        let status = rows[i].querySelectorAll('td');
+        status = status[9].innerHTML.toUpperCase();
     
-    if (
-        !(regexpAccept.test(e.value) || regexp2Accept.test(e.value) ) || (check2 == fullname)
-        || numberToCheck > 1
-    ) {
-        console.log(status)
-        if (status == 'OK' || status == 'NG') {
-        result = false;
-    } else {
-        result = true;
+            if (
+                !(regexpAccept.test(e.value) || regexp2Accept.test(e.value) ) || check2 != fullname || numberToCheck > 1
+            ) {
+                    console.log(check2)
+                    console.log(status)
+                    if (status !== 'OK' || status !== 'NG') {
+        
+                    result = false;
+                    } else {
+                        console.log("result true ", check2)
+                        console.log("result true status " ,status)
+                        result = true;
+                    }
+            }
+    //debugger;
+        return result;
     }
-    }
-    debugger;
-    return result;
-}
 }
 
 // add or remove error message
@@ -202,7 +205,7 @@ function addRemoveErrorAccept(context, errorMsg) {
 }
 
 function deleteFormAccept() {
-    formAllowedIdsArr.push(this.parentNode.id);
+    formAllowedIdsArrAccept.push(this.parentNode.id);
     this.parentNode.parentNode.removeChild(this.parentNode);
     canShowAddButtonAccept();
     canShowDeleteButtonAccept();
@@ -220,16 +223,16 @@ function formIdGeneratorAccept(num) {
 
 //reset all forms, fields, console and generate new allowed IDs array
 function resetFormsAccept() {
-    formAllowedIdsArr = formIdGeneratorAccept(rowsAmount);
-    while (mainDiv.firstChild) {
-        mainDiv.removeChild(mainDiv.firstChild);
+    formAllowedIdsArrAccept = formIdGeneratorAccept(rowsAmountAccept);
+    while (mainDivAccept.firstChild) {
+        mainDivAccept.removeChild(mainDivAccept.firstChild);
     }
-    finalData = [];
+    finalDataAccept = [];
     //console.clear();
 }
 
 function canShowAddButtonAccept() {
-    if (formAllowedIdsArr.length == 0) {
+    if (formAllowedIdsArrAccept.length == 0) {
         document.getElementById("add-conditionAccept").disabled = true;
     } else {
         document.getElementById("add-conditionAccept").disabled = false;
@@ -237,7 +240,7 @@ function canShowAddButtonAccept() {
 }
 
 function canShowDeleteButtonAccept() {
-    if (formAllowedIdsArr.length < rowsAmount - 1) {
+    if (formAllowedIdsArrAccept.length < rowsAmountAccept - 1) {
         document.getElementsByClassName("deleteFormAccept")[0].disabled = false;
     } else {
         document.getElementsByClassName("deleteFormAccept")[0].disabled = true;
@@ -308,4 +311,4 @@ function sendDataAccept() {
 
 //let's go
 initAccept();
-*/
+
