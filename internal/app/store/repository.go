@@ -67,6 +67,7 @@ type InspectionRepository interface {
 	ListAcceptWHInspection() (*model.Inspections, error)
 	EditAcceptWarehouseInspection(int, string) (*model.Inspection, error)
 	AcceptWarehouseInspection(*model.Inspection, string) error
+	AcceptGroupsWarehouseInspection(*model.Inspection, string) error
 	CountTotalInspection() (int, error)
 	HoldInspection() (int, error)
 	NotVerifyComponents() (int, error)

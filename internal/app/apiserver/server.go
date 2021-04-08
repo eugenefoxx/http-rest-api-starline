@@ -139,6 +139,7 @@ func (s *Server) configureRouter() {
 	s.router.HandleFunc("/statusinspectionforwh", s.AuthMiddleware(s.PageListAcceptWHInspection())).Methods("GET")
 	s.router.HandleFunc("/acceptinspectiontowh/{ID:[0-9]+}", s.AuthMiddleware(s.PageacceptWarehouseInspection())).Methods("GET")
 	s.router.HandleFunc("/acceptinspectiontowh/{ID:[0-9]+}", s.AuthMiddleware(s.AcceptWarehouseInspection())).Methods("POST")
+	s.router.HandleFunc("/acceptgroupsinspectiontowh", s.AuthMiddleware(s.AcceptGroupsWarehouseInspection())).Methods("POST")
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 
 	s.router.HandleFunc("/main", s.AuthMiddleware(s.main())).Methods("GET")

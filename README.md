@@ -31,6 +31,9 @@ delete from transfer a using transfer b where a.id < b.id and a.idmaterial = b.i
 and a.status is null;
 //\***\*\*\*\*\*\*\***\*\*\*\*\***\*\*\*\*\*\*\***\*\*\***\*\*\*\*\*\*\***\*\*\*\*\***\*\*\*\*\*\*\***
 
+P2013002LK340621858R1000425231Q03000D00000000
+P2013002LK340621858R1000425299Q03000D00000000
+
 select \* from shipmentbysap where lastname = 'Коновалов' and shipment_date between '2020-02-15' and '2020-05-01';
 select material, qty, to_char (shipment_date, 'YYYY-MON-DD') shipment_date2, to_char (shipment_time, 'HH24:MI:SS') shipment_time2, lastname from shipmentbysap shipment_date;select material, qty, to_char (shipment_date, 'YYYY-MON-DD') shipment_date2, to_char (shipment_time, 'HH24:MI:SS') shipment_time2, lastname from shipmentbysap shipment_date;
 
@@ -148,3 +151,22 @@ left outer join panacim_stock on(id_return.id_roll = panacim_stock.material_barc
 DROP VIEW sap_description;
 DROP VIEW stock_sum7813;
 DROP VIEW stock7813;
+
+const btn = document.querySelector('sendupdate');
+
+function sendupdate(data) {
+const form = document.querySelector('form[name="valform"]'),
+const status = form.elements['status'].value,
+const note = form.elements['note'].value,
+
+}
+
+btn.addEventListener( 'click', function() {
+
+    sendupdate()
+
+// let elements = document
+//sendData( {test:'ok'} );
+})
+
+console.log(status);

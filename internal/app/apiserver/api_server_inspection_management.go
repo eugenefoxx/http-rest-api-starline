@@ -237,7 +237,7 @@ func (s *Server) InInspection() http.HandlerFunc {
 						return
 					}
 				} else {
-					if (strings.Contains(v.ScanID[0:1], "P") == false) && (len(v.ScanID) != 45) {
+					if (strings.Contains(v.ScanID[0:1], "P") == false) && (len(v.ScanID) != 35) {
 						fmt.Println("не верное сканирование :\n" + v.ScanID + "\n")
 						//	fmt.Fprintf(w, "не верное сканирование :"+v.ScanID)
 					}
@@ -1211,4 +1211,107 @@ func (s *Server) AcceptWarehouseInspection() http.HandlerFunc {
 		//http.Redirect(w, r, "/statusinspectionforwh", 303)
 		http.Redirect(w, r, "/statusinspection", 303)
 	}
+}
+
+func (s *Server) AcceptGroupsWarehouseInspection() http.HandlerFunc {
+	type req struct {
+		ScanID         string `json:"scanidAccept"`
+		SAP            int
+		Lot            string
+		Roll           int
+		Qty            int
+		ProductionDate string
+		NumberVendor   string
+		Location       string
+	}
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		var rdata []req
+		json.Unmarshal(body, &rdata)
+		fmt.Printf("test AcceptGroupsWarehouseInspection %s", body)
+		fmt.Println("\nall of the rdata AcceptGroupsWarehouseInspection", rdata)
+
+		currentTime := time.Now()
+
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		id, ok := session.Values["user_id"]
+		if !ok {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		user, err := s.store.User().Find(id.(int))
+		if err != nil {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		const statusTransfer = "Принято на склад с ВК"
+
+		for _, v := range rdata {
+			if (strings.Contains(v.ScanID[0:1], "P") == true) && (len(v.ScanID) == 45) {
+				idMaterial := v.ScanID[0:45]
+
+				if (strings.Contains(v.ScanID[0:1], "P") == true) && (len(v.ScanID) == 45) {
+					u := &model.Inspection{
+						Location:       statusTransfer,
+						Lastnameaccept: user.LastName, // Lastnameaccept
+						Dateaccept:     currentTime,   // Dateaccept
+						Timeaccept:     currentTime,   // Timeaccept
+						IdMaterial:     idMaterial,
+						Groups:         user.Groups,
+					}
+					if err := s.store.Inspection().AcceptGroupsWarehouseInspection(u, user.Groups); err != nil {
+						s.error(w, r, http.StatusUnprocessableEntity, err)
+
+						return
+					}
+				} else {
+					if (strings.Contains(v.ScanID[0:1], "P") == false) && (len(v.ScanID) != 45) {
+						fmt.Println("не верное сканирование :\n" + v.ScanID + "\n")
+						//	fmt.Fprintf(w, "не верное сканирование :"+v.ScanID)
+					}
+					//	tpl.Execute(w, data)
+					return
+				}
+			}
+			if (strings.Contains(v.ScanID[0:1], "P") == true) && (len(v.ScanID) == 35) {
+				idMaterial := v.ScanID[0:35]
+
+				if (strings.Contains(v.ScanID[0:1], "P") == true) && (len(v.ScanID) == 35) {
+					u := &model.Inspection{
+						Location:       statusTransfer,
+						Lastnameaccept: user.LastName, // Lastnameaccept
+						Dateaccept:     currentTime,   // Dateaccept
+						Timeaccept:     currentTime,   // Timeaccept
+						IdMaterial:     idMaterial,
+						Groups:         user.Groups,
+					}
+					if err := s.store.Inspection().AcceptGroupsWarehouseInspection(u, user.Groups); err != nil {
+						s.error(w, r, http.StatusUnprocessableEntity, err)
+
+						return
+					}
+				} else {
+					if (strings.Contains(v.ScanID[0:1], "P") == false) && (len(v.ScanID) != 35) {
+						fmt.Println("не верное сканирование :\n" + v.ScanID + "\n")
+						//	fmt.Fprintf(w, "не верное сканирование :"+v.ScanID)
+					}
+					//	tpl.Execute(w, data)
+					return
+				}
+			}
+		}
+	}
+
 }

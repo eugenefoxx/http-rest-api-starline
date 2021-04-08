@@ -379,6 +379,24 @@ func (r *InspectionRepository) AcceptWarehouseInspection(s *model.Inspection, gr
 	return nil
 }
 
+func (r *InspectionRepository) AcceptGroupsWarehouseInspection(s *model.Inspection, groups string) error {
+	if groups == "склад" {
+		_, err := r.store.db.Exec(
+			"UPDATE transfer SET location = $1, lastnameaccept = $2, dateaccept = $3, timeaccept = $4 FROM users WHERE transfer.idmaterial = $5 AND users.groups = $6",
+			s.Location,
+			s.Lastnameaccept,
+			s.Dateaccept,
+			s.Timeaccept,
+			s.IdMaterial,
+			s.Groups,
+		)
+		if err != nil {
+			panic(err)
+		}
+	}
+	return nil
+}
+
 func (r *InspectionRepository) ListShowDataByEO(eo string) (s *model.Inspections, err error) {
 	showDataByDate := model.Inspection{}
 	showDataByDateList := make(model.Inspections, 0)

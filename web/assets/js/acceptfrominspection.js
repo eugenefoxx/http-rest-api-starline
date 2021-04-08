@@ -91,8 +91,9 @@ function createFormAccept() {
         if (event.keyCode === 13 || 40) {
             event.preventDefault();
             errorMsg = createError("Введён некорректный номер");
+            // debugger
             addRemoveErrorAccept(this, errorMsg);
-            if (checkCanAddValueOnContextAccept(this)) {
+            if (validateQrCode(this.value)) {
                 addFormAccept();
             }
         }
@@ -153,43 +154,74 @@ function addFormButtonAccept() {
 }
 
 // check input value on context
-function checkCanAddValueOnContextAccept(e) {
-    var numberToCheck = checkValueAccept(e.value);
-    var result = true;
-   // debugger;
-    var table = document.getElementById('thetable');
-    let rows = table.querySelectorAll('tr');
-    let check = e.value;
-    let check2 = check.toUpperCase();
+// function checkCanAddValueOnContextAccept(e) {
+//     var numberToCheck = checkValueAccept(e.value);
+//     var result = true;
+//    // debugger;
+//     var table = document.getElementById('thetable');
+//     let rows = table.querySelectorAll('tr');
+//     let check = e.value;
+//     let check2 = check.toUpperCase();
 
-    for (var i = 0; i < rows.length; i++) {
-        var fullname = rows[i].querySelectorAll('td');
-        fullname = fullname[0].innerHTML.toUpperCase();
-        let status = rows[i].querySelectorAll('td');
-        status = status[9].innerHTML.toUpperCase();
+//     for (var i = 0; i < rows.length; i++) {
+//         var fullname = rows[i].querySelectorAll('td');
+//         fullname = fullname[0].innerHTML.toUpperCase();
+//         let status = rows[i].querySelectorAll('td');
+//         status = status[9].innerHTML.toUpperCase();
     
-            if (
-                !(regexpAccept.test(e.value) || regexp2Accept.test(e.value) ) || check2 != fullname || numberToCheck > 1
-            ) {
-                    console.log(check2)
-                    console.log(status)
-                    if (status !== 'OK' || status !== 'NG') {
+//             if (
+//                 !(regexpAccept.test(e.value) || regexp2Accept.test(e.value) ) || check2 != fullname || numberToCheck > 1
+//             ) {
+//                     console.log(check2)
+//                     console.log(status)
+//                     if (status !== 'OK' || status !== 'NG') {
         
-                    result = false;
-                    } else {
-                        console.log("result true ", check2)
-                        console.log("result true status " ,status)
-                        result = true;
-                    }
-            }
-    //debugger;
-        return result;
+//                     result = false;
+//                     } else {
+//                         console.log("result true ", check2)
+//                         console.log("result true status " ,status)
+//                         result = true;
+//                     }
+//             }
+//     //debugger;
+//         return result;
+//     }
+// }
+
+function validateQrCode(code) {
+ //   debugger;
+    const regexpContractEO = /\bP\d{7}LK\d{9}R\d{10}Q\d{5}D\d{8}\b/; 
+    const regexpStarLineEO = /\bP\d{7}L\d{10}R\d{10}Q\d{5}D\d{8}\b/;
+    const regexpCart = /\bP\d{7}LR\d{10}Q\d{5}D\d{8}\b/;
+    const column = document.querySelector('td[data-material-id="'+code+'"]');
+    let result = true;
+
+    if (!column || !column.innerHTML) {
+        return false;
     }
+
+    const row = document.querySelector('td[data-material-id="'+code+'"]').parentElement; 
+    const stateIsValid = row.classList.contains('NG') || row.classList.contains('OK');
+
+  //  if (rowid.includes(code)) {
+    if (
+        (
+            regexpStarLineEO.test(code) ||
+            regexpContractEO.test(code) ||
+            regexpCart.test(code)
+        ) && (stateIsValid)
+    ) {  
+        result = true;
+    } else {
+        result = false;
+    }  
+
+    return result;
 }
 
 // add or remove error message
 function addRemoveErrorAccept(context, errorMsg) {
-    if (!checkCanAddValueOnContextAccept(context)) {
+    if (!validateQrCode(context.value)) {
         if (!context.className.includes("is-invalid")) {
             context.className = context.className.concat(" is-invalid");
         }
@@ -287,8 +319,8 @@ function sendDataAccept() {
     if (dataToSend != "[]") {
         var xhr = new XMLHttpRequest();
         //   xhr.open("POST", "http://10.1.20.110:3001/ininspection", true);
-       // xhr.open("POST", "http://localhost:3001/ininspection", true);
-      //  xhr.open("POST", "http://*", true);
+        xhr.open("POST", "http://localhost:3001/acceptgroupsinspectiontowh", true);
+      //  xhr.open("POST", "http://", true);
         xhr.setRequestHeader("Content-Type", "application/json");
 
         xhr.send(dataToSend);
