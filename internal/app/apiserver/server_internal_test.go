@@ -1,6 +1,17 @@
 package apiserver
 
-/*
+import (
+	"bytes"
+	"encoding/json"
+	"net/http"
+	"net/http/httptest"
+	"testing"
+
+	"github.com/eugenefoxx/http-rest-api-starline/internal/app/store/teststore"
+	"github.com/gorilla/sessions"
+	"gotest.tools/assert"
+)
+
 func TestServer_HandleUsersCreate(t *testing.T) {
 
 	s := newServer(teststore.New(), sessions.NewCookieStore([]byte("secret")))
@@ -48,8 +59,9 @@ func TestServer_HandleUsersCreate(t *testing.T) {
 		s := newServer(teststore.New())
 		s.ServeHTTP(rec, req)
 		assert.Equal(t, rec.Code, http.StatusOK)
-*/
-//} */
+	*/
+}
+
 /*
 func TestServer_AuthenticateUser(t *testing.T) {
 	store := teststore.New()
@@ -93,6 +105,7 @@ func TestServer_AuthenticateUser(t *testing.T) {
 		})
 	}
 }
+
 
 func TestSever_HandleSessionsCreate(t *testing.T) {
 

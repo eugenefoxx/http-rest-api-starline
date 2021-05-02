@@ -79,6 +79,8 @@ type InspectionRepository interface {
 	ListShowDataByDate(string, string) (*model.Inspections, error)
 	ListShowDataByDateAndSAP(string, string, int) (*model.Inspections, error)
 	ListShowDataByDateAndEO(string, string, string) (*model.Inspections, error)
-	ListShowDataBySap(int) (*model.Inspections, error)
+	ListShowDataBySap(int, int, int) (*model.Inspections, error)
 	ListShowDataByEO(string) (*model.Inspections, error)
+	CountInspection() (int, error)
+	PaginationInspection(int, int) (*model.Inspections, error)
 }

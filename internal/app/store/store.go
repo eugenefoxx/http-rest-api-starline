@@ -1,5 +1,6 @@
 package store
 
+// Через методы Store вызываются методы репозиториев-интерфейсов
 // Store ...
 type Store interface {
 	User() UserRepository

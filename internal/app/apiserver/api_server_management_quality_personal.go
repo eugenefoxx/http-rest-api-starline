@@ -44,12 +44,13 @@ func (s *Server) PageshowUsersQuality() http.HandlerFunc {
 			SuperIngenerQuality = true
 			LoggedIn = true
 		}
-
+		s.Lock()
 		get, err := s.store.User().ListUsersQuality()
 		if err != nil {
 			s.error(w, r, http.StatusUnprocessableEntity, err)
 			return
 		}
+		s.Unlock()
 		data := map[string]interface{}{
 			"TitleDOC":            "Сотрудники качества",
 			"User":                user.LastName,
@@ -102,11 +103,12 @@ func (s *Server) CreateUserQuality() http.HandlerFunc {
 				Groups:    Group,
 				Tabel:     v.Tabel,
 			}
-
+			s.Lock()
 			if err := s.store.User().CreateUserByManager(u); err != nil {
 				s.error(w, r, http.StatusUnprocessableEntity, err)
 				return
 			}
+			s.Unlock()
 		}
 
 	}
@@ -152,11 +154,13 @@ func (s *Server) PageupdateUserQuality() http.HandlerFunc {
 		if err != nil {
 			log.Println(err)
 		}
+		s.Lock()
 		get, err := s.store.User().EditUserByManager(id)
 		if err != nil {
 			s.error(w, r, http.StatusUnprocessableEntity, err)
 			return
 		}
+		s.Unlock()
 		data := map[string]interface{}{
 			"GET":                 get,
 			"Admin":               Admin,
@@ -205,12 +209,13 @@ func (s *Server) UpdateUserQuality() http.HandlerFunc {
 			Role:      req.Role,
 			Tabel:     req.Tabel,
 		}
-
+		s.Lock()
 		if err := s.store.User().UpdateUserByManager(u); err != nil {
 			s.error(w, r, http.StatusUnprocessableEntity, err)
 			return
 		}
-		http.Redirect(w, r, "/showusersquality", 303)
+		s.Unlock()
+		http.Redirect(w, r, "/operation/showusersquality", 303)
 	}
 
 }
@@ -231,12 +236,12 @@ func (s *Server) DeleteUserQuality() http.HandlerFunc {
 		u := &model.User{
 			ID: req.ID,
 		}
-
+		s.Lock()
 		if err := s.store.User().DeleteUserByManager(u); err != nil {
 			s.error(w, r, http.StatusUnprocessableEntity, err)
 			return
 		}
-
-		http.Redirect(w, r, "/showusersquality", 303)
+		s.Unlock()
+		http.Redirect(w, r, "/operation/showusersquality", 303)
 	}
 }

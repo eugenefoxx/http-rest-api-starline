@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"sync"
 
 	"github.com/eugenefoxx/http-rest-api-starline/internal/app/model"
 	"github.com/eugenefoxx/http-rest-api-starline/internal/app/store"
@@ -49,7 +50,7 @@ type Server struct {
 	sessionStore sessions.Store
 	database     *sqlx.DB
 	//	html         string
-
+	sync.Mutex
 }
 
 func init() {
@@ -79,28 +80,12 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func (s *Server) configureRouter() {
 	s.router.Use(s.setRequestID)
 	s.router.Use(s.logRequest)
-	s.router.Use(handlers.CORS(handlers.AllowedOrigins([]string{"*"})))
+	s.router.Use(handlers.CORS(handlers.AllowedOrigins([]string{"http://localhost:3001"}), handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}), handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE"})))
 
 	s.router.HandleFunc("/test", s.diaplayPage())
 
 	s.router.HandleFunc("/users", s.pagehandleUsersCreate()).Methods("GET")
 	s.router.HandleFunc("/users", s.handleUsersCreate()).Methods("POST")
-
-	// api_server_management_quality_personal.go
-	s.router.HandleFunc("/showusersquality", s.PageshowUsersQuality()).Methods("GET")
-	//s.router.HandleFunc("/showusersquality", s.showUsersQuality()).Methods("POST")
-	s.router.HandleFunc("/createusersquality", s.CreateUserQuality()).Methods("POST")
-	s.router.HandleFunc("/updateuserquality/{ID:[0-9]+}", s.AuthMiddleware(s.PageupdateUserQuality())).Methods("GET")
-	s.router.HandleFunc("/updateuserquality/{ID:[0-9]+}", s.AuthMiddleware(s.UpdateUserQuality())).Methods("POST")
-	s.router.HandleFunc("/deleteuserquality/{ID:[0-9]+}", s.AuthMiddleware(s.DeleteUserQuality()))
-	//////////////////////////////////////////////////////////////////////////////////////////
-	// api_server_management_warehouse_personal.go
-	s.router.HandleFunc("/showuserswarehouse", s.PageshowUsersWarehouse()).Methods("GET")
-	s.router.HandleFunc("/createuserswarehouse", s.CreateUserWarehouse()).Methods("POST")
-	s.router.HandleFunc("/updateuserwarehouse/{ID:[0-9]+}", s.AuthMiddleware(s.PageupdateUserWarehouse())).Methods("GET")
-	s.router.HandleFunc("/updateuserwarehouse/{ID:[0-9]+}", s.AuthMiddleware(s.UpdateUserWarehouse())).Methods("POST")
-	s.router.HandleFunc("/deleteuserwarehouse/{ID:[0-9]+}", s.AuthMiddleware(s.DeleteUserWarehouse()))
-	////////////////////////////////////////////////////////////////////////////////////////////
 
 	s.router.HandleFunc("/updatepass", s.pageupdateSessionsCreate()).Methods("GET")
 	s.router.HandleFunc("/updatepass", s.updateSessionsCreate()).Methods("POST")
@@ -109,40 +94,63 @@ func (s *Server) configureRouter() {
 	s.router.HandleFunc("/login", s.handleSessionsCreate()).Methods("POST")
 	s.router.HandleFunc("/logout", s.signOut()).Methods("GET")
 
-	s.router.HandleFunc("/shipmentbysap", s.AuthMiddleware(s.pageshipmentBySAP())).Methods("GET")
-	s.router.HandleFunc("/shipmentbysap", s.AuthMiddleware(s.shipmentBySAP())).Methods("POST")
-	s.router.HandleFunc("/showdateshipmentbysapbysearchstatic", s.AuthMiddleware(s.pageshowShipmentBySAPBySearchStatic())).Methods("GET")
-	s.router.HandleFunc("/showdateshipmentbysapbysearchstatic", s.AuthMiddleware(s.showShipmentBySAPBySearchStatic())).Methods("POST")
+	// /operation/***
+	operation := s.router.PathPrefix("/operation").Subrouter()
+	//	operation.Use(s.authenticateUser)
+	operation.Use(s.AuthMiddleware)
+	operation.HandleFunc("/whoami", s.handleWhoami()).Methods("GET")
 
-	s.router.HandleFunc("/insertIDReturn", s.AuthMiddleware(s.pageidReturn())).Methods("GET")
-	s.router.HandleFunc("/insertIDReturn", s.AuthMiddleware(s.idReturn())).Methods("POST")
+	// api_server_management_quality_personal.go
+	operation.HandleFunc("/showusersquality", s.PageshowUsersQuality()).Methods("GET")
+	//s.router.HandleFunc("/showusersquality", s.showUsersQuality()).Methods("POST")
+	operation.HandleFunc("/createusersquality", s.CreateUserQuality()).Methods("POST")
+	operation.HandleFunc("/updateuserquality/{ID:[0-9]+}", s.PageupdateUserQuality()).Methods("GET")
+	operation.HandleFunc("/updateuserquality/{ID:[0-9]+}", s.UpdateUserQuality()).Methods("POST")
+	operation.HandleFunc("/deleteuserquality/{ID:[0-9]+}", s.DeleteUserQuality())
+	//////////////////////////////////////////////////////////////////////////////////////////
+	// api_server_management_warehouse_personal.go
+	operation.HandleFunc("/showuserswarehouse", s.PageshowUsersWarehouse()).Methods("GET")
+	operation.HandleFunc("/createuserswarehouse", s.CreateUserWarehouse()).Methods("POST")
+	operation.HandleFunc("/updateuserwarehouse/{ID:[0-9]+}", s.PageupdateUserWarehouse()).Methods("GET")
+	operation.HandleFunc("/updateuserwarehouse/{ID:[0-9]+}", s.UpdateUserWarehouse()).Methods("POST")
+	operation.HandleFunc("/deleteuserwarehouse/{ID:[0-9]+}", s.DeleteUserWarehouse())
+	////////////////////////////////////////////////////////////////////////////////////////////
 
-	s.router.HandleFunc("/insertvendor", s.AuthMiddleware(s.PageinsertVendor())).Methods("GET")
-	s.router.HandleFunc("/insertvendor", s.AuthMiddleware(s.InsertVendor())).Methods("POST")
+	operation.HandleFunc("/shipmentbysap", s.pageshipmentBySAP()).Methods("GET")
+	operation.HandleFunc("/shipmentbysap", s.shipmentBySAP()).Methods("POST")
+	operation.HandleFunc("/showdateshipmentbysapbysearchstatic", s.pageshowShipmentBySAPBySearchStatic()).Methods("GET")
+	operation.HandleFunc("/showdateshipmentbysapbysearchstatic", s.showShipmentBySAPBySearchStatic()).Methods("POST")
+
+	operation.HandleFunc("/insertIDReturn", s.pageidReturn()).Methods("GET")
+	operation.HandleFunc("/insertIDReturn", s.idReturn()).Methods("POST")
+
+	operation.HandleFunc("/insertvendor", s.PageinsertVendor()).Methods("GET")
+	operation.HandleFunc("/insertvendor", s.InsertVendor()).Methods("POST")
 	// api_server_vendor_management.go
-	s.router.HandleFunc("/showvendor", s.AuthMiddleware(s.PageVendor())).Methods("GET")
-	s.router.HandleFunc("/updatevendor/{ID:[0-9]+}", s.AuthMiddleware(s.PageupdateVendor())).Methods("GET")
-	s.router.HandleFunc("/updatevendor/{ID:[0-9]+}", s.AuthMiddleware(s.UpdateVendor())).Methods("POST")
-	s.router.HandleFunc("/deletevendor/{ID:[0-9]+}", s.AuthMiddleware(s.DeleteVendor())) //.Methods("DELETE")
+	operation.HandleFunc("/showvendor", s.PageVendor()).Methods("GET", "OPTIONS")
+	operation.HandleFunc("/updatevendor/{ID:[0-9]+}", s.PageupdateVendor()).Methods("GET")
+	operation.HandleFunc("/updatevendor/{ID:[0-9]+}", s.UpdateVendor()).Methods("POST")
+	operation.HandleFunc("/deletevendor/{ID:[0-9]+}", s.DeleteVendor()) //.Methods("DELETE")
 	/////////////////////////////////////////////////////////////////////////////////////////////
 	// api_server_inspection_management.go
-	s.router.HandleFunc("/ininspection", s.AuthMiddleware(s.PageinInspection())).Methods("GET")
-	s.router.HandleFunc("/ininspection", s.AuthMiddleware(s.InInspection())).Methods("POST")
-	s.router.HandleFunc("/historyinspection", s.AuthMiddleware(s.PagehistoryInspection())).Methods("GET")
-	s.router.HandleFunc("/historyinspection", s.AuthMiddleware(s.HistoryInspection())).Methods("POST")
+	operation.HandleFunc("/ininspection", s.PageinInspection()).Methods("GET")
+	operation.HandleFunc("/ininspection", s.InInspection()).Methods("POST")
+	operation.HandleFunc("/historyinspection", s.PagehistoryInspection()).Methods("GET")
+	operation.HandleFunc("/historyinspection", s.HistoryInspection()).Methods("POST")
 
-	s.router.HandleFunc("/statusinspection", s.AuthMiddleware(s.PageInspection())).Methods("GET")
-	s.router.HandleFunc("/updateinspection/{ID:[0-9]+}", s.AuthMiddleware(s.PageupdateInspection())).Methods("GET")
-	s.router.HandleFunc("/updateinspection/{ID:[0-9]+}", s.AuthMiddleware(s.UpdateInspection())).Methods("POST")
-	s.router.HandleFunc("/deleteinspection/{ID:[0-9]+}", s.AuthMiddleware(s.DeleteInspection()))
+	operation.HandleFunc("/statusinspection", s.PageInspection()).Methods("GET")
+	operation.HandleFunc("/updateinspection/{ID:[0-9]+}", s.PageupdateInspection()).Methods("GET")
+	operation.HandleFunc("/updateinspection/{ID:[0-9]+}", s.UpdateInspection()).Methods("POST", "OPTIONS")
+	operation.HandleFunc("/deleteinspection/{ID:[0-9]+}", s.DeleteInspection())
 
-	s.router.HandleFunc("/statusinspectionforwh", s.AuthMiddleware(s.PageListAcceptWHInspection())).Methods("GET")
-	s.router.HandleFunc("/acceptinspectiontowh/{ID:[0-9]+}", s.AuthMiddleware(s.PageacceptWarehouseInspection())).Methods("GET")
-	s.router.HandleFunc("/acceptinspectiontowh/{ID:[0-9]+}", s.AuthMiddleware(s.AcceptWarehouseInspection())).Methods("POST")
-	s.router.HandleFunc("/acceptgroupsinspectiontowh", s.AuthMiddleware(s.AcceptGroupsWarehouseInspection())).Methods("POST")
+	operation.HandleFunc("/statusinspectionforwh", s.PageListAcceptWHInspection()).Methods("GET")
+	operation.HandleFunc("/acceptinspectiontowh/{ID:[0-9]+}", s.PageacceptWarehouseInspection()).Methods("GET")
+	operation.HandleFunc("/acceptinspectiontowh/{ID:[0-9]+}", s.AcceptWarehouseInspection()).Methods("POST")
+	operation.HandleFunc("/acceptgroupsinspectiontowh", s.AcceptGroupsWarehouseInspection()).Methods("POST")
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 
-	s.router.HandleFunc("/main", s.AuthMiddleware(s.main())).Methods("GET")
+	//	s.router.HandleFunc("/main", s.AuthMiddleware(s.main())).Methods("GET")
+	operation.HandleFunc("/main", s.main()).Methods("GET")
 	s.router.HandleFunc("/", s.upload()).Methods("GET")
 	s.router.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("./web"))))
 	fmt.Println("Webserver StarLine launch.")
@@ -192,6 +200,7 @@ func (s *Server) setRequestID(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		id := uuid.New().String()
 		w.Header().Set("X-Request-ID", id)
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		next.ServeHTTP(w, r.WithContext(context.WithValue(r.Context(), ctxKeyRequestID, id)))
 	})
 }
@@ -225,7 +234,7 @@ func (s *Server) logRequest(next http.Handler) http.Handler {
 		logger.Infof("started %s %s", r.Method, r.RequestURI)
 
 		start := time.Now()
-
+		// переопределение ResponseWriter
 		rw := &responseWriter{w, http.StatusOK}
 		next.ServeHTTP(rw, r)
 
@@ -318,12 +327,14 @@ func (s *Server) handleUsersCreate() http.HandlerFunc {
 			LastName:  req.LastName,  // lastname req.LastName
 		}
 		//json.NewEncoder(w).Encode(u)
+		s.Lock()
 		if err := s.store.User().Create(u); err != nil {
 			s.error(w, r, http.StatusUnprocessableEntity, err)
 			return
 		}
 
 		u.Sanitize()
+		s.Unlock()
 		//	s.respond(w, r, http.StatusCreated, u)
 		//	target = "/one"
 		//	http.Redirect(w, r, target, 302)
@@ -399,11 +410,13 @@ func (s *Server) updateSessionsCreate() http.HandlerFunc {
 			Password: req.Password,
 		}
 
+		s.Lock()
 		if err := s.store.User().UpdatePass(u); err != nil {
 			s.error(w, r, http.StatusUnprocessableEntity, err)
 			return
 		}
 		u.Sanitize()
+		s.Unlock()
 		fmt.Println("обновляю пароль")
 		http.Redirect(w, r, "/", 303)
 		err = tpl.ExecuteTemplate(w, "updateUser.html", nil)
@@ -565,7 +578,7 @@ func (s *Server) authenticateUser(next http.Handler) http.Handler {
 	})
 }
 
-func (s *Server) AuthMiddleware(h http.HandlerFunc) http.HandlerFunc {
+func (s *Server) AuthMiddleware(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		session, err := s.sessionStore.Get(r, sessionName)
 		if err != nil {
@@ -592,6 +605,7 @@ func (s *Server) AuthMiddleware(h http.HandlerFunc) http.HandlerFunc {
 
 		if id == nil {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
+			//w.Write([]byte("Ooops"))
 			//tpl.ExecuteTemplate(w, "login.html", nil)
 		} else {
 			h.ServeHTTP(w, r)
@@ -679,6 +693,7 @@ func (s *Server) handleSessionsCreate() http.HandlerFunc {
 		fmt.Println("email:   ", email)
 		//	target := "/sessions"
 
+		s.Lock()
 		u, err := s.store.User().FindByEmail(email, email)
 		//	fmt.Println("FindByEmail:   ", u)
 		//	match := u.ComparePassword(password)
@@ -688,7 +703,7 @@ func (s *Server) handleSessionsCreate() http.HandlerFunc {
 
 			return
 		}
-
+		s.Unlock()
 		if u.Role == "Administrator" {
 			Admin = true
 			LoggedIn = true
@@ -1009,11 +1024,13 @@ func (s *Server) shipmentBySAP() http.HandlerFunc {
 					LastName: user.LastName, //record.LastName, // user.LastName,
 
 				}
+				s.Lock()
 				//	var send bool
 				if err := s.store.Shipmentbysap().InterDate(u); err != nil {
 					s.error(w, r, http.StatusUnprocessableEntity, err)
 					return
 				}
+				s.Unlock()
 				//	}
 
 				//	fm := session.Flashes("message")
@@ -1210,12 +1227,13 @@ func (s *Server) showShipmentBySAPBySearchStatic() http.HandlerFunc {
 				Material:      search.Material,
 			}
 		*/
+		s.Lock()
 		get, err := s.store.Shipmentbysap().ShowDateBySearch(search.LastName, search.Date1, search.Date2, search.Material)
 		if err != nil {
 			s.error(w, r, http.StatusUnprocessableEntity, err)
 			return
 		}
-
+		s.Unlock()
 		data := map[string]interface{}{
 			"TitleDOC":    "Отгрузка изделий",
 			"User":        u.LastName,
@@ -1367,12 +1385,13 @@ func (s *Server) idReturn() http.HandlerFunc {
 					LastName:   user.LastName,
 				}
 				fmt.Println("idroll - ", idroll)
+				s.Lock()
 				if err := s.store.IDReturn().InterDate(u); err != nil {
 					s.error(w, r, http.StatusUnprocessableEntity, err)
 
 					return
 				}
-
+				s.Unlock()
 				//	fmt.Fprintf(w, "Date of ID uploaded successfully")
 				//	return
 
@@ -1539,12 +1558,13 @@ func (s *Server) showUsersQuality() http.HandlerFunc {
 			SuperIngenerQuality = true
 			LoggedIn = true
 		}
-
+		s.Lock()
 		get, err := s.store.User().ListUsersQuality()
 		if err != nil {
 			s.error(w, r, http.StatusUnprocessableEntity, err)
 			return
 		}
+		s.Unlock()
 		data := map[string]interface{}{
 			"TitleDOC":            "Сотрудники качества",
 			"User":                user.LastName,
@@ -1572,5 +1592,29 @@ func (s *Server) respond(w http.ResponseWriter, r *http.Request, code int, data 
 	w.WriteHeader(code)
 	if data != nil {
 		json.NewEncoder(w).Encode(data)
+	}
+}
+
+func (s *Server) Pagination(r *http.Request, limit int) (int, int) {
+	keys := r.URL.Query()
+	if keys.Get("page") == "" {
+		return 1, 0
+	}
+
+	page, _ := strconv.Atoi(keys.Get("page"))
+	if page < 1 {
+		return 1, 0
+	}
+
+	begin := (limit * page) - limit
+	return page, begin
+}
+
+func RenderJSON(w http.ResponseWriter, val interface{}, statusCode int) {
+	w.Header().Set("Content-Type", "application/json; charset-UTF8")
+	w.WriteHeader(statusCode)
+	err := json.NewEncoder(w).Encode(val)
+	if err != nil {
+		log.Fatal(err)
 	}
 }

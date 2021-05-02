@@ -191,7 +191,7 @@ function alternate(id) {
 }
 
 function editVendor(id) {
-    axios.get('/updatevendor/' + id)
+    axios.get('/operation/updatevendor/' + id)
         .then(function (response) {
             document
                 .getElementById('modal-2')
@@ -202,7 +202,7 @@ function editVendor(id) {
 
 
 function editInspection(id) {
-    axios.get('/updateinspection/' + id)
+    axios.get('/operation/updateinspection/' + id)
         .then(function (response) {
             document
                 .getElementById('modal-2')
@@ -212,7 +212,7 @@ function editInspection(id) {
 }
 
 function editUserQuality(id) {
-    axios.get('/updateuserquality/' + id)
+    axios.get('/operation/updateuserquality/' + id)
         .then(function (response) {
             document
                 .getElementById('modal-2')
@@ -222,7 +222,7 @@ function editUserQuality(id) {
   }
 
   function acceptInspection(id) {
-    axios.get('/acceptinspectiontowh/' + id)
+    axios.get('/operation/acceptinspectiontowh/' + id)
         .then(function (response) {
             document
                 .getElementById('modal-4')
@@ -232,7 +232,7 @@ function editUserQuality(id) {
   }
 
   function editUserWarehouse(id) {
-    axios.get('/updateuserwarehouse/' + id)
+    axios.get('/operation/updateuserwarehouse/' + id)
         .then(function (response) {
             document
                 .getElementById('modal-6')
@@ -242,5 +242,5 @@ function editUserQuality(id) {
   }
 
   function redirectTostatusinspection() {
-    window.location.replace("http://localhost:3001/statusinspection");
+    window.location.replace("http://localhost:3001/operation/statusinspection");
 }

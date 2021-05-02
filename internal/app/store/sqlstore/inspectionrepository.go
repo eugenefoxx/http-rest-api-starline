@@ -461,7 +461,7 @@ func (r *InspectionRepository) ListShowDataByEO(eo string) (s *model.Inspections
 	return &showDataByDateList, nil
 }
 
-func (r *InspectionRepository) ListShowDataBySap(sap int) (s *model.Inspections, err error) {
+func (r *InspectionRepository) ListShowDataBySap(sap, begin, limit int) (s *model.Inspections, err error) {
 	showDataByDate := model.Inspection{}
 	showDataByDateList := make(model.Inspections, 0)
 
@@ -474,15 +474,17 @@ func (r *InspectionRepository) ListShowDataBySap(sap int) (s *model.Inspections,
 		Coalesce (transfer.lastnameaccept, ''), Coalesce(TO_CHAR(transfer.dateaccept, 'YYYY-MM-DD'), '') dateaccept2,  
 		Coalesce(TO_CHAR(transfer.timeaccept, 'HH24:MI:SS'), '') timeaccept2
 		FROM transfer left outer join vendor on (transfer.numbervendor = vendor.code_debitor) 
-		WHERE sap = $1;`
+		WHERE sap = $1 offset $2 limit $3;`
 
 	rows, err := r.store.db.Query(
 		//	"SELECT * FROM transfer WHERE dateupdate BETWEEN $1 AND $2",
 		selectDate,
-		sap)
+		sap,
+		begin,
+		limit)
 
 	if err != nil {
-		fmt.Println("ошибка в select")
+		fmt.Println("ошибка в selectDate")
 		return nil, err
 	}
 	defer rows.Close()
@@ -715,4 +717,81 @@ func (r *InspectionRepository) ListShowDataByDateAndEO(updateDate1 string, updat
 	}
 
 	return &showDataByDateList, nil
+}
+
+func (r *InspectionRepository) CountInspection() (int, error) {
+
+	//select := `SELECT COUNT (transfer.id) FROM transfer;`
+	var count int
+	row := r.store.db.QueryRow(
+		//			select
+		"SELECT COUNT (transfer.id) FROM transfer",
+	)
+	err := row.Scan(&count)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return count, nil
+}
+
+func (r *InspectionRepository) PaginationInspection(begin, limit int) (s *model.Inspections, err error) {
+	showPaginationInspection := model.Inspection{}
+	showPaginationInspectionList := make(model.Inspections, 0)
+
+	selectOffset := `transfer.id, transfer.idmaterial, transfer.sap, transfer.lot, transfer.idroll, 
+	transfer.productiondate, Coalesce (vendor.name_debitor, ''), transfer.location, transfer.lastname, Coalesce (transfer.status, ''), 
+	Coalesce (transfer.note, ''), Coalesce (transfer.update, ''), 
+	Coalesce(TO_CHAR(transfer.dateupdate, 'YYYY-MM-DD'), '') dateupdate2, 
+	Coalesce(TO_CHAR(transfer.timeupdate, 'HH24:MI:SS'), '') timeupdate2, 
+	TO_CHAR(transfer.date, 'YYYY-MM-DD') date2, TO_CHAR(transfer.time, 'HH24:MI:SS') time2, 
+	Coalesce (transfer.lastnameaccept, ''), Coalesce(TO_CHAR(transfer.dateaccept, 'YYYY-MM-DD'), '') dateaccept2,  
+	Coalesce(TO_CHAR(transfer.timeaccept, 'HH24:MI:SS'), '') timeaccept2
+	FROM transfer left outer join vendor on (transfer.numbervendor = vendor.code_debitor) offset = $1 limit = $2;`
+
+	rows, err := r.store.db.Query(
+		selectOffset,
+		begin,
+		limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		err := rows.Scan(
+			&showPaginationInspection.ID,
+			&showPaginationInspection.IdMaterial,
+			&showPaginationInspection.SAP,
+			&showPaginationInspection.Lot,
+			&showPaginationInspection.IdRoll,
+			&showPaginationInspection.ProductionDate,
+			&showPaginationInspection.NameDebitor,
+			&showPaginationInspection.Location,
+			&showPaginationInspection.Lastname,
+			&showPaginationInspection.Status,
+			&showPaginationInspection.Note,
+			&showPaginationInspection.Update,
+			&showPaginationInspection.Dateupdate2,
+			&showPaginationInspection.Timeupdate2,
+			&showPaginationInspection.Date2,
+			&showPaginationInspection.Time2,
+			&showPaginationInspection.Lastnameaccept,
+			&showPaginationInspection.Dateaccept2,
+			&showPaginationInspection.Timeaccept2,
+		)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				return nil, store.ErrRecordNotFound
+			}
+			return nil, err
+		}
+		showPaginationInspectionList = append(showPaginationInspectionList, showPaginationInspection)
+	}
+	err = rows.Err()
+	if err != nil {
+		return nil, err
+	}
+
+	return &showPaginationInspectionList, nil
 }

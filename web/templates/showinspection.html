@@ -165,7 +165,7 @@
                                     <!--   <a href="/updateinspection/{{.ID}}" class="btnfortable btn-primary">Изменить</a>-->
                                     <a href="#modal-2" onclick="editInspection({{.ID}});"
                                         class="js-modal-open btnfortable btn-primary--l">Изменить</a>
-                                    <a href="/deleteinspection/{{.ID}}"
+                                    <a href="/operation/deleteinspection/{{.ID}}"
                                         class="btnfortable btn-danger--s confirmation">Удалить</a>
                                 </td>
                             </tr>
@@ -678,7 +678,7 @@
 
                                 <td nowrap>
                                     {{ else if eq .Status "" }}
-                                    <a href="/deleteinspection/{{.ID}}"
+                                    <a href="/operations/deleteinspection/{{.ID}}"
                                         class="btnfortable btn-danger--s confirmation">Удалить</a>
                                     <!--   <a href="/acceptinspectiontowh/{{.ID}}" class="btnfortable btn-primary">
                                     Принять на склад
@@ -883,7 +883,7 @@
 
                                 <td nowrap>
                                     {{ else if eq .Status "" }}
-                                    <a href="/deleteinspection/{{.ID}}"
+                                    <a href="/operation/deleteinspection/{{.ID}}"
                                         class="btnfortable btn-danger--s confirmation">Удалить</a>
                                     <!--   <a href="/acceptinspectiontowh/{{.ID}}" class="btnfortable btn-primary">
                                     Принять на склад
@@ -1077,7 +1077,8 @@
         {{template "footer.html" .}}
         <script src="/assets/js/formininspectionV2.js"></script>
         <script src="/assets/js/acceptfrominspection.js"></script>
-        <script src="/assets/js/sendupdate.js"></script>
+        <script src="/assets/js/serialize.js"></script>
+        <script src="/assets/js/updatecomponent.js"></script>
 
 
         <script>

@@ -16,15 +16,15 @@ function initAccept() {
 //global variables
 //
 //
-//debugger;
+
 var mainDivAccept = document.getElementById("formAccept"); //ref to main div with forms
 
 //attributes for form fields, they will be added during the creation of forms
 var formElementsTypesAccept = ["input", "button"];//https://www.jetbrains.com/idea/features/editions_comparison_matrix.html
-var formElementsIdsAccept = ["scanidAccept", "button"];
+var formElementsIdsAccept = ["scanidAccept", "buttonaccept"];
 var formElementsClassNamesAccept = [
     "form-control form-control-sm col-lg-4",
-    "deleteFormAccept btn",
+    "deleteForm btn",
 ];
 
 var formAllowedIdsArrAccept = [];
@@ -91,7 +91,7 @@ function createFormAccept() {
         if (event.keyCode === 13 || 40) {
             event.preventDefault();
             errorMsg = createError("Введён некорректный номер");
-            // debugger
+            
             addRemoveErrorAccept(this, errorMsg);
             if (validateQrCode(this.value)) {
                 addFormAccept();
@@ -157,7 +157,7 @@ function addFormButtonAccept() {
 // function checkCanAddValueOnContextAccept(e) {
 //     var numberToCheck = checkValueAccept(e.value);
 //     var result = true;
-//    // debugger;
+
 //     var table = document.getElementById('thetable');
 //     let rows = table.querySelectorAll('tr');
 //     let check = e.value;
@@ -183,13 +183,13 @@ function addFormButtonAccept() {
 //                         result = true;
 //                     }
 //             }
-//     //debugger;
+
 //         return result;
 //     }
 // }
 
 function validateQrCode(code) {
- //   debugger;
+ 
     const regexpContractEO = /\bP\d{7}LK\d{9}R\d{10}Q\d{5}D\d{8}\b/; 
     const regexpStarLineEO = /\bP\d{7}L\d{10}R\d{10}Q\d{5}D\d{8}\b/;
     const regexpCart = /\bP\d{7}LR\d{10}Q\d{5}D\d{8}\b/;
@@ -273,9 +273,9 @@ function canShowAddButtonAccept() {
 
 function canShowDeleteButtonAccept() {
     if (formAllowedIdsArrAccept.length < rowsAmountAccept - 1) {
-        document.getElementsByClassName("deleteFormAccept")[0].disabled = false;
+        document.getElementsByClassName("deleteForm")[0].disabled = false;
     } else {
-        document.getElementsByClassName("deleteFormAccept")[0].disabled = true;
+        document.getElementsByClassName("deleteForm")[0].disabled = true;
     }
 }
 
@@ -319,7 +319,7 @@ function sendDataAccept() {
     if (dataToSend != "[]") {
         var xhr = new XMLHttpRequest();
         //   xhr.open("POST", "http://10.1.20.110:3001/ininspection", true);
-        xhr.open("POST", "http://localhost:3001/acceptgroupsinspectiontowh", true);
+        xhr.open("POST", "http://localhost:3001/operation/acceptgroupsinspectiontowh", true);
       //  xhr.open("POST", "http://", true);
         xhr.setRequestHeader("Content-Type", "application/json");
 

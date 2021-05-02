@@ -256,7 +256,27 @@ function drawSuccessMessage(div) {
     //div.appendChild(successMessage);
     return successMessage;
 }
+/*
+function updateComponentRequest() {
+    var xhr = new XMLHttpRequest();
+    //   xhr.open("POST", "http://10.1.20.110:3001/ininspection", true);
+    xhr.open("POST", "http://localhost:3001/operation/ininspection", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
 
+    xhr.send(dataToSend);
+    debugger;
+    xhr.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            debugger;
+            //mainDiv.innerHTML = drawSuccessMessage();
+            console.log("success");
+        } else {
+            //mainDiv.innerHTML = drawErrorMessage();
+            console.log("error");
+        }
+    };
+}
+*/
 function sendData() {
     for (el of document.getElementsByClassName('is-invalid')) {
         el.parentNode.remove();
@@ -269,12 +289,13 @@ function sendData() {
     if (dataToSend != "[]") {
         var xhr = new XMLHttpRequest();
         //   xhr.open("POST", "http://10.1.20.110:3001/ininspection", true);
-        xhr.open("POST", "http://localhost:3001/ininspection", true);
+        xhr.open("POST", "http://localhost:3001/operation/ininspection", true);
         xhr.setRequestHeader("Content-Type", "application/json");
 
         xhr.send(dataToSend);
         xhr.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
+             //   debugger;
                 //mainDiv.innerHTML = drawSuccessMessage();
                 console.log("success");
             } else {

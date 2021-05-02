@@ -27,6 +27,22 @@ func (r *UserRepository) Create(u *model.User) error {
 	return nil
 }
 
+// CreateUserByManager ...
+func (r *UserRepository) CreateUserByManager(u *model.User) error {
+	if err := u.Validate(); err != nil {
+		return err
+	}
+
+	if err := u.BeforCreate(); err != nil {
+		return err
+	}
+
+	u.ID = len(r.users) + 1
+	r.users[u.ID] = u
+
+	return nil
+}
+
 // Find ...
 func (r *UserRepository) Find(id int) (*model.User, error) {
 	u, ok := r.users[id]

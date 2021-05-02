@@ -1,5 +1,7 @@
 # http-rest-api-starline
 
+https://codesource.io/build-a-crud-application-in-golang-with-postgresql/
+
 git add .
 git commit -a -m "v1.1.979 modify style"
 git push
@@ -29,6 +31,25 @@ systemctl start appstarlineprod.service
 // удаление дублирующихся ЕО, до присвоения статус OK or NG
 delete from transfer a using transfer b where a.id < b.id and a.idmaterial = b.idmaterial
 and a.status is null;
+//\***\*\*\*\*\*\*\***\*\*\*\*\***\*\*\*\*\*\*\***\*\*\***\*\*\*\*\*\*\***\*\*\*\*\***\*\*\*\*\*\*\***
+
+/\***\*\*\*\*\*\*\***\*\*\*\*\***\*\*\*\*\*\*\***\*\*\***\*\*\*\*\*\*\***\*\*\*\*\***\*\*\*\*\*\*\***
+// создать пакет utils
+https://www.youtube.com/watch?v=mkFkWTuDIVU
+func ToJSON(w http.ResponseWriter, data interface{}, statusCode int) {
+w.Header().Set("Content-Type", "application/json; charset-UTF8")
+w.WriteHeader(statusCode)
+err := json.NewEncoder(w).Encode(data)
+CheckError(err)
+}
+
+func CheckError(err error) {
+
+    if err != nil {
+        log.Fatal(err)
+
+}
+}
 //\***\*\*\*\*\*\*\***\*\*\*\*\***\*\*\*\*\*\*\***\*\*\***\*\*\*\*\*\*\***\*\*\*\*\***\*\*\*\*\*\*\***
 
 P2013002LK340621858R1000425231Q03000D00000000

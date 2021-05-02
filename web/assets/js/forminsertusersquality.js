@@ -209,7 +209,7 @@ function drawSuccessMessage(div) {
 
 function sendData() {
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "http://localhost:3001/createusersquality", true);
+    xhr.open("POST", "http://localhost:3001/operation/createusersquality", true);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(getData());
 

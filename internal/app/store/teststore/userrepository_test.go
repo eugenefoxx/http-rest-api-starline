@@ -19,6 +19,15 @@ func TestUserRepository_Create(t *testing.T) {
 	assert.NotNil(t, u)
 }
 
+func TestUserRepository_CreateUserByManager(t *testing.T) {
+	s := teststore.New()
+
+	u := model.TestUser(t)
+
+	assert.NoError(t, s.User().CreateUserByManager(u))
+	assert.NotNil(t, u)
+}
+
 func TestUserRepository_Find(t *testing.T) {
 
 	s := teststore.New()

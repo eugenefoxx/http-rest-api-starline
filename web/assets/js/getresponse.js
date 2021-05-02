@@ -13,7 +13,7 @@ var getJSON = function (url, callback) {
     xhr.send();
 };
 
-getJSON('http://localhost:3001/shipmentbysap',
+getJSON('http://localhost:3001/operation/shipmentbysap',
     function (err, data) {
         if (err !== null) {
             alert('Something went wrong: ' + err);

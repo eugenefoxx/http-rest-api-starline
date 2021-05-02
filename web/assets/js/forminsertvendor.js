@@ -179,7 +179,7 @@ function drawSuccessMessage(div) {
 
 function sendData() {
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "http://localhost:3001/insertvendor", true);
+    xhr.open("POST", "http://localhost:3001/operation/insertvendor", true);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(getData());
 

@@ -8,6 +8,7 @@ type Config struct {
 	LogLevel    string `toml:"log_level"`
 	DatabaseURL string `toml:"database_url"`
 	SessionKey  string `toml:"session_key"`
+	Redis       string `toml:"redis"`
 	//	HTML        string `toml:"html"`
 
 }

@@ -173,11 +173,13 @@ func (s *Server) InInspection() http.HandlerFunc {
 						Location:       statusTransfer,
 						Lastname:       user.LastName,
 					}
+					s.Lock()
 					if err := s.store.Inspection().InInspection(u); err != nil {
 						s.error(w, r, http.StatusUnprocessableEntity, err)
 
 						return
 					}
+					s.Unlock()
 				} else {
 					if (strings.Contains(v.ScanID[0:1], "P") == false) && (len(v.ScanID) != 45) {
 						fmt.Println("не верное сканирование :\n" + v.ScanID + "\n")
@@ -191,7 +193,7 @@ func (s *Server) InInspection() http.HandlerFunc {
 				//			fmt.Println("Значения совпадают:\n" + idMaterial + "\n")
 				//		}
 				//	}
-				http.Redirect(w, r, "/statusinspection", 303)
+				http.Redirect(w, r, "/operation/statusinspection", 303)
 			}
 			if (strings.Contains(v.ScanID[0:1], "P") == true) && (len(v.ScanID) == 35) {
 				idMaterial := v.ScanID[0:35]
@@ -231,11 +233,13 @@ func (s *Server) InInspection() http.HandlerFunc {
 						Location:       statusTransfer,
 						Lastname:       user.LastName,
 					}
+					s.Lock()
 					if err := s.store.Inspection().InInspection(u); err != nil {
 						s.error(w, r, http.StatusUnprocessableEntity, err)
 
 						return
 					}
+					s.Unlock()
 				} else {
 					if (strings.Contains(v.ScanID[0:1], "P") == false) && (len(v.ScanID) != 35) {
 						fmt.Println("не верное сканирование :\n" + v.ScanID + "\n")
@@ -249,7 +253,7 @@ func (s *Server) InInspection() http.HandlerFunc {
 				//			fmt.Println("Значения совпадают:\n" + idMaterial + "\n")
 				//		}
 				//	}
-				http.Redirect(w, r, "/statusinspection", 303)
+				http.Redirect(w, r, "/operation/statusinspection", 303)
 			}
 		}
 		/*
@@ -432,11 +436,18 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 			}
 		} else if search.Date1 == "" && search.Date2 == "" {
 			if search.EO != "" {
+				s.Lock()
 				get, err := s.store.Inspection().ListShowDataByEO(search.EO)
 				if err != nil {
 					s.error(w, r, http.StatusUnprocessableEntity, err)
 					return
 				}
+				count, _ := s.store.Inspection().CountInspection()
+				fmt.Println(count)
+				limit := 5
+				page, begin := s.Pagination(r, limit)
+				fmt.Printf("Current Page: %d, Begin: %d\n", page, begin)
+				s.Unlock()
 				data := map[string]interface{}{
 					"TitleDOC":            "Отчет по истроии ВК",
 					"User":                user.LastName,
@@ -458,12 +469,20 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 					return
 				}
 			} else if search.Material != 0 {
-				get, err := s.store.Inspection().ListShowDataBySap(search.Material)
+				s.Lock()
+				count, _ := s.store.Inspection().CountInspection()
+				fmt.Println(count)
+				limit := 2
+				page, begin := s.Pagination(r, limit)
+				fmt.Printf("Current Page: %d, Begin: %d\n", page, begin)
+				get, err := s.store.Inspection().ListShowDataBySap(search.Material, begin, limit)
+				s.Unlock()
 				if err != nil {
 					s.error(w, r, http.StatusUnprocessableEntity, err)
 					return
 				}
-				data := map[string]interface{}{
+
+				/*	data := map[string]interface{}{
 					"TitleDOC":            "Отчет по истроии ВК",
 					"User":                user.LastName,
 					"Username":            user.FirstName,
@@ -476,23 +495,25 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 					"Inspector":           Inspector,
 					"LoggedIn":            LoggedIn,
 					"GET":                 get,
-				}
-
-				err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
-				if err != nil {
-					http.Error(w, err.Error(), 400)
-					return
-				}
+				}*/
+				RenderJSON(w, get, http.StatusOK)
+				/*	err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
+					if err != nil {
+						http.Error(w, err.Error(), 400)
+						return
+					}*/
 			}
 		} else if search.Date1 != "" && search.Date2 == "" {
 
 			if search.Material != 0 {
 				fmt.Println("OK Material")
+				s.Lock()
 				get, err := s.store.Inspection().ListShowDataByDateAndSAP(search.Date1, searchDateNow, search.Material)
 				if err != nil {
 					s.error(w, r, http.StatusUnprocessableEntity, err)
 					return
 				}
+				s.Unlock()
 				data := map[string]interface{}{
 					"TitleDOC":            "Отчет по истроии ВК",
 					"User":                user.LastName,
@@ -515,12 +536,13 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 				}
 			} else if search.EO != "" {
 				fmt.Println("OK EO")
-
+				s.Lock()
 				get, err := s.store.Inspection().ListShowDataByDateAndEO(search.Date1, searchDateNow, search.EO)
 				if err != nil {
 					s.error(w, r, http.StatusUnprocessableEntity, err)
 					return
 				}
+				s.Unlock()
 				data := map[string]interface{}{
 					"TitleDOC":            "Отчет по истроии ВК",
 					"User":                user.LastName,
@@ -543,12 +565,13 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 				}
 
 			} else {
+				s.Lock()
 				get, err := s.store.Inspection().ListShowDataByDate(search.Date1, searchDateNow)
 				if err != nil {
 					s.error(w, r, http.StatusUnprocessableEntity, err)
 					return
 				}
-
+				s.Unlock()
 				data := map[string]interface{}{
 					"TitleDOC":            "Отчет по истроии ВК",
 					"User":                user.LastName,
@@ -573,11 +596,13 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 		} else {
 			if search.Material != 0 {
 				fmt.Println("OK Material")
+				s.Lock()
 				get, err := s.store.Inspection().ListShowDataByDateAndSAP(search.Date1, search.Date2, search.Material)
 				if err != nil {
 					s.error(w, r, http.StatusUnprocessableEntity, err)
 					return
 				}
+				s.Unlock()
 				data := map[string]interface{}{
 					"TitleDOC":            "Отчет по истроии ВК",
 					"User":                user.LastName,
@@ -600,12 +625,13 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 				}
 			} else if search.EO != "" {
 				fmt.Println("OK EO")
-
+				s.Lock()
 				get, err := s.store.Inspection().ListShowDataByDateAndEO(search.Date1, search.Date2, search.EO)
 				if err != nil {
 					s.error(w, r, http.StatusUnprocessableEntity, err)
 					return
 				}
+				s.Unlock()
 				data := map[string]interface{}{
 					"TitleDOC":            "Отчет по истроии ВК",
 					"User":                user.LastName,
@@ -628,12 +654,13 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 				}
 
 			} else {
+				s.Lock()
 				get, err := s.store.Inspection().ListShowDataByDate(search.Date1, search.Date2)
 				if err != nil {
 					s.error(w, r, http.StatusUnprocessableEntity, err)
 					return
 				}
-
+				s.Unlock()
 				data := map[string]interface{}{
 					"TitleDOC":            "Отчет по истроии ВК",
 					"User":                user.LastName,
@@ -684,6 +711,7 @@ func (s *Server) PageInspection() http.HandlerFunc {
 	///		panic(err)
 	///	}
 	return func(w http.ResponseWriter, r *http.Request) {
+		//w.Header().Add("Content-Type", "application/json")
 		//	Admin := true
 		//	Warehouse := true
 		StockkeeperWH := false
@@ -740,7 +768,7 @@ func (s *Server) PageInspection() http.HandlerFunc {
 			LoggedIn = true
 			//	fmt.Println("pageInspection quality - ", Quality)
 		} */
-
+		s.Lock()
 		get, err := s.store.Inspection().ListInspection()
 		if err != nil {
 			s.error(w, r, http.StatusUnprocessableEntity, err)
@@ -788,7 +816,7 @@ func (s *Server) PageInspection() http.HandlerFunc {
 			s.error(w, r, http.StatusUnprocessableEntity, err)
 			return
 		}
-
+		s.Unlock()
 		groups := map[string]interface{}{
 			"TitleDOC": "Список ВК",
 			"User":     user.LastName,
@@ -814,6 +842,7 @@ func (s *Server) PageInspection() http.HandlerFunc {
 		}
 
 		tpl.ExecuteTemplate(w, "showinspection.html", groups)
+		//	json.NewEncoder(w).Encode(get)
 
 	}
 }
@@ -823,7 +852,12 @@ func (s *Server) PageupdateInspection() http.HandlerFunc {
 	///	if err != nil {
 	///		panic(err)
 	///	}
+
 	return func(w http.ResponseWriter, r *http.Request) {
+		//	w.Header().Set("Access-Control-Allow-Origin", "")
+		//	if r.Method == http.MethodOptions {
+		//		return
+		//	}
 		Admin := false
 		SuperIngenerQuality := false
 		IngenerQuality := false
@@ -872,11 +906,13 @@ func (s *Server) PageupdateInspection() http.HandlerFunc {
 
 		}
 		//fmt.Println("ID - ?", id)
+		s.Lock()
 		get, err := s.store.Inspection().EditInspection(id, user.Groups)
 		if err != nil {
 			s.error(w, r, http.StatusUnprocessableEntity, err)
 			return
 		}
+		s.Unlock()
 		data := map[string]interface{}{
 			"Admin":               Admin,
 			"SuperIngenerQuality": SuperIngenerQuality,
@@ -896,6 +932,134 @@ func (s *Server) PageupdateInspection() http.HandlerFunc {
 }
 
 func (s *Server) UpdateInspection() http.HandlerFunc {
+
+	// response format
+	type response struct {
+		ID      int64  `json:"id,omitempty"`
+		Status  string `json:"status,omitempty"`
+		Note    string `json:"note,omitempty"`
+		Message string `json:"message,omitempty"`
+	}
+
+	type request struct {
+		ID     int    `json:"ID"`
+		Status string `json:"status"`
+		Note   string `json:"note"`
+	}
+
+	type requestJSON struct {
+		ID     string `json:"id"`
+		Status string `json:"status"`
+		Note   string `json:"note"`
+	}
+	///	_, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "updateinspection.html")
+	///	if err != nil {
+	///		panic(err)
+	///	}
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		//	w.Header().Set("Content-Type", "application/x-www-form-urlencoded")
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "POST")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+		/*
+			req := &request{}
+			vars := mux.Vars(r)
+			id, err := strconv.Atoi(vars["ID"])
+			if err != nil {
+				log.Println(err)
+			}
+		*/
+		currentTime := time.Now()
+
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		idd, ok := session.Values["user_id"]
+		if !ok {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		user, err := s.store.User().Find(idd.(int))
+		if err != nil {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+		/*
+			req.ID = id
+			req.Status = r.FormValue("status")
+			req.Note = r.FormValue("note")
+		*/
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			log.Fatal(err)
+		}
+		var hdata []requestJSON
+		json.Unmarshal(body, &hdata)
+		fmt.Printf("body requestJSON: %s", body)
+		fmt.Println("\njson  struct hdata requestJSON", hdata)
+		/*	u := &model.Inspection{
+				ID:         req.ID,
+				Status:     req.Status,
+				Note:       req.Note,
+				Update:     user.LastName, //
+				Dateupdate: currentTime,   // Dateaccept
+				Timeupdate: currentTime,   // Timeaccept
+				Groups:     user.Groups,
+			}
+		*/
+		for _, v := range hdata {
+			fmt.Println("проверка в цкле - requestJSON", v.ID, v.Status, v.Note)
+			idRoll, err := strconv.Atoi(v.ID)
+			if err != nil {
+				log.Fatal(err)
+			}
+			u := &model.Inspection{
+				ID:         idRoll,
+				Status:     v.Status,
+				Note:       v.Note,
+				Update:     user.LastName, //
+				Dateupdate: currentTime,   // Dateaccept
+				Timeupdate: currentTime,   // Timeaccept
+				Groups:     user.Groups,
+			}
+			s.Lock()
+			if err := s.store.Inspection().UpdateInspection(u, user.Groups); err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+			s.Unlock()
+			// format the message string
+			msg := fmt.Sprintf("Inspection updated successfully. Total rows/record affected")
+			//msg := "Inspection updated successfully. Total rows/record affected"
+
+			// format the response message
+			res := response{
+				ID:      int64(idRoll),
+				Status:  v.Status,
+				Note:    v.Note,
+				Message: msg,
+			}
+			// send the response
+			json.NewEncoder(w).Encode(res)
+		}
+
+		/*	err = tpl.ExecuteTemplate(w, "layout", nil)
+			if err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}*/
+		// http.Redirect(w, r, "/operation/statusinspection", 303)
+
+	}
+}
+
+func (s *Server) UpdateInspectionJSON() http.HandlerFunc {
 	type request struct {
 		ID     int    `json:"ID"`
 		Status string `json:"status"`
@@ -947,18 +1111,18 @@ func (s *Server) UpdateInspection() http.HandlerFunc {
 			Timeupdate: currentTime,   // Timeaccept
 			Groups:     user.Groups,
 		}
-
+		s.Lock()
 		if err := s.store.Inspection().UpdateInspection(u, user.Groups); err != nil {
 			s.error(w, r, http.StatusUnprocessableEntity, err)
 			return
 		}
-
+		s.Unlock()
 		/*	err = tpl.ExecuteTemplate(w, "layout", nil)
 			if err != nil {
 				http.Error(w, err.Error(), 400)
 				return
 			}*/
-		http.Redirect(w, r, "/statusinspection", 303)
+		http.Redirect(w, r, "/operation/statusinspection", 303)
 	}
 }
 
@@ -983,13 +1147,13 @@ func (s *Server) DeleteInspection() http.HandlerFunc {
 		u := &model.Inspection{
 			ID: req.ID,
 		}
-
+		s.Lock()
 		if err := s.store.Inspection().DeleteItemInspection(u); err != nil {
 			s.error(w, r, http.StatusUnprocessableEntity, err)
 			return
 		}
-
-		http.Redirect(w, r, "/statusinspection", 303)
+		s.Unlock()
+		http.Redirect(w, r, "/operation/statusinspection", 303)
 	}
 }
 
@@ -1049,11 +1213,13 @@ func (s *Server) PageListAcceptWHInspection() http.HandlerFunc { // acceptinspec
 			WarehouseManager = true
 			LoggedIn = true
 		}
+		s.Lock()
 		get, err := s.store.Inspection().ListAcceptWHInspection()
 		if err != nil {
 			s.error(w, r, http.StatusUnprocessableEntity, err)
 			return
 		}
+		s.Unlock()
 		groups := map[string]interface{}{
 			//	"quality":   quality,
 			"Warehouse":        stockkeeperWH,
@@ -1127,11 +1293,13 @@ func (s *Server) PageacceptWarehouseInspection() http.HandlerFunc {
 		}
 
 		//fmt.Println("ID - ?", id)
+		s.Lock()
 		get, err := s.store.Inspection().EditAcceptWarehouseInspection(id, user.Groups)
 		if err != nil {
 			s.error(w, r, http.StatusUnprocessableEntity, err)
 			return
 		}
+		s.Unlock()
 		data := map[string]interface{}{
 			"User":             user.LastName,
 			"Username":         user.FirstName,
@@ -1197,19 +1365,19 @@ func (s *Server) AcceptWarehouseInspection() http.HandlerFunc {
 			Timeaccept:     currentTime,   // Timeaccept
 			Groups:         user.Groups,
 		}
-
+		s.Lock()
 		if err := s.store.Inspection().AcceptWarehouseInspection(u, user.Groups); err != nil {
 			s.error(w, r, http.StatusUnprocessableEntity, err)
 			return
 		}
-
+		s.Unlock()
 		/*	err = tpl.ExecuteTemplate(w, "layout", nil)
 			if err != nil {
 				http.Error(w, err.Error(), 400)
 				return
 			}*/
 		//http.Redirect(w, r, "/statusinspectionforwh", 303)
-		http.Redirect(w, r, "/statusinspection", 303)
+		http.Redirect(w, r, "/operation/statusinspection", 303)
 	}
 }
 
@@ -1271,11 +1439,13 @@ func (s *Server) AcceptGroupsWarehouseInspection() http.HandlerFunc {
 						IdMaterial:     idMaterial,
 						Groups:         user.Groups,
 					}
+					s.Lock()
 					if err := s.store.Inspection().AcceptGroupsWarehouseInspection(u, user.Groups); err != nil {
 						s.error(w, r, http.StatusUnprocessableEntity, err)
 
 						return
 					}
+					s.Unlock()
 				} else {
 					if (strings.Contains(v.ScanID[0:1], "P") == false) && (len(v.ScanID) != 45) {
 						fmt.Println("не верное сканирование :\n" + v.ScanID + "\n")
@@ -1297,11 +1467,13 @@ func (s *Server) AcceptGroupsWarehouseInspection() http.HandlerFunc {
 						IdMaterial:     idMaterial,
 						Groups:         user.Groups,
 					}
+					s.Lock()
 					if err := s.store.Inspection().AcceptGroupsWarehouseInspection(u, user.Groups); err != nil {
 						s.error(w, r, http.StatusUnprocessableEntity, err)
 
 						return
 					}
+					s.Unlock()
 				} else {
 					if (strings.Contains(v.ScanID[0:1], "P") == false) && (len(v.ScanID) != 35) {
 						fmt.Println("не верное сканирование :\n" + v.ScanID + "\n")
