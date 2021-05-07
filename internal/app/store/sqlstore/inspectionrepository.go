@@ -2,6 +2,7 @@ package sqlstore
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"log"
 
@@ -512,10 +513,16 @@ func (r *InspectionRepository) ListShowDataBySap(sap, begin, limit int) (s *mode
 			&showDataByDate.Timeaccept2,
 		)
 		if err != nil {
-			if err == sql.ErrNoRows {
+			/*	if err == sql.ErrNoRows {
+					return nil, store.ErrRecordNotFound
+				}
+				return nil, err
+			*/
+			if errors.Is(err, sql.ErrNoRows) {
 				return nil, store.ErrRecordNotFound
+			} else {
+				return nil, err
 			}
-			return nil, err
 		}
 		showDataByDateList = append(showDataByDateList, showDataByDate)
 	}

@@ -200,7 +200,17 @@ function editVendor(id) {
         });
 }
 
+function editInspection(id) {
+    axios.get('/operation/updateinspection/' + id)
+        .then(function (response) {
+            document
+                .getElementById('modal-2')
+                .getElementsByClassName('modal__dialog-body')[0].innerHTML = response.data;
+        });
+        
+}
 
+/*
 function editInspection(id) {
     axios.get('/operation/updateinspection/' + id)
         .then(function (response) {
@@ -210,7 +220,7 @@ function editInspection(id) {
 
         });
 }
-
+*/
 function editUserQuality(id) {
     axios.get('/operation/updateuserquality/' + id)
         .then(function (response) {

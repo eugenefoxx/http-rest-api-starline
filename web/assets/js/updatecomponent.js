@@ -1,4 +1,39 @@
 //const btn = document.querySelector('button');
+//debugger;
+
+
+function ready() {
+  alert('DOM готов');
+  debugger;
+  let sendForm = document.querySelector('#send-form');
+  let form = document.querySelector('form');
+  sendForm.onclick = function (event) {
+    event.preventDefault();
+  console.log('work');
+  console.log(serialize(form));
+  }
+  // изображение ещё не загружено (если не было закешировано), так что размер будет 0x0
+ // alert(`Размер изображения: ${img.offsetWidth}x${img.offsetHeight}`);
+}
+
+document.addEventListener("DOMContentLoaded", ready);
+
+/*
+document.addEventListener("DOMContentLoaded", () => {
+  alert("DOM готов!");
+  debugger;
+  let sendForm = document.querySelector('#send-form');
+  let form = document.querySelector('form');
+  sendForm.onclick = function (event) {
+    event.preventDefault();
+  console.log('work');
+  console.log(serialize(form));
+  }
+});
+*/
+//document.addEventListener('DOMContentLoaded', updateInspectionComponent);//() {
+
+//document.querySelector('#send-form').addEventListener('click', updateInspectionComponent);
 
 function updateInspectionComponent() {
 /*const form = document.querySelector('form[name="valform"]');
@@ -9,14 +44,40 @@ alert(form);
 console.log(note);
 alert(note);*/
 
-let sendForm = document.querySelector('#send-form');
+
+
+//var resultData = [];
+//let sendForm = document.querySelector('#send-form');
+//var formid = document.getElementById("update-component-form");
+//debugger;
 let form = document.querySelector('form');
-sendForm.onclick = function (event) {
-  debugger;
-  event.preventDefault();
+//sendForm.onclick = function (event) {
+//  document.getElementById('send-form').addEventListener("click", function (){  
+    debugger;
+ // event.preventDefault();
   console.log('work');
   console.log(serialize(form));
-}
+/*fetch('http://localhost:3001/operation/updateinspection', {
+  
+		method: 'POST',
+		body: JSON.stringify(serialize(form)),
+		headers: {
+			'Content-type': 'application/json; charset=UTF-8'
+		}
+	}).then(function (response) {
+		if (response.ok) {
+			return response.json();
+		}
+		return Promise.reject(response);
+	}).then(function (data) {
+		console.log(data);
+	}).catch(function (error) {
+		console.warn(error);
+	});*/
+ // resultData = serialize(form);
+ // console.log(resultData);
+//}
+// return resultData;
 /*
 var resultData = [];
     var forms = document.getElementsByClassName("form-control");
@@ -94,3 +155,5 @@ btn.addEventListener( 'click', function() {
 //sendData( {test:'ok'} );
 })
 */
+//document.addEventListener("DOMContentLoaded", updateInspectionComponent);
+//});
