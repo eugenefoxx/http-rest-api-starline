@@ -548,7 +548,20 @@ button.buttonPlus:after {
   /* Add some space below the input */
 }
 
-#myTable {
+#myTable--s {
+  border-collapse: collapse;
+  /* Collapse borders */
+  width: 100%;
+  /* Full-width */
+  border: 1px solid #ddd;
+  /* Add a grey border */
+  font-size: 15px;
+  /* Increase font-size */
+  background: white;
+  min-width: 800px;
+}
+
+#myTable--l {
   border-collapse: collapse;
   /* Collapse borders */
   width: 100%;

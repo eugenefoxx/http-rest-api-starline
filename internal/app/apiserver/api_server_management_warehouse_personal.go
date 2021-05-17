@@ -15,8 +15,13 @@ import (
 func (s *Server) PageshowUsersWarehouse() http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
+		s.mu.Lock()
+		defer s.mu.Unlock()
+
 		Admin := false
 		WarehouseManager := false
+		GroupP1 := false
+		GroupP5 := false
 		LoggedIn := false
 
 		session, err := s.sessionStore.Get(r, sessionName)
@@ -37,33 +42,72 @@ func (s *Server) PageshowUsersWarehouse() http.HandlerFunc {
 			return
 		}
 
-		if user.Role == "Administrator" {
-			Admin = true
-			LoggedIn = true
-		} else if user.Role == "старший кладовщик склада" {
-			WarehouseManager = true
-			LoggedIn = true
+		if user.Groups == "склад" {
+			GroupP1 = true
+			group := "склад"
+			if user.Role == "Administrator" {
+				Admin = true
+				LoggedIn = true
+			} else if user.Role == "старший кладовщик склада" {
+				WarehouseManager = true
+				LoggedIn = true
+			}
+
+			get, err := s.store.User().ListUsersWarehouse(group)
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			data := map[string]interface{}{
+				"TitleDOC":         "Сотрудники склада",
+				"User":             user.LastName,
+				"Username":         user.FirstName,
+				"Admin":            Admin,
+				"WarehouseManager": WarehouseManager,
+				"GroupP1":          GroupP1,
+				"LoggedIn":         LoggedIn,
+				"GET":              get,
+			}
+			err = tpl.ExecuteTemplate(w, "showUsersWarehouse.html", data)
+			if err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}
 		}
-		s.Lock()
-		get, err := s.store.User().ListUsersWarehouse()
-		if err != nil {
-			s.error(w, r, http.StatusUnprocessableEntity, err)
-			return
-		}
-		s.Unlock()
-		data := map[string]interface{}{
-			"TitleDOC":         "Сотрудники склада",
-			"User":             user.LastName,
-			"Username":         user.FirstName,
-			"Admin":            Admin,
-			"WarehouseManager": WarehouseManager,
-			"LoggedIn":         LoggedIn,
-			"GET":              get,
-		}
-		err = tpl.ExecuteTemplate(w, "showUsersWarehouse.html", data)
-		if err != nil {
-			http.Error(w, err.Error(), 400)
-			return
+
+		if user.Groups == "склад П5" {
+			GroupP5 = true
+			group := "склад П5"
+			if user.Role == "Administrator" {
+				Admin = true
+				LoggedIn = true
+			} else if user.Role == "старший кладовщик склада" {
+				WarehouseManager = true
+				LoggedIn = true
+			}
+
+			get, err := s.store.User().ListUsersWarehouse(group)
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			data := map[string]interface{}{
+				"TitleDOC":         "Сотрудники склада",
+				"User":             user.LastName,
+				"Username":         user.FirstName,
+				"Admin":            Admin,
+				"WarehouseManager": WarehouseManager,
+				"GroupP5":          GroupP5,
+				"LoggedIn":         LoggedIn,
+				"GET":              get,
+			}
+			err = tpl.ExecuteTemplate(w, "showUsersWarehouse.html", data)
+			if err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}
 		}
 	}
 }
@@ -79,44 +123,103 @@ func (s *Server) CreateUserWarehouse() http.HandlerFunc {
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
+		s.mu.Lock()
+		defer s.mu.Unlock()
+		//	WarehouseManager := false
 
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
+			s.errorLog.Printf(err.Error())
 		}
 		var hdata []requestFrom
 		json.Unmarshal(body, &hdata)
 		fmt.Printf("body json: %s", body)
+		s.infoLog.Printf("Loading body json: %s\n", body)
 		fmt.Println("\njson  struct hdata", hdata)
+		s.infoLog.Printf("Loading hdata json: %v\n", hdata)
 
-		group := "склад"
+		Groupp1 := "склад"
+		Groupp5 := "склад П5"
 
-		for _, v := range hdata {
-			fmt.Println(v.Email, v.FirstName, v.LastName, v.Password, v.Role, v.Tabel)
-
-			u := &model.User{
-				Email:     v.Email,
-				Password:  v.Password,
-				FirstName: v.FirstName,
-				LastName:  v.LastName,
-				Role:      v.Role,
-				Groups:    group,
-				Tabel:     v.Tabel,
-			}
-			s.Lock()
-			if err := s.store.User().CreateUserByManager(u); err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-			s.Unlock()
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
 		}
 
+		idd, ok := session.Values["user_id"]
+		if !ok {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		user, err := s.store.User().Find(idd.(int))
+		if err != nil {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		//group := "склад"
+		if user.Groups == "склад" {
+			if user.Role == "старший кладовщик склада" {
+				//	WarehouseManager = true
+				for _, v := range hdata {
+					fmt.Println(v.Email, v.FirstName, v.LastName, v.Password, v.Role, v.Tabel)
+					s.infoLog.Printf("P1 create warehouse employee:: %v, %v, %v, %v, %v, %v\n", v.Email, v.FirstName, v.LastName, v.Password, v.Role, v.Tabel)
+					u := &model.User{
+						Email:     v.Email,
+						Password:  v.Password,
+						FirstName: v.FirstName,
+						LastName:  v.LastName,
+						Role:      v.Role,
+						Groups:    Groupp1,
+						Tabel:     v.Tabel,
+					}
+					//	s.Lock()
+					if err := s.store.User().CreateUserByManager(u); err != nil {
+						s.error(w, r, http.StatusUnprocessableEntity, err)
+						return
+					}
+					//	s.Unlock()
+				}
+			}
+		}
+
+		if user.Groups == "склад П5" {
+			if user.Role == "старший кладовщик склада" {
+				//	WarehouseManager = true
+				for _, v := range hdata {
+					fmt.Println("create stockkeeper P5", v.Email, v.FirstName, v.LastName, v.Password, v.Role, v.Tabel)
+					s.infoLog.Printf("P5 create warehouse employee: %v, %v, %v, %v, %v, %v\n", v.Email, v.FirstName, v.LastName, v.Password, v.Role, v.Tabel)
+
+					u := &model.User{
+						Email:     v.Email,
+						Password:  v.Password,
+						FirstName: v.FirstName,
+						LastName:  v.LastName,
+						Role:      v.Role,
+						Groups:    Groupp5,
+						Tabel:     v.Tabel,
+					}
+					//	s.Lock()
+					if err := s.store.User().CreateUserByManager(u); err != nil {
+						s.error(w, r, http.StatusUnprocessableEntity, err)
+						return
+					}
+					//	s.Unlock()
+				}
+			}
+		}
 	}
 }
 
 func (s *Server) PageupdateUserWarehouse() http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
+		s.mu.Lock()
+		defer s.mu.Unlock()
+
 		Admin := false
 		WarehouseManager := false
 		LoggedIn := false
@@ -153,14 +256,15 @@ func (s *Server) PageupdateUserWarehouse() http.HandlerFunc {
 		fmt.Println("var id - ", id)
 		if err != nil {
 			log.Println(err)
+			s.errorLog.Printf(err.Error())
 		}
-		s.Lock()
+
 		get, err := s.store.User().EditUserByManager(id)
 		if err != nil {
 			s.error(w, r, http.StatusUnprocessableEntity, err)
 			return
 		}
-		s.Unlock()
+
 		data := map[string]interface{}{
 			"GET":              get,
 			"Admin":            Admin,
@@ -186,12 +290,15 @@ func (s *Server) UpdateUserWarehouse() http.HandlerFunc {
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
+		s.mu.Lock()
+		defer s.mu.Unlock()
 
 		req := &request{}
 		vars := mux.Vars(r)
 		id, err := strconv.Atoi(vars["ID"])
 		if err != nil {
 			log.Println(err)
+			s.errorLog.Printf(err.Error())
 		}
 		req.ID = id
 		req.Email = r.FormValue("email")
@@ -201,6 +308,7 @@ func (s *Server) UpdateUserWarehouse() http.HandlerFunc {
 		//fmt.Println("Роль - ", req.Role)
 		req.Tabel = r.FormValue("tabel")
 		fmt.Println("ID - ", req.ID)
+		s.infoLog.Printf("Update warehouse employee: %v, %v, %v, %v, %v, %v\n", req.ID, req.Email, req.Firstname, req.Lastname, req.Role, req.Tabel)
 		u := &model.User{
 			ID:        req.ID,
 			Email:     req.Email,
@@ -209,12 +317,12 @@ func (s *Server) UpdateUserWarehouse() http.HandlerFunc {
 			Role:      req.Role,
 			Tabel:     req.Tabel,
 		}
-		s.Lock()
+
 		if err := s.store.User().UpdateUserByManager(u); err != nil {
 			s.error(w, r, http.StatusUnprocessableEntity, err)
 			return
 		}
-		s.Unlock()
+
 		http.Redirect(w, r, "/operation/showuserswarehouse", 303)
 	}
 
@@ -225,23 +333,27 @@ func (s *Server) DeleteUserWarehouse() http.HandlerFunc {
 		ID int `json:"ID"`
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
+		s.mu.Lock()
+		defer s.mu.Unlock()
+
 		req := &request{}
 		vars := mux.Vars(r)
 		id, err := strconv.Atoi(vars["ID"])
 		if err != nil {
 			log.Println(err)
+			s.errorLog.Printf(err.Error())
 		}
 		req.ID = id
 
 		u := &model.User{
 			ID: req.ID,
 		}
-		s.Lock()
+
 		if err := s.store.User().DeleteUserByManager(u); err != nil {
 			s.error(w, r, http.StatusUnprocessableEntity, err)
 			return
 		}
-		s.Unlock()
+
 		http.Redirect(w, r, "/operation/showuserswarehouse", 303)
 	}
 }

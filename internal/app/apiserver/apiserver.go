@@ -42,18 +42,21 @@ func Start(config *Config) error {
 	}
 
 	fmt.Printf("redis is ok %v\n", redis)
-
-	srvv := &http.Server{
-		Addr: config.BindAddr,
-		// Good practice to set timeouts to avoid Slowloris attacks.
-		WriteTimeout: time.Second * 15,
-		ReadTimeout:  time.Second * 15,
-		IdleTimeout:  time.Second * 60,
-	}
-
+	/*
+		srvv := &http.Server{
+			Addr: config.BindAddr,
+			// Good practice to set timeouts to avoid Slowloris attacks.
+			WriteTimeout: time.Second * 15,
+			ReadTimeout:  time.Second * 15,
+			IdleTimeout:  time.Second * 60,
+		}
+	*/
 	//	return http.ListenAndServe(config.BindAddr, srv)
 	// http.Handle("/resources/", http.StripPrefix("/resources", http.FileServer(http.Dir("./web/images"))))
-	return http.ListenAndServe(srvv.Addr, srv)
+	//return http.ListenAndServe(config.BindAddr, srv)
+	serv := http.ListenAndServe(config.BindAddr, srv)
+
+	return serv
 }
 
 func newDB(databaseURL string) (*sqlx.DB, error) {

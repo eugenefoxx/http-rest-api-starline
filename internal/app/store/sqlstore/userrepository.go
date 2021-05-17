@@ -102,6 +102,7 @@ func (r *UserRepository) UpdatePass(s *model.User) error {
 	if err != nil {
 		return err
 	}
+
 	if err := s.Validate(); err != nil {
 		return err
 	}
@@ -186,15 +187,58 @@ func (r *UserRepository) ListUsersQuality() (u *model.Users, err error) {
 	return &showUsersQualityList, nil
 }
 
-func (r *UserRepository) ListUsersWarehouse() (u *model.Users, err error) {
+func (r *UserRepository) ListUsersQualityP5() (u *model.Users, err error) {
+	showUsersQuality := model.User{}
+	showUsersQualityList := make(model.Users, 0)
+
+	selectUsers := `SELECT id, email, firstname, lastname, 
+	role, groups, tabel FROM users WHERE groups = 'качество П5';`
+
+	rows, err := r.store.db.Query(
+		selectUsers,
+	)
+
+	if err != nil {
+		fmt.Println(err, "error in func ListUsersQuality()")
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		err := rows.Scan(
+			&showUsersQuality.ID,
+			&showUsersQuality.Email,
+			&showUsersQuality.FirstName,
+			&showUsersQuality.LastName,
+			&showUsersQuality.Role,
+			&showUsersQuality.Groups,
+			&showUsersQuality.Tabel,
+		)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				return nil, store.ErrRecordNotFound
+			}
+			return nil, err
+		}
+		showUsersQualityList = append(showUsersQualityList, showUsersQuality)
+	}
+	err = rows.Err()
+	if err != nil {
+		return nil, err
+	}
+	return &showUsersQualityList, nil
+}
+
+func (r *UserRepository) ListUsersWarehouse(groups string) (u *model.Users, err error) {
 	showUsersWarehouse := model.User{}
 	showUsersWarehouseList := make(model.Users, 0)
 
 	selectUsers := `SELECT id, email, firstname, lastname, 
-	role, groups, tabel FROM users WHERE groups = 'склад';`
+	role, groups, tabel FROM users WHERE groups = $1;`
 
 	rows, err := r.store.db.Query(
 		selectUsers,
+		groups,
 	)
 
 	if err != nil {

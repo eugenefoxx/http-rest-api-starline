@@ -12,7 +12,7 @@
             </div>
             <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .." title="Type in a name">
             <br>
-            <table id="myTable" onload="alternate('thetable')" class="tableexport" style="width: 1200px;">
+            <table id="myTable--s" onload="alternate('thetable')" class="tableexport" style="width: 1200px;">
                 <caption style="color: white; font-size: 22px; padding-bottom: 10px;">Список поставщиков</caption>
                 <button onclick="exportTableToCSV('export.csv')" style="margin-left:0px; width: 300px; height: 30px;"
                     class="button3">Экспортировать таблицу в csv файл</button>
@@ -21,10 +21,10 @@
                         <!--<th>ID</th>-->
                         <!--    <th scope="col" onclick="sortTable(0)">№ ID</th>-->
                         <!--Material-->
-                        <th scope="col" onclick="sortTable(0)">Код дебитора</th>
+                        <th scope="col" onclick="sortTable(0)" style="text-align: center;">Код дебитора</th>
                         <!--Qty-->
-                        <th scope="col" onclick="sortTable(1)">Наименование</th>
-                        <th scope="col" onclick="sortTable(2)">Редактирование</th>
+                        <th scope="col" onclick="sortTable(1)" style="text-align: center;">Наименование</th>
+                        <th scope="col" onclick="sortTable(2)" style="text-align: center;">Редактирование</th>
                         <!--ShipmentDate-->
                         <!--    <th scope="col" onclick="sortTable(2)">ShipmentDate2</th>-->
                     </tr>
@@ -36,7 +36,7 @@
                         <!--    <td>
                         {{.ID}}
                     </td>-->
-                        <td>
+                        <td style="text-align: center;">
                             {{.CodeDebitor}}
                         </td>
                         <td>

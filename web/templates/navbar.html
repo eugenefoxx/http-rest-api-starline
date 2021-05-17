@@ -1,5 +1,5 @@
 <ul class="nav">
-    <li><a class="active" href="/operation/main">StarLine {{.Navbar}}</a></li>
+
     <!--    <li class="dropdown">
         <a href="javascript:void(0)" class="dropbtn">Dropdown</a>
         <div class="dropdown-content">
@@ -9,7 +9,11 @@
         </div>
     </li>
     <li><a href="/test">Test</a></li>-->
+
     {{ if .LoggedIn}}
+
+    {{ if .GroupP1}}
+    <li><a class="active" href="/operation/main">StarLine П1 {{.Navbar}}</a></li>
     {{ if .Admin}}
     <li class="dropdown">
         <a href="javascript:void(0)" class="dropbtn">Логистика</a>
@@ -102,42 +106,128 @@
 
     {{ if .Admin}}
     <div style="margin-top: 10px;">
-        <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля</a>
+        <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля П1</a>
     </div>
     {{end}}
     {{ if .Stockkeeper}}
     <div style="margin-top: 10px;">
-        <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля</a>
+        <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля П1</a>
     </div>
     {{end}}
     {{ if .SuperIngenerQuality}}
     <div style="margin-top: 10px;">
-        <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля</a>
+        <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля П1</a>
     </div>
     {{end}}
     {{ if .StockkeeperWH}}
     <div style="margin-top: 10px;">
-        <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля</a>
+        <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля П1</a>
     </div>
     {{end}}
     {{ if .IngenerQuality}}
     <div style="margin-top: 10px;">
-        <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля</a>
+        <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля П1</a>
     </div>
     {{end}}
     {{ if .Inspector}}
     <div style="margin-top: 10px;">
         <a href="#modal-3" class="js-modal-open linkblack" style="margin-left: 700px;">Поиск по базе Входного
-            Контроля</a>
+            Контроля П1</a>
     </div>
     {{end}}
     {{ if .WarehouseManager}}
     <div style="margin-top: 10px;">
         <a href="#modal-3" class="js-modal-open linkblack" style="margin-left: 700px;">Поиск по базе Входного
-            Контроля</a>
+            Контроля П1</a>
     </div>
     {{end}}
+    {{end}}
 
+    {{ if .GroupP5}}
+    <li><a class="active" href="/operation/main">StarLine П5 {{.Navbar}}</a></li>
+    {{ if .SuperIngenerQuality}}
+    <li class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">Отдел качества</a>
+        <div class="dropdown-content">
+            <!--    <a href="/ininspection">Отгрузка катушек на ВК</a>
+            <a href="/insertvendor">Добавить поставщика в базу</a>-->
+            <a href="/operation/showusersquality">Управление пользователями отдела качества</a>
+            <a href="/operation/showvendor">Просмотр и редактирование поставщиков</a>
+            <a href="/operation/statusinspection">Компоненты на входном контроле</a>
+        </div>
+    </li>
+    {{ end}}
+    {{ if .Inspector}}
+    <li class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">Отдел качества</a>
+        <div class="dropdown-content">
+            <a href="/operation/statusinspection">Компоненты на входном контроле</a>
+        </div>
+    </li>
+    {{ end}}
+    {{ if .IngenerQuality}}
+    <li class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">Отдел качества</a>
+        <div class="dropdown-content">
+            <a href="/operation/statusinspection">Компоненты на входном контроле</a>
+        </div>
+    </li>
+    {{ end}}
+    {{ if .WarehouseManager}}
+    <li class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">Отдел качества</a>
+        <div class="dropdown-content">
+            <a href="/operation/showuserswarehouse">Управление пользователями сотрудников склада</a>
+            <!--    <a href="/ininspection">Отгрузка катушек на ВК</a>-->
+            <a href="/operation/statusinspection">Компоненты на входном контроле</a>
+            <!--   <a href="/statusinspectionforwh">Компоненты на входном контроле для приема</a>-->
+        </div>
+    </li>
+    {{ end}}
+    {{ if .StockkeeperWH}}
+    <li class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">Отдел качества</a>
+        <div class="dropdown-content">
+            <!--    <a href="/ininspection">Отгрузка катушек на ВК</a>-->
+            <a href="/operation/statusinspection">Компоненты на входном контроле</a>
+            <!--   <a href="/statusinspectionforwh">Компоненты на входном контроле для приема</a>-->
+        </div>
+    </li>
+    {{ end}}
+
+    {{ if .Stockkeeper}}
+    <div style="margin-top: 10px;">
+        <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля П5</a>
+    </div>
+    {{end}}
+    {{ if .SuperIngenerQuality}}
+    <div style="margin-top: 10px;">
+        <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля П5</a>
+    </div>
+    {{end}}
+    {{ if .StockkeeperWH}}
+    <div style="margin-top: 10px;">
+        <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля П5</a>
+    </div>
+    {{end}}
+    {{ if .IngenerQuality}}
+    <div style="margin-top: 10px;">
+        <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля П5</a>
+    </div>
+    {{end}}
+    {{ if .Inspector}}
+    <div style="margin-top: 10px;">
+        <a href="#modal-3" class="js-modal-open linkblack" style="margin-left: 700px;">Поиск по базе Входного
+            Контроля П5</a>
+    </div>
+    {{end}}
+    {{ if .WarehouseManager}}
+    <div style="margin-top: 10px;">
+        <a href="#modal-3" class="js-modal-open linkblack" style="margin-left: 700px;">Поиск по базе Входного
+            Контроля П5</a>
+    </div>
+    {{end}}
+    {{end}}
 
     <div style="margin-left:200px; margin-top: 10px;">
         Пользователь: {{.User}} {{.Username}}
@@ -145,7 +235,7 @@
 
     <li class="out"><a href="/logout">Выход</a></li>
     {{ else}}
-
+    <li><a class="active" href="/operation/main">StarLine {{.Navbar}}</a></li>
     <li><a href="/login">Авторизация</a></li>
     <li style="margin-left:70%;"><a href="/users">Регистрация</a></li>
     <li><a href="/updatepass">Обновить пароль</a></li>

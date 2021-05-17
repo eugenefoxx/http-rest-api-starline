@@ -1,0 +1,50 @@
+<form id="update-component-form" method="POST" action="/operation/updateinspection/{{.GET.ID}}">
+
+    <div>
+        <select class="form-control" name="id" style="visibility: hidden;">
+            <option value="{{.GET.ID}}"></option>
+        </select>
+    </div>
+    <label for="title" class="login">Статус</label>
+    <div class="form-group">
+
+
+        <!--<input type="text" class="form-control" name="status" id="status" value="<<.Status>>">-->
+        <!--  <p><input class="form-control" name="status" id="status" type="radio" value="OK">
+                        OK <<.Status>>
+                    </p>
+                    <p><input class="form-control" name="status" id="status" type="radio" value="NG">
+                        NG <<.Status>>
+                    </p>-->
+        <select class="form-control" id="status" name="status" style="width: 35%;">
+            <!--   <option disabled selected>Изменить статус</option>-->
+            <option value="OK">
+                OK - Текущий статус: {{.GET.Status}}
+            </option>
+            <option value="NG">
+                NG - Текущий статус: {{.GET.Status}}
+            </option>
+        </select>
+
+    </div>
+    <label for="description" class="login">Примечание</label>
+    <div class="form-group">
+
+        <textarea class="form-control" name="note" id="note" rows="3"
+            style="width: 50%; height: 200px;">{{.GET.Note}}</textarea>
+    </div>
+    <div>
+        <label>
+            {{.GET.Groups}}
+        </label>
+    </div>
+    <!--    <div class="form-group">
+                    <label>{{.Updated}}</label>
+                </div>-->
+    <br>
+    <!--<button onClick="updateComponentRequest();" type="button" class="btn btn-primary--s"  onClick="sendupdateInspectionComponent();"-->
+    <!--    <button type="submit" class="btn btn-primary--s" style="margin-left: 2%;" value="push" id="send-form">-->
+    <button type="submit" class="btn btn-primary--s" style="margin-left: 2%;" value="push" id="send-form">
+        Подтвердить
+    </button>
+</form>

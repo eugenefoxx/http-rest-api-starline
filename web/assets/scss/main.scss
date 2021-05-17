@@ -514,12 +514,23 @@ button.buttonPlus:after {
 }
 
 #myTable {
-  border-collapse: collapse; /* Collapse borders */
-  width: 100%; /* Full-width */
-  border: 1px solid #ddd; /* Add a grey border */
-  font-size: 15px; /* Increase font-size */
-  background: white;
-  min-width: 1800px;
+  &--s {
+    border-collapse: collapse; /* Collapse borders */
+    width: 100%; /* Full-width */
+    border: 1px solid #ddd; /* Add a grey border */
+    font-size: 15px; /* Increase font-size */
+    background: white;
+    min-width: 800px;
+  }
+
+  &--l {
+    border-collapse: collapse; /* Collapse borders */
+    width: 100%; /* Full-width */
+    border: 1px solid #ddd; /* Add a grey border */
+    font-size: 15px; /* Increase font-size */
+    background: white;
+    min-width: 1800px;
+  }
 }
 
 #myTable th,

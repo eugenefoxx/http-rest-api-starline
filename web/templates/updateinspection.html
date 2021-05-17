@@ -1,10 +1,10 @@
 <form id="update-component-form" method="POST" action="/operation/updateinspection/{{.GET.ID}}">
-
+    <!--
     <div>
         <select class="form-control" name="id" style="visibility: hidden;">
             <option value="{{.GET.ID}}"></option>
         </select>
-    </div>
+    </div>-->
     <label for="title" class="login">Статус</label>
     <div class="form-group">
 
@@ -43,7 +43,8 @@
                 </div>-->
     <br>
     <!--<button onClick="updateComponentRequest();" type="button" class="btn btn-primary--s"  onClick="sendupdateInspectionComponent();"-->
-    <button type="submit" class="btn btn-primary--s" style="margin-left: 2%;" value="push" id="send-form">
+    <!--    <button type="submit" class="btn btn-primary--s" style="margin-left: 2%;" value="push" id="send-form">-->
+    <button type="submit" class="btn btn-primary--s" style="margin-left: 2%;">
         Подтвердить
     </button>
 </form>

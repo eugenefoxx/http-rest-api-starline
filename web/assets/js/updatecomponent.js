@@ -3,15 +3,24 @@
 
 
 function ready() {
-  alert('DOM готов');
-  debugger;
+  //alert('DOM готов');
+  
+ // let isSendForm = document.getElementById("send-form");
+ // console.log("have", isSendForm);
+ // if (document.getElementById("send-form").children.length > 0) {
+  //debugger;
   let sendForm = document.querySelector('#send-form');
+  console.log(sendForm);
   let form = document.querySelector('form');
+  if (sendForm !== null) {
+    alert("Hi");
+    
   sendForm.onclick = function (event) {
     event.preventDefault();
-  console.log('work');
-  console.log(serialize(form));
+    console.log('work');
+    console.log(serialize(form));
   }
+}
   // изображение ещё не загружено (если не было закешировано), так что размер будет 0x0
  // alert(`Размер изображения: ${img.offsetWidth}x${img.offsetHeight}`);
 }
@@ -34,15 +43,16 @@ document.addEventListener("DOMContentLoaded", () => {
 //document.addEventListener('DOMContentLoaded', updateInspectionComponent);//() {
 
 //document.querySelector('#send-form').addEventListener('click', updateInspectionComponent);
-
+/*
 function updateInspectionComponent() {
+
 /*const form = document.querySelector('form[name="valform"]');
 const status = form.elements['status'].value;
 const note = form.elements['note'].value;
 
 alert(form);
 console.log(note);
-alert(note);*/
+alert(note);
 
 
 
@@ -50,6 +60,7 @@ alert(note);*/
 //let sendForm = document.querySelector('#send-form');
 //var formid = document.getElementById("update-component-form");
 //debugger;
+
 let form = document.querySelector('form');
 //sendForm.onclick = function (event) {
 //  document.getElementById('send-form').addEventListener("click", function (){  
@@ -89,7 +100,7 @@ var resultData = [];
 console.log(resultData);
 return resultData;
 */
-}
+//} 
 /*
 data = updateInspectionComponent();
 console.log("data - ", data);
