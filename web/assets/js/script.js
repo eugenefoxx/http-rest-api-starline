@@ -206,8 +206,195 @@ function editInspection(id) {
             document
                 .getElementById('modal-2')
                 .getElementsByClassName('modal__dialog-body')[0].innerHTML = response.data;
+            //    debugger;
+                let sendForm = document.querySelector('#send-form');
+                console.log(sendForm);
+                //    let form = document.querySelector('form');
+                
+                if (sendForm !== null) {
+                //  alert("Hi");
+                  
+                sendForm.onclick = function (event) {
+                    event.preventDefault();
+                    // Get the form
+                    let form = document.querySelector('#update-component-form');
+                    // Get all field data from the form
+                    // returns a FormData object
+                    let data = new FormData(form);
+                    console.log('work');
+                    //  console.log(serialize(form));
+                    // Convert to an object
+                    let formObj = serialize(data);
+                    console.log(formObj);
+                 /*   let resultData = [];
+                    resultData = serialize(data);
+                    console.log(resultData);*/
+                    //  resultData = formObj;
+                    //arrRezalt = serializeArray(form);
+                   // console.log(arrRezalt);
+                    // action="/operation/updateinspection/{{.GET.ID}}"
+                    fetch('http://localhost:3001/operation/updateinspection',{
+  
+		                method: 'POST',
+		                body: JSON.stringify(serialize(data)),
+		                headers: {
+			                'Content-type': 'application/json; charset=UTF-8'
+		                }
+	                }).then(function (response) {
+		                if (response.ok) {
+                          	return response.json();
+		                }
+		                return Promise.reject(response);
+	                }).then(function (data) {
+                      /*  const updateid = document.querySelector('td[updateid-id="'+data.id+'"]')
+                        if (!updateid || !updateid.innerHTML){
+                            return false;
+                        }*/
+                       //  debugger;
+                        console.log(data.id)
+                        console.log(data.status)
+                       // console.log("data.id", tt)
+                      //  document.querySelector('#updatestatus').innerHTML = data.status;
+                        document.querySelector('td[updateid-status="'+data.id+'"]').innerHTML = data.status;
+                        console.log(data.note)
+                     //   if (data.note = undefined){
+                     //       return false;
+                     //   }
+                      //  document.querySelector('#updatenote').innerHTML = data.note;
+                      //  if {
+                        document.querySelector('td[updateid-note="'+data.id+'"]').innerHTML = data.note;
+		                console.log(data.message)
+                //  document.querySelector('label[response="'+data.message+'"]').innerText = data.message;
+                        document.querySelector('#responseInspection').innerText = data.message;
+                        //}
+                        console.log(data);
+                    //}
+	                }).catch(function (error) {
+		                console.warn(error);
+	                });
+                }
+              }  
         });
         
+}
+
+function editInspectionMix(id) {
+    axios.get('/operation/updateinspectionmix/' + id)
+        .then(function (response) {
+            document
+                .getElementById('modal-2')
+                .getElementsByClassName('modal__dialog-body')[0].innerHTML = response.data;
+            //    debugger;
+                let sendForm = document.querySelector('#send-form');
+                console.log(sendForm);
+                //    let form = document.querySelector('form');
+                
+                if (sendForm !== null) {
+                //  alert("Hi");
+                  
+                sendForm.onclick = function (event) {
+                    event.preventDefault();
+                    // Get the form
+                    let form = document.querySelector('#update-component-form');
+                    // Get all field data from the form
+                    // returns a FormData object
+                    let data = new FormData(form);
+                    console.log('work');
+                    //  console.log(serialize(form));
+                    // Convert to an object
+                    let formObj = serialize(data);
+                    console.log(formObj);
+                 /*   let resultData = [];
+                    resultData = serialize(data);
+                    console.log(resultData);*/
+                    //  resultData = formObj;
+                    //arrRezalt = serializeArray(form);
+                   // console.log(arrRezalt);
+                    // action="/operation/updateinspection/{{.GET.ID}}"
+                    fetch('http://localhost:3001/operation/updateinspectionmix',{
+  
+		                method: 'POST',
+		                body: JSON.stringify(serialize(data)),
+		                headers: {
+			                'Content-type': 'application/json; charset=UTF-8'
+		                }
+	                }).then(function (response) {
+		                if (response.ok) {
+                          	return response.json();
+		                }
+		                return Promise.reject(response);
+	                }).then(function (data) {
+                      /*  const updateid = document.querySelector('td[updateid-id="'+data.id+'"]')
+                        if (!updateid || !updateid.innerHTML){
+                            return false;
+                        }*/
+                        
+                        console.log(data.id)
+                        console.log(data.status)
+                       // console.log("data.id", tt)
+                      //  document.querySelector('#updatestatus').innerHTML = data.status;
+                        document.querySelector('td[updateid-status="'+data.id+'"]').innerHTML = data.status;
+                        console.log(data.note)
+                     //   if (data.note = undefined){
+                     //       return false;
+                     //   }
+                      //  document.querySelector('#updatenote').innerHTML = data.note;
+                      //  if {
+                        document.querySelector('td[updateid-note="'+data.id+'"]').innerHTML = data.note;
+		                console.log(data.message)
+                //  document.querySelector('label[response="'+data.message+'"]').innerText = data.message;
+                        document.querySelector('#responseInspection').innerText = data.message;
+                        //}
+                        console.log(data);
+                    //}
+	                }).catch(function (error) {
+		                console.warn(error);
+	                });
+                }
+              }  
+        });
+        
+}
+
+function serializeArray (form) {
+    // Create a new FormData object
+    const formData = new FormData(form);
+  
+    // Create an array to hold the name/value pairs
+    const pairs = [];
+  
+    // Add each name/value pair to the array
+    for (const [name, value] of formData) {
+      pairs.push({ name, value });
+    }
+  
+    // Return the array
+    return pairs;
+  }
+
+function serialize (data) {
+    
+	let obj = {};
+	for (let [key, value] of data) {
+		if (obj[key] !== undefined) {
+			if (!Array.isArray(obj[key])) {
+				obj[key] = [obj[key]];
+			}
+			obj[key].push(value);
+		} else {
+			obj[key] = value;
+		}
+	}
+    return [obj];
+  
+ /*
+  var array = Object.keys(obj)
+    .map(function(key) {
+        return obj[key];
+    });
+	console.log(array);
+    return array;
+    */
 }
 
 /*

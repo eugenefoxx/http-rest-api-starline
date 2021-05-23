@@ -1,12 +1,21 @@
+
+let form = document.getElementById('update-component-form');
 function serialize (form) {
-    if (!form || form.nodeName !== "FORM"){
+  //  let checkForm = document.getElementById('update-component-form');
+  //  console.log(checkForm);
+    if (!form || form.nodeName !== "FORM" /*&& !form.getElementById('update-component-form')*/ ){
         return false;
     }
+/* /    let form = document.getElementById('update-component-form')
+    if (document.querySelectorAll('update-component-form')){
+        return false;
+    }*/
     let i,j, q = []
     for (i = form.elements.length -1; i >= 0; i = i -1) {
         if (form.elements[i].name === "") {
             continue;
         }
+        debugger;
         switch (form.elements[i].nodeName) {
             case 'INPUT':
                 switch (form.elements[i].type) {

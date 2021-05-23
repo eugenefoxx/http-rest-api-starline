@@ -17,6 +17,7 @@ function init() {
 //
 
 var mainDiv = document.getElementById("form"); //ref to main div with forms
+//var container = document.getElementById("count");
 
 //attributes for form fields, they will be added during the creation of forms
 var formElementsTypes = ["input", "button"];//https://www.jetbrains.com/idea/features/editions_comparison_matrix.html
@@ -43,6 +44,7 @@ function createForm() {
     formAllowedIdsArr = formAllowedIdsArr.slice(1);
     mainDiv.appendChild(form);
     for (var i = 0; i < formElementsTypes.length; i++) {
+      //  container.appendChild(document.createTextNode("Member " + (i+1)));
         var element = document.createElement(formElementsTypes[i]);
         element.id = `${formElementsIds[i]}-${form.id}`;
         element.className = formElementsClassNames[i].concat(" ", "fields-style");

@@ -146,6 +146,7 @@ func (s *Server) InInspection() http.HandlerFunc {
 					idMaterial := v.ScanID[0:45]
 
 					//	fmt.Println("Пропускаем:\n" + idMaterial + "\n")
+					s.infoLog.Printf("Запись строки сканирования на входной контроль, П1: %v", idMaterial)
 					sapStr := v.ScanID[1:8]
 					sap := v.SAP
 					sap, err := strconv.Atoi(sapStr)
@@ -193,7 +194,7 @@ func (s *Server) InInspection() http.HandlerFunc {
 					} else {
 						if (strings.Contains(v.ScanID[0:1], "P") == false) && (len(v.ScanID) != 45) {
 							fmt.Println("не верное сканирование :\n" + v.ScanID + "\n")
-							s.errorLog.Printf("не верное сканирование :\n" + v.ScanID + "\n")
+							s.errorLog.Printf("Не верное сканирование на входной контроль, П1: %v", v)
 							//	fmt.Fprintf(w, "не верное сканирование :"+v.ScanID)
 						}
 						//	tpl.Execute(w, data)
@@ -210,6 +211,7 @@ func (s *Server) InInspection() http.HandlerFunc {
 					idMaterial := v.ScanID[0:35]
 
 					//	fmt.Println("Пропускаем:\n" + idMaterial + "\n")
+					s.infoLog.Printf("Запись строки сканирования на входной контроль, П1: %v", idMaterial)
 					sapStr := v.ScanID[1:8]
 					sap := v.SAP
 					sap, err := strconv.Atoi(sapStr)
@@ -257,7 +259,7 @@ func (s *Server) InInspection() http.HandlerFunc {
 					} else {
 						if (strings.Contains(v.ScanID[0:1], "P") == false) && (len(v.ScanID) != 35) {
 							fmt.Println("не верное сканирование :\n" + v.ScanID + "\n")
-							s.errorLog.Printf("не верное сканирование :\n" + v.ScanID + "\n")
+							s.errorLog.Printf("Не верное сканирование на входной контроль, П1: %v", v)
 							//	fmt.Fprintf(w, "не верное сканирование :"+v.ScanID)
 						}
 						//	tpl.Execute(w, data)
@@ -279,6 +281,7 @@ func (s *Server) InInspection() http.HandlerFunc {
 					idMaterial := v.ScanID[0:45]
 
 					//	fmt.Println("Пропускаем:\n" + idMaterial + "\n")
+					s.infoLog.Printf("Запись строки сканирования на входной контроль, П5: %v", idMaterial)
 					sapStr := v.ScanID[1:8]
 					sap := v.SAP
 					sap, err := strconv.Atoi(sapStr)
@@ -326,7 +329,7 @@ func (s *Server) InInspection() http.HandlerFunc {
 					} else {
 						if (strings.Contains(v.ScanID[0:1], "P") == false) && (len(v.ScanID) != 45) {
 							fmt.Println("не верное сканирование :\n" + v.ScanID + "\n")
-							s.errorLog.Printf("не верное сканирование :\n" + v.ScanID + "\n")
+							s.errorLog.Printf("Не верное сканирование на входной контроль, П5: %v", v)
 							//	fmt.Fprintf(w, "не верное сканирование :"+v.ScanID)
 						}
 						//	tpl.Execute(w, data)
@@ -343,6 +346,7 @@ func (s *Server) InInspection() http.HandlerFunc {
 					idMaterial := v.ScanID[0:35]
 
 					//	fmt.Println("Пропускаем:\n" + idMaterial + "\n")
+					s.infoLog.Printf("Запись строки сканирования на входной контроль, П5: %v", idMaterial)
 					sapStr := v.ScanID[1:8]
 					sap := v.SAP
 					sap, err := strconv.Atoi(sapStr)
@@ -390,7 +394,7 @@ func (s *Server) InInspection() http.HandlerFunc {
 					} else {
 						if (strings.Contains(v.ScanID[0:1], "P") == false) && (len(v.ScanID) != 35) {
 							fmt.Println("не верное сканирование :\n" + v.ScanID + "\n")
-							s.errorLog.Printf("не верное сканирование :\n" + v.ScanID + "\n")
+							s.errorLog.Printf("Не верное сканирование на входной контроль, П5: %v", v)
 							//	fmt.Fprintf(w, "не верное сканирование :"+v.ScanID)
 						}
 						//	tpl.Execute(w, data)
@@ -1273,6 +1277,7 @@ func (s *Server) PageInspection() http.HandlerFunc {
 		SuperIngenerQuality2 := false
 		GroupP1 := false
 		GroupP5 := false
+		MixP1P5 := false
 		LoggedIn := true
 
 		session, err := s.sessionStore.Get(r, sessionName)
@@ -1298,6 +1303,7 @@ func (s *Server) PageInspection() http.HandlerFunc {
 			if user.Role == "главный инженер по качеству" {
 				SuperIngenerQuality = true
 				SuperIngenerQuality2 = true
+				MixP1P5 = true
 				LoggedIn = true
 				fmt.Println("pageInspection SuperIngenerQuality - ", SuperIngenerQuality)
 			} else if user.Role == "кладовщик склада" {
@@ -1385,6 +1391,7 @@ func (s *Server) PageInspection() http.HandlerFunc {
 				"SuperIngenerQuality":  SuperIngenerQuality,
 				"SuperIngenerQuality2": SuperIngenerQuality2,
 				"GroupP1":              GroupP1,
+				"MixP1P5":              MixP1P5,
 				"GET":                  get,
 				"ListVendor":           listVendor,
 				"CountTotal":           countTotal,
@@ -1394,6 +1401,7 @@ func (s *Server) PageInspection() http.HandlerFunc {
 				"HoldCountDebitor":     holdCountDebitor,
 				"NotVerifyDebitor":     notVerifyDebitor,
 				"LoggedIn":             LoggedIn,
+				"Pobedit":              "Pobedit 1",
 			}
 
 			tpl.ExecuteTemplate(w, "showinspection.html", groups)
@@ -1501,11 +1509,282 @@ func (s *Server) PageInspection() http.HandlerFunc {
 				"HoldCountDebitor":     holdCountDebitor,
 				"NotVerifyDebitor":     notVerifyDebitor,
 				"LoggedIn":             LoggedIn,
+				"Pobedit":              "Pobedit 5",
 			}
 
 			tpl.ExecuteTemplate(w, "showinspection.html", groups)
 			//	json.NewEncoder(w).Encode(get)
 		}
+	}
+}
+
+func (s *Server) PageInspectionMix() http.HandlerFunc {
+	///	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "showinspection.html")
+	///	if err != nil {
+	///		panic(err)
+	///	}
+	return func(w http.ResponseWriter, r *http.Request) {
+		s.mu.Lock()
+		defer s.mu.Unlock()
+		//w.Header().Add("Content-Type", "application/json")
+		//	Admin := true
+		//	Warehouse := true
+		StockkeeperWH := false
+		WarehouseManager := false
+		//	Quality := false
+		Inspector := false
+		SuperIngenerQuality := false
+		IngenerQuality := false
+		SuperIngenerQuality2 := false
+		GroupP1 := false
+		GroupP5 := false
+		//MixP1P5 := false
+		LoggedIn := true
+
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		id, ok := session.Values["user_id"]
+		if !ok {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		user, err := s.store.User().Find(id.(int))
+		if err != nil {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		if user.Groups == "качество" && user.Role == "главный инженер по качеству" ||
+			user.Groups == "качество" && user.Role == "инженер по качеству" {
+			//	MixP1P5 = true
+			GroupP1 = true
+			if user.Role == "главный инженер по качеству" {
+				SuperIngenerQuality = true
+				SuperIngenerQuality2 = true
+				LoggedIn = true
+				fmt.Println("pageInspection SuperIngenerQuality - ", SuperIngenerQuality)
+			} else if user.Role == "инженер по качеству" {
+				IngenerQuality = true
+			} /* else if user.Role == "кладовщик склада" {
+				StockkeeperWH = true
+				//	Warehouse = false
+				//	WarehouseManager = true
+				LoggedIn = true
+			} */
+			/* else if user.Role == "контролер качества" {
+				Inspector = true
+			} else if user.Role == "старший кладовщик склада" {
+				WarehouseManager = true
+				LoggedIn = true
+			} */
+			/* else if user.Role == "Administrator" {
+				Admin = true
+				LoggedIn = true
+			}*/ /**else if user.Groups == "качество" {
+				//	Quality = true
+				Inspector = true
+				IngenerQuality = true
+				LoggedIn = true
+				//	fmt.Println("pageInspection quality - ", Quality)
+			} */
+
+			get, err := s.store.Inspection().ListInspectionP5()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			countTotal, err := s.store.Inspection().CountTotalInspectionP5()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			holdInspection, err := s.store.Inspection().HoldInspectionP5()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			notVerifyComponents, err := s.store.Inspection().NotVerifyComponentsP5()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			getStatic, err := s.store.Inspection().CountDebitorP5()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			holdCountDebitor, err := s.store.Inspection().HoldCountDebitorP5()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			notVerifyDebitor, err := s.store.Inspection().NotVerifyDebitorP5()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			listVendor, err := s.store.Vendor().ListVendor()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			groups := map[string]interface{}{
+				"TitleDOC": "Список ВК",
+				"User":     user.LastName,
+				"Username": user.FirstName,
+				//	"Admin":                Admin,
+				//	"Quality":              Quality,
+				"Inspector":        Inspector,
+				"IngenerQuality":   IngenerQuality,
+				"WarehouseManager": WarehouseManager,
+				//	"Warehouse":            Warehouse,
+				"StockkeeperWH":        StockkeeperWH,
+				"SuperIngenerQuality":  SuperIngenerQuality,
+				"SuperIngenerQuality2": SuperIngenerQuality2,
+				//"MixP1P5":              MixP1P5,
+				"GroupP1":             GroupP1,
+				"GET":                 get,
+				"ListVendor":          listVendor,
+				"CountTotal":          countTotal,
+				"HoldInspection":      holdInspection,
+				"NotVerifyComponents": notVerifyComponents,
+				"GetStatic":           getStatic,
+				"HoldCountDebitor":    holdCountDebitor,
+				"NotVerifyDebitor":    notVerifyDebitor,
+				"LoggedIn":            LoggedIn,
+				"Pobedit":             "Pobedit 5",
+			}
+
+			tpl.ExecuteTemplate(w, "showinspectionmix.html", groups)
+			//	json.NewEncoder(w).Encode(get)
+		}
+
+		if user.Groups == "качество П5" && user.Role == "главный инженер по качеству" ||
+			user.Groups == "качество П5" && user.Role == "инженер по качеству" {
+			//	MixP1P5 = true
+			GroupP5 = true
+			if user.Role == "главный инженер по качеству" {
+				SuperIngenerQuality = true
+				SuperIngenerQuality2 = true
+				LoggedIn = true
+				fmt.Println("pageInspection SuperIngenerQuality - ", SuperIngenerQuality)
+			} else if user.Role == "инженер по качеству" {
+				IngenerQuality = true
+			} /* else if user.Role == "кладовщик склада" {
+				StockkeeperWH = true
+				//	Warehouse = false
+				//	WarehouseManager = true
+				LoggedIn = true
+			} */
+			/* else if user.Role == "контролер качества" {
+				Inspector = true
+			} else if user.Role == "старший кладовщик склада" {
+				WarehouseManager = true
+				LoggedIn = true
+			} */
+			/* else if user.Role == "Administrator" {
+				Admin = true
+				LoggedIn = true
+			}*/ /**else if user.Groups == "качество" {
+				//	Quality = true
+				Inspector = true
+				IngenerQuality = true
+				LoggedIn = true
+				//	fmt.Println("pageInspection quality - ", Quality)
+			} */
+
+			get, err := s.store.Inspection().ListInspection()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			countTotal, err := s.store.Inspection().CountTotalInspection()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			holdInspection, err := s.store.Inspection().HoldInspection()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			notVerifyComponents, err := s.store.Inspection().NotVerifyComponents()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			getStatic, err := s.store.Inspection().CountDebitor()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			holdCountDebitor, err := s.store.Inspection().HoldCountDebitor()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			notVerifyDebitor, err := s.store.Inspection().NotVerifyDebitor()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			listVendor, err := s.store.Vendor().ListVendor()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			groups := map[string]interface{}{
+				"TitleDOC": "Список ВК",
+				"User":     user.LastName,
+				"Username": user.FirstName,
+				//	"Admin":                Admin,
+				//	"Quality":              Quality,
+				"Inspector":        Inspector,
+				"IngenerQuality":   IngenerQuality,
+				"WarehouseManager": WarehouseManager,
+				//	"Warehouse":            Warehouse,
+				"StockkeeperWH":        StockkeeperWH,
+				"SuperIngenerQuality":  SuperIngenerQuality,
+				"SuperIngenerQuality2": SuperIngenerQuality2,
+				//"MixP1P5":              MixP1P5,
+				"GroupP5":             GroupP5,
+				"GET":                 get,
+				"ListVendor":          listVendor,
+				"CountTotal":          countTotal,
+				"HoldInspection":      holdInspection,
+				"NotVerifyComponents": notVerifyComponents,
+				"GetStatic":           getStatic,
+				"HoldCountDebitor":    holdCountDebitor,
+				"NotVerifyDebitor":    notVerifyDebitor,
+				"LoggedIn":            LoggedIn,
+				"Pobedit":             "Pobedit 1",
+			}
+
+			tpl.ExecuteTemplate(w, "showinspectionmix.html", groups)
+			//	json.NewEncoder(w).Encode(get)
+		}
+
 	}
 }
 
@@ -1663,6 +1942,8 @@ func (s *Server) PageupdateInspectionJSON() http.HandlerFunc {
 		SuperIngenerQuality := false
 		IngenerQuality := false
 		Inspector := false
+		GroupP1 := false
+		GroupP5 := false
 		LoggedIn := false
 
 		vars := mux.Vars(r)
@@ -1690,46 +1971,284 @@ func (s *Server) PageupdateInspectionJSON() http.HandlerFunc {
 			return
 		}
 		fmt.Println("user.Groups - ?", user.Groups)
+		fmt.Println("Test json page update")
+		s.infoLog.Printf("user.Groups - %v", user.Groups)
+		/*
+			if (user.Groups == "качество" && user.Role == "главный инженер по качеству") ||
+				(user.Groups == "качество" && user.Role == "инженер по качеству") {
+				fmt.Println("Test mix page update")
+				GroupP1 = true
+				if user.Role == "Administrator" {
+					Admin = true
+					LoggedIn = true
+				} else if user.Role == "главный инженер по качеству" {
+					SuperIngenerQuality = true
+					LoggedIn = true
+					fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
+				} else if user.Role == "инженер по качеству" {
+					IngenerQuality = true
+					LoggedIn = true
+					fmt.Println("IngenerQuality - ", IngenerQuality)
+				} /*else if user.Role == "контролер качества" {
+					Inspector = true
+					LoggedIn = true
+
+				}*/
+		//fmt.Println("ID - ?", id)
+		/*
+				get, err := s.store.Inspection().EditInspectionP5(id)
+				if err != nil {
+					s.error(w, r, http.StatusUnprocessableEntity, err)
+					return
+				}
+
+				data := map[string]interface{}{
+					"Admin":               Admin,
+					"SuperIngenerQuality": SuperIngenerQuality,
+					"IngenerQuality":      IngenerQuality,
+					"Inspector":           Inspector,
+					"GroupP1":             GroupP1,
+					"GET":                 get,
+					"LoggedIn":            LoggedIn,
+					"User":                user.LastName,
+					"Username":            user.FirstName,
+				}
+				err = tpl.ExecuteTemplate(w, "updateinspectionjson.html", data)
+				if err != nil {
+					http.Error(w, err.Error(), 400)
+					return
+				}
+			}
+		*/
+		if user.Groups == "качество" {
+			GroupP1 = true
+			if user.Role == "Administrator" {
+				Admin = true
+				LoggedIn = true
+			} else if user.Role == "главный инженер по качеству" {
+				SuperIngenerQuality = true
+				LoggedIn = true
+				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
+			} else if user.Role == "инженер по качеству" {
+				IngenerQuality = true
+				LoggedIn = true
+				fmt.Println("IngenerQuality - ", IngenerQuality)
+			} else if user.Role == "контролер качества" {
+				Inspector = true
+				LoggedIn = true
+
+			}
+			//fmt.Println("ID - ?", id)
+
+			get, err := s.store.Inspection().EditInspection(id)
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			data := map[string]interface{}{
+				"Admin":               Admin,
+				"SuperIngenerQuality": SuperIngenerQuality,
+				"IngenerQuality":      IngenerQuality,
+				"Inspector":           Inspector,
+				"GroupP1":             GroupP1,
+				"GET":                 get,
+				"LoggedIn":            LoggedIn,
+				"User":                user.LastName,
+				"Username":            user.FirstName,
+			}
+			err = tpl.ExecuteTemplate(w, "updateinspectionjson.html", data)
+			if err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}
+		}
+		if user.Groups == "качество П5" {
+			GroupP5 = true
+			if user.Role == "Administrator" {
+				Admin = true
+				LoggedIn = true
+			} else if user.Role == "главный инженер по качеству" {
+				SuperIngenerQuality = true
+				LoggedIn = true
+				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
+			} else if user.Role == "инженер по качеству" {
+				IngenerQuality = true
+				LoggedIn = true
+				fmt.Println("IngenerQuality - ", IngenerQuality)
+			} else if user.Role == "контролер качества" {
+				Inspector = true
+				LoggedIn = true
+
+			}
+			//fmt.Println("ID - ?", id)
+
+			get, err := s.store.Inspection().EditInspectionP5(id)
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			data := map[string]interface{}{
+				"Admin":               Admin,
+				"SuperIngenerQuality": SuperIngenerQuality,
+				"IngenerQuality":      IngenerQuality,
+				"Inspector":           Inspector,
+				"GroupP5":             GroupP5,
+				"GET":                 get,
+				"LoggedIn":            LoggedIn,
+				"User":                user.LastName,
+				"Username":            user.FirstName,
+			}
+			err = tpl.ExecuteTemplate(w, "updateinspectionjson.html", data)
+			if err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}
+		}
+
+	}
+}
+
+func (s *Server) PageupdateInspectionJSONmix() http.HandlerFunc {
+	///	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "updateinspection.html")
+	///	if err != nil {
+	///		panic(err)
+	///	}
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		s.mu.Lock()
+		defer s.mu.Unlock()
+		//	w.Header().Set("Access-Control-Allow-Origin", "")
+		//	if r.Method == http.MethodOptions {
+		//		return
+		//	}
+		Admin := false
+		SuperIngenerQuality := false
+		IngenerQuality := false
+		Inspector := false
+		GroupP1 := false
+		GroupP5 := false
+		LoggedIn := false
+
+		vars := mux.Vars(r)
+		id, err := strconv.Atoi(vars["ID"])
+		if err != nil {
+			log.Println(err)
+			s.errorLog.Printf(err.Error())
+		}
+
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		idd, ok := session.Values["user_id"]
+		if !ok {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		user, err := s.store.User().Find(idd.(int))
+		if err != nil {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+		fmt.Println("user.Groups - ?", user.Groups)
+		fmt.Println("Test json page update")
 		s.infoLog.Printf("user.Groups - %v", user.Groups)
 
-		if user.Role == "Administrator" {
-			Admin = true
-			LoggedIn = true
-		} else if user.Role == "главный инженер по качеству" {
-			SuperIngenerQuality = true
-			LoggedIn = true
-			fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
-		} else if user.Role == "инженер по качеству" {
-			IngenerQuality = true
-			LoggedIn = true
-			fmt.Println("IngenerQuality - ", IngenerQuality)
-		} else if user.Role == "контролер качества" {
-			Inspector = true
-			LoggedIn = true
+		if (user.Groups == "качество" && user.Role == "главный инженер по качеству") ||
+			(user.Groups == "качество" && user.Role == "инженер по качеству") {
+			fmt.Println("Test mix page update")
+			GroupP1 = true
+			if user.Role == "Administrator" {
+				Admin = true
+				LoggedIn = true
+			} else if user.Role == "главный инженер по качеству" {
+				SuperIngenerQuality = true
+				LoggedIn = true
+				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
+			} else if user.Role == "инженер по качеству" {
+				IngenerQuality = true
+				LoggedIn = true
+				fmt.Println("IngenerQuality - ", IngenerQuality)
+			} /*else if user.Role == "контролер качества" {
+				Inspector = true
+				LoggedIn = true
 
-		}
-		//fmt.Println("ID - ?", id)
+			}*/
+			//fmt.Println("ID - ?", id)
 
-		get, err := s.store.Inspection().EditInspection(id)
-		if err != nil {
-			s.error(w, r, http.StatusUnprocessableEntity, err)
-			return
+			get, err := s.store.Inspection().EditInspectionP5(id)
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			data := map[string]interface{}{
+				"Admin":               Admin,
+				"SuperIngenerQuality": SuperIngenerQuality,
+				"IngenerQuality":      IngenerQuality,
+				"Inspector":           Inspector,
+				"GroupP1":             GroupP1,
+				"GET":                 get,
+				"LoggedIn":            LoggedIn,
+				"User":                user.LastName,
+				"Username":            user.FirstName,
+			}
+			err = tpl.ExecuteTemplate(w, "updateinspectionjsonmix.html", data)
+			if err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}
 		}
 
-		data := map[string]interface{}{
-			"Admin":               Admin,
-			"SuperIngenerQuality": SuperIngenerQuality,
-			"IngenerQuality":      IngenerQuality,
-			"Inspector":           Inspector,
-			"GET":                 get,
-			"LoggedIn":            LoggedIn,
-			"User":                user.LastName,
-			"Username":            user.FirstName,
-		}
-		err = tpl.ExecuteTemplate(w, "updateinspectionjson.html", data)
-		if err != nil {
-			http.Error(w, err.Error(), 400)
-			return
+		if (user.Groups == "качество П5" && user.Role == "главный инженер по качеству") ||
+			(user.Groups == "качество П5" && user.Role == "инженер по качеству") {
+			fmt.Println("Test mix page update")
+			GroupP5 = true
+			if user.Role == "Administrator" {
+				Admin = true
+				LoggedIn = true
+			} else if user.Role == "главный инженер по качеству" {
+				SuperIngenerQuality = true
+				LoggedIn = true
+				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
+			} else if user.Role == "инженер по качеству" {
+				IngenerQuality = true
+				LoggedIn = true
+				fmt.Println("IngenerQuality - ", IngenerQuality)
+			} /*else if user.Role == "контролер качества" {
+				Inspector = true
+				LoggedIn = true
+
+			}*/
+			//fmt.Println("ID - ?", id)
+
+			get, err := s.store.Inspection().EditInspection(id)
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			data := map[string]interface{}{
+				"Admin":               Admin,
+				"SuperIngenerQuality": SuperIngenerQuality,
+				"IngenerQuality":      IngenerQuality,
+				"Inspector":           Inspector,
+				"GroupP5":             GroupP5,
+				"GET":                 get,
+				"LoggedIn":            LoggedIn,
+				"User":                user.LastName,
+				"Username":            user.FirstName,
+			}
+			err = tpl.ExecuteTemplate(w, "updateinspectionjsonmix.html", data)
+			if err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}
 		}
 	}
 }
@@ -1952,47 +2471,228 @@ func (s *Server) UpdateInspectionJSON() http.HandlerFunc {
 			s.errorLog.Printf(err.Error())
 		}
 		var hdata []requestJSON
+		//var hdata map[string]interface{}
 		json.Unmarshal(body, &hdata)
+		//json.Unmarshal([]byte(body), &hdata)
 		fmt.Printf("body requestJSON: %s", body)
 		s.infoLog.Printf("Loading body requestJSON: %v\n", body)
 		fmt.Println("\njson  struct hdata requestJSON", hdata)
 		s.infoLog.Printf("Loading hdata requestJSON: %v\n", hdata)
+		//hdata2 := hdata["hdata2"].(map[string]interface{})
 
 		for _, v := range hdata {
 			fmt.Println("проверка в цкле - requestJSON", v.ID, v.Status, v.Note)
+			//	fmt.Println("проверка в цкле - requestJSON", v.(string), v.(string), v.(string))
 			idRoll, err := strconv.Atoi(v.ID)
+			//idRoll, err := strconv.Atoi(v.(string))
 			if err != nil {
 				log.Println(err)
 				s.errorLog.Printf(err.Error())
 			}
 			u := &model.Inspection{
 				ID:         idRoll,
-				Status:     v.Status,
-				Note:       v.Note,
+				Status:     v.Status,      // v.(string),
+				Note:       v.Note,        // v.(string),
 				Update:     user.LastName, //
 				Dateupdate: currentTime,   // Dateaccept
 				Timeupdate: currentTime,   // Timeaccept
 				Groups:     user.Groups,
 			}
+			/*	if user.Groups == "качество" && user.Role == "главный инженер по качеству" ||
+				user.Groups == "качество" && user.Role == "инженер по качеству" {
+				if err := s.store.Inspection().UpdateInspectionP5(u); err != nil {
+					s.error(w, r, http.StatusUnprocessableEntity, err)
+					return
+				}
 
-			if err := s.store.Inspection().UpdateInspection(u); err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
+				// format the message string
+				//msg := fmt.Sprintf("Inspection updated successfully. Total rows/record affected")
+				msg := "Данные успешно отправлены."
+
+				// format the response message
+				res := response{
+					ID:      int64(idRoll),
+					Status:  v.Status, // v.(string),
+					Note:    v.Note,   // v.(string),
+					Message: msg,
+				}
+				// send the response
+				json.NewEncoder(w).Encode(res)
+			}*/
+			if user.Groups == "качество" {
+				if err := s.store.Inspection().UpdateInspection(u); err != nil {
+					s.error(w, r, http.StatusUnprocessableEntity, err)
+					return
+				}
+
+				// format the message string
+				//msg := fmt.Sprintf("Inspection updated successfully. Total rows/record affected")
+				msg := "Данные успешно отправлены."
+
+				// format the response message
+				res := response{
+					ID:      int64(idRoll),
+					Status:  v.Status, // v.(string),
+					Note:    v.Note,   // v.(string),
+					Message: msg,
+				}
+				// send the response
+				json.NewEncoder(w).Encode(res)
+			}
+			if user.Groups == "качество П5" {
+				if err := s.store.Inspection().UpdateInspectionP5(u); err != nil {
+					s.error(w, r, http.StatusUnprocessableEntity, err)
+					return
+				}
+
+				// format the message string
+				//msg := fmt.Sprintf("Inspection updated successfully. Total rows/record affected")
+				msg := "Данные успешно отправлены."
+
+				// format the response message
+				res := response{
+					ID:      int64(idRoll),
+					Status:  v.Status, // v.(string),
+					Note:    v.Note,   // v.(string),
+					Message: msg,
+				}
+				// send the response
+				json.NewEncoder(w).Encode(res)
+			}
+		}
+		/*	err = tpl.ExecuteTemplate(w, "layout", nil)
+			if err != nil {
+				http.Error(w, err.Error(), 400)
 				return
+			}*/
+		//	http.Redirect(w, r, "/operation/statusinspection", 303)
+	}
+}
+
+func (s *Server) UpdateInspectionJSONmix() http.HandlerFunc {
+	// response format
+	type response struct {
+		ID      int64  `json:"id,omitempty"`
+		Status  string `json:"status,omitempty"`
+		Note    string `json:"note,omitempty"`
+		Message string `json:"message,omitempty"`
+	}
+
+	type requestJSON struct {
+		ID     string `json:"id"`
+		Status string `json:"status"`
+		Note   string `json:"note"`
+	}
+	///	_, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "updateinspection.html")
+	///	if err != nil {
+	///		panic(err)
+	///	}
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		s.mu.Lock()
+		s.mu.Unlock()
+		//	w.Header().Set("Content-Type", "application/x-www-form-urlencoded")
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "POST")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+		currentTime := time.Now()
+
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		idd, ok := session.Values["user_id"]
+		if !ok {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		user, err := s.store.User().Find(idd.(int))
+		if err != nil {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			log.Println(err)
+			s.errorLog.Printf(err.Error())
+		}
+		var hdata []requestJSON
+		//var hdata map[string]interface{}
+		json.Unmarshal(body, &hdata)
+		//json.Unmarshal([]byte(body), &hdata)
+		fmt.Printf("body requestJSON: %s", body)
+		s.infoLog.Printf("Loading body requestJSON: %v\n", body)
+		fmt.Println("\njson  struct hdata requestJSON", hdata)
+		s.infoLog.Printf("Loading hdata requestJSON: %v\n", hdata)
+		//hdata2 := hdata["hdata2"].(map[string]interface{})
+
+		for _, v := range hdata {
+			fmt.Println("проверка в цкле - requestJSON", v.ID, v.Status, v.Note)
+			//	fmt.Println("проверка в цкле - requestJSON", v.(string), v.(string), v.(string))
+			idRoll, err := strconv.Atoi(v.ID)
+			//idRoll, err := strconv.Atoi(v.(string))
+			if err != nil {
+				log.Println(err)
+				s.errorLog.Printf(err.Error())
+			}
+			u := &model.Inspection{
+				ID:         idRoll,
+				Status:     v.Status,      // v.(string),
+				Note:       v.Note,        // v.(string),
+				Update:     user.LastName, //
+				Dateupdate: currentTime,   // Dateaccept
+				Timeupdate: currentTime,   // Timeaccept
+				Groups:     user.Groups,
+			}
+			if user.Groups == "качество" && user.Role == "главный инженер по качеству" ||
+				user.Groups == "качество" && user.Role == "инженер по качеству" {
+				if err := s.store.Inspection().UpdateInspectionP5(u); err != nil {
+					s.error(w, r, http.StatusUnprocessableEntity, err)
+					return
+				}
+
+				// format the message string
+				//msg := fmt.Sprintf("Inspection updated successfully. Total rows/record affected")
+				msg := "Данные успешно отправлены."
+
+				// format the response message
+				res := response{
+					ID:      int64(idRoll),
+					Status:  v.Status, // v.(string),
+					Note:    v.Note,   // v.(string),
+					Message: msg,
+				}
+				// send the response
+				json.NewEncoder(w).Encode(res)
 			}
 
-			// format the message string
-			//msg := fmt.Sprintf("Inspection updated successfully. Total rows/record affected")
-			msg := "Inspection updated successfully. Total rows/record affected"
+			if user.Groups == "качество П5" && user.Role == "главный инженер по качеству" ||
+				user.Groups == "качество П5" && user.Role == "инженер по качеству" {
+				if err := s.store.Inspection().UpdateInspection(u); err != nil {
+					s.error(w, r, http.StatusUnprocessableEntity, err)
+					return
+				}
 
-			// format the response message
-			res := response{
-				ID:      int64(idRoll),
-				Status:  v.Status,
-				Note:    v.Note,
-				Message: msg,
+				// format the message string
+				//msg := fmt.Sprintf("Inspection updated successfully. Total rows/record affected")
+				msg := "Данные успешно отправлены."
+
+				// format the response message
+				res := response{
+					ID:      int64(idRoll),
+					Status:  v.Status, // v.(string),
+					Note:    v.Note,   // v.(string),
+					Message: msg,
+				}
+				// send the response
+				json.NewEncoder(w).Encode(res)
 			}
-			// send the response
-			json.NewEncoder(w).Encode(res)
 		}
 		/*	err = tpl.ExecuteTemplate(w, "layout", nil)
 			if err != nil {

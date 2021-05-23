@@ -162,14 +162,19 @@ func (s *Server) configureRouter() {
 	// api_server_inspection_management.go
 	operation.HandleFunc("/ininspection", s.PageinInspection()).Methods("GET")
 	operation.HandleFunc("/ininspection", s.InInspection()).Methods("POST")
+	operation.HandleFunc("/uploadfile", s.UploadFileToInspection()).Methods("POST")
+	//operation.HandleFunc("/uploadfile", s.UploadFileToInspectionJSON()).Methods("POST", "OPTIONS")
 	operation.HandleFunc("/historyinspection", s.PagehistoryInspection()).Methods("GET")
 	operation.HandleFunc("/historyinspection", s.HistoryInspection()).Methods("POST")
 
 	operation.HandleFunc("/statusinspection", s.PageInspection()).Methods("GET")
-	operation.HandleFunc("/updateinspection/{ID:[0-9]+}", s.PageupdateInspection()).Methods("GET")
-	operation.HandleFunc("/updateinspection/{ID:[0-9]+}", s.UpdateInspection()).Methods("POST", "OPTIONS")
-	//operation.HandleFunc("/updateinspection/{ID:[0-9]+}", s.PageupdateInspectionJSON()).Methods("GET")
-	//operation.HandleFunc("/updateinspection/{ID:[0-9]+}", s.UpdateInspectionJSON()).Methods("POST", "OPTIONS")
+	operation.HandleFunc("/statusinspectionmix", s.PageInspectionMix()).Methods("GET")
+	//operation.HandleFunc("/updateinspection/{ID:[0-9]+}", s.PageupdateInspection()).Methods("GET")
+	//operation.HandleFunc("/updateinspection/{ID:[0-9]+}", s.UpdateInspection()).Methods("POST", "OPTIONS")
+	operation.HandleFunc("/updateinspection/{ID:[0-9]+}", s.PageupdateInspectionJSON()).Methods("GET")
+	operation.HandleFunc("/updateinspection", s.UpdateInspectionJSON()).Methods("POST", "OPTIONS")
+	operation.HandleFunc("/updateinspectionmix/{ID:[0-9]+}", s.PageupdateInspectionJSONmix()).Methods("GET")
+	operation.HandleFunc("/updateinspectionmix", s.UpdateInspectionJSONmix()).Methods("POST", "OPTIONS")
 	operation.HandleFunc("/deleteinspection/{ID:[0-9]+}", s.DeleteInspection())
 
 	operation.HandleFunc("/statusinspectionforwh", s.PageListAcceptWHInspection()).Methods("GET")
@@ -514,7 +519,7 @@ func (s *Server) main() http.HandlerFunc {
 		GroupP1 := false
 		GroupP5 := false
 		LoggedIn := false
-
+		fmt.Println("Test Main")
 		//	u := s.authenticateUser()
 		//	fmt.Println(u)
 		//	var body, _ = helper.LoadFile("./web/templates/index.html")

@@ -24,6 +24,7 @@ type User struct {
 	Role              string `json:"role"`
 	Groups            string `json:"groups"`
 	Tabel             string `json:"tabel"`
+	Groupmix          string `json:"groupmix"`
 }
 
 // Users ...

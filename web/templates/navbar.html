@@ -12,7 +12,7 @@
 
     {{ if .LoggedIn}}
 
-    {{ if .GroupP1}}
+    {{ if or (.GroupP1) (.MixP1P5) }}
     <li><a class="active" href="/operation/main">StarLine П1 {{.Navbar}}</a></li>
     {{ if .Admin}}
     <li class="dropdown">
@@ -61,7 +61,10 @@
             <a href="/insertvendor">Добавить поставщика в базу</a>-->
             <a href="/operation/showusersquality">Управление пользователями отдела качества</a>
             <a href="/operation/showvendor">Просмотр и редактирование поставщиков</a>
-            <a href="/operation/statusinspection">Компоненты на входном контроле</a>
+            <a href="/operation/statusinspection">Компоненты на входном контроле П1</a>
+
+            <a href="/operation/statusinspectionmix">Компоненты на входном контроле П5</a>
+
         </div>
     </li>
     {{ end}}
@@ -87,7 +90,8 @@
     <li class="dropdown">
         <a href="javascript:void(0)" class="dropbtn">Отдел качества</a>
         <div class="dropdown-content">
-            <a href="/operation/statusinspection">Компоненты на входном контроле</a>
+            <a href="/operation/statusinspection">Компоненты на входном контроле П1</a>
+            <a href="/operation/statusinspectionmix">Компоненты на входном контроле П5</a>
         </div>
     </li>
     {{ end}}
@@ -153,7 +157,8 @@
             <a href="/insertvendor">Добавить поставщика в базу</a>-->
             <a href="/operation/showusersquality">Управление пользователями отдела качества</a>
             <a href="/operation/showvendor">Просмотр и редактирование поставщиков</a>
-            <a href="/operation/statusinspection">Компоненты на входном контроле</a>
+            <a href="/operation/statusinspection">Компоненты на входном контроле П5</a>
+            <a href="/operation/statusinspectionmix">Компоненты на входном контроле П1</a>
         </div>
     </li>
     {{ end}}
@@ -162,6 +167,7 @@
         <a href="javascript:void(0)" class="dropbtn">Отдел качества</a>
         <div class="dropdown-content">
             <a href="/operation/statusinspection">Компоненты на входном контроле</a>
+
         </div>
     </li>
     {{ end}}
@@ -169,7 +175,8 @@
     <li class="dropdown">
         <a href="javascript:void(0)" class="dropbtn">Отдел качества</a>
         <div class="dropdown-content">
-            <a href="/operation/statusinspection">Компоненты на входном контроле</a>
+            <a href="/operation/statusinspection">Компоненты на входном контроле П5</a>
+            <a href="/operation/statusinspectionmix">Компоненты на входном контроле П1</a>
         </div>
     </li>
     {{ end}}
@@ -280,7 +287,7 @@
                     <br>
 
                     <br>
-                    <button class="button" type="submit">Отправить</button>
+                    <button class="btn btn-primary--s" type="submit">Отправить</button>
                     <!--   </div>-->
                 </form>
             </div>

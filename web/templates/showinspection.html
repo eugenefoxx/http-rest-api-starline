@@ -76,8 +76,9 @@
                         title="Type in a name">
                     <!--style="margin-left:0px; width: 1000px;"-->
                     <br>
-                    <table id="myTable--l" onload="alternate('thetable')" class="tableexport">
+                    <table id="myTable" onload="alternate('thetable')" class="tableexport">
                         <caption style="color: white; font-size: 22px; padding-bottom: 10px;">Список на инспекции
+                            {{.Pobedit}}
                         </caption>
 
                         <button onclick=" exportTableToCSV('export.csv')"
@@ -115,9 +116,9 @@
                             {{ range .GET}}
                             <tr class="header {{.Status}}">
                                 <!--<td>{{.ID }}</td>-->
-                                <!--    <td style="visibility: hidden;">
-                                {{.ID}}
-                            </td>-->
+                                <!--    <td style="visibility: hidden;" updateid-id="{{.ID }}">
+                                    {{.ID}}
+                                </td>-->
                                 <td style="font-size: 10%;" data-material-id="{{.IdMaterial}}">{{.IdMaterial}}</td>
                                 <td>
                                     {{.SAP}}
@@ -140,10 +141,10 @@
                                 <td>
                                     {{.Lastname}}
                                 </td>
-                                <td>
+                                <td updateid-status="{{.ID }}">
                                     {{.Status}}
                                 </td>
-                                <td>
+                                <td updateid-note="{{.ID }}">
                                     {{.Note}}
                                 </td>
                                 <td nowrap>
@@ -241,8 +242,9 @@
                     <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .."
                         title="Type in a name" style="margin-left:0px; width: 1000px;">
                     <br>
-                    <table id="myTable--l" onload="alternate('thetable')" class="tableexport">
+                    <table id="myTable" onload="alternate('thetable')" class="tableexport">
                         <caption style="color: white; font-size: 22px; padding-bottom: 10px;">Список на инспекции
+                            {{.Pobedit}}
                         </caption>
 
                         <button onclick=" exportTableToCSV('export.csv')"
@@ -301,10 +303,10 @@
                                 <td>
                                     {{.Lastname}}
                                 </td>
-                                <td>
+                                <td updateid-status="{{.ID }}">
                                     {{.Status}}
                                 </td>
-                                <td>
+                                <td updateid-note="{{.ID }}">
                                     {{.Note}}
                                 </td>
                                 <td>
@@ -404,8 +406,9 @@
                     <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .."
                         title="Type in a name" style="margin-left:0px; width: 1000px;">
                     <br>
-                    <table id="myTable--l" onload="alternate('thetable')" class="tableexport">
+                    <table id="myTable" onload="alternate('thetable')" class="tableexport">
                         <caption style="color: white; font-size: 22px; padding-bottom: 10px;">Список на инспекции
+                            {{.Pobedit}}
                         </caption>
 
                         <button onclick=" exportTableToCSV('export.csv')"
@@ -463,10 +466,10 @@
                                 <td>
                                     {{.Lastname}}
                                 </td>
-                                <td>
+                                <td updateid-status="{{.ID }}">
                                     {{.Status}}
                                 </td>
-                                <td>
+                                <td updateid-note="{{.ID }}">
                                     {{.Note}}
                                 </td>
                                 <td>
@@ -499,9 +502,12 @@
             {{ else if eq .WarehouseManager true}}
             <div class="wrap2">
                 <div class="columninspection1">
-                    <ul style="display:flex;">
+                    <ul style="display:flex; max-height: 80px;min-width: 560px;">
                         <li><a href="#modal-1" class="js-modal-open link buttonInspectionWarehous button3">ОТГРУЗКА НА
                                 ВК</a>
+                        </li>
+                        <li><a href="#modal-9" class="js-modal-open link buttonInspectionWarehous button3">ОТГРУЗКА НА
+                                ВК CSV ФАЙЛОМ</a>
                         </li>
                         <li><a href="#modal-7" class="js-modal-open link buttonInspectionWarehous button3">ПРИЕМКА С
                                 ВК</a>
@@ -571,8 +577,9 @@
                     <!--    <input type="text" id="myInput2" onkeyup="myFunctionT()" placeholder="Search2 for .."
                     title="Type in a name" style="margin-left:0px; width: 1000px;">-->
                     <br>
-                    <table id="myTable--l" id="myTable2" onload="alternate('thetable')" class="tableexport">
+                    <table id="myTable" id="myTable2" onload="alternate('thetable')" class="tableexport">
                         <caption style="color: white; font-size: 22px; padding-bottom: 10px;">Список на инспекции
+                            {{.Pobedit}}
                         </caption>
 
                         <button onclick=" exportTableToCSV('export.csv')"
@@ -634,10 +641,10 @@
                                 <td>
                                     {{.Lastname}}
                                 </td>
-                                <td>
+                                <td updateid-status="{{.ID }}">
                                     {{.Status}}
                                 </td>
-                                <td>
+                                <td updateid-note="{{.ID }}">
                                     {{.Note}}
                                 </td>
                                 <td>
@@ -699,9 +706,12 @@
             {{ else if eq .StockkeeperWH true}}
             <div class="wrap2">
                 <div class="columninspection1">
-                    <ul style="display: flex;">
+                    <ul style="display: flex; max-height: 80px;min-width: 560px;">
                         <li><a href="#modal-1" class="js-modal-open link buttonInspectionWarehous button3">ОТГРУЗКА НА
                                 ВК</a>
+                        </li>
+                        <li><a href="#modal-9" class="js-modal-open link buttonInspectionWarehous button3">ОТГРУЗКА НА
+                                ВК CSV ФАЙЛОМ</a>
                         </li>
                         <li><a href="#modal-7" class="js-modal-open link buttonInspectionWarehous button3">ПРИЕМКА С
                                 ВК</a>
@@ -772,8 +782,9 @@
                     <!--    <input type="text" id="myInput2" onkeyup="myFunctionT()" placeholder="Search2 for .."
                     title="Type in a name" style="margin-left:0px; width: 1000px;">-->
                     <br>
-                    <table id="myTable--l" id="myTable2" onload="alternate('thetable')" class="tableexport">
+                    <table id="myTable" id="myTable2" onload="alternate('thetable')" class="tableexport">
                         <caption style="color: white; font-size: 22px; padding-bottom: 10px;">Список на инспекции
+                            {{.Pobedit}}
                         </caption>
                         <button onclick=" exportTableToCSV('export.csv')"
                             style="margin-left:0px; width: 300px; height: 30px;" class="button3">Экспортировать таблицу
@@ -839,10 +850,10 @@
                                 <td>
                                     {{.Lastname}}
                                 </td>
-                                <td>
+                                <td updateid-status="{{.ID }}">
                                     {{.Status}}
                                 </td>
-                                <td>
+                                <td updateid-note="{{.ID }}">
                                     {{.Note}}
                                 </td>
                                 <td>
@@ -917,18 +928,48 @@
                         <!--   <div class="formSendTitle">
                         <h3>Форма отправки катушек на ВК</h3>-->
 
-                        <div class="formSendEO" id="form"></div>
+                        <div class="formSendEO" id="form" id="count"></div>
                         <div>
                             <button id="add-condition" class="buttonPlus">+</button>
                             <hr />
                             <div>
-                                <button id="apply" class="button button4green">
+                                <button id="apply" class="btn btn-primary--s">
                                     Отправить данные</button>
-                                <button id="clear-form" class="button button4red">
+                                <button id="clear-form" class="btn btn-danger--m">
                                     Очистить форму
                                 </button>
                             </div>
                         </div>
+                    </div>
+                    <div class="modal__dialog-footer" onclick="redirectTostatusinspection();">
+                        <button class="js-modal-close modal__dialog-footer-close-btn">Закрыть</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal modal--l" id="modal-9">
+                <div class="modal__dialog">
+                    <div class="modal__dialog-header" onclick="redirectTostatusinspection();">
+                        <div class="modal__dialog-header-content">
+                            <h3>Форма отправки катушек на ВК файлом</h3>
+                        </div>
+                        <div class="modal__dialog-header-close">
+                            <button class="js-modal-close modal__dialog-header-close-btn"><span>&times;</span></button>
+                        </div>
+                    </div>
+                    <div class="modal__dialog-body">
+                        <!--    <div>modal__dialog-body</div>
+                    <button id="js-add-content-temp">Add content</button>-->
+                        <!--   <div class="formSendTitle">
+                        <h3>Форма отправки катушек на ВК</h3>-->
+
+                        <form method="POST" enctype="multipart/form-data" action="/operation/uploadfile">
+                            <input required type="file" id="fileUpload" name="q" style="width: 260px; height: inherit;">
+                            <input type="submit" class="btn btn-primary--s">
+                            <div id="responseUpdateFile">
+
+                            </div>
+                        </form>
                     </div>
                     <div class="modal__dialog-footer" onclick="redirectTostatusinspection();">
                         <button class="js-modal-close modal__dialog-footer-close-btn">Закрыть</button>
@@ -958,9 +999,9 @@
                             <button id="add-conditionAccept" class="buttonPlus">+</button>
                             <hr />
                             <div>
-                                <button id="applyAccept" class="button button4green">
+                                <button id="applyAccept" class="btn btn-primary--s">
                                     Отправить данные</button>
-                                <button id="clear-formAccept" class="button button4red">
+                                <button id="clear-formAccept" class="btn btn-danger--m">
                                     Очистить форму
                                 </button>
                             </div>
@@ -1077,11 +1118,13 @@
         {{template "footer.html" .}}
         <script src="/assets/js/formininspectionV2.js"></script>
         <script src="/assets/js/acceptfrominspection.js"></script>
-        <script src="/assets/js/serialize.js"></script>
-        <script src="/assets/js/updatecomponent.js"></script>
+        <!--   <script src="/assets/js/uploadfile.js"></script>-->
+        <!--    <script src="/assets/js/serialize2.js"></script>-->
+        <!--    <script src="/assets/js/serialize.js"></script>
+        <script src="/assets/js/updatecomponent.js"></script>-->
 
         <script>
-            var table = document.getElementById('myTable--l'),
+            var table = document.getElementById('myTable'),
                 cells = table.getElementsByTagName('td');
 
             for (var i = 0, len = cells.length; i < len; i++) {

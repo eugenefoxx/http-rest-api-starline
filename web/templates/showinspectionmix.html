@@ -1,0 +1,1136 @@
+<!DOCTYPE HTML>
+<html>
+<!--<meta http-equiv="refresh" content="3" />-->
+{{template "head.html" .}}
+
+<body>
+    <div class="content">
+        {{template "navbar.html" .}}
+        <div class="container">
+            {{ if eq .SuperIngenerQuality2 true}}
+            <div class="wrap2">
+                <div class="columninspection1">
+                    <ul>
+                        <li><a href="#modal-1" class="js-modal-open link button button3">ОТГРУЗКА НА ВК</a></li>
+                        <li><a href="#modal-8" class="js-modal-open link button button3">КАТАЛОГ ДЕБИТОРОВ</a></li>
+                    </ul>
+                    <!--    <a href="#modal-1" class="js-modal-open link button button3">ОТГРУЗКА НА ВК</a>-->
+                    <br>
+                    <div class="btn-box">
+                        <button type="button" class="btn btn-default" style="width: 300px;"
+                            onclick="redirectTostatusinspection();">
+                            Обновить страницу
+                        </button>
+                    </div>
+                    <!--    <a href="#modal-8" class="js-modal-open link button button3">Каталог дебиторов</a>-->
+                </div>
+                <div class="columninspection2">
+                    <!--style="margin-left:1100px; width: 1000px; margin-top: 0px; font-size: 150%;"-->
+                    <table class="tableInfo">
+                        <tbody>
+                            <tr>
+                                <td style="text-align: left; color:darkslategrey;">
+                                    Общее количество
+                                </td>
+                                <td style="text-align: center;">
+                                    {{ .CountTotal}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left; color:red;">
+                                    Задержано
+                                </td>
+                                <td style="text-align: center;">
+                                    {{.HoldInspection}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left; color:green;">
+                                    Требуют проверки
+                                </td>
+                                <td style="text-align: center;">
+                                    {{.NotVerifyComponents}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!--   <font color="white">Общее количество</font>: &nbsp;{{ .CountTotal}} <br>
+                <font color="red">Задержано</font>: &nbsp;{{.HoldInspection}} <br>
+                <font color="green">Требуют проверки</font>: &nbsp;{{.NotVerifyComponents}} <br>
+                <br>-->
+                    <!--  <a href="#okno">Статистика по дебиторам</a>-->
+                    <div class="btn-box">
+
+                        <button type="button" class="btn btn-default" style="width: 300px;"
+                            data-modal="modal_1">Статистика
+                            по
+                            дебиторам</button>
+
+                        <!--    <button type="button" class="btn btn-primary btn-lg" data-modal="modal_1">Статистика по
+                       дебиторам</button>-->
+                    </div>
+                </div>
+                {{ template "popup.html" . }}
+                <div class="wrap">
+                    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .."
+                        title="Type in a name">
+                    <!--style="margin-left:0px; width: 1000px;"-->
+                    <br>
+                    <table id="myTable" onload="alternate('thetable')" class="tableexport">
+                        <caption style="color: white; font-size: 22px; padding-bottom: 10px;">Список на инспекции
+                            {{.Pobedit}}
+                        </caption>
+
+                        <button onclick=" exportTableToCSV('export.csv')"
+                            style="margin-left:0px; width: 300px; height: 30px;" class="button3">Экспортировать таблицу
+                            в
+                            csv
+                            файл</button>
+                        <thead>
+                            <tr id="fontsize-showinspection">
+                                <!--    <th scope="col" onclick="sortTable(0)" style="visibility: hidden;">№ ID</th>-->
+                                <!--<th>ID</th>-->
+                                <th scope="col" onclick="sortTable(0)">QR-код</th>
+                                <!--Material-->
+                                <th scope="col" onclick="sortTable(1)">SAP</th>
+                                <!--Qty-->
+                                <th scope="col" onclick="sortTable(2)">Партия</th>
+                                <!--ShipmentDate-->
+                                <!--    <th scope="col" onclick="sortTable(2)">ShipmentDate2</th>-->
+                                <th scope="col" onclick="sortTable(3)">ЕО катушки</th>
+                                <th scope="col" onclick="sortTable(4)">Дата пр-ва</th>
+                                <th scope="col" onclick="sortTable(5)">Имя дебитора</th>
+                                <th scope="col" onclick="sortTable(6)">Статус трансфера</th>
+                                <th scope="col" onclick="sortTable(7)">Кем отгружено</th>
+                                <th scope="col" onclick="sortTable(8)">Статус отметки проверки</th>
+                                <th scope="col" onclick="sortTable(9)">Примечание</th>
+                                <th scope="col" onclick="sortTable(10)">Кем отред-но</th>
+                                <th scope="col" onclick="sortTable(11)">Дата ред-я</th>
+                                <th scope="col" onclick="sortTable(12)">Время ред-я</th>
+                                <th scope="col" onclick="sortTable(13)">Дата отгрузки на ВК</th>
+                                <th scope="col" onclick="sortTable(14)">Время отгрузки на ВК</th>
+                                <th scope="col" onclick="sortTable(15)">Внести запись</th>
+                            </tr>
+                        </thead>
+                        <tbody id="thetable">
+                            {{ range .GET}}
+                            <tr class="header {{.Status}}">
+                                <!--<td>{{.ID }}</td>-->
+                                <!--    <td style="visibility: hidden;" updateid-id="{{.ID }}">
+                                    {{.ID}}
+                                </td>-->
+                                <td style="font-size: 10%;" data-material-id="{{.IdMaterial}}">{{.IdMaterial}}</td>
+                                <td>
+                                    {{.SAP}}
+                                </td>
+                                <td>
+                                    {{.Lot}}
+                                </td>
+                                <td>
+                                    {{.IdRoll}}
+                                </td>
+                                <td>
+                                    {{.ProductionDate}}
+                                </td>
+                                <td>
+                                    {{.NameDebitor}}
+                                </td>
+                                <td>
+                                    {{.Location}}
+                                </td>
+                                <td>
+                                    {{.Lastname}}
+                                </td>
+                                <td updateid-status="{{.ID }}">
+                                    {{.Status}}
+                                </td>
+                                <td updateid-note="{{.ID }}">
+                                    {{.Note}}
+                                </td>
+                                <td nowrap>
+                                    {{.Update}}
+                                </td>
+                                <td nowrap>
+                                    {{.Dateupdate2}}
+                                </td nowrap>
+                                <td>
+                                    {{.Timeupdate2}}
+                                </td>
+                                <td nowrap>
+                                    {{.Date2}}
+                                </td>
+                                <td nowrap>
+                                    {{.Time2}}
+                                </td>
+                                <td style="width: 100%;">
+                                    <!--   <a href="/updateinspection/{{.ID}}" class="btnfortable btn-primary">Изменить</a>-->
+                                    <a href="#modal-2" onclick="editInspectionMix({{.ID}});"
+                                        class="js-modal-open btnfortable btn-primary--l">Изменить</a>
+                                    <a href="/operation/deleteinspection/{{.ID}}"
+                                        class="btnfortable btn-danger--s confirmation">Удалить</a>
+                                </td>
+                            </tr>
+                            {{ end}}
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+
+            {{ else if eq .IngenerQuality true}}
+            <div class="wrap2">
+                <div class="columninspection1">
+                    <!--    <ul>-->
+                    <!--    <li><a href="#modal-1" class="js-modal-open link button button3">ОТГРУЗКА НА ВК</a></li>-->
+                    <!--     <li><a href="#modal-8" class="js-modal-open link button button3">КАТАЛОГ ДЕБИТОРОВ</a></li>
+                </ul>-->
+                    <!--    <a href="#modal-1" class="js-modal-open link button button3">ОТГРУЗКА НА ВК</a>-->
+                    <br>
+                    <div class="btn-box">
+                        <button type="button" class="btn btn-default" style="width: 300px;"
+                            onclick="redirectTostatusinspection();">
+                            Обновить страницу
+                        </button>
+                    </div>
+                </div>
+                <div class="columninspection2">
+                    <table class="tableInfo">
+                        <tbody>
+                            <tr>
+                                <td style="text-align: left; color:darkslategrey;">
+                                    Общее количество
+                                </td>
+                                <td style="text-align: center;">
+                                    {{ .CountTotal}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left; color:red;">
+                                    Задержано
+                                </td>
+                                <td style="text-align: center;">
+                                    {{.HoldInspection}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left; color:green;">
+                                    Требуют проверки
+                                </td>
+                                <td style="text-align: center;">
+                                    {{.NotVerifyComponents}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!--   <font color="white">Общее количество</font>: &nbsp;{{ .CountTotal}} <br>
+                <font color="red">Задержано</font>: &nbsp;{{.HoldInspection}} <br>
+                <font color="green">Требуют проверки</font>: &nbsp;{{.NotVerifyComponents}} <br>
+                <br>-->
+                    <!--  <a href="#okno">Статистика по дебиторам</a>-->
+                    <div class="btn-box">
+                        <button type="button" class="btn btn-default" style="width: 300px;"
+                            data-modal="modal_1">Статистика
+                            по
+                            дебиторам</button>
+                        <!--    <button type="button" class="btn btn-primary btn-lg" data-modal="modal_1">Статистика п
+               дебиторам</button>-->
+                    </div>
+                </div>
+                {{ template "popup.html" . }}
+                <div class="wrap">
+                    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .."
+                        title="Type in a name" style="margin-left:0px; width: 1000px;">
+                    <br>
+                    <table id="myTable" onload="alternate('thetable')" class="tableexport">
+                        <caption style="color: white; font-size: 22px; padding-bottom: 10px;">Список на инспекции
+                            {{.Pobedit}}
+                        </caption>
+
+                        <button onclick=" exportTableToCSV('export.csv')"
+                            style="margin-left:0px; width: 300px; height: 30px;" class="button3">Экспортировать таблицу
+                            в
+                            csv
+                            файл</button>
+                        <thead>
+                            <tr id="fontsize-showinspection">
+                                <!--    <th scope="col" onclick="sortTable(0)" style="visibility: hidden;">№ ID</th>-->
+                                <!--<th>ID</th>-->
+                                <th scope="col" onclick="sortTable(0)">QR-код</th>
+                                <!--Material-->
+                                <th scope="col" onclick="sortTable(1)">SAP</th>
+                                <!--Qty-->
+                                <th scope="col" onclick="sortTable(2)">Партия</th>
+                                <!--ShipmentDate-->
+                                <!--    <th scope="col" onclick="sortTable(2)">ShipmentDate2</th>-->
+                                <th scope="col" onclick="sortTable(3)">ЕО катушки</th>
+                                <th scope="col" onclick="sortTable(4)">Дата пр-ва</th>
+                                <th scope="col" onclick="sortTable(5)">Имя дебитора</th>
+                                <th scope="col" onclick="sortTable(6)">Статус трансфера</th>
+                                <th scope="col" onclick="sortTable(7)">Кем отгружено</th>
+                                <th scope="col" onclick="sortTable(8)">Статус отметки проверки</th>
+                                <th scope="col" onclick="sortTable(9)">Примечание</th>
+                                <th scope="col" onclick="sortTable(10)">Кем отред-но</th>
+                                <th scope="col" onclick="sortTable(11)">Дата ред-я</th>
+                                <th scope="col" onclick="sortTable(12)">Время ред-я</th>
+                                <th scope="col" onclick="sortTable(13)">Дата отгрузки на ВК</th>
+                                <th scope="col" onclick="sortTable(14)">Время отгрузки на ВК</th>
+                                <th scope="col" onclick="sortTable(15)">Внести запись</th>
+                            </tr>
+                        </thead>
+                        <tbody id="thetable">
+                            {{ range .GET}}
+                            <tr class="header {{.Status}}">
+                                <td style="font-size: 10%;" data-material-id="{{.IdMaterial}}">{{.IdMaterial}}</td>
+                                <td>
+                                    {{.SAP}}
+                                </td>
+                                <td>
+                                    {{.Lot}}
+                                </td>
+                                <td>
+                                    {{.IdRoll}}
+                                </td>
+                                <td>
+                                    {{.ProductionDate}}
+                                </td>
+                                <td>
+                                    {{.NameDebitor}}
+                                </td>
+                                <td>
+                                    {{.Location}}
+                                </td>
+                                <td>
+                                    {{.Lastname}}
+                                </td>
+                                <td updateid-status="{{.ID }}">
+                                    {{.Status}}
+                                </td>
+                                <td updateid-note="{{.ID }}">
+                                    {{.Note}}
+                                </td>
+                                <td>
+                                    {{.Update}}
+                                </td>
+                                <td nowrap>
+                                    {{.Dateupdate2}}
+                                </td>
+                                <td nowrap>
+                                    {{.Timeupdate2}}
+                                </td>
+                                <td nowrap>
+                                    {{.Date2}}
+                                </td>
+                                <td nowrap>
+                                    {{.Time2}}
+                                </td>
+                                <td>
+                                    <!--   <a href="/updateinspection/{{.ID}}" class="btnfortable btn-primary">Изменить</a>-->
+                                    <a href="#modal-2" onclick="editInspectionMix({{.ID}});"
+                                        class="js-modal-open btnfortable btn-primary--l">Изменить</a>
+                                </td>
+                            </tr>
+                            {{ end}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            {{ else if eq .Inspector true}}
+            <div class="wrap2">
+                <div class="columninspection1">
+                    <!--    <p>
+                    "Ты спросишь: - что такое качество?
+                    Как объяснить тебе попроще?
+                    Послушай соловья чудачество,
+                    когда взахлеб поет он в роще…"
+                </p>-->
+                    <!--    <ul>-->
+                    <!--    <li><a href="#modal-1" class="js-modal-open link button button3">ОТГРУЗКА НА ВК</a></li>-->
+                    <!--    <li><a href="#modal-8" class="js-modal-open link button button3">КАТАЛОГ ДЕБИТОРОВ</a></li>
+                </ul>-->
+                    <!--    <a href="#modal-1" class="js-modal-open link button button3">ОТГРУЗКА НА ВК</a>-->
+                    <br>
+                    <div class="btn-box">
+                        <button type="button" class="btn btn-default" style="width: 300px;"
+                            onclick="redirectTostatusinspection();">
+                            Обновить страницу
+                        </button>
+                    </div>
+                </div>
+                <div class="columninspection2">
+                    <table class="tableInfo">
+                        <tbody>
+                            <tr>
+                                <td style="text-align: left; color:darkslategrey;">
+                                    Общее количество
+                                </td>
+                                <td style="text-align: center;">
+                                    {{ .CountTotal}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left; color:red;">
+                                    Задержано
+                                </td>
+                                <td style="text-align: center;">
+                                    {{.HoldInspection}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left; color:green;">
+                                    Требуют проверки
+                                </td>
+                                <td style="text-align: center;">
+                                    {{.NotVerifyComponents}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!--   <font color="white">Общее количество</font>: &nbsp;{{ .CountTotal}} <br>
+                <font color="red">Задержано</font>: &nbsp;{{.HoldInspection}} <br>
+                <font color="green">Требуют проверки</font>: &nbsp;{{.NotVerifyComponents}} <br>
+                <br>-->
+                    <!--  <a href="#okno">Статистика по дебиторам</a>-->
+                    <div class="btn-box">
+                        <button type="button" class="btn btn-default" style="width: 300px;"
+                            data-modal="modal_1">Статистика
+                            по
+                            дебиторам</button>
+                        <!--    <button type="button" class="btn btn-primary btn-lg" data-modal="modal_1">Статистика п
+               дебиторам</button>-->
+                    </div>
+                </div>
+                {{ template "popup.html" . }}
+                <div class="wrap">
+                    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .."
+                        title="Type in a name" style="margin-left:0px; width: 1000px;">
+                    <br>
+                    <table id="myTable" onload="alternate('thetable')" class="tableexport">
+                        <caption style="color: white; font-size: 22px; padding-bottom: 10px;">Список на инспекции
+                            {{.Pobedit}}
+                        </caption>
+
+                        <button onclick=" exportTableToCSV('export.csv')"
+                            style="margin-left:0px; width: 300px; height: 30px;" class="button3">Экспортировать таблицу
+                            в
+                            csv файл</button>
+                        <thead>
+                            <tr id="fontsize-showinspection">
+                                <!--    <th scope="col" onclick="sortTable(0)" style="visibility: hidden;">№ ID</th>-->
+                                <!--<th>ID</th>-->
+                                <th scope="col" onclick="sortTable(0)">QR-код</th>
+                                <!--Material-->
+                                <th scope="col" onclick="sortTable(1)">SAP</th>
+                                <!--Qty-->
+                                <th scope="col" onclick="sortTable(2)">Партия</th>
+                                <!--ShipmentDate-->
+                                <!--    <th scope="col" onclick="sortTable(2)">ShipmentDate2</th>-->
+                                <th scope="col" onclick="sortTable(3)">ЕО катушки</th>
+                                <th scope="col" onclick="sortTable(4)">Дата пр-ва</th>
+                                <th scope="col" onclick="sortTable(5)">Имя дебитора</th>
+                                <th scope="col" onclick="sortTable(6)">Статус трансфера</th>
+                                <th scope="col" onclick="sortTable(7)">Кем отгружено</th>
+                                <th scope="col" onclick="sortTable(8)">Статус отметки проверки</th>
+                                <th scope="col" onclick="sortTable(9)">Примечание</th>
+                                <th scope="col" onclick="sortTable(10)">Кем отред-но</th>
+                                <th scope="col" onclick="sortTable(11)">Дата ред-я</th>
+                                <th scope="col" onclick="sortTable(12)">Время ред-я</th>
+                                <th scope="col" onclick="sortTable(13)">Дата отгрузки на ВК</th>
+                                <th scope="col" onclick="sortTable(14)">Время отгрузки на ВК</th>
+                                <th scope="col" onclick="sortTable(15)">Внести запись</th>
+                            </tr>
+                        </thead>
+                        <tbody id="thetable">
+                            {{ range .GET}}
+                            <tr class="header {{.Status}}">
+                                <td style="font-size: 10%;" data-material-id="{{.IdMaterial}}">{{.IdMaterial}}</td>
+                                <td>
+                                    {{.SAP}}
+                                </td>
+                                <td>
+                                    {{.Lot}}
+                                </td>
+                                <td>
+                                    {{.IdRoll}}
+                                </td>
+                                <td>
+                                    {{.ProductionDate}}
+                                </td>
+                                <td>
+                                    {{.NameDebitor}}
+                                </td>
+                                <td>
+                                    {{.Location}}
+                                </td>
+                                <td>
+                                    {{.Lastname}}
+                                </td>
+                                <td updateid-status="{{.ID }}">
+                                    {{.Status}}
+                                </td>
+                                <td updateid-note="{{.ID }}">
+                                    {{.Note}}
+                                </td>
+                                <td>
+                                    {{.Update}}
+                                </td>
+                                <td nowrap>
+                                    {{.Dateupdate2}}
+                                </td>
+                                <td nowrap>
+                                    {{.Timeupdate2}}
+                                </td>
+                                <td nowrap>
+                                    {{.Date2}}
+                                </td>
+                                <td nowrap>
+                                    {{.Time2}}
+                                </td>
+                                <td>
+                                    <!--   <a href="/updateinspection/{{.ID}}" class="btnfortable btn-primary">Изменить</a>-->
+                                    <a href="#modal-2" onclick="editInspectionMix({{.ID}});"
+                                        class="js-modal-open btnfortable btn-primary--l">Изменить</a>
+                                </td>
+                            </tr>
+                            {{ end}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            {{ else if eq .WarehouseManager true}}
+            <div class="wrap2">
+                <div class="columninspection1">
+                    <ul style="display:flex; max-height: 80px;min-width: 560px;">
+                        <li><a href="#modal-1" class="js-modal-open link buttonInspectionWarehous button3">ОТГРУЗКА НА
+                                ВК</a>
+                        </li>
+                        <li><a href="#modal-9" class="js-modal-open link buttonInspectionWarehous button3">ОТГРУЗКА НА
+                                ВК CSV ФАЙЛОМ</a>
+                        </li>
+                        <li><a href="#modal-7" class="js-modal-open link buttonInspectionWarehous button3">ПРИЕМКА С
+                                ВК</a>
+                        </li>
+                        <li><a href="#modal-8" class="js-modal-open link buttonInspectionWarehous button3">КАТАЛОГ
+                                ДЕБИТОРОВ</a>
+                        </li>
+                    </ul>
+                    <!--    <a href="#modal-1" class="js-modal-open link button button3">ОТГРУЗКА НА ВК</a>-->
+                    <br>
+                    <div class="btn-box">
+                        <button type="button" class="btn btn-default" style="width: 300px;"
+                            onclick="redirectTostatusinspection();">
+                            Обновить страницу
+                        </button>
+                    </div>
+                </div>
+                <div class="columninspection2">
+                    <table class="tableInfo">
+                        <tbody>
+                            <tr>
+                                <td style="text-align: left; color:darkslategrey;">
+                                    Общее количество
+                                </td>
+                                <td style="text-align: center;">
+                                    {{ .CountTotal}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left; color:red;">
+                                    Задержано
+                                </td>
+                                <td style="text-align: center;">
+                                    {{.HoldInspection}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left; color:green;">
+                                    Требуют проверки
+                                </td>
+                                <td style="text-align: center;">
+                                    {{.NotVerifyComponents}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!--   <font color="white">Общее количество</font>: &nbsp;{{ .CountTotal}} <br>
+            <font color="red">Задержано</font>: &nbsp;{{.HoldInspection}} <br>
+            <font color="green">Требуют проверки</font>: &nbsp;{{.NotVerifyComponents}} <br>
+            <br>-->
+                    <!--  <a href="#okno">Статистика по дебиторам</a>-->
+                    <div class="btn-box">
+                        <button type="button" class="btn btn-default" style="width: 300px;"
+                            data-modal="modal_1">Статистика
+                            по
+                            дебиторам</button>
+                        <!--    <button type="button" class="btn btn-primary btn-lg" data-modal="modal_1">Статистика по
+               дебиторам</button>-->
+
+                    </div>
+
+                </div>
+                {{ template "popup.html" . }}
+                <div class="wrap">
+                    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .."
+                        title="Type in a name" style="margin-left:0px; width: 1000px;">
+                    <!--    <input type="text" id="myInput2" onkeyup="myFunctionT()" placeholder="Search2 for .."
+                    title="Type in a name" style="margin-left:0px; width: 1000px;">-->
+                    <br>
+                    <table id="myTable" id="myTable2" onload="alternate('thetable')" class="tableexport">
+                        <caption style="color: white; font-size: 22px; padding-bottom: 10px;">Список на инспекции
+                            {{.Pobedit}}
+                        </caption>
+
+                        <button onclick=" exportTableToCSV('export.csv')"
+                            style="margin-left:0px; width: 300px; height: 30px;" class="button3">Экспортировать
+                            таблицу в csv
+                            файл</button>
+                        <thead>
+                            <tr id="fontsize-showinspection">
+                                <!--    <th scope="col" onclick="sortTable(0)" style="visibility: hidden;">№ ID</th>-->
+                                <!--<th>ID</th>-->
+                                <th scope="col" onclick="sortTable(0)">QR-код</th>
+                                <!--Material-->
+                                <th scope="col" onclick="sortTable(1)">SAP</th>
+                                <!--Qty-->
+                                <th scope="col" onclick="sortTable(2)">Партия</th>
+                                <!--ShipmentDate-->
+                                <!--    <th scope="col" onclick="sortTable(2)">ShipmentDate2</th>-->
+                                <th scope="col" onclick="sortTable(3)">ЕО катушки</th>
+                                <th scope="col" onclick="sortTable(4)">Нач кол-во</th>
+                                <th scope="col" onclick="sortTable(5)">Дата пр-ва</th>
+                                <th scope="col" onclick="sortTable(6)">Имя дебитора</th>
+                                <th scope="col" onclick="sortTable(7)">Статус трансфера</th>
+                                <th scope="col" onclick="sortTable(8)">Кем отгружено</th>
+                                <th scope="col" onclick="sortTable(9)">Статус отметки проверки</th>
+                                <th scope="col" onclick="sortTable(10)">Примечание</th>
+                                <th scope="col" onclick="sortTable(11)">Кем отред-но</th>
+                                <th scope="col" onclick="sortTable(12)">Дата ред-я</th>
+                                <th scope="col" onclick="sortTable(13)">Время ред-я</th>
+                                <th scope="col" onclick="sortTable(14)">Дата отгрузки на ВК</th>
+                                <th scope="col" onclick="sortTable(15)">Время отгрузки на ВК</th>
+                                <th scope="col" onclick="sortTable(16)">Принять на склад</th>
+                            </tr>
+                        </thead>
+                        <tbody id="thetable">
+                            {{ range .GET}}
+                            <tr class="header {{.Status}}">
+                                <td style="font-size: 10%;" data-material-id="{{.IdMaterial}}">{{.IdMaterial}}</td>
+                                <td>
+                                    {{.SAP}}
+                                </td>
+                                <td>
+                                    {{.Lot}}
+                                </td>
+                                <td>
+                                    {{.IdRoll}}
+                                </td>
+                                <td>
+                                    {{.Qty}}
+                                </td>
+                                <td>
+                                    {{.ProductionDate}}
+                                </td>
+                                <td>
+                                    {{.NameDebitor}}
+                                </td>
+                                <td>
+                                    {{.Location}}
+                                </td>
+                                <td>
+                                    {{.Lastname}}
+                                </td>
+                                <td updateid-status="{{.ID }}">
+                                    {{.Status}}
+                                </td>
+                                <td updateid-note="{{.ID }}">
+                                    {{.Note}}
+                                </td>
+                                <td>
+                                    {{.Update}}
+                                </td>
+                                <td nowrap>
+                                    {{.Dateupdate2}}
+                                </td>
+                                <td nowrap>
+                                    {{.Timeupdate2}}
+                                </td>
+                                <td nowrap>
+                                    {{.Date2}}
+                                </td>
+                                <td nowrap>
+                                    {{.Time2}}
+                                </td>
+
+                                <td nowrap>
+                                    {{ if eq .Status "OK" }}
+                                    <a href="#modal-4" onclick="acceptInspection({{.ID}});"
+                                        class="js-modal-open btnfortable btn-primary--ss">Принять на склад</a>
+
+                                    <!--    <a href="/acceptinspectiontowh/{{.ID}}" class="btnfortable btn-primary">
+                                    Принять на склад
+                                </a>-->
+                                </td>
+
+                                <td nowrap>
+                                    {{ else if eq .Status "NG" }}
+                                    <a href="#modal-4" onclick="acceptInspection({{.ID}});"
+                                        class="js-modal-open btnfortable btn-primary--ss">Принять на склад</a>
+                                    <!--   <a href="/acceptinspectiontowh/{{.ID}}" class="btnfortable btn-primary">
+                                    Принять на склад
+                                </a>-->
+
+                                </td>
+
+                                <td nowrap>
+                                    {{ else if eq .Status "" }}
+                                    <a href="/operation/deleteinspection/{{.ID}}"
+                                        class="btnfortable btn-danger--s confirmation">Удалить</a>
+                                    <!--   <a href="/acceptinspectiontowh/{{.ID}}" class="btnfortable btn-primary">
+                                    Принять на склад
+                                </a>-->
+                                    {{ end }}
+                                </td>
+
+                            </tr>
+                            {{ end}}
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+
+
+            {{ else if eq .StockkeeperWH true}}
+            <div class="wrap2">
+                <div class="columninspection1">
+                    <ul style="display: flex; max-height: 80px;min-width: 560px;">
+                        <li><a href="#modal-1" class="js-modal-open link buttonInspectionWarehous button3">ОТГРУЗКА НА
+                                ВК</a>
+                        </li>
+                        <li><a href="#modal-9" class="js-modal-open link buttonInspectionWarehous button3">ОТГРУЗКА НА
+                                ВК CSV ФАЙЛОМ</a>
+                        </li>
+                        <li><a href="#modal-7" class="js-modal-open link buttonInspectionWarehous button3">ПРИЕМКА С
+                                ВК</a>
+                        </li>
+                        <li><a href="#modal-8" class="js-modal-open link buttonInspectionWarehous button3">КАТАЛОГ
+                                ДЕБИТОРОВ</a>
+                        </li>
+                    </ul>
+                    <!--    <a href="#modal-1" class="js-modal-open link button button3">ОТГРУЗКА НА ВК</a>-->
+                    <br>
+                    <!--    <a href="#modal-1" class="js-modal-open link button button3">ОТГРУЗКА НА ВК</a>
+            <a href="#modal-7" class="js-modal-open link button button3">ПРИЕМКА С ВК</a>
+            <br>-->
+                    <div class="btn-box">
+                        <button type="button" class="btn btn-default" style="width: 300px;"
+                            onclick="redirectTostatusinspection();">
+                            Обновить страницу
+                        </button>
+                    </div>
+                </div>
+                <div class="columninspection2">
+                    <table class="tableInfo">
+                        <tbody>
+                            <tr>
+                                <td style="text-align: left; color:darkslategrey;">
+                                    Общее количество
+                                </td>
+                                <td style="text-align: center;">
+                                    {{ .CountTotal}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left; color:red;">
+                                    Задержано
+                                </td>
+                                <td style="text-align: center;">
+                                    {{.HoldInspection}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left; color:green;">
+                                    Требуют проверки
+                                </td>
+                                <td style="text-align: center;">
+                                    {{.NotVerifyComponents}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!--   <font color="white">Общее количество</font>: &nbsp;{{ .CountTotal}} <br>
+            <font color="red">Задержано</font>: &nbsp;{{.HoldInspection}} <br>
+            <font color="green">Требуют проверки</font>: &nbsp;{{.NotVerifyComponents}} <br>
+            <br>-->
+                    <!--  <a href="#okno">Статистика по дебиторам</a>-->
+                    <div class="btn-box">
+                        <button type="button" class="btn btn-default" style="width: 300px;"
+                            data-modal="modal_1">Статистика
+                            по
+                            дебиторам</button>
+                        <!--    <button type="button" class="btn btn-primary btn-lg" data-modal="modal_1">Статистика по
+               дебиторам</button>-->
+                    </div>
+                </div>
+                {{ template "popup.html" . }}
+                <div class="wrap">
+                    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .."
+                        title="Type in a name" style="margin-left:0px; width: 1000px;">
+                    <!--    <input type="text" id="myInput2" onkeyup="myFunctionT()" placeholder="Search2 for .."
+                    title="Type in a name" style="margin-left:0px; width: 1000px;">-->
+                    <br>
+                    <table id="myTable" id="myTable2" onload="alternate('thetable')" class="tableexport">
+                        <caption style="color: white; font-size: 22px; padding-bottom: 10px;">Список на инспекции
+                            {{.Pobedit}}
+                        </caption>
+                        <button onclick=" exportTableToCSV('export.csv')"
+                            style="margin-left:0px; width: 300px; height: 30px;" class="button3">Экспортировать таблицу
+                            в
+                            csv файл</button>
+
+                        <thead style="margin-top: 10px;">
+                            <tr id="fontsize-showinspection">
+                                <!--    <th scope="col" onclick="sortTable(0)" style="visibility: hidden;">№ ID</th>-->
+                                <!--<th>ID</th>-->
+                                <th scope="col" onclick="sortTable(0)">QR-код</th>
+                                <!--Material-->
+                                <th scope="col" onclick="sortTable(1)">SAP</th>
+                                <!--Qty-->
+                                <th scope="col" onclick="sortTable(2)">Партия</th>
+                                <!--ShipmentDate-->
+                                <!--    <th scope="col" onclick="sortTable(2)">ShipmentDate2</th>-->
+                                <th scope="col" onclick="sortTable(3)">ЕО катушки</th>
+                                <th scope="col" onclick="sortTable(4)">Нач кол-во</th>
+                                <th scope="col" onclick="sortTable(5)">Дата пр-ва</th>
+                                <th scope="col" onclick="sortTable(6)">Имя дебитора</th>
+                                <th scope="col" onclick="sortTable(7)">Статус трансфера</th>
+                                <th scope="col" onclick="sortTable(8)">Кем отгружено</th>
+                                <th scope="col" onclick="sortTable(9)">Статус отметки проверки</th>
+                                <th scope="col" onclick="sortTable(10)">Примечание</th>
+                                <th scope="col" onclick="sortTable(11)">Кем отред-но</th>
+                                <th scope="col" onclick="sortTable(12)">Дата ред-я</th>
+                                <th scope="col" onclick="sortTable(13)">Время ред-я</th>
+                                <th scope="col" onclick="sortTable(14)">Дата отгрузки на ВК</th>
+                                <th scope="col" onclick="sortTable(15)">Время отгрузки на ВК</th>
+                                <th scope="col" onclick="sortTable(16)">Принять на склад</th>
+                            </tr>
+                        </thead>
+                        <tbody id="thetable">
+                            {{ range .GET}}
+                            <tr class="header {{.Status}}">
+                                <!--<td>{{.ID }}</td>-->
+                                <!--    <td style="visibility: hidden;">
+                            {{.ID}}
+                        </td>-->
+                                <td style="font-size: 10%;" data-material-id="{{.IdMaterial}}">{{.IdMaterial}}</td>
+                                <td>
+                                    {{.SAP}}
+                                </td>
+                                <td>
+                                    {{.Lot}}
+                                </td>
+                                <td>
+                                    {{.IdRoll}}
+                                </td>
+                                <td>
+                                    {{.Qty}}
+                                </td>
+                                <td>
+                                    {{.ProductionDate}}
+                                </td>
+                                <td>
+                                    {{.NameDebitor}}
+                                </td>
+                                <td>
+                                    {{.Location}}
+                                </td>
+                                <td>
+                                    {{.Lastname}}
+                                </td>
+                                <td updateid-status="{{.ID }}">
+                                    {{.Status}}
+                                </td>
+                                <td updateid-note="{{.ID }}">
+                                    {{.Note}}
+                                </td>
+                                <td>
+                                    {{.Update}}
+                                </td>
+                                <td nowrap>
+                                    {{.Dateupdate2}}
+                                </td>
+                                <td nowrap>
+                                    {{.Timeupdate2}}
+                                </td>
+                                <td nowrap>
+                                    {{.Date2}}
+                                </td>
+                                <td nowrap>
+                                    {{.Time2}}
+                                </td>
+
+                                <td nowrap>
+                                    {{ if eq .Status "OK" }}
+                                    <a href="#modal-4" onclick="acceptInspection({{.ID}});"
+                                        class="js-modal-open btnfortable btn-primary--ss">Принять на склад</a>
+
+                                    <!--    <a href="/acceptinspectiontowh/{{.ID}}" class="btnfortable btn-primary">
+                                    Принять на склад
+                                </a>-->
+                                </td>
+
+                                <td nowrap>
+                                    {{ else if eq .Status "NG" }}
+                                    <a href="#modal-4" onclick="acceptInspection({{.ID}});"
+                                        class="js-modal-open btnfortable btn-primary--ss">Принять на склад</a>
+                                    <!--   <a href="/acceptinspectiontowh/{{.ID}}" class="btnfortable btn-primary">
+                                    Принять на склад
+                                </a>-->
+
+                                </td>
+
+                                <td nowrap>
+                                    {{ else if eq .Status "" }}
+                                    <a href="/operation/deleteinspection/{{.ID}}"
+                                        class="btnfortable btn-danger--s confirmation">Удалить</a>
+                                    <!--   <a href="/acceptinspectiontowh/{{.ID}}" class="btnfortable btn-primary">
+                                    Принять на склад
+                                </a>-->
+                                    {{ end }}
+                                </td>
+
+                            </tr>
+                            {{ end}}
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+            {{ end}}
+
+            <div class="modal modal--l" id="modal-1">
+                <div class="modal__dialog">
+                    <div class="modal__dialog-header" onclick="redirectTostatusinspection();">
+                        <div class="modal__dialog-header-content">
+                            <h3>Форма отправки катушек на ВК</h3>
+                        </div>
+                        <div class="modal__dialog-header-close">
+                            <button class="js-modal-close modal__dialog-header-close-btn"><span>&times;</span></button>
+                        </div>
+                    </div>
+                    <div class="modal__dialog-body">
+                        <!--    <div>modal__dialog-body</div>
+                    <button id="js-add-content-temp">Add content</button>-->
+                        <!--   <div class="formSendTitle">
+                        <h3>Форма отправки катушек на ВК</h3>-->
+
+                        <div class="formSendEO" id="form"></div>
+                        <div>
+                            <button id="add-condition" class="buttonPlus">+</button>
+                            <hr />
+                            <div>
+                                <button id="apply" class="btn btn-primary--s">
+                                    Отправить данные</button>
+                                <button id="clear-form" class="btn btn-danger--m">
+                                    Очистить форму
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal__dialog-footer" onclick="redirectTostatusinspection();">
+                        <button class="js-modal-close modal__dialog-footer-close-btn">Закрыть</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal modal--l" id="modal-9">
+                <div class="modal__dialog">
+                    <div class="modal__dialog-header" onclick="redirectTostatusinspection();">
+                        <div class="modal__dialog-header-content">
+                            <h3>Форма отправки катушек на ВК файлом</h3>
+                        </div>
+                        <div class="modal__dialog-header-close">
+                            <button class="js-modal-close modal__dialog-header-close-btn"><span>&times;</span></button>
+                        </div>
+                    </div>
+                    <div class="modal__dialog-body">
+                        <!--    <div>modal__dialog-body</div>
+                    <button id="js-add-content-temp">Add content</button>-->
+                        <!--   <div class="formSendTitle">
+                        <h3>Форма отправки катушек на ВК</h3>-->
+
+                        <form method="POST" enctype="multipart/form-data" action="/operation/uploadfile">
+                            <input required type="file" name="q" style="width: 260px; height: inherit;">
+                            <input type="submit" class="btn btn-primary--s">
+                        </form>
+                    </div>
+                    <div class="modal__dialog-footer" onclick="redirectTostatusinspection();">
+                        <button class="js-modal-close modal__dialog-footer-close-btn">Закрыть</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal modal--l" id="modal-7">
+                <div class="modal__dialog">
+                    <div class="modal__dialog-header" onclick="redirectTostatusinspection();">
+                        <div class="modal__dialog-header-content">
+                            <h3>Форма приемки катушек с ВК</h3>
+                        </div>
+                        <div class="modal__dialog-header-close">
+                            <button class="js-modal-close modal__dialog-header-close-btn"><span>&times;</span></button>
+                        </div>
+                    </div>
+                    <div class="modal__dialog-body">
+                        <!--    <div>modal__dialog-body</div>
+                    <button id="js-add-content-temp">Add content</button>-->
+                        <!--   <div class="formSendTitle">
+                        <h3>Форма отправки катушек на ВК</h3>-->
+
+                        <div class="formSendEO" id="formAccept"></div>
+                        <div>
+                            <!--   <input type="text" id="qr-code-value" />-->
+                            <button id="add-conditionAccept" class="buttonPlus">+</button>
+                            <hr />
+                            <div>
+                                <button id="applyAccept" class="btn btn-primary--s">
+                                    Отправить данные</button>
+                                <button id="clear-formAccept" class="btn btn-danger--m">
+                                    Очистить форму
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal__dialog-footer" onclick="redirectTostatusinspection();">
+                        <button class="js-modal-close modal__dialog-footer-close-btn">Закрыть</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal modal--l" id="modal-2">
+                <div class="modal__dialog">
+                    <div class="modal__dialog-header">
+                        <div class="modal__dialog-header-content">
+                            <h3>Карточка контроля компонента</h3>
+                        </div>
+                        <div class="modal__dialog-header-close">
+                            <button class="js-modal-close modal__dialog-header-close-btn">
+                                <span>&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="modal__dialog-body">
+                    </div>
+                    <div class="modal__dialog-footer">
+                        <button class="js-modal-close modal__dialog-footer-close-btn">Закрыть</button>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="modal modal--l" id="modal-4">
+                <div class="modal__dialog">
+                    <div class="modal__dialog-header">
+                        <div class="modal__dialog-header-content">
+                            <h3>Карточка контроля компонента</h3>
+                        </div>
+                        <div class="modal__dialog-header-close">
+                            <button class="js-modal-close modal__dialog-header-close-btn">
+                                <span>&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="modal__dialog-body">
+                    </div>
+                    <div class="modal__dialog-footer">
+                        <button class="js-modal-close modal__dialog-footer-close-btn">Закрыть</button>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="modal modal--m" id="modal-8">
+                <div class="modal__dialog">
+                    <div class="modal__dialog-header">
+                        <div class="modal__dialog-header-content">
+                            <h3>Каталог дебиторов</h3>
+                        </div>
+                        <div class="modal__dialog-header-close">
+                            <button class="js-modal-close modal__dialog-header-close-btn">
+                                <span>&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="modal__dialog-body">
+                        <input type="text" id="debitorModalInput" onkeyup="searchDebitorModalWindow()"
+                            placeholder="Поиск ..." title="Type in a name" style="height: 40px;">
+                        <br>
+                        <table id="debitorModalTable" onload="alternate('thetable')">
+                            <caption style="color: white; font-size: 22px; padding-bottom: 10px;">Список поставщиков
+                            </caption>
+
+                            <thead>
+                                <tr>
+                                    <!--<th>ID</th>-->
+                                    <!--    <th scope="col" onclick="sortDebitorModalTable(0)">№ ID</th>-->
+                                    <!--Material-->
+                                    <th scope="col" onclick="sortDebitorModalTable(0)">Код дебитора</th>
+                                    <!--Qty-->
+                                    <th scope="col" onclick="sortDebitorModalTable(1)">Наименование</th>
+                                    <!--    <th scope="col" onclick="sortTable(3)">Редактирование</th>-->
+                                    <!--ShipmentDate-->
+                                    <!--    <th scope="col" onclick="sortTable(2)">ShipmentDate2</th>-->
+                                </tr>
+                            </thead>
+                            <tbody id="thetable">
+                                {{ range .ListVendor}}
+                                <tr class="header">
+                                    <!--<td>{{.ID }}</td>-->
+                                    <!--    <td>
+                                {{.ID}}
+                            </td>-->
+                                    <td>
+                                        {{.CodeDebitor}}
+                                    </td>
+                                    <td>
+                                        {{.NameDebitor}}
+                                    </td>
+
+                                </tr>
+                                {{ end}}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal__dialog-footer">
+                        <button class="js-modal-close modal__dialog-footer-close-btn">Закрыть</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        {{template "footer.html" .}}
+        <script src="/assets/js/formininspectionV2.js"></script>
+        <script src="/assets/js/acceptfrominspection.js"></script>
+        <!--    <script src="/assets/js/serialize2.js"></script>-->
+        <!--    <script src="/assets/js/serialize.js"></script>
+        <script src="/assets/js/updatecomponent.js"></script>-->
+
+        <script>
+            var table = document.getElementById('myTable'),
+                cells = table.getElementsByTagName('td');
+
+            for (var i = 0, len = cells.length; i < len; i++) {
+                cells[i].onclick = function () {
+                    console.log('search td', this.innerHTML);
+                }
+            }
+        </script>
+
+
+</body>
+
+</html>

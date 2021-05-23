@@ -459,7 +459,7 @@ button.buttonPlus:after {
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 17px;
+  font-size: 10px; // 17px
   margin: 10px 10px;
   cursor: pointer;
 }
@@ -514,23 +514,29 @@ button.buttonPlus:after {
 }
 
 #myTable {
-  &--s {
-    border-collapse: collapse; /* Collapse borders */
-    width: 100%; /* Full-width */
-    border: 1px solid #ddd; /* Add a grey border */
-    font-size: 15px; /* Increase font-size */
+  border-collapse: collapse; /* Collapse borders */
+  width: 100%; /* Full-width */
+  border: 1px solid #ddd; /* Add a grey border */
+  font-size: 15px; /* Increase font-size */
+  background: white;
+  min-width: 1800px;
+  /*  &--s {
+    border-collapse: collapse; // Collapse borders 
+    width: 100%; // Full-width 
+    border: 1px solid #ddd; // Add a grey border 
+    font-size: 15px; // Increase font-size 
     background: white;
     min-width: 800px;
   }
 
   &--l {
-    border-collapse: collapse; /* Collapse borders */
-    width: 100%; /* Full-width */
-    border: 1px solid #ddd; /* Add a grey border */
-    font-size: 15px; /* Increase font-size */
+    border-collapse: collapse; // Collapse borders 
+    width: 100%; // Full-width 
+    border: 1px solid #ddd; // Add a grey border 
+    font-size: 15px; // Increase font-size 
     background: white;
     min-width: 1800px;
-  }
+  }*/
 }
 
 #myTable th,
@@ -848,6 +854,7 @@ p {
     border-color: #285e8e;
     background: #285e8e;
     padding: 2px 31px;
+    width: 280px;
   }
   &--ss {
     border-color: #285e8e;
@@ -862,6 +869,12 @@ p {
 }
 
 .btn-danger {
+  &--m {
+    border-color: #e60f0f;
+    background: #e60f0f;
+    padding: 1px 44px;
+    width: 280px;
+  }
   &--s {
     border-color: #e60f0f;
     background: #e60f0f;
