@@ -307,7 +307,7 @@ func (s *Server) UploadFileToInspection() http.HandlerFunc {
 
 				}
 			}
-			w.Write([]byte("Файл загружен"))
+			w.Write([]byte("Файл успешно загружен"))
 		}
 		fmt.Println("Test1")
 		if user.Groups == "склад П5" {
@@ -457,7 +457,7 @@ func (s *Server) UploadFileToInspection() http.HandlerFunc {
 
 				}
 			}
-			w.Write([]byte("Файл загружен"))
+			w.Write([]byte("Файл успешно загружен"))
 		}
 		/*
 			for i, y := range s {
@@ -586,14 +586,47 @@ func (s *Server) UploadFileToInspectionJSON() http.HandlerFunc {
 		for scanner.Scan() {
 			lines = append(lines, scanner.Text())
 		}
-		/*
-			fmt.Println("read lines:")
-			for i, line := range lines {
-				//	fmt.Println(line)
-				fmt.Printf("%v %v\n", i, line)
-				fmt.Println(line[0:45])
+
+		err = os.Remove("data")
+		if err != nil {
+			log.Println(err)
+		}
+		err = os.Remove("data2")
+		if err != nil {
+			log.Println(err)
+		}
+		fmt.Println("read lines:")
+		for i, line := range lines {
+			//	fmt.Println(line)
+			//	fmt.Printf("%v %v\n", i, line)
+			s.infoLog.Printf("%v %v\n", i, line)
+			//	fmt.Println(line[0:45])
+			//	fmt.Println(line[0:1])
+			//fmt.Println("Test", len(line))
+			re := regexp.MustCompile(`P\d{7}LK\d{9}R\d{10}Q\d{5}D\d{8}`)
+			re2 := regexp.MustCompile(`P\d{7}L\d{10}R\d{10}Q\d{5}D\d{8}`)
+			re3 := regexp.MustCompile(`P\d{7}LR\d{10}Q\d{5}D\d{8}`)
+			if re.MatchString(line) != true && re2.MatchString(line) != true && re3.MatchString(line) != true {
+				fmt.Println("не верное сканирование MatchString :\n" + line + "\n")
+				s.errorLog.Printf("Не верное сканирование из файла загрузки на входной контроль, П1: %v", line)
+				//	fmt.Fprintf(w, "не верное сканирование :"+v.ScanID)
+				//	w.Write([]byte("Запись не соответствует: " + line))
+				//	break
+				//	return
+				msg := "Запись не соответствует: " + line
+				// format the response message
+				res := response{
+					//	ID:      int64(idRoll),
+					//	Status:  v.Status, // v.(string),
+					//	Note:    v.Note,   // v.(string),
+					Message: msg,
+				}
+				// send the response
+				json.NewEncoder(w).Encode(res)
+				return
 			}
-		*/
+
+		}
 
 		if user.Groups == "склад" || user.Groups == "качество" {
 			for _, v := range lines {
