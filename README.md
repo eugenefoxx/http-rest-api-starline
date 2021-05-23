@@ -43,13 +43,12 @@ err := json.NewEncoder(w).Encode(data)
 CheckError(err)
 }
 
-func CheckError(err error) {
+    func CheckError(err error) {
+        if err != nil {
+            log.Fatal(err)
+        }
+    }
 
-    if err != nil {
-        log.Fatal(err)
-
-}
-}
 //\***\*\*\*\*\*\*\***\*\*\*\*\***\*\*\*\*\*\*\***\*\*\***\*\*\*\*\*\*\***\*\*\*\*\***\*\*\*\*\*\*\***
 
 P2013002LK340621858R1000425231Q03000D00000000

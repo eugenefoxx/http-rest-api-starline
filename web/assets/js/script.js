@@ -262,7 +262,13 @@ function editInspection(id) {
                      //   }
                       //  document.querySelector('#updatenote').innerHTML = data.note;
                       //  if {
-                        document.querySelector('td[updateid-note="'+data.id+'"]').innerHTML = data.note;
+                        if (data.note === undefined) {
+                            data.note = ""
+                            document.querySelector('td[updateid-note="'+data.id+'"]').innerHTML = data.note;
+                        } else {
+                            document.querySelector('td[updateid-note="'+data.id+'"]').innerHTML = data.note;
+                        }
+                        
 		                console.log(data.message)
                 //  document.querySelector('label[response="'+data.message+'"]').innerText = data.message;
                         document.querySelector('#responseInspection').innerText = data.message;

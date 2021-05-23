@@ -260,7 +260,7 @@ func (s *Server) logRequest(next http.Handler) http.Handler {
 		}
 
 		// don't forget to close it
-		defer f.Close()
+		//defer f.Close()
 
 		// Log as JSON instead of the default ASCII formatter.
 		s.logger.SetFormatter(&logrus.TextFormatter{}) //(&s.logger.JSONFormatter{})
