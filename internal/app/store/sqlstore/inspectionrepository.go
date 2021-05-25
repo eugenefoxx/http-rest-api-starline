@@ -460,8 +460,8 @@ func (r *InspectionRepository) CountVerifyComponents() (int, error) {
 
 	//	count := &model.Inspection{}
 	var countOK int
-	var countNG int
-	var countTotal int
+	//	var countNG int
+	//	var countTotal int
 	row := r.store.db.QueryRow(
 		"SELECT COUNT (transfer.id) FROM transfer WHERE transfer.status='OK' AND transfer.location ='отгружено на ВК'",
 	)
@@ -469,16 +469,16 @@ func (r *InspectionRepository) CountVerifyComponents() (int, error) {
 	if ok != nil {
 		log.Fatal(ok)
 	}
-	row = r.store.db.QueryRow(
-		"SELECT COUNT (transfer.id) FROM transfer WHERE transfer.status='NG' AND transfer.location ='отгружено на ВК'",
-	)
-	ng := row.Scan(&countNG)
-	if ng != nil {
-		log.Fatal(ng)
-	}
-	countTotal = countOK + countNG
+	/*	row = r.store.db.QueryRow(
+			"SELECT COUNT (transfer.id) FROM transfer WHERE transfer.status='NG' AND transfer.location ='отгружено на ВК'",
+		)
+		ng := row.Scan(&countNG)
+		if ng != nil {
+			log.Fatal(ng)
+		}
+		countTotal = countOK + countNG*/
 
-	return countTotal, nil
+	return countOK, nil
 
 }
 
