@@ -163,9 +163,12 @@ func (s *Server) configureRouter() {
 	operation.HandleFunc("/ininspection", s.PageinInspection()).Methods("GET")
 	operation.HandleFunc("/ininspection", s.InInspection()).Methods("POST")
 	operation.HandleFunc("/uploadfile", s.UploadFileToInspection()).Methods("POST")
+	//operation.HandleFunc("/uploadfile", s.PageUploadFileToInspectionJSON()).Methods("GET")
 	//operation.HandleFunc("/uploadfile", s.UploadFileToInspectionJSON()).Methods("POST", "OPTIONS")
 	operation.HandleFunc("/historyinspection", s.PagehistoryInspection()).Methods("GET")
 	operation.HandleFunc("/historyinspection", s.HistoryInspection()).Methods("POST")
+	operation.HandleFunc("/historyinspectionp5", s.PagehistoryInspectionP5()).Methods("GET")
+	operation.HandleFunc("/historyinspectionp5", s.HistoryInspectionP5()).Methods("POST")
 
 	operation.HandleFunc("/statusinspection", s.PageInspection()).Methods("GET")
 	operation.HandleFunc("/statusinspectionmix", s.PageInspectionMix()).Methods("GET")

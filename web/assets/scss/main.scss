@@ -21,17 +21,22 @@ li {
   float: left;
 }
 
-li a {
-  display: block;
+li a,
+.dropbtn {
+  display: inline-block;
   color: rgb(4, 11, 117);
   text-align: center;
   padding: 14px 16px;
   text-decoration: none;
 }
 
-li a:hover {
+li a:hover .dropdown:hover .dropbtn {
   background-color: #111;
   color: white;
+}
+
+li.dropdown {
+  display: inline-block;
 }
 
 body {
@@ -166,6 +171,15 @@ margin: 0;
 background-color: red;
 }
 */
+/*
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+*/
+
+//////////////////////////////////////////////////////////
+
 .dropdown-content {
   display: none;
   position: absolute;
@@ -191,6 +205,7 @@ background-color: red;
 .dropdown:hover .dropdown-content {
   display: block;
 }
+////////////////////////////////////////////////////////////
 /*
 .dropdown-content2 {
 display: none;
@@ -1244,7 +1259,7 @@ $transition: 0.2s;
 
 .linkblack {
   color: #050505;
-  margin-left: 500px;
+  //  margin-left: 500px;
   // margin-top: 10px;
   &:hover {
     text-decoration: none;

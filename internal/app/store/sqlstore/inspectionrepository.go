@@ -456,6 +456,58 @@ func (r *InspectionRepository) NotVerifyDebitorP5() (*model.Inspections, error) 
 	return &listInspectionList, nil
 }
 
+func (r *InspectionRepository) CountVerifyComponents() (int, error) {
+
+	//	count := &model.Inspection{}
+	var countOK int
+	var countNG int
+	var countTotal int
+	row := r.store.db.QueryRow(
+		"SELECT COUNT (transfer.id) FROM transfer WHERE transfer.status='OK' AND transfer.location ='отгружено на ВК'",
+	)
+	ok := row.Scan(&countOK)
+	if ok != nil {
+		log.Fatal(ok)
+	}
+	row = r.store.db.QueryRow(
+		"SELECT COUNT (transfer.id) FROM transfer WHERE transfer.status='NG' AND transfer.location ='отгружено на ВК'",
+	)
+	ng := row.Scan(&countNG)
+	if ng != nil {
+		log.Fatal(ng)
+	}
+	countTotal = countOK + countNG
+
+	return countTotal, nil
+
+}
+
+func (r *InspectionRepository) CountVerifyComponentsP5() (int, error) {
+
+	//	count := &model.Inspection{}
+	var countOK int
+	var countNG int
+	var countTotal int
+	row := r.store.db.QueryRow(
+		"SELECT COUNT (transferp5.id) FROM transferp5 WHERE transferp5.status='OK' AND transferp5.location ='отгружено на ВК'",
+	)
+	ok := row.Scan(&countOK)
+	if ok != nil {
+		log.Fatal(ok)
+	}
+	row = r.store.db.QueryRow(
+		"SELECT COUNT (transferp5.id) FROM transferp5 WHERE transferp5.status='NG' AND transferp5.location ='отгружено на ВК'",
+	)
+	ng := row.Scan(&countNG)
+	if ng != nil {
+		log.Fatal(ng)
+	}
+	countTotal = countOK + countNG
+
+	return countTotal, nil
+
+}
+
 func (r *InspectionRepository) EditInspection(id int) (*model.Inspection, error) {
 
 	u := &model.Inspection{}
@@ -572,6 +624,31 @@ func (r *InspectionRepository) DeleteItemInspectionP5(s *model.Inspection) error
 	return nil
 }
 
+/*
+func (r *InspectionRepository) EditInspectionForWarehouse(id int) (*model.Inspection, error) {
+
+	u := &model.Inspection{}
+	//	fmt.Println("EditInspection -", groups)
+	//	if groups == "качество" {
+	if err := r.store.db.QueryRow(
+		"SELECT id, Coalesce (notewarehouse, '') FROM transfer WHERE id = $1",
+		id,
+	).Scan(
+		&u.ID,
+		//	&u.IdRoll,
+		//&u.Status,
+		&u.Notewarehouse,
+	); err != nil {
+		if err == sql.ErrNoRows {
+			return nil, store.ErrRecordNotFound
+		}
+		return nil, err
+	}
+	//	}
+	return u, nil
+
+}
+*/
 func (r *InspectionRepository) ListAcceptWHInspection() (*model.Inspections, error) {
 	listInspection := model.Inspection{}
 	listInspectionList := make(model.Inspections, 0)

@@ -82,6 +82,8 @@ type InspectionRepository interface {
 	HoldInspectionP5() (int, error)
 	NotVerifyComponents() (int, error)
 	NotVerifyComponentsP5() (int, error)
+	CountVerifyComponents() (int, error)
+	CountVerifyComponentsP5() (int, error)
 	DeleteItemInspection(*model.Inspection) error
 	DeleteItemInspectionP5(*model.Inspection) error
 	//	CountDebitor() (int, string, error)

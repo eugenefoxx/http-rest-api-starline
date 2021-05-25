@@ -111,39 +111,68 @@
     {{ if .Admin}}
     <div style="margin-top: 10px;">
         <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля П1</a>
+        <a href="#modal-10" class="js-modal-open linkblack">Поиск по базе Входного Контроля П5</a>
     </div>
     {{end}}
     {{ if .Stockkeeper}}
-    <div style="margin-top: 10px;">
-        <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля П1</a>
-    </div>
+    <li class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">Поиск по базе ВК</a>
+        <div class="dropdown-content">
+            <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля П1</a>
+            <a href="#modal-10" class="js-modal-open linkblack">Поиск по базе Входного Контроля П5</a>
+        </div>
+    </li>
     {{end}}
     {{ if .SuperIngenerQuality}}
-    <div style="margin-top: 10px;">
+    <li class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">Поиск по базе ВК</a>
+        <div class="dropdown-content">
+            <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля П1</a>
+            <a href="#modal-10" class="js-modal-open linkblack">Поиск по базе Входного Контроля П5</a>
+        </div>
+    </li>
+    <!--    <div style="margin-top: 10px;">
         <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля П1</a>
     </div>
+    <div style="margin-top: 10px;">
+        <a href="#modal-10" class="js-modal-open linkblack">Поиск по базе Входного Контроля П5</a>
+    </div>-->
     {{end}}
     {{ if .StockkeeperWH}}
-    <div style="margin-top: 10px;">
-        <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля П1</a>
-    </div>
+    <li class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">Поиск по базе ВК</a>
+        <div class="dropdown-content">
+            <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля П1</a>
+            <a href="#modal-10" class="js-modal-open linkblack">Поиск по базе Входного Контроля П5</a>
+        </div>
+    </li>
     {{end}}
     {{ if .IngenerQuality}}
-    <div style="margin-top: 10px;">
-        <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля П1</a>
-    </div>
+    <li class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">Поиск по базе ВК</a>
+        <div class="dropdown-content">
+            <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля П1</a>
+            <a href="#modal-10" class="js-modal-open linkblack">Поиск по базе Входного Контроля П5</a>
+        </div>
+    </li>
     {{end}}
     {{ if .Inspector}}
-    <div style="margin-top: 10px;">
-        <a href="#modal-3" class="js-modal-open linkblack" style="margin-left: 700px;">Поиск по базе Входного
-            Контроля П1</a>
-    </div>
+    <li class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">Поиск по базе ВК</a>
+        <div class="dropdown-content">
+            <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля П1</a>
+            <a href="#modal-10" class="js-modal-open linkblack">Поиск по базе Входного Контроля П5</a>
+        </div>
+    </li>
     {{end}}
     {{ if .WarehouseManager}}
-    <div style="margin-top: 10px;">
-        <a href="#modal-3" class="js-modal-open linkblack" style="margin-left: 700px;">Поиск по базе Входного
-            Контроля П1</a>
-    </div>
+    <li class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">Поиск по базе ВК</a>
+        <div class="dropdown-content">
+            <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля П1</a>
+            <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля П1</a>
+        </div>
+    </li>
     {{end}}
     {{end}}
 
@@ -203,40 +232,62 @@
     {{ end}}
 
     {{ if .Stockkeeper}}
-    <div style="margin-top: 10px;">
-        <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля П5</a>
-    </div>
+    <li class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">Поиск по базе ВК</a>
+        <div class="dropdown-content">
+            <a href="#modal-10" class="js-modal-open linkblack">Поиск по базе Входного Контроля П5</a>
+            <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля П1</a>
+        </div>
+    </li>
     {{end}}
     {{ if .SuperIngenerQuality}}
-    <div style="margin-top: 10px;">
-        <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля П5</a>
-    </div>
+    <li class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">Поиск по базе ВК</a>
+        <div class="dropdown-content">
+            <a href="#modal-10" class="js-modal-open linkblack">Поиск по базе Входного Контроля П5</a>
+            <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля П1</a>
+        </div>
+    </li>
     {{end}}
     {{ if .StockkeeperWH}}
-    <div style="margin-top: 10px;">
-        <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля П5</a>
-    </div>
+    <li class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">Поиск по базе ВК</a>
+        <div class="dropdown-content">
+            <a href="#modal-10" class="js-modal-open linkblack">Поиск по базе Входного Контроля П5</a>
+            <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля П1</a>
+        </div>
+    </li>
     {{end}}
     {{ if .IngenerQuality}}
-    <div style="margin-top: 10px;">
-        <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля П5</a>
-    </div>
+    <li class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">Поиск по базе ВК</a>
+        <div class="dropdown-content">
+            <a href="#modal-10" class="js-modal-open linkblack">Поиск по базе Входного Контроля П5</a>
+            <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля П1</a>
+        </div>
+    </li>
     {{end}}
     {{ if .Inspector}}
-    <div style="margin-top: 10px;">
-        <a href="#modal-3" class="js-modal-open linkblack" style="margin-left: 700px;">Поиск по базе Входного
-            Контроля П5</a>
-    </div>
+    <li class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">Поиск по базе ВК</a>
+        <div class="dropdown-content">
+            <a href="#modal-10" class="js-modal-open linkblack">Поиск по базе Входного Контроля П5</a>
+            <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля П1</a>
+        </div>
+    </li>
     {{end}}
     {{ if .WarehouseManager}}
-    <div style="margin-top: 10px;">
-        <a href="#modal-3" class="js-modal-open linkblack" style="margin-left: 700px;">Поиск по базе Входного
-            Контроля П5</a>
-    </div>
+    <li class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">Поиск по базе ВК</a>
+        <div class="dropdown-content">
+            <a href="#modal-10" class="js-modal-open linkblack">Поиск по базе Входного Контроля П5</a>
+            <a href="#modal-3" class="js-modal-open linkblack">Поиск по базе Входного Контроля П1</a>
+        </div>
+    </li>
     {{end}}
     {{end}}
 
-    <div style="margin-left:200px; margin-top: 10px;">
+    <div style="margin-left:800px; margin-top: 10px;">
         Пользователь: {{.User}} {{.Username}}
     </div>
 
@@ -252,7 +303,7 @@
         <div class="modal__dialog">
             <div class="modal__dialog-header">
                 <div class="modal__dialog-header-content">
-                    <h3>Поиск по базе передачи компонентов на ВК</h3>
+                    <h3>Поиск по базе передачи компонентов на ВК П1</h3>
                 </div>
                 <div class="modal__dialog-header-close">
                     <button class="js-modal-close modal__dialog-header-close-btn"><span>&times;</span></button>
@@ -265,6 +316,55 @@
             <h3>Форма отправки катушек на ВК</h3>-->
 
                 <form id="text" method="post" action="/operation/historyinspection">
+                    <!--   <div class="register-form">-->
+                    <!--form-group-->
+                    <h2>Поиск по параметрам</h2>
+                    <label for="date from">Дата от</label>
+                    <input type="date" class="form-control" style="width: 174px;" name="date1" placeholder="Дата от">
+                    <br>
+                    <p></p>
+                    <label for="date on">Дата по</label>
+                    <input type="date" class="form-control" style="width: 174px;" name="date2" placeholder="Дата от">
+                    <br>
+                    <p></p>
+                    <label for="material"></label>
+                    <input type="number" class="form-control" style="margin-left: 78px;" id="material" name="material"
+                        placeholder="Материал">
+                    <br>
+                    <p></p>
+                    <label for="eo"></label>
+                    <input type="number" class="form-control" style="margin-left: 78px;" id="eo" name="eo"
+                        placeholder="ЕО компонента">
+                    <br>
+
+                    <br>
+                    <button class="btn btn-primary--s" type="submit">Отправить</button>
+                    <!--   </div>-->
+                </form>
+            </div>
+            <div class="modal__dialog-footer">
+                <button class="js-modal-close modal__dialog-footer-close-btn">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal modal--l" id="modal-10">
+        <div class="modal__dialog">
+            <div class="modal__dialog-header">
+                <div class="modal__dialog-header-content">
+                    <h3>Поиск по базе передачи компонентов на ВК П5</h3>
+                </div>
+                <div class="modal__dialog-header-close">
+                    <button class="js-modal-close modal__dialog-header-close-btn"><span>&times;</span></button>
+                </div>
+            </div>
+            <div class="modal__dialog-body">
+                <!--    <div>modal__dialog-body</div>
+        <button id="js-add-content-temp">Add content</button>-->
+                <!--   <div class="formSendTitle">
+            <h3>Форма отправки катушек на ВК</h3>-->
+
+                <form id="text" method="post" action="/operation/historyinspectionp5">
                     <!--   <div class="register-form">-->
                     <!--form-group-->
                     <h2>Поиск по параметрам</h2>

@@ -39,6 +39,7 @@ type Inspection struct {
 	Timeaccept     time.Time `json:"timeaccept"`
 	Timeaccept2    string    `json:"timeaccept2"`
 	Count          int       `json:"count"`
+	Notewarehouse  string    `json:"notewarehouse"`
 }
 
 // Inspections ...

@@ -24,17 +24,22 @@ li {
   float: left;
 }
 
-li a {
-  display: block;
+li a,
+.dropbtn {
+  display: inline-block;
   color: #040b75;
   text-align: center;
   padding: 14px 16px;
   text-decoration: none;
 }
 
-li a:hover {
+li a:hover .dropdown:hover .dropbtn {
   background-color: #111;
   color: white;
+}
+
+li.dropdown {
+  display: inline-block;
 }
 
 body {
@@ -165,6 +170,12 @@ margin: 0;
 
 .navbar a:hover, .dropdown:hover .dropbtn {
 background-color: red;
+}
+*/
+/*
+.dropdown {
+  position: relative;
+  display: inline-block;
 }
 */
 .dropdown-content {
@@ -1306,7 +1317,6 @@ p {
 
 .linkblack {
   color: #050505;
-  margin-left: 500px;
 }
 
 .linkblack:hover {

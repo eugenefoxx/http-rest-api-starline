@@ -52,6 +52,14 @@
                                     {{.NotVerifyComponents}}
                                 </td>
                             </tr>
+                            <tr>
+                                <td style="text-align: left; color:blue;">
+                                    Проверено
+                                </td>
+                                <td style="text-align: center;">
+                                    {{.CountVerifyComponents}}
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                     <!--   <font color="white">Общее количество</font>: &nbsp;{{ .CountTotal}} <br>
@@ -110,6 +118,7 @@
                                 <th scope="col" onclick="sortTable(13)">Дата отгрузки на ВК</th>
                                 <th scope="col" onclick="sortTable(14)">Время отгрузки на ВК</th>
                                 <th scope="col" onclick="sortTable(15)">Внести запись</th>
+
                             </tr>
                         </thead>
                         <tbody id="thetable">
@@ -169,6 +178,7 @@
                                     <a href="/operation/deleteinspection/{{.ID}}"
                                         class="btnfortable btn-danger--s confirmation">Удалить</a>
                                 </td>
+
                             </tr>
                             {{ end}}
                         </tbody>
@@ -219,6 +229,14 @@
                                 </td>
                                 <td style="text-align: center;">
                                     {{.NotVerifyComponents}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left; color:blue;">
+                                    Проверено
+                                </td>
+                                <td style="text-align: center;">
+                                    {{.CountVerifyComponents}}
                                 </td>
                             </tr>
                         </tbody>
@@ -383,6 +401,14 @@
                                 </td>
                                 <td style="text-align: center;">
                                     {{.NotVerifyComponents}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left; color:blue;">
+                                    Проверено
+                                </td>
+                                <td style="text-align: center;">
+                                    {{.CountVerifyComponents}}
                                 </td>
                             </tr>
                         </tbody>
@@ -552,6 +578,14 @@
                                     {{.NotVerifyComponents}}
                                 </td>
                             </tr>
+                            <tr>
+                                <td style="text-align: left; color:blue;">
+                                    Проверено
+                                </td>
+                                <td style="text-align: center;">
+                                    {{.CountVerifyComponents}}
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                     <!--   <font color="white">Общее количество</font>: &nbsp;{{ .CountTotal}} <br>
@@ -712,6 +746,7 @@
                         </li>
                         <li><a href="#modal-9" class="js-modal-open link buttonInspectionWarehous button3">ОТГРУЗКА НА
                                 ВК CSV ФАЙЛОМ</a>
+                            <!--onclick="uploadfile();"-->
                         </li>
                         <li><a href="#modal-7" class="js-modal-open link buttonInspectionWarehous button3">ПРИЕМКА С
                                 ВК</a>
@@ -757,6 +792,14 @@
                                 </td>
                                 <td style="text-align: center;">
                                     {{.NotVerifyComponents}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left; color:blue;">
+                                    Проверено
+                                </td>
+                                <td style="text-align: center;">
+                                    {{.CountVerifyComponents}}
                                 </td>
                             </tr>
                         </tbody>
@@ -958,17 +1001,12 @@
                         </div>
                     </div>
                     <div class="modal__dialog-body">
-                        <!--    <div>modal__dialog-body</div>
-                    <button id="js-add-content-temp">Add content</button>-->
-                        <!--   <div class="formSendTitle">
-                        <h3>Форма отправки катушек на ВК</h3>-->
-
                         <form method="POST" enctype="multipart/form-data" action="/operation/uploadfile">
+                            <!--<form action="" enctype="multipart/form-data">-->
                             <input required type="file" id="fileUpload" name="q" style="width: 260px; height: inherit;">
                             <input type="submit" class="btn btn-primary--s">
-                            <div id="responseUpdateFile">
-
-                            </div>
+                            <!--<button type="submit" class="btn btn-primary--s">Отправить</button>-->
+                            <div id="responseUpdateFile"></div>
                         </form>
                     </div>
                     <div class="modal__dialog-footer" onclick="redirectTostatusinspection();">
@@ -1118,7 +1156,7 @@
         {{template "footer.html" .}}
         <script src="/assets/js/formininspectionV2.js"></script>
         <script src="/assets/js/acceptfrominspection.js"></script>
-        <!--    <script src="/assets/js/uploadfile.js"></script>-->
+        <!--<script src="/assets/js/uploadfile.js"></script>-->
         <!--    <script src="/assets/js/serialize2.js"></script>-->
         <!--    <script src="/assets/js/serialize.js"></script>
         <script src="/assets/js/updatecomponent.js"></script>-->

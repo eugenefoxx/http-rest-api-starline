@@ -414,6 +414,16 @@ function editInspection(id) {
         });
 }
 */
+
+function uploadfile() {
+    axios.get('/operation/uploadfile/')
+    .then(function (response) {
+        document
+                .getElementById('modal-9')
+                .getElementsByClassName('modal__dialog-body')[0].innerHTML = response.data;
+    });
+    
+}
 function editUserQuality(id) {
     axios.get('/operation/updateuserquality/' + id)
         .then(function (response) {

@@ -452,49 +452,8 @@ func (s *Server) PagehistoryInspection() http.HandlerFunc {
 			return
 		}
 
-		if user.Groups == "качество" || user.Groups == "склад" {
+		if user.Groups == "качество" || user.Groups == "склад" || user.Groups == "качество П5" || user.Groups == "склад П5" {
 			GroupP1 = true
-			if user.Role == "Administrator" {
-				Admin = true
-				LoggedIn = true
-			} else if user.Role == "кладовщик склада" {
-				StockkeeperWH = true
-				LoggedIn = true
-				fmt.Println("кладовщик склада - ", StockkeeperWH)
-			} else if user.Role == "главный инженер по качеству" {
-				SuperIngenerQuality = true
-				LoggedIn = true
-			} else if user.Role == "инженер по качеству" {
-				IngenerQuality = true
-				LoggedIn = true
-			} else if user.Groups == "качество" {
-				Quality = true
-				Inspector = true
-				LoggedIn = true
-				fmt.Println("pageInspection quality - ", Quality)
-			} else if user.Role == "старший кладовщик склада" {
-				WarehouseManager = true
-				LoggedIn = true
-			}
-			data := map[string]interface{}{
-				"Admin":               Admin,
-				"StockkeeperWH":       StockkeeperWH,
-				"SuperIngenerQuality": SuperIngenerQuality,
-				"WarehouseManager":    WarehouseManager,
-				"IngenerQuality":      IngenerQuality,
-				"Quality":             Quality,
-				"Inspector":           Inspector,
-				"GroupP1":             GroupP1,
-				//	"GET":           get,
-				"LoggedIn": LoggedIn,
-				"User":     user.LastName,
-				"Username": user.FirstName,
-			}
-
-			tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
-		}
-
-		if user.Groups == "качество П5" || user.Groups == "склад П5" {
 			GroupP5 = true
 			if user.Role == "Administrator" {
 				Admin = true
@@ -526,6 +485,7 @@ func (s *Server) PagehistoryInspection() http.HandlerFunc {
 				"IngenerQuality":      IngenerQuality,
 				"Quality":             Quality,
 				"Inspector":           Inspector,
+				"GroupP1":             GroupP1,
 				"GroupP5":             GroupP5,
 				//	"GET":           get,
 				"LoggedIn": LoggedIn,
@@ -535,6 +495,7 @@ func (s *Server) PagehistoryInspection() http.HandlerFunc {
 
 			tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
 		}
+
 	}
 }
 
@@ -581,6 +542,7 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 
 		if user.Groups == "качество" || user.Groups == "склад" {
 			GroupP1 = true
+
 			if user.Role == "Administrator" {
 				Admin = true
 				LoggedIn = true
@@ -639,7 +601,8 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 					"Quality":             Quality,
 					"Inspector":           Inspector,
 					"GroupP1":             GroupP1,
-					"LoggedIn":            LoggedIn,
+					//"GroupP5":             GroupP5,
+					"LoggedIn": LoggedIn,
 					//	"GET":                 get,
 				}
 
@@ -675,7 +638,9 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						"Inspector":           Inspector,
 						"LoggedIn":            LoggedIn,
 						"GroupP1":             GroupP1,
-						"GET":                 get,
+						"Pobedit":             "Победит 1",
+						//"GroupP5":             GroupP5,
+						"GET": get,
 					}
 
 					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
@@ -710,7 +675,9 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						"Inspector":           Inspector,
 						"LoggedIn":            LoggedIn,
 						"GroupP1":             GroupP1,
-						"GET":                 get,
+						"Pobedit":             "Победит 1",
+						//	"GroupP5":             GroupP5,
+						"GET": get,
 					}
 					// RenderJSON(w, get, http.StatusOK)
 					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
@@ -743,7 +710,9 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						"Inspector":           Inspector,
 						"LoggedIn":            LoggedIn,
 						"GroupP1":             GroupP1,
-						"GET":                 get,
+						"Pobedit":             "Победит 1",
+						//	"GroupP5":             GroupP5,
+						"GET": get,
 					}
 
 					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
@@ -773,7 +742,9 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						"Inspector":           Inspector,
 						"LoggedIn":            LoggedIn,
 						"GroupP1":             GroupP1,
-						"GET":                 get,
+						"Pobedit":             "Победит 1",
+						//	"GroupP5":             GroupP5,
+						"GET": get,
 					}
 
 					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
@@ -803,7 +774,9 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						"Inspector":           Inspector,
 						"LoggedIn":            LoggedIn,
 						"GroupP1":             GroupP1,
-						"GET":                 get,
+						"Pobedit":             "Победит 1",
+						//	"GroupP5":             GroupP5,
+						"GET": get,
 					}
 
 					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
@@ -835,7 +808,9 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						"Inspector":           Inspector,
 						"LoggedIn":            LoggedIn,
 						"GroupP1":             GroupP1,
-						"GET":                 get,
+						"Pobedit":             "Победит 1",
+						//	"GroupP5":             GroupP5,
+						"GET": get,
 					}
 
 					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
@@ -865,7 +840,9 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						"Inspector":           Inspector,
 						"LoggedIn":            LoggedIn,
 						"GroupP1":             GroupP1,
-						"GET":                 get,
+						"Pobedit":             "Победит 1",
+						//	"GroupP5":             GroupP5,
+						"GET": get,
 					}
 
 					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
@@ -895,7 +872,355 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						"Inspector":           Inspector,
 						"LoggedIn":            LoggedIn,
 						"GroupP1":             GroupP1,
-						"GET":                 get,
+						"Pobedit":             "Победит 1",
+						//	"GroupP5":             GroupP5,
+						"GET": get,
+					}
+
+					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
+					if err != nil {
+						http.Error(w, err.Error(), 400)
+						return
+					}
+				}
+			}
+		}
+
+		if user.Groups == "качество П5" || user.Groups == "склад П5" {
+
+			GroupP5 = true
+			if user.Role == "Administrator" {
+				Admin = true
+				LoggedIn = true
+			} else if user.Role == "кладовщик склада" {
+				StockkeeperWH = true
+				LoggedIn = true
+				fmt.Println("кладовщик склада - ", StockkeeperWH)
+			} else if user.Role == "главный инженер по качеству" {
+				SuperIngenerQuality = true
+				LoggedIn = true
+			} else if user.Role == "инженер по качеству" {
+				IngenerQuality = true
+				LoggedIn = true
+			} else if user.Groups == "качество" {
+				Quality = true
+				Inspector = true
+				LoggedIn = true
+				fmt.Println("pageInspection quality - ", Quality)
+			} else if user.Role == "старший кладовщик склада" {
+				WarehouseManager = true
+				LoggedIn = true
+			}
+
+			search := &req{}
+			materialInt, err := strconv.Atoi(r.FormValue("material"))
+			if err != nil {
+				fmt.Println(err)
+				s.errorLog.Printf(err.Error())
+			}
+			search.Date1 = r.FormValue("date1")
+			fmt.Println("date1 - ", search.Date1)
+			s.infoLog.Printf("date1 - %v", search.Date1)
+			search.Date2 = r.FormValue("date2")
+			fmt.Println("date2 - ", search.Date2)
+			s.infoLog.Printf("date2 - %v", search.Date2)
+			search.Material = materialInt
+			fmt.Println("material - ", search.Material)
+			s.infoLog.Printf("material - %v", search.Material)
+			search.EO = r.FormValue("eo")
+			s.infoLog.Printf("eo - %v", search.EO)
+
+			currentData := time.Now()
+			searchDateNow := currentData.Format("2006-01-02")
+
+			if search.Date1 == "" && search.Date2 == "" && search.Material == 0 && search.EO == "" {
+				fmt.Println("Не заполнены поля ввода")
+				data := map[string]interface{}{
+					"TitleDOC":            "Отчет по истроии ВК",
+					"User":                user.LastName,
+					"Username":            user.FirstName,
+					"Admin":               Admin,
+					"WarehouseManager":    WarehouseManager,
+					"StockkeeperWH":       StockkeeperWH,
+					"SuperIngenerQuality": SuperIngenerQuality,
+					"IngenerQuality":      IngenerQuality,
+					"Quality":             Quality,
+					"Inspector":           Inspector,
+					//	"GroupP1":             GroupP1,
+					"GroupP5":  GroupP5,
+					"LoggedIn": LoggedIn,
+					//	"GET":                 get,
+				}
+
+				err = tpl.ExecuteTemplate(w, "errorSearchHistoryInspection.html", data)
+				if err != nil {
+					http.Error(w, err.Error(), 400)
+					return
+				}
+			} else if search.Date1 == "" && search.Date2 == "" {
+				if search.EO != "" {
+
+					get, err := s.store.Inspection().ListShowDataByEO(search.EO)
+					if err != nil {
+						s.error(w, r, http.StatusUnprocessableEntity, err)
+						return
+					}
+					count, _ := s.store.Inspection().CountInspection()
+					fmt.Println(count)
+					limit := 5
+					page, begin := s.Pagination(r, limit)
+					fmt.Printf("Current Page: %d, Begin: %d\n", page, begin)
+
+					data := map[string]interface{}{
+						"TitleDOC":            "Отчет по истроии ВК",
+						"User":                user.LastName,
+						"Username":            user.FirstName,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
+						//	"GroupP1":             GroupP1,
+						"GroupP5": GroupP5,
+						"Pobedit": "Победит 1",
+						"GET":     get,
+					}
+
+					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
+					if err != nil {
+						http.Error(w, err.Error(), 400)
+						return
+					}
+				} else if search.Material != 0 {
+
+					count, _ := s.store.Inspection().CountInspection()
+					fmt.Println(count)
+					limit := 2
+					page, begin := s.Pagination(r, limit)
+					fmt.Printf("Current Page: %d, Begin: %d\n", page, begin)
+					get, err := s.store.Inspection().ListShowDataBySap(search.Material, begin, limit)
+
+					if err != nil {
+						s.error(w, r, http.StatusUnprocessableEntity, err)
+						return
+					}
+
+					data := map[string]interface{}{
+						"TitleDOC":            "Отчет по истроии ВК",
+						"User":                user.LastName,
+						"Username":            user.FirstName,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
+						//	"GroupP1":             GroupP1,
+						"GroupP5": GroupP5,
+						"Pobedit": "Победит 1",
+						"GET":     get,
+					}
+					// RenderJSON(w, get, http.StatusOK)
+					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
+					if err != nil {
+						http.Error(w, err.Error(), 400)
+						return
+					}
+				}
+			} else if search.Date1 != "" && search.Date2 == "" {
+
+				if search.Material != 0 {
+					fmt.Println("OK Material")
+
+					get, err := s.store.Inspection().ListShowDataByDateAndSAP(search.Date1, searchDateNow, search.Material)
+					if err != nil {
+						s.error(w, r, http.StatusUnprocessableEntity, err)
+						return
+					}
+
+					data := map[string]interface{}{
+						"TitleDOC":            "Отчет по истроии ВК",
+						"User":                user.LastName,
+						"Username":            user.FirstName,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
+						//	"GroupP1":             GroupP1,
+						"GroupP5": GroupP5,
+						"Pobedit": "Победит 1",
+						"GET":     get,
+					}
+
+					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
+					if err != nil {
+						http.Error(w, err.Error(), 400)
+						return
+					}
+				} else if search.EO != "" {
+					fmt.Println("OK EO")
+
+					get, err := s.store.Inspection().ListShowDataByDateAndEO(search.Date1, searchDateNow, search.EO)
+					if err != nil {
+						s.error(w, r, http.StatusUnprocessableEntity, err)
+						return
+					}
+
+					data := map[string]interface{}{
+						"TitleDOC":            "Отчет по истроии ВК",
+						"User":                user.LastName,
+						"Username":            user.FirstName,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
+						//	"GroupP1":             GroupP1,
+						"GroupP5": GroupP5,
+						"Pobedit": "Победит 1",
+						"GET":     get,
+					}
+
+					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
+					if err != nil {
+						http.Error(w, err.Error(), 400)
+						return
+					}
+
+				} else {
+
+					get, err := s.store.Inspection().ListShowDataByDate(search.Date1, searchDateNow)
+					if err != nil {
+						s.error(w, r, http.StatusUnprocessableEntity, err)
+						return
+					}
+
+					data := map[string]interface{}{
+						"TitleDOC":            "Отчет по истроии ВК",
+						"User":                user.LastName,
+						"Username":            user.FirstName,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
+						//	"GroupP1":             GroupP1,
+						"GroupP5": GroupP5,
+						"Pobedit": "Победит 1",
+						"GET":     get,
+					}
+
+					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
+					if err != nil {
+						http.Error(w, err.Error(), 400)
+						return
+					}
+				}
+			} else {
+				if search.Material != 0 {
+					fmt.Println("OK Material")
+
+					get, err := s.store.Inspection().ListShowDataByDateAndSAP(search.Date1, search.Date2, search.Material)
+					if err != nil {
+						s.error(w, r, http.StatusUnprocessableEntity, err)
+						return
+					}
+
+					data := map[string]interface{}{
+						"TitleDOC":            "Отчет по истроии ВК",
+						"User":                user.LastName,
+						"Username":            user.FirstName,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
+						//	"GroupP1":             GroupP1,
+						"GroupP5": GroupP5,
+						"Pobedit": "Победит 1",
+						"GET":     get,
+					}
+
+					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
+					if err != nil {
+						http.Error(w, err.Error(), 400)
+						return
+					}
+				} else if search.EO != "" {
+					fmt.Println("OK EO")
+
+					get, err := s.store.Inspection().ListShowDataByDateAndEO(search.Date1, search.Date2, search.EO)
+					if err != nil {
+						s.error(w, r, http.StatusUnprocessableEntity, err)
+						return
+					}
+
+					data := map[string]interface{}{
+						"TitleDOC":            "Отчет по истроии ВК",
+						"User":                user.LastName,
+						"Username":            user.FirstName,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
+						//	"GroupP1":             GroupP1,
+						"GroupP5": GroupP5,
+						"Pobedit": "Победит 1",
+						"GET":     get,
+					}
+
+					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
+					if err != nil {
+						http.Error(w, err.Error(), 400)
+						return
+					}
+
+				} else {
+
+					get, err := s.store.Inspection().ListShowDataByDate(search.Date1, search.Date2)
+					if err != nil {
+						s.error(w, r, http.StatusUnprocessableEntity, err)
+						return
+					}
+
+					data := map[string]interface{}{
+						"TitleDOC":            "Отчет по истроии ВК",
+						"User":                user.LastName,
+						"Username":            user.FirstName,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
+						//	"GroupP1":             GroupP1,
+						"GroupP5": GroupP5,
+						"Pobedit": "Победит 1",
+						"GET":     get,
 					}
 
 					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
@@ -925,6 +1250,130 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 				return
 			}
 		*/
+
+	}
+}
+
+//historyInspectionP5
+func (s *Server) PagehistoryInspectionP5() http.HandlerFunc {
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		Admin := false
+		StockkeeperWH := false
+		WarehouseManager := false
+		SuperIngenerQuality := false
+		IngenerQuality := false
+		Quality := false
+		Inspector := false
+		GroupP1 := false
+		GroupP5 := false
+		LoggedIn := false
+
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		id, ok := session.Values["user_id"]
+		if !ok {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		user, err := s.store.User().Find(id.(int))
+		if err != nil {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		if user.Groups == "качество П5" || user.Groups == "склад П5" || user.Groups == "качество" || user.Groups == "склад" {
+			GroupP5 = true
+			GroupP1 = true
+			if user.Role == "Administrator" {
+				Admin = true
+				LoggedIn = true
+			} else if user.Role == "кладовщик склада" {
+				StockkeeperWH = true
+				LoggedIn = true
+				fmt.Println("кладовщик склада - ", StockkeeperWH)
+			} else if user.Role == "главный инженер по качеству" {
+				SuperIngenerQuality = true
+				LoggedIn = true
+			} else if user.Role == "инженер по качеству" {
+				IngenerQuality = true
+				LoggedIn = true
+			} else if user.Groups == "качество" {
+				Quality = true
+				Inspector = true
+				LoggedIn = true
+				fmt.Println("pageInspection quality - ", Quality)
+			} else if user.Role == "старший кладовщик склада" {
+				WarehouseManager = true
+				LoggedIn = true
+			}
+			data := map[string]interface{}{
+				"Admin":               Admin,
+				"StockkeeperWH":       StockkeeperWH,
+				"SuperIngenerQuality": SuperIngenerQuality,
+				"WarehouseManager":    WarehouseManager,
+				"IngenerQuality":      IngenerQuality,
+				"Quality":             Quality,
+				"Inspector":           Inspector,
+				"GroupP5":             GroupP5,
+				"GroupP1":             GroupP1,
+				//	"GET":           get,
+				"LoggedIn": LoggedIn,
+				"User":     user.LastName,
+				"Username": user.FirstName,
+			}
+
+			tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
+		}
+	}
+}
+
+func (s *Server) HistoryInspectionP5() http.HandlerFunc {
+	type req struct {
+		Date1    string `json:"date1"`
+		Date2    string `json:"date2"`
+		Material int    `json:"material"`
+		EO       string `json:"eo"`
+	}
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		s.mu.Lock()
+		defer s.mu.Unlock()
+
+		Admin := false
+		StockkeeperWH := false
+		WarehouseManager := false
+		SuperIngenerQuality := false
+		IngenerQuality := false
+		Quality := false
+		Inspector := false
+		GroupP5 := false
+		GroupP1 := false
+		LoggedIn := false
+
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		id, ok := session.Values["user_id"]
+		if !ok {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		user, err := s.store.User().Find(id.(int))
+		if err != nil {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
 		if user.Groups == "качество П5" || user.Groups == "склад П5" {
 			GroupP5 = true
 			if user.Role == "Administrator" {
@@ -985,7 +1434,9 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 					"Quality":             Quality,
 					"Inspector":           Inspector,
 					"GroupP5":             GroupP5,
-					"LoggedIn":            LoggedIn,
+					"Pobedit":             "Победит 5",
+					//"GroupP1":             GroupP1,
+					"LoggedIn": LoggedIn,
 					//	"GET":                 get,
 				}
 
@@ -1020,8 +1471,10 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						"Quality":             Quality,
 						"Inspector":           Inspector,
 						"LoggedIn":            LoggedIn,
-						"GroupP5":             GroupP5,
-						"GET":                 get,
+						"Pobedit":             "Победит 5",
+						//"GroupP1":             GroupP1,
+						"GroupP5": GroupP5,
+						"GET":     get,
 					}
 
 					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
@@ -1056,8 +1509,10 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						"Quality":             Quality,
 						"Inspector":           Inspector,
 						"LoggedIn":            LoggedIn,
-						"GroupP5":             GroupP5,
-						"GET":                 get,
+						"Pobedit":             "Победит 5",
+						//	"GroupP1":             GroupP1,
+						"GroupP5": GroupP5,
+						"GET":     get,
 					}
 					//	RenderJSON(w, get, http.StatusOK)
 					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
@@ -1089,8 +1544,10 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						"Quality":             Quality,
 						"Inspector":           Inspector,
 						"LoggedIn":            LoggedIn,
-						"GroupP5":             GroupP5,
-						"GET":                 get,
+						//	"GroupP1":             GroupP1,
+						"GroupP5": GroupP5,
+						"Pobedit": "Победит 5",
+						"GET":     get,
 					}
 
 					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
@@ -1119,8 +1576,10 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						"Quality":             Quality,
 						"Inspector":           Inspector,
 						"LoggedIn":            LoggedIn,
-						"GroupP5":             GroupP5,
-						"GET":                 get,
+						//	"GroupP1":             GroupP1,
+						"GroupP5": GroupP5,
+						"Pobedit": "Победит 5",
+						"GET":     get,
 					}
 
 					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
@@ -1149,8 +1608,10 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						"Quality":             Quality,
 						"Inspector":           Inspector,
 						"LoggedIn":            LoggedIn,
-						"GroupP5":             GroupP5,
-						"GET":                 get,
+						//	"GroupP1":             GroupP1,
+						"GroupP5": GroupP5,
+						"Pobedit": "Победит 5",
+						"GET":     get,
 					}
 
 					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
@@ -1181,8 +1642,10 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						"Quality":             Quality,
 						"Inspector":           Inspector,
 						"LoggedIn":            LoggedIn,
-						"GroupP5":             GroupP5,
-						"GET":                 get,
+						//	"GroupP1":             GroupP1,
+						"GroupP5": GroupP5,
+						"Pobedit": "Победит 5",
+						"GET":     get,
 					}
 
 					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
@@ -1211,8 +1674,10 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						"Quality":             Quality,
 						"Inspector":           Inspector,
 						"LoggedIn":            LoggedIn,
-						"GroupP5":             GroupP5,
-						"GET":                 get,
+						//	"GroupP1":             GroupP1,
+						"GroupP5": GroupP5,
+						"Pobedit": "Победит 5",
+						"GET":     get,
 					}
 
 					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
@@ -1241,8 +1706,357 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						"Quality":             Quality,
 						"Inspector":           Inspector,
 						"LoggedIn":            LoggedIn,
-						"GroupP5":             GroupP5,
-						"GET":                 get,
+						//	"GroupP1":             GroupP1,
+						"GroupP5": GroupP5,
+						"Pobedit": "Победит 5",
+						"GET":     get,
+					}
+
+					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
+					if err != nil {
+						http.Error(w, err.Error(), 400)
+						return
+					}
+				}
+			}
+		}
+
+		if user.Groups == "качество" || user.Groups == "склад" {
+			GroupP1 = true
+			if user.Role == "Administrator" {
+				Admin = true
+				LoggedIn = true
+			} else if user.Role == "кладовщик склада" {
+				StockkeeperWH = true
+				LoggedIn = true
+				fmt.Println("кладовщик склада - ", StockkeeperWH)
+			} else if user.Role == "главный инженер по качеству" {
+				SuperIngenerQuality = true
+				LoggedIn = true
+			} else if user.Role == "инженер по качеству" {
+				IngenerQuality = true
+				LoggedIn = true
+			} else if user.Groups == "качество П5" {
+				Quality = true
+				Inspector = true
+				LoggedIn = true
+				fmt.Println("pageInspection quality - ", Quality)
+			} else if user.Role == "старший кладовщик склада" {
+				WarehouseManager = true
+				LoggedIn = true
+			}
+
+			search := &req{}
+			materialInt, err := strconv.Atoi(r.FormValue("material"))
+			if err != nil {
+				fmt.Println(err)
+				s.errorLog.Printf(err.Error())
+			}
+			search.Date1 = r.FormValue("date1")
+			fmt.Println("date1 - ", search.Date1)
+			s.infoLog.Printf("date1 - %v", search.Date1)
+			search.Date2 = r.FormValue("date2")
+			fmt.Println("date2 - ", search.Date2)
+			s.infoLog.Printf("date2 - %v", search.Date2)
+			search.Material = materialInt
+			fmt.Println("material - ", search.Material)
+			s.infoLog.Printf("material - %v", search.Material)
+			search.EO = r.FormValue("eo")
+			s.infoLog.Printf("eo - %v", search.EO)
+
+			currentData := time.Now()
+			searchDateNow := currentData.Format("2006-01-02")
+
+			if search.Date1 == "" && search.Date2 == "" && search.Material == 0 && search.EO == "" {
+				fmt.Println("Не заполнены поля ввода")
+				data := map[string]interface{}{
+					"TitleDOC":            "Отчет по истроии ВК",
+					"User":                user.LastName,
+					"Username":            user.FirstName,
+					"Admin":               Admin,
+					"WarehouseManager":    WarehouseManager,
+					"StockkeeperWH":       StockkeeperWH,
+					"SuperIngenerQuality": SuperIngenerQuality,
+					"IngenerQuality":      IngenerQuality,
+					"Quality":             Quality,
+					"Inspector":           Inspector,
+					//	"GroupP5":             GroupP5,
+					"GroupP1":  GroupP1,
+					"Pobedit":  "Победит 5",
+					"LoggedIn": LoggedIn,
+					//	"GET":                 get,
+				}
+
+				err = tpl.ExecuteTemplate(w, "errorSearchHistoryInspection.html", data)
+				if err != nil {
+					http.Error(w, err.Error(), 400)
+					return
+				}
+			} else if search.Date1 == "" && search.Date2 == "" {
+				if search.EO != "" {
+
+					get, err := s.store.Inspection().ListShowDataByEOP5(search.EO)
+					if err != nil {
+						s.error(w, r, http.StatusUnprocessableEntity, err)
+						return
+					}
+					//	count, _ := s.store.Inspection().CountInspection()
+					//	fmt.Println(count)
+					//	limit := 5
+					//	page, begin := s.Pagination(r, limit)
+					//	fmt.Printf("Current Page: %d, Begin: %d\n", page, begin)
+
+					data := map[string]interface{}{
+						"TitleDOC":            "Отчет по истроии ВК",
+						"User":                user.LastName,
+						"Username":            user.FirstName,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
+						"GroupP1":             GroupP1,
+						"Pobedit":             "Победит 5",
+						//	"GroupP5":             GroupP5,
+						"GET": get,
+					}
+
+					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
+					if err != nil {
+						http.Error(w, err.Error(), 400)
+						return
+					}
+				} else if search.Material != 0 {
+
+					//	count, _ := s.store.Inspection().CountInspection()
+					//	fmt.Println(count)
+					//	limit := 2
+					//	page, begin := s.Pagination(r, limit)
+					//	fmt.Printf("Current Page: %d, Begin: %d\n", page, begin)
+					//	get, err := s.store.Inspection().ListShowDataBySap(search.Material, begin, limit)
+					get, err := s.store.Inspection().ListShowDataBySapP5(search.Material)
+
+					if err != nil {
+						s.error(w, r, http.StatusUnprocessableEntity, err)
+						return
+					}
+
+					data := map[string]interface{}{
+						"TitleDOC":            "Отчет по истроии ВК",
+						"User":                user.LastName,
+						"Username":            user.FirstName,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
+						"GroupP1":             GroupP1,
+						"Pobedit":             "Победит 5",
+						//	"GroupP5":             GroupP5,
+						"GET": get,
+					}
+					//	RenderJSON(w, get, http.StatusOK)
+					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
+					if err != nil {
+						http.Error(w, err.Error(), 400)
+						return
+					}
+				}
+			} else if search.Date1 != "" && search.Date2 == "" {
+
+				if search.Material != 0 {
+					fmt.Println("OK Material")
+
+					get, err := s.store.Inspection().ListShowDataByDateAndSAPP5(search.Date1, searchDateNow, search.Material)
+					if err != nil {
+						s.error(w, r, http.StatusUnprocessableEntity, err)
+						return
+					}
+
+					data := map[string]interface{}{
+						"TitleDOC":            "Отчет по истроии ВК",
+						"User":                user.LastName,
+						"Username":            user.FirstName,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
+						"GroupP1":             GroupP1,
+						"Pobedit":             "Победит 5",
+						//	"GroupP5":             GroupP5,
+						"GET": get,
+					}
+
+					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
+					if err != nil {
+						http.Error(w, err.Error(), 400)
+						return
+					}
+				} else if search.EO != "" {
+					fmt.Println("OK EO")
+
+					get, err := s.store.Inspection().ListShowDataByDateAndEOP5(search.Date1, searchDateNow, search.EO)
+					if err != nil {
+						s.error(w, r, http.StatusUnprocessableEntity, err)
+						return
+					}
+
+					data := map[string]interface{}{
+						"TitleDOC":            "Отчет по истроии ВК",
+						"User":                user.LastName,
+						"Username":            user.FirstName,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
+						"GroupP1":             GroupP1,
+						"Pobedit":             "Победит 5",
+						//	"GroupP5":             GroupP5,
+						"GET": get,
+					}
+
+					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
+					if err != nil {
+						http.Error(w, err.Error(), 400)
+						return
+					}
+
+				} else {
+
+					get, err := s.store.Inspection().ListShowDataByDateP5(search.Date1, searchDateNow)
+					if err != nil {
+						s.error(w, r, http.StatusUnprocessableEntity, err)
+						return
+					}
+
+					data := map[string]interface{}{
+						"TitleDOC":            "Отчет по истроии ВК",
+						"User":                user.LastName,
+						"Username":            user.FirstName,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
+						"GroupP1":             GroupP1,
+						"Pobedit":             "Победит 5",
+						//	"GroupP5":             GroupP5,
+						"GET": get,
+					}
+
+					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
+					if err != nil {
+						http.Error(w, err.Error(), 400)
+						return
+					}
+				}
+			} else {
+				if search.Material != 0 {
+					fmt.Println("OK Material")
+
+					get, err := s.store.Inspection().ListShowDataByDateAndSAPP5(search.Date1, search.Date2, search.Material)
+					if err != nil {
+						s.error(w, r, http.StatusUnprocessableEntity, err)
+						return
+					}
+
+					data := map[string]interface{}{
+						"TitleDOC":            "Отчет по истроии ВК",
+						"User":                user.LastName,
+						"Username":            user.FirstName,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
+						"GroupP1":             GroupP1,
+						"Pobedit":             "Победит 5",
+						//	"GroupP5":             GroupP5,
+						"GET": get,
+					}
+
+					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
+					if err != nil {
+						http.Error(w, err.Error(), 400)
+						return
+					}
+				} else if search.EO != "" {
+					fmt.Println("OK EO")
+
+					get, err := s.store.Inspection().ListShowDataByDateAndEOP5(search.Date1, search.Date2, search.EO)
+					if err != nil {
+						s.error(w, r, http.StatusUnprocessableEntity, err)
+						return
+					}
+
+					data := map[string]interface{}{
+						"TitleDOC":            "Отчет по истроии ВК",
+						"User":                user.LastName,
+						"Username":            user.FirstName,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
+						"GroupP1":             GroupP1,
+						"Pobedit":             "Победит 5",
+						//	"GroupP5":             GroupP5,
+						"GET": get,
+					}
+
+					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
+					if err != nil {
+						http.Error(w, err.Error(), 400)
+						return
+					}
+
+				} else {
+
+					get, err := s.store.Inspection().ListShowDataByDateP5(search.Date1, search.Date2)
+					if err != nil {
+						s.error(w, r, http.StatusUnprocessableEntity, err)
+						return
+					}
+
+					data := map[string]interface{}{
+						"TitleDOC":            "Отчет по истроии ВК",
+						"User":                user.LastName,
+						"Username":            user.FirstName,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
+						"GroupP1":             GroupP1,
+						"Pobedit":             "Победит 5",
+						//	"GroupP5":             GroupP5,
+						"GET": get,
 					}
 
 					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
@@ -1371,6 +2185,12 @@ func (s *Server) PageInspection() http.HandlerFunc {
 				return
 			}
 
+			countVerifyComponents, err := s.store.Inspection().CountVerifyComponents()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
 			listVendor, err := s.store.Vendor().ListVendor()
 			if err != nil {
 				s.error(w, r, http.StatusUnprocessableEntity, err)
@@ -1387,21 +2207,22 @@ func (s *Server) PageInspection() http.HandlerFunc {
 				"IngenerQuality":   IngenerQuality,
 				"WarehouseManager": WarehouseManager,
 				//	"Warehouse":            Warehouse,
-				"StockkeeperWH":        StockkeeperWH,
-				"SuperIngenerQuality":  SuperIngenerQuality,
-				"SuperIngenerQuality2": SuperIngenerQuality2,
-				"GroupP1":              GroupP1,
-				"MixP1P5":              MixP1P5,
-				"GET":                  get,
-				"ListVendor":           listVendor,
-				"CountTotal":           countTotal,
-				"HoldInspection":       holdInspection,
-				"NotVerifyComponents":  notVerifyComponents,
-				"GetStatic":            getStatic,
-				"HoldCountDebitor":     holdCountDebitor,
-				"NotVerifyDebitor":     notVerifyDebitor,
-				"LoggedIn":             LoggedIn,
-				"Pobedit":              "Pobedit 1",
+				"StockkeeperWH":         StockkeeperWH,
+				"SuperIngenerQuality":   SuperIngenerQuality,
+				"SuperIngenerQuality2":  SuperIngenerQuality2,
+				"GroupP1":               GroupP1,
+				"MixP1P5":               MixP1P5,
+				"GET":                   get,
+				"ListVendor":            listVendor,
+				"CountTotal":            countTotal,
+				"HoldInspection":        holdInspection,
+				"NotVerifyComponents":   notVerifyComponents,
+				"CountVerifyComponents": countVerifyComponents,
+				"GetStatic":             getStatic,
+				"HoldCountDebitor":      holdCountDebitor,
+				"NotVerifyDebitor":      notVerifyDebitor,
+				"LoggedIn":              LoggedIn,
+				"Pobedit":               "Победит 1",
 			}
 
 			tpl.ExecuteTemplate(w, "showinspection.html", groups)
@@ -1480,6 +2301,12 @@ func (s *Server) PageInspection() http.HandlerFunc {
 				return
 			}
 
+			countVerifyComponents, err := s.store.Inspection().CountVerifyComponentsP5()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
 			listVendor, err := s.store.Vendor().ListVendor()
 			if err != nil {
 				s.error(w, r, http.StatusUnprocessableEntity, err)
@@ -1496,20 +2323,21 @@ func (s *Server) PageInspection() http.HandlerFunc {
 				"IngenerQuality":   IngenerQuality,
 				"WarehouseManager": WarehouseManager,
 				//	"Warehouse":            Warehouse,
-				"StockkeeperWH":        StockkeeperWH,
-				"SuperIngenerQuality":  SuperIngenerQuality,
-				"SuperIngenerQuality2": SuperIngenerQuality2,
-				"GroupP5":              GroupP5,
-				"GET":                  get,
-				"ListVendor":           listVendor,
-				"CountTotal":           countTotal,
-				"HoldInspection":       holdInspection,
-				"NotVerifyComponents":  notVerifyComponents,
-				"GetStatic":            getStatic,
-				"HoldCountDebitor":     holdCountDebitor,
-				"NotVerifyDebitor":     notVerifyDebitor,
-				"LoggedIn":             LoggedIn,
-				"Pobedit":              "Pobedit 5",
+				"StockkeeperWH":         StockkeeperWH,
+				"SuperIngenerQuality":   SuperIngenerQuality,
+				"SuperIngenerQuality2":  SuperIngenerQuality2,
+				"GroupP5":               GroupP5,
+				"GET":                   get,
+				"ListVendor":            listVendor,
+				"CountTotal":            countTotal,
+				"HoldInspection":        holdInspection,
+				"NotVerifyComponents":   notVerifyComponents,
+				"GetStatic":             getStatic,
+				"HoldCountDebitor":      holdCountDebitor,
+				"NotVerifyDebitor":      notVerifyDebitor,
+				"CountVerifyComponents": countVerifyComponents,
+				"LoggedIn":              LoggedIn,
+				"Pobedit":               "Победит 5",
 			}
 
 			tpl.ExecuteTemplate(w, "showinspection.html", groups)
@@ -1635,6 +2463,12 @@ func (s *Server) PageInspectionMix() http.HandlerFunc {
 				return
 			}
 
+			countVerifyComponents, err := s.store.Inspection().CountVerifyComponentsP5()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
 			listVendor, err := s.store.Vendor().ListVendor()
 			if err != nil {
 				s.error(w, r, http.StatusUnprocessableEntity, err)
@@ -1655,17 +2489,18 @@ func (s *Server) PageInspectionMix() http.HandlerFunc {
 				"SuperIngenerQuality":  SuperIngenerQuality,
 				"SuperIngenerQuality2": SuperIngenerQuality2,
 				//"MixP1P5":              MixP1P5,
-				"GroupP1":             GroupP1,
-				"GET":                 get,
-				"ListVendor":          listVendor,
-				"CountTotal":          countTotal,
-				"HoldInspection":      holdInspection,
-				"NotVerifyComponents": notVerifyComponents,
-				"GetStatic":           getStatic,
-				"HoldCountDebitor":    holdCountDebitor,
-				"NotVerifyDebitor":    notVerifyDebitor,
-				"LoggedIn":            LoggedIn,
-				"Pobedit":             "Pobedit 5",
+				"GroupP1":               GroupP1,
+				"GET":                   get,
+				"ListVendor":            listVendor,
+				"CountTotal":            countTotal,
+				"HoldInspection":        holdInspection,
+				"NotVerifyComponents":   notVerifyComponents,
+				"GetStatic":             getStatic,
+				"HoldCountDebitor":      holdCountDebitor,
+				"NotVerifyDebitor":      notVerifyDebitor,
+				"CountVerifyComponents": countVerifyComponents,
+				"LoggedIn":              LoggedIn,
+				"Pobedit":               "Победит 5",
 			}
 
 			tpl.ExecuteTemplate(w, "showinspectionmix.html", groups)
@@ -1748,6 +2583,12 @@ func (s *Server) PageInspectionMix() http.HandlerFunc {
 				return
 			}
 
+			countVerifyComponents, err := s.store.Inspection().CountVerifyComponents()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
 			listVendor, err := s.store.Vendor().ListVendor()
 			if err != nil {
 				s.error(w, r, http.StatusUnprocessableEntity, err)
@@ -1768,17 +2609,18 @@ func (s *Server) PageInspectionMix() http.HandlerFunc {
 				"SuperIngenerQuality":  SuperIngenerQuality,
 				"SuperIngenerQuality2": SuperIngenerQuality2,
 				//"MixP1P5":              MixP1P5,
-				"GroupP5":             GroupP5,
-				"GET":                 get,
-				"ListVendor":          listVendor,
-				"CountTotal":          countTotal,
-				"HoldInspection":      holdInspection,
-				"NotVerifyComponents": notVerifyComponents,
-				"GetStatic":           getStatic,
-				"HoldCountDebitor":    holdCountDebitor,
-				"NotVerifyDebitor":    notVerifyDebitor,
-				"LoggedIn":            LoggedIn,
-				"Pobedit":             "Pobedit 1",
+				"GroupP5":               GroupP5,
+				"GET":                   get,
+				"ListVendor":            listVendor,
+				"CountTotal":            countTotal,
+				"HoldInspection":        holdInspection,
+				"NotVerifyComponents":   notVerifyComponents,
+				"GetStatic":             getStatic,
+				"HoldCountDebitor":      holdCountDebitor,
+				"NotVerifyDebitor":      notVerifyDebitor,
+				"CountVerifyComponents": countVerifyComponents,
+				"LoggedIn":              LoggedIn,
+				"Pobedit":               "Победит 1",
 			}
 
 			tpl.ExecuteTemplate(w, "showinspectionmix.html", groups)

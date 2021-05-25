@@ -1,4 +1,33 @@
+var windowOnloadAdd = function (event) {
+  if ( window.onload ){
+     window.onload = window.onload + event;
+  } else {
+     window.onload = event;
+  };
+};
 
+  let responseUpdateFile = document.querySelector('#responseUpdateFile'); 
+  windowOnloadAdd(function() {
+  // Ваш скрипт
+  let file = document.getElementById("fileUpload").files[0];  // file from input
+  let xhr = new XMLHttpRequest();
+  let formData = new FormData();
+
+  formData.append("file", file);                                
+  xhr.open("POST", 'http://localhost:3001/operation/uploadfile');
+  xhr.setRequestHeader("Content-Type", "multipart/form-data");
+  xhr.send(formData);
+  xhr.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+           debugger;
+      //mainDiv.innerHTML = drawSuccessMessage();
+      console.log("success");
+      responseUpdateFile.textContent = xhr.responseText;
+    }
+  }
+});
+
+/*
 var windowOnloadAdd = function (event) {
     if ( window.onload ){
        window.onload = window.onload + event;
@@ -15,6 +44,7 @@ const upload = (file) => {
   fetch('http://localhost:3001/operation/uploadfile', { // Your POST endpoint
     method: 'POST',
     headers: {
+      'Access-Control-Allow-Origin': '*;',
       // Content-Type may need to be completely **omitted**
       // or you may need something
       'Content-Type': 'multipart/form-data;'
@@ -37,8 +67,9 @@ const onSelectFile = () => upload(input.files[0]);
 // Add a listener on your input
 // It will be triggered when a file will be selected
 input.addEventListener('change', onSelectFile, false);
-
-/*document.querySelector('#fileUpload').addEventListener('change', event => {
+*/
+/*
+document.querySelector('#fileUpload').addEventListener('change', event => {
     handleImageUpload(event)
   })
 
@@ -60,6 +91,7 @@ input.addEventListener('change', onSelectFile, false);
     .catch(error => {
       console.error(error)
     })
-  }*/
-});
+  }
+  */
+//});
 

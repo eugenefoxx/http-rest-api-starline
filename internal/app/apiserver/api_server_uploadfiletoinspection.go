@@ -469,6 +469,173 @@ func (s *Server) UploadFileToInspection() http.HandlerFunc {
 
 }
 
+// PageUploadFileToInspectionJSON
+func (s *Server) PageUploadFileToInspectionJSON() http.HandlerFunc {
+	///	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "updateinspection.html")
+	///	if err != nil {
+	///		panic(err)
+	///	}
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		s.mu.Lock()
+		defer s.mu.Unlock()
+		//	w.Header().Set("Access-Control-Allow-Origin", "")
+		//	if r.Method == http.MethodOptions {
+		//		return
+		//	}
+		Admin := false
+		//	SuperIngenerQuality := false
+		//	IngenerQuality := false
+		//	Inspector := false
+		StockkeeperWH := false
+		WarehouseManager := false
+		GroupP1 := false
+		GroupP5 := false
+		LoggedIn := false
+		/*
+			vars := mux.Vars(r)
+			id, err := strconv.Atoi(vars["ID"])
+			if err != nil {
+				log.Println(err)
+				s.errorLog.Printf(err.Error())
+			}
+		*/
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		idd, ok := session.Values["user_id"]
+		if !ok {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		user, err := s.store.User().Find(idd.(int))
+		if err != nil {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+		fmt.Println("user.Groups - ?", user.Groups)
+		fmt.Println("Test json page update")
+		s.infoLog.Printf("user.Groups - %v", user.Groups)
+		if user.Groups == "склад" {
+			StockkeeperWH = true
+			WarehouseManager = true
+		}
+
+		if user.Groups == "качество" {
+			GroupP1 = true
+			if user.Role == "Administrator" {
+				Admin = true
+				LoggedIn = true
+			} else if user.Role == "кладовщик склада" {
+				StockkeeperWH = true
+				LoggedIn = true
+				fmt.Println("кладовщик склада - ", StockkeeperWH)
+			} else if user.Role == "старший кладовщик склада" {
+				WarehouseManager = true
+				LoggedIn = true
+			}
+			/*else if user.Role == "главный инженер по качеству" {
+				SuperIngenerQuality = true
+				LoggedIn = true
+				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
+			} else if user.Role == "инженер по качеству" {
+				IngenerQuality = true
+				LoggedIn = true
+				fmt.Println("IngenerQuality - ", IngenerQuality)
+			} else if user.Role == "контролер качества" {
+				Inspector = true
+				LoggedIn = true
+
+			}*/
+			//fmt.Println("ID - ?", id)
+			/*
+				get, err := s.store.Inspection().EditInspection(id)
+				if err != nil {
+					s.error(w, r, http.StatusUnprocessableEntity, err)
+					return
+				}
+			*/
+			data := map[string]interface{}{
+				"Admin":            Admin,
+				"WarehouseManager": WarehouseManager,
+				"StockkeeperWH":    StockkeeperWH,
+				//	"SuperIngenerQuality": SuperIngenerQuality,
+				//	"IngenerQuality":      IngenerQuality,
+				//	"Inspector":           Inspector,
+				"GroupP1": GroupP1,
+				//"GET":      get,
+				"LoggedIn": LoggedIn,
+				"User":     user.LastName,
+				"Username": user.FirstName,
+			}
+			err = tpl.ExecuteTemplate(w, "uploadfile.html", data)
+			if err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}
+		}
+		if user.Groups == "качество П5" {
+			GroupP5 = true
+			fmt.Println("Test Upload Page")
+			if user.Role == "Administrator" {
+				Admin = true
+				LoggedIn = true
+			} else if user.Role == "кладовщик склада" {
+				StockkeeperWH = true
+				LoggedIn = true
+				fmt.Println("кладовщик склада - ", StockkeeperWH)
+			} else if user.Role == "старший кладовщик склада" {
+				WarehouseManager = true
+				LoggedIn = true
+			}
+			/*else if user.Role == "главный инженер по качеству" {
+				SuperIngenerQuality = true
+				LoggedIn = true
+				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
+			} else if user.Role == "инженер по качеству" {
+				IngenerQuality = true
+				LoggedIn = true
+				fmt.Println("IngenerQuality - ", IngenerQuality)
+			} else if user.Role == "контролер качества" {
+				Inspector = true
+				LoggedIn = true
+
+			}*/
+			//fmt.Println("ID - ?", id)
+			/*
+				get, err := s.store.Inspection().EditInspectionP5(id)
+				if err != nil {
+					s.error(w, r, http.StatusUnprocessableEntity, err)
+					return
+				}
+			*/
+			data := map[string]interface{}{
+				"Admin":            Admin,
+				"WarehouseManager": WarehouseManager,
+				"StockkeeperWH":    StockkeeperWH,
+				//	"SuperIngenerQuality": SuperIngenerQuality,
+				//	"IngenerQuality":      IngenerQuality,
+				//	"Inspector":           Inspector,
+				"GroupP5": GroupP5,
+				//"GET":      get,
+				"LoggedIn": LoggedIn,
+				"User":     user.LastName,
+				"Username": user.FirstName,
+			}
+			err = tpl.ExecuteTemplate(w, "uploadfile.html", data)
+			if err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}
+		}
+
+	}
+}
+
 func (s *Server) UploadFileToInspectionJSON() http.HandlerFunc {
 	// response format
 	type response struct {
@@ -505,7 +672,7 @@ func (s *Server) UploadFileToInspectionJSON() http.HandlerFunc {
 		}
 
 		const statusTransfer = "отгружено на ВК"
-
+		fmt.Println("test")
 		// чтение данных из формы
 		f, h, err := r.FormFile("q")
 
