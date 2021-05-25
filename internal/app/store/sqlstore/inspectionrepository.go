@@ -486,8 +486,8 @@ func (r *InspectionRepository) CountVerifyComponentsP5() (int, error) {
 
 	//	count := &model.Inspection{}
 	var countOK int
-	var countNG int
-	var countTotal int
+	//	var countNG int
+	//	var countTotal int
 	row := r.store.db.QueryRow(
 		"SELECT COUNT (transferp5.id) FROM transferp5 WHERE transferp5.status='OK' AND transferp5.location ='отгружено на ВК'",
 	)
@@ -495,16 +495,16 @@ func (r *InspectionRepository) CountVerifyComponentsP5() (int, error) {
 	if ok != nil {
 		log.Fatal(ok)
 	}
-	row = r.store.db.QueryRow(
-		"SELECT COUNT (transferp5.id) FROM transferp5 WHERE transferp5.status='NG' AND transferp5.location ='отгружено на ВК'",
-	)
-	ng := row.Scan(&countNG)
-	if ng != nil {
-		log.Fatal(ng)
-	}
-	countTotal = countOK + countNG
+	/*	row = r.store.db.QueryRow(
+			"SELECT COUNT (transferp5.id) FROM transferp5 WHERE transferp5.status='NG' AND transferp5.location ='отгружено на ВК'",
+		)
+		ng := row.Scan(&countNG)
+		if ng != nil {
+			log.Fatal(ng)
+		}
+		countTotal = countOK + countNG*/
 
-	return countTotal, nil
+	return countOK, nil
 
 }
 
