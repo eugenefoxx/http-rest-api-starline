@@ -556,7 +556,7 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 			} else if user.Role == "инженер по качеству" {
 				IngenerQuality = true
 				LoggedIn = true
-			} else if user.Groups == "качество" {
+			} else if user.Role == "контролер качества" {
 				Quality = true
 				Inspector = true
 				LoggedIn = true
@@ -902,7 +902,7 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 			} else if user.Role == "инженер по качеству" {
 				IngenerQuality = true
 				LoggedIn = true
-			} else if user.Groups == "качество" {
+			} else if user.Role == "контролер качества" {
 				Quality = true
 				Inspector = true
 				LoggedIn = true
@@ -1389,7 +1389,7 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 			} else if user.Role == "инженер по качеству" {
 				IngenerQuality = true
 				LoggedIn = true
-			} else if user.Groups == "качество П5" {
+			} else if user.Role == "контролер качества" {
 				Quality = true
 				Inspector = true
 				LoggedIn = true
@@ -1736,7 +1736,7 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 			} else if user.Role == "инженер по качеству" {
 				IngenerQuality = true
 				LoggedIn = true
-			} else if user.Groups == "качество П5" {
+			} else if user.Role == "контролер качества" {
 				Quality = true
 				Inspector = true
 				LoggedIn = true
