@@ -459,3 +459,7 @@ function editUserQuality(id) {
   function redirectTostatusinspection() {
     window.location.replace("http://localhost:3001/operation/statusinspection");
 }
+
+function redirectTostatusinspectionMix() {
+    window.location.replace("http://localhost:3001/operation/statusinspectionmix");
+}
