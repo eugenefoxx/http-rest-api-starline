@@ -1,7 +1,7 @@
 package model
 
-// MainVendor The function will return a pointer to the array of type Vendor
-func MainVendor() *Vendors {
+// NewVendor The function will return a pointer to the array of type Vendor
+func NewVendor() *Vendors {
 	return &Vendors{}
 }
 

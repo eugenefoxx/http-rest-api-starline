@@ -1,7 +1,7 @@
 package model
 
-// MainShowdateidreturn The function will return a pointer to the array of type Showdateidreturn
-func MainShowdateidreturn() *Showdateidreturns {
+// NewShowdateidreturn The function will return a pointer to the array of type Showdateidreturn
+func NewShowdateidreturn() *Showdateidreturns {
 	return &Showdateidreturns{}
 }
 

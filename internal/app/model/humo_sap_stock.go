@@ -1,7 +1,7 @@
 package model
 
-// MainHUMOSAPStock The function will return a pointer to the array of type PanacimStock
-func MainHUMOSAPStock() *HUMOSAPStocks {
+// NewHUMOSAPStock The function will return a pointer to the array of type PanacimStock
+func NewHUMOSAPStock() *HUMOSAPStocks {
 	return &HUMOSAPStocks{}
 }
 

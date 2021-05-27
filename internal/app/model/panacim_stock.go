@@ -1,7 +1,7 @@
 package model
 
-// MainPanacimStock The function will return a pointer to the array of type PanacimStock
-func MainPanacimStock() *PanacimStocks {
+// NewPanacimStock The function will return a pointer to the array of type PanacimStock
+func NewPanacimStock() *PanacimStocks {
 	return &PanacimStocks{}
 }
 

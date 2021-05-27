@@ -2,8 +2,8 @@ package model
 
 import "time"
 
-// Main The function will return a pointer to the array of type Shipmentbysap
-func Main() *Shipmentbysaps {
+// NewShipmentbysap The function will return a pointer to the array of type Shipmentbysap
+func NewShipmentbysap() *Shipmentbysaps {
 	return &Shipmentbysaps{}
 }
 

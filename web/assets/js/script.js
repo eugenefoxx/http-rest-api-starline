@@ -256,6 +256,8 @@ function editInspection(id) {
                        // console.log("data.id", tt)
                       //  document.querySelector('#updatestatus').innerHTML = data.status;
                         document.querySelector('td[updateid-status="'+data.id+'"]').innerHTML = data.status;
+                        console.log(data.lastname)
+                        document.querySelector('td[lastname="'+data.id+'"]').innerHTML= data.lastname;
                         console.log(data.note)
                      //   if (data.note = undefined){
                      //       return false;

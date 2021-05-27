@@ -1,7 +1,7 @@
 package model
 
-// MainIDReturn The function will return a pointer to the array of type IDReturn
-func MainIDReturn() *IDReturns {
+// NewIDReturn The function will return a pointer to the array of type IDReturn
+func NewIDReturn() *IDReturns {
 	return &IDReturns{}
 }
 

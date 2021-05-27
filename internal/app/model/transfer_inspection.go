@@ -2,8 +2,8 @@ package model
 
 import "time"
 
-// MainInspection The function will return a pointer to the array of type Inspection
-func MainInspection() *Inspections {
+// NewInspection The function will return a pointer to the array of type Inspection
+func NewInspection() *Inspections {
 	return &Inspections{}
 }
 

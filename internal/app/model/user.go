@@ -8,8 +8,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// MainUser The function will return a pointer to the array of type User
-func MainUser() *Users {
+// NewUser The function will return a pointer to the array of type User
+func NewUser() *Users {
 	return &Users{}
 }
 

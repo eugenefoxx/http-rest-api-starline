@@ -3262,16 +3262,18 @@ func (s *Server) UpdateInspection() http.HandlerFunc {
 func (s *Server) UpdateInspectionJSON() http.HandlerFunc {
 	// response format
 	type response struct {
-		ID      int64  `json:"id,omitempty"`
-		Status  string `json:"status,omitempty"`
-		Note    string `json:"note,omitempty"`
-		Message string `json:"message,omitempty"`
+		ID       int64  `json:"id,omitempty"`
+		Status   string `json:"status,omitempty"`
+		Note     string `json:"note,omitempty"`
+		Message  string `json:"message,omitempty"`
+		Lastname string `json:"lastname,omitempty"`
 	}
 
 	type requestJSON struct {
-		ID     string `json:"id"`
-		Status string `json:"status"`
-		Note   string `json:"note"`
+		ID       string `json:"id"`
+		Status   string `json:"status"`
+		Note     string `json:"note"`
+		Lastname string `json:"lastname"`
 	}
 	///	_, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "updateinspection.html")
 	///	if err != nil {
@@ -3326,11 +3328,13 @@ func (s *Server) UpdateInspectionJSON() http.HandlerFunc {
 			fmt.Println("проверка в цкле - requestJSON", v.ID, v.Status, v.Note)
 			//	fmt.Println("проверка в цкле - requestJSON", v.(string), v.(string), v.(string))
 			idRoll, err := strconv.Atoi(v.ID)
+			lastname := v.Lastname
 			//idRoll, err := strconv.Atoi(v.(string))
 			if err != nil {
 				log.Println(err)
 				s.errorLog.Printf(err.Error())
 			}
+
 			u := &model.Inspection{
 				ID:         idRoll,
 				Status:     v.Status,      // v.(string),
@@ -3373,10 +3377,11 @@ func (s *Server) UpdateInspectionJSON() http.HandlerFunc {
 
 				// format the response message
 				res := response{
-					ID:      int64(idRoll),
-					Status:  v.Status, // v.(string),
-					Note:    v.Note,   // v.(string),
-					Message: msg,
+					ID:       int64(idRoll),
+					Status:   v.Status, // v.(string),
+					Note:     v.Note,   // v.(string),
+					Lastname: lastname,
+					Message:  msg,
 				}
 				// send the response
 				json.NewEncoder(w).Encode(res)

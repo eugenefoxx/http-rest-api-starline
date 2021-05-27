@@ -1,7 +1,7 @@
 package model
 
-// MainMB52SAPStock The function will return a pointer to the array of type MB52SAPStock
-func MainMB52SAPStock() *MB52SAPStocks {
+// NewMB52SAPStock The function will return a pointer to the array of type MB52SAPStock
+func NewMB52SAPStock() *MB52SAPStocks {
 	return &MB52SAPStocks{}
 }
 
