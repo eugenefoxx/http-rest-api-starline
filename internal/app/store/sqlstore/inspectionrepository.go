@@ -816,6 +816,7 @@ func (r *InspectionRepository) AcceptGroupsWarehouseInspectionP5(s *model.Inspec
 func (r *InspectionRepository) ListShowDataByEO(eo string) (s *model.Inspections, err error) {
 	showDataByDate := model.Inspection{}
 	showDataByDateList := make(model.Inspections, 0)
+	//showDataByDateList := model.Inspections{}
 
 	selectDate := `SELECT transfer.id, transfer.idmaterial, transfer.sap, transfer.lot, transfer.idroll, 
 		transfer.productiondate, Coalesce (vendor.name_debitor, ''), transfer.location, transfer.lastname, Coalesce (transfer.status, ''), 

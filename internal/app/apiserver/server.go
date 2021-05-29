@@ -9,6 +9,7 @@ import (
 
 	"github.com/eugenefoxx/http-rest-api-starline/internal/app/model"
 	"github.com/eugenefoxx/http-rest-api-starline/internal/app/store"
+	"github.com/eugenefoxx/http-rest-api-starline/internal/app/store_redis"
 
 	"html/template"
 	"io"
@@ -54,6 +55,7 @@ type Server struct {
 	httpServer *http.Server
 	errorLog   *log.Logger
 	infoLog    *log.Logger
+	redis      store_redis.Redis
 }
 
 func init() {
@@ -63,7 +65,7 @@ func init() {
 }
 
 //func newServer(store store.Store, sessionStore sessions.Store, html string) *Server {
-func newServer(store store.Store, sessionStore sessions.Store) *Server {
+func newServer(store store.Store, sessionStore sessions.Store, redis store_redis.Redis) *Server {
 	// "/home/eugenearch/Code/github.com/eugenefoxx/http-rest-api/logfile.log"
 	f, err := os.OpenFile(LOGFILE, os.O_APPEND|os.O_RDWR|os.O_CREATE, 0666)
 	if err != nil {
@@ -84,6 +86,7 @@ func newServer(store store.Store, sessionStore sessions.Store) *Server {
 		errorLog:     errorLog,
 		infoLog:      infoLog,
 		mu:           sync.Mutex{},
+		redis:        redis,
 		httpServer: &http.Server{
 			WriteTimeout:   15 * time.Second,
 			ReadTimeout:    15 * time.Second,

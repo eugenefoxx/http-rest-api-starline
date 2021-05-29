@@ -4,6 +4,7 @@ import (
 
 	//	"fmt"
 
+	"context"
 	"fmt"
 	"log"
 	"net/http"
@@ -12,7 +13,11 @@ import (
 	//	"os"
 
 	"github.com/eugenefoxx/http-rest-api-starline/internal/app/store/sqlstore"
-	"github.com/go-redis/redis"
+	"github.com/eugenefoxx/http-rest-api-starline/internal/app/store_redis/redisstore"
+	"github.com/go-redis/redis/v8"
+
+	///"github.com/go-redis/redis"
+
 	"github.com/gorilla/sessions"
 	"github.com/jmoiron/sqlx"
 )
@@ -33,15 +38,20 @@ func Start(config *Config) error {
 	//	router.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("./static"))))
 
 	//srv := newServer(store, sessionStore, html)
-	srv := newServer(store, sessionStore)
 
 	redis, err := newRedis(config.Redis)
 	if err != nil {
 		//	log.Fatalf("Could not initialize Redis client %s", err)
 		log.Printf("Could not initialize Redis client %s", err)
+
 	}
+	//defer redis.Close()
+
+	redis_store := redisstore.New(redis)
 
 	fmt.Printf("redis is ok %v\n", redis)
+
+	srv := newServer(store, sessionStore, redis_store)
 	/*
 		srvv := &http.Server{
 			Addr: config.BindAddr,
@@ -79,23 +89,30 @@ func newDB(databaseURL string) (*sqlx.DB, error) {
 	return db, nil
 }
 
+/*
 type Client struct {
 	client *redis.Client
 }
-
-func newRedis(redisAddr string) (*Client, error) {
-	client := redis.NewClient(&redis.Options{
+*/
+func newRedis(redisAddr string) (client *redis.Client, err error) {
+	client = redis.NewClient(&redis.Options{
 		Addr:        redisAddr,
 		DB:          0,
 		DialTimeout: 100 * time.Millisecond,
 		ReadTimeout: 100 * time.Millisecond,
 	})
 
-	if _, err := client.Ping().Result(); err != nil {
+	if _, err := client.Ping(context.Background()).Result(); err != nil {
 		return nil, err
 	}
-
-	return &Client{
+	/*
+		if _, err := client.Ping().Result(); err != nil {
+			return nil, err
+		}
+	*/
+	/*return &Client{
 		client: client,
 	}, nil
+	*/
+	return client, nil
 }
