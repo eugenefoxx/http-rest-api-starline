@@ -23,6 +23,7 @@ type Store struct {
 	showdateidreturnRepository *ShowdateidreturnRepository
 	vendorRepository           *VendorRepository
 	inspectionRepository       *InspectionRepository
+	rolequalityRepository      *RoleQualityRepository
 }
 
 // New ...
@@ -33,6 +34,7 @@ func New(db *sqlx.DB) *Store {
 	}
 }
 
+// Вызов метода репозитория для внешнего мира
 // User ...
 func (s *Store) User() store.UserRepository {
 	if s.userRepository != nil {
@@ -148,4 +150,16 @@ func (s *Store) Inspection() store.InspectionRepository {
 	}
 
 	return s.inspectionRepository
+}
+
+func (s *Store) RoleQuality() store.RoleQualityRepository {
+	if s.rolequalityRepository != nil {
+		return s.rolequalityRepository
+	}
+
+	s.rolequalityRepository = &RoleQualityRepository{
+		store: s,
+	}
+
+	return s.rolequalityRepository
 }

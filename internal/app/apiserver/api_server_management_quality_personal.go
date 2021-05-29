@@ -58,6 +58,12 @@ func (s *Server) PageshowUsersQuality() http.HandlerFunc {
 				return
 			}
 
+			getRoleQuality, err := s.store.RoleQuality().ListRoleQuality()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
 			data := map[string]interface{}{
 				"TitleDOC":            "Сотрудники качества",
 				"User":                user.LastName,
@@ -67,6 +73,7 @@ func (s *Server) PageshowUsersQuality() http.HandlerFunc {
 				"GroupP1":             GroupP1,
 				"LoggedIn":            LoggedIn,
 				"GET":                 get,
+				"GetRoleQuality":      getRoleQuality,
 			}
 			err = tpl.ExecuteTemplate(w, "showUsersQuality.html", data)
 			if err != nil {

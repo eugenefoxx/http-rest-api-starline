@@ -34,7 +34,7 @@ var rowsAmount = 50;
 var finalData = [];
 var labels = ["email", "Пароль", "Имя", "Фамилия", "Роль", "Табель"];
 var roles = [
-  /*  {
+   /* {
         
         id: 'Выберите позицию',
         title: 'Выберите позицию'
@@ -42,6 +42,10 @@ var roles = [
     {
         id: 'главный инженер по качеству',
         title: 'главный инженер по качеству'
+    // {{ range .GetRoleQuality }}
+    //  id: 'role',
+    //  title: '{{.GetRoleQuality}}'
+   //   {{end}}
     },
     {
         id: 'инженер по качеству',
@@ -69,8 +73,12 @@ function createForm() {
         }
 
         if (formElementsTypes[i] === 'select' && formElementsIds[i] === 'role') {
+            
             roles.forEach((role) => {
-                element.innerHTML += `<option value="${role.id}">${role.title}</option>`;
+               element.innerHTML += `<option value="${role.id}">${role.title}</option>`;
+            // element.innerHTML = `{{ range .GetRoleQuality }}`;   
+            //  element.innerHTML += `<option value="${role.id}">${role.`{{.GetRoleQuality}}}</option>`;
+            //  element.innerHTML = `{{ end }}`;
             });
         }
 

@@ -1,11 +1,17 @@
 package redisstore
 
-import "github.com/eugenefoxx/http-rest-api-starline/internal/app/model"
+import (
+	"bytes"
+	"encoding/gob"
+	"time"
 
-func (c *Client) GetListShowDataByEO (eo string) (s *model.Inspections, err) {
+	"github.com/eugenefoxx/http-rest-api-starline/internal/app/model"
+)
+
+func (c *Client) GetListShowDataByEO(eo string) (*model.Inspections, error) {
 	getshowDataByDate := model.Inspection{}
-//	getshowDataByDateList := make(model.Inspections, 0)
-	
+	//	getshowDataByDateList := make(model.Inspections, 0)
+
 	cmd := c.client.Get(eo)
 
 	cmdb, err := cmd.Bytes()
@@ -23,4 +29,14 @@ func (c *Client) GetListShowDataByEO (eo string) (s *model.Inspections, err) {
 
 	return res, nil
 
+}
+
+func (c *Client) SetListShowDataByEO(n *model.Inspections) error {
+	var b bytes.Buffer
+
+	if err := gob.NewEncoder(&b).Encode(n); err != nil {
+		return err
+	}
+
+	return c.client.Set(n.ID, b.Bytes(), 25*time.Second).Err()
 }
