@@ -8,6 +8,7 @@ import (
 	"github.com/eugenefoxx/http-rest-api-starline/internal/app/model"
 )
 
+// GetListShowDataByEO ...
 func (c *Client) GetListShowDataByEO(eo string) (*model.Inspections, error) {
 	getshowDataByDate := model.Inspection{}
 	//	getshowDataByDateList := make(model.Inspections, 0)
