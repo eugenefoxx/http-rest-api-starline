@@ -12,4 +12,5 @@ type Store interface {
 	Showdateidreturn() ShowdateidreturnRepository
 	Vendor() VendorRepository
 	Inspection() InspectionRepository
+	RoleQuality() RoleQualityRepository
 }

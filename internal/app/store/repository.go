@@ -106,3 +106,7 @@ type InspectionRepository interface {
 	CountInspection() (int, error)
 	PaginationInspection(int, int) (*model.Inspections, error)
 }
+
+type RoleQualityRepository interface {
+	ListRoleQuality() (*model.RoleQualitys, error)
+}

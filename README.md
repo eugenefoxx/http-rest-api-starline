@@ -190,3 +190,6 @@ btn.addEventListener( 'click', function() {
 })
 
 console.log(status);
+
+пример удаления пакета из go.mod
+go get -d github.com/go-redis/redis@none

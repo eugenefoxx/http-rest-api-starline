@@ -12,6 +12,19 @@
             </div>
             <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .." title="Type in a name">
             <br>
+            <!--        <form>
+                <div>
+                    <label for="">Debitor</label>
+
+                    <select name="" id="">
+                        {{ range .GET}}
+                        <option value="{{.NameDebitor}}">{{.NameDebitor}}</option>
+                        {{end}}
+                    </select>
+
+
+                </div>
+            </form>-->
             <table id="myTable" onload="alternate('thetable')" class="tableexport" style="width: 1200px;">
                 <caption style="color: white; font-size: 22px; padding-bottom: 10px;">Список поставщиков</caption>
                 <button onclick="exportTableToCSV('export.csv')" style="margin-left:0px; width: 300px; height: 30px;"

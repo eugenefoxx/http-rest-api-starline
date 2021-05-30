@@ -614,17 +614,27 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 			} else if search.Date1 == "" && search.Date2 == "" {
 				if search.EO != "" {
 
+					val, err := s.redis.Inspection().GetListShowDataByEO(r.Context(), search.EO)
+					if err != nil {
+						//RenderJSON(w, &val, http.StatusOK)
+						fmt.Println(&val)
+					}
+
 					get, err := s.store.Inspection().ListShowDataByEO(search.EO)
+					//get, err := s.store.Inspection().ListShowDataByEO(val)
 					if err != nil {
 						s.error(w, r, http.StatusUnprocessableEntity, err)
 						return
 					}
-					count, _ := s.store.Inspection().CountInspection()
-					fmt.Println(count)
-					limit := 5
-					page, begin := s.Pagination(r, limit)
-					fmt.Printf("Current Page: %d, Begin: %d\n", page, begin)
 
+					_ = s.redis.Inspection().SetListShowDataByEO(r.Context(), get)
+					/*
+						count, _ := s.store.Inspection().CountInspection()
+						fmt.Println(count)
+						limit := 5
+						page, begin := s.Pagination(r, limit)
+						fmt.Printf("Current Page: %d, Begin: %d\n", page, begin)
+					*/
 					data := map[string]interface{}{
 						"TitleDOC":            "Отчет по истроии ВК",
 						"User":                user.LastName,
