@@ -3282,7 +3282,7 @@ func (s *Server) UpdateInspectionJSON() http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		s.mu.Lock()
-		s.mu.Unlock()
+		defer s.mu.Unlock()
 		//	w.Header().Set("Content-Type", "application/x-www-form-urlencoded")
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -3437,7 +3437,7 @@ func (s *Server) UpdateInspectionJSONmix() http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		s.mu.Lock()
-		s.mu.Unlock()
+		defer s.mu.Unlock()
 		//	w.Header().Set("Content-Type", "application/x-www-form-urlencoded")
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -3912,6 +3912,265 @@ func (s *Server) AcceptWarehouseInspection() http.HandlerFunc {
 				}*/
 			//http.Redirect(w, r, "/statusinspectionforwh", 303)
 			http.Redirect(w, r, "/operation/statusinspection", 303)
+		}
+	}
+}
+
+func (s *Server) PageacceptWarehouseInspectionJSON() http.HandlerFunc {
+	///	tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "acceptWarehouseInspection.html")
+	///	if err != nil {
+	///		panic(err)
+	///	}
+	return func(w http.ResponseWriter, r *http.Request) {
+		s.mu.Lock()
+		defer s.mu.Unlock()
+
+		Admin := false
+		StockkeeperWH := false
+		WarehouseManager := false
+		GroupP1 := false
+		GroupP5 := false
+		LoggedIn := false
+
+		vars := mux.Vars(r)
+		id, err := strconv.Atoi(vars["ID"])
+		if err != nil {
+			log.Println(err)
+			s.errorLog.Printf(err.Error())
+		}
+
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		idd, ok := session.Values["user_id"]
+		if !ok {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		user, err := s.store.User().Find(idd.(int))
+		if err != nil {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+		fmt.Println("user.Groups - ?", user.Groups)
+		s.infoLog.Printf("user.Groups - %v\n", user.Groups)
+
+		if user.Groups == "склад" {
+			GroupP1 = true
+			if user.Role == "Administrator" {
+				Admin = true
+				LoggedIn = true
+
+			} else if user.Role == "кладовщик склада" {
+				StockkeeperWH = true
+				LoggedIn = true
+
+			} else if user.Role == "старший кладовщик склада" {
+				WarehouseManager = true
+				LoggedIn = true
+			}
+
+			//fmt.Println("ID - ?", id)
+
+			get, err := s.store.Inspection().EditAcceptWarehouseInspection(id)
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			data := map[string]interface{}{
+				"User":             user.LastName,
+				"Username":         user.FirstName,
+				"Admin":            Admin,
+				"WarehouseManager": WarehouseManager,
+				"StockkeeperWH":    StockkeeperWH,
+				"GroupP1":          GroupP1,
+				"LoggedIn":         LoggedIn,
+				"GET":              get,
+			}
+			err = tpl.ExecuteTemplate(w, "acceptWarehouseInspectionjson.html", data)
+			if err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}
+		}
+		if user.Groups == "склад П5" {
+			GroupP5 = true
+			if user.Role == "Administrator" {
+				Admin = true
+				LoggedIn = true
+
+			} else if user.Role == "кладовщик склада" {
+				StockkeeperWH = true
+				LoggedIn = true
+
+			} else if user.Role == "старший кладовщик склада" {
+				WarehouseManager = true
+				LoggedIn = true
+			}
+
+			//fmt.Println("ID - ?", id)
+
+			get, err := s.store.Inspection().EditAcceptWarehouseInspectionP5(id)
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			data := map[string]interface{}{
+				"User":             user.LastName,
+				"Username":         user.FirstName,
+				"Admin":            Admin,
+				"WarehouseManager": WarehouseManager,
+				"StockkeeperWH":    StockkeeperWH,
+				"GroupP5":          GroupP5,
+				"LoggedIn":         LoggedIn,
+				"GET":              get,
+			}
+			err = tpl.ExecuteTemplate(w, "acceptWarehouseInspectionjson.html", data)
+			if err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}
+		}
+	}
+}
+
+func (s *Server) AcceptWarehouseInspectionJSON() http.HandlerFunc {
+	// response format
+	type response struct {
+		ID       int64  `json:"id,omitempty"`
+		Location string `json:"location,omitempty"`
+		Message  string `json:"message,omitempty"`
+	}
+
+	type requestJSON struct {
+		ID       string `json:"id"`
+		Location string `json:"location"`
+	}
+	///	_, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "acceptWarehouseInspection.html")
+	///	if err != nil {
+	///		panic(err)
+	///	}
+	return func(w http.ResponseWriter, r *http.Request) {
+		s.mu.Lock()
+		defer s.mu.Unlock()
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "POST")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+		currentTime := time.Now()
+
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		idd, ok := session.Values["user_id"]
+		if !ok {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		user, err := s.store.User().Find(idd.(int))
+		if err != nil {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+		/*
+			req.ID = id
+			req.Location = r.FormValue("location")
+		*/
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			log.Println(err)
+			s.errorLog.Printf(err.Error())
+		}
+		var hdata []requestJSON
+		//var hdata map[string]interface{}
+		json.Unmarshal(body, &hdata)
+		//json.Unmarshal([]byte(body), &hdata)
+		fmt.Printf("body requestJSON: %s", body)
+		s.infoLog.Printf("Accept body requestJSON: %v\n", body)
+		fmt.Println("\njson  struct hdata requestJSON", hdata)
+		s.infoLog.Printf("Accept hdata requestJSON: %v\n", hdata)
+		//hdata2 := hdata["hdata2"].(map[string]interface{})
+
+		for _, v := range hdata {
+			fmt.Println("проверка в цкле - requestJSON", v.ID, v.Location)
+			idRoll, err := strconv.Atoi(v.ID)
+			//idRoll, err := strconv.Atoi(v.(string))
+			if err != nil {
+				log.Println(err)
+				s.errorLog.Printf(err.Error())
+			}
+			u := &model.Inspection{
+				ID:             idRoll,
+				Location:       v.Location,
+				Lastnameaccept: user.LastName, // Lastnameaccept
+				Dateaccept:     currentTime,   // Dateaccept
+				Timeaccept:     currentTime,   // Timeaccept
+				Groups:         user.Groups,
+			}
+			if user.Groups == "склад" {
+
+				if err := s.store.Inspection().AcceptWarehouseInspection(u); err != nil {
+					s.error(w, r, http.StatusUnprocessableEntity, err)
+					return
+				}
+
+				/*	err = tpl.ExecuteTemplate(w, "layout", nil)
+					if err != nil {
+						http.Error(w, err.Error(), 400)
+						return
+					}*/
+				//http.Redirect(w, r, "/statusinspectionforwh", 303)
+				msg := "Данные успешно отправлены."
+
+				// format the response message
+				res := response{
+					ID:       int64(idRoll),
+					Location: v.Location, // v.(string),
+					Message:  msg,
+				}
+				// send the response
+				json.NewEncoder(w).Encode(res)
+				//	http.Redirect(w, r, "/operation/statusinspection", 303)
+			}
+			if user.Groups == "склад П5" {
+				fmt.Println("Test accept")
+
+				if err := s.store.Inspection().AcceptWarehouseInspectionP5(u); err != nil {
+					s.error(w, r, http.StatusUnprocessableEntity, err)
+					return
+				}
+
+				/*	err = tpl.ExecuteTemplate(w, "layout", nil)
+					if err != nil {
+						http.Error(w, err.Error(), 400)
+						return
+					}*/
+
+				//http.Redirect(w, r, "/statusinspectionforwh", 303)
+				msg := "Данные успешно отправлены."
+
+				// format the response message
+				res := response{
+					ID:       int64(idRoll),
+					Location: v.Location, // v.(string),
+					Message:  msg,
+				}
+				// send the response
+				json.NewEncoder(w).Encode(res)
+				// http.Redirect(w, r, "/operation/statusinspection", 303)
+			}
 		}
 	}
 }

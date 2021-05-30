@@ -348,10 +348,92 @@ function editInspectionMix(id) {
                      //   }
                       //  document.querySelector('#updatenote').innerHTML = data.note;
                       //  if {
-                        document.querySelector('td[updateid-note="'+data.id+'"]').innerHTML = data.note;
+                        if (data.note === undefined) {
+                            data.note = ""
+                            document.querySelector('td[updateid-note="'+data.id+'"]').innerHTML = data.note;
+                        } else {
+                            document.querySelector('td[updateid-note="'+data.id+'"]').innerHTML = data.note;
+                        }
 		                console.log(data.message)
                 //  document.querySelector('label[response="'+data.message+'"]').innerText = data.message;
                         document.querySelector('#responseInspection').innerText = data.message;
+                        //}
+                        console.log(data);
+                    //}
+	                }).catch(function (error) {
+		                console.warn(error);
+	                });
+                }
+              }  
+        });
+        
+}
+
+function acceptInspectiontowh(id) {
+    axios.get('/operation/acceptinspectiontowh/' + id)
+        .then(function (response) {
+            document
+                .getElementById('modal-4')
+                .getElementsByClassName('modal__dialog-body')[0].innerHTML = response.data;
+            //    debugger;
+                let sendForm = document.querySelector('#acceptsend-form');
+                console.log(sendForm);
+                //    let form = document.querySelector('form');
+                
+                if (sendForm !== null) {
+                //  alert("Hi");
+                  
+                sendForm.onclick = function (event) {
+                    debugger;
+                    event.preventDefault();
+                    // Get the form
+                    let form = document.querySelector('#accept-component-form');
+                    // Get all field data from the form
+                    // returns a FormData object
+                    let data = new FormData(form);
+                    console.log('work');
+                    //  console.log(serialize(form));
+                    // Convert to an object
+                    let formObj = serialize(data);
+                    console.log(formObj);
+                 /*   let resultData = [];
+                    resultData = serialize(data);
+                    console.log(resultData);*/
+                    //  resultData = formObj;
+                    //arrRezalt = serializeArray(form);
+                   // console.log(arrRezalt);
+                    // action="/operation/updateinspection/{{.GET.ID}}"
+                    fetch('http://localhost:3001/operation/acceptinspectiontowh',{
+  
+		                method: 'POST',
+		                body: JSON.stringify(serialize(data)),
+		                headers: {
+			                'Content-type': 'application/json; charset=UTF-8'
+		                }
+	                }).then(function (response) {
+		                if (response.ok) {
+                          	return response.json();
+		                }
+		                return Promise.reject(response);
+	                }).then(function (data) {
+                      /*  const updateid = document.querySelector('td[updateid-id="'+data.id+'"]')
+                        if (!updateid || !updateid.innerHTML){
+                            return false;
+                        }*/
+                       //  debugger;
+                        console.log(data.id)
+                        console.log(data.location)
+                       // console.log("data.id", tt)
+                      //  document.querySelector('#updatestatus').innerHTML = data.status;
+                      if (data.location === undefined) {
+                          data.location = "Принято на склад с ВК"
+                        document.querySelector('td[updateid-location="'+data.id+'"]').innerHTML= data.locaton;
+                      } else {
+                        document.querySelector('td[updateid-location="'+data.id+'"]').innerHTML= data.locaton;
+                      }
+		                console.log(data.message)
+                //  document.querySelector('label[response="'+data.message+'"]').innerText = data.message;
+                        document.querySelector('#responseacceptInspection').innerText = data.message;
                         //}
                         console.log(data);
                     //}

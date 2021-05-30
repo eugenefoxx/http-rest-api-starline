@@ -181,8 +181,10 @@ func (s *Server) configureRouter() {
 	operation.HandleFunc("/deleteinspection/{ID:[0-9]+}", s.DeleteInspection())
 
 	operation.HandleFunc("/statusinspectionforwh", s.PageListAcceptWHInspection()).Methods("GET")
-	operation.HandleFunc("/acceptinspectiontowh/{ID:[0-9]+}", s.PageacceptWarehouseInspection()).Methods("GET")
-	operation.HandleFunc("/acceptinspectiontowh/{ID:[0-9]+}", s.AcceptWarehouseInspection()).Methods("POST")
+	//operation.HandleFunc("/acceptinspectiontowh/{ID:[0-9]+}", s.PageacceptWarehouseInspection()).Methods("GET")
+	//	operation.HandleFunc("/acceptinspectiontowh/{ID:[0-9]+}", s.AcceptWarehouseInspection()).Methods("POST")
+	operation.HandleFunc("/acceptinspectiontowh/{ID:[0-9]+}", s.PageacceptWarehouseInspectionJSON()).Methods("GET")
+	operation.HandleFunc("/acceptinspectiontowh", s.AcceptWarehouseInspectionJSON()).Methods("POST", "OPTIONS")
 	operation.HandleFunc("/acceptgroupsinspectiontowh", s.AcceptGroupsWarehouseInspection()).Methods("POST")
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 
