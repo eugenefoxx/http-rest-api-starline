@@ -49,7 +49,7 @@ func Start(config *Config) error {
 
 	redis_store := redisstore.New(redis)
 
-	fmt.Printf("redis is ok %v\n", redis)
+	fmt.Printf("redis is run  %v\n", redis)
 
 	srv := newServer(store, sessionStore, redis_store)
 	/*
