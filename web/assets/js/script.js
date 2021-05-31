@@ -384,7 +384,7 @@ function acceptInspectiontowh(id) {
                 //  alert("Hi");
                   
                 sendForm.onclick = function (event) {
-                    debugger;
+                    
                     event.preventDefault();
                     // Get the form
                     let form = document.querySelector('#accept-component-form');

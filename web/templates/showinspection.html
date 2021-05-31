@@ -669,7 +669,7 @@
                                 <td>
                                     {{.NameDebitor}}
                                 </td>
-                                <td>
+                                <td updateid-location="{{.ID }}">
                                     {{.Location}}
                                 </td>
                                 <td>
@@ -699,7 +699,8 @@
 
                                 <td nowrap>
                                     {{ if eq .Status "OK" }}
-                                    <a href="#modal-4" onclick="acceptInspection({{.ID}});"
+                                    <!--onclick="acceptInspection({{.ID}});"-->
+                                    <a href="#modal-4" onclick="acceptInspectiontowh({{.ID}});"
                                         class="js-modal-open btnfortable btn-primary--ss">Принять на склад</a>
 
                                     <!--    <a href="/acceptinspectiontowh/{{.ID}}" class="btnfortable btn-primary">
@@ -709,7 +710,7 @@
 
                                 <td nowrap>
                                     {{ else if eq .Status "NG" }}
-                                    <a href="#modal-4" onclick="acceptInspection({{.ID}});"
+                                    <a href="#modal-4" onclick="acceptInspectiontowh({{.ID}});"
                                         class="js-modal-open btnfortable btn-primary--ss">Принять на склад</a>
                                     <!--   <a href="/acceptinspectiontowh/{{.ID}}" class="btnfortable btn-primary">
                                     Принять на склад
