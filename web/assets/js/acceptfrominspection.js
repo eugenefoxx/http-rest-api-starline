@@ -56,7 +56,7 @@ function createFormAccept() {
             var icon = document.createElement("i");
             var deleteButton = document.getElementById(element.id);
             deleteButton.appendChild(icon);
-            icon.className = "fa fa-times2";
+            icon.className = "fa fa-times";
         }
     }
     form.childNodes[0].focus();

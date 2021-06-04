@@ -33,7 +33,7 @@ document.addEventListener('click', (event) => {
         const modalId = target.getAttribute('href').replace('#', '');
         const modal = document.getElementById(modalId);
 
-        document.body.style.paddingRight = `${getScrollbarWidth()}px`;
+    //    document.body.style.paddingRight = `${getScrollbarWidth()}px`;
         document.body.style.overflow = 'hidden';
 
         modal.classList.add(CLASS_LIST.MODAL_ACTIVE);
@@ -115,6 +115,7 @@ function onQrCodeChange(e) {
         // 1. 
         // 2.
     }
+    
 }
 
 document.addEventListener("DOMContentLoaded", function() {

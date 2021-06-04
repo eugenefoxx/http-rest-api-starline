@@ -110,7 +110,8 @@
                                 <th scope="col" onclick="sortTable(5)">Имя дебитора</th>
                                 <th scope="col" onclick="sortTable(6)">Статус трансфера</th>
                                 <th scope="col" onclick="sortTable(7)">Кем отгружено</th>
-                                <th scope="col" onclick="sortTable(8)">Статус отметки проверки</th>
+                                <th scope="col" onclick="sortTable(8)">Статус отметки проверки
+                                </th>
                                 <th scope="col" onclick="sortTable(9)">Примечание</th>
                                 <th scope="col" onclick="sortTable(10)">Кем отред-но</th>
                                 <th scope="col" onclick="sortTable(11)">Дата ред-я</th>
@@ -171,7 +172,7 @@
                                 <td nowrap>
                                     {{.Time2}}
                                 </td>
-                                <td style="width: 100%;">
+                                <td>
                                     <!--   <a href="/updateinspection/{{.ID}}" class="btnfortable btn-primary">Изменить</a>-->
                                     <a href="#modal-2" onclick="editInspection({{.ID}});"
                                         class="js-modal-open btnfortable btn-primary--l">Изменить</a>
