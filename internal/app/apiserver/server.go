@@ -5,7 +5,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/eugenefoxx/http-rest-api-starline/pkg/logging"
+	"github.com/gorilla/handlers"
 	"sync"
+//	"unsafe"
 
 	"github.com/eugenefoxx/http-rest-api-starline/internal/app/model"
 	"github.com/eugenefoxx/http-rest-api-starline/internal/app/store"
@@ -16,7 +19,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -24,7 +26,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
-	"github.com/jmoiron/sqlx"
 	"github.com/sirupsen/logrus"
 )
 
@@ -38,23 +39,24 @@ var (
 	errIncorrectEmailOrPassword = errors.New("incorrect email or password")
 	errNotAuthenticated         = errors.New("not authenticated")
 	tpl                         *template.Template
-	LOGFILE                     = "/tmp/apiServer.log"
+	//LOGFILE                     = "/tmp/apiServer.log"
 )
 
 type ctxKey int8
 
 type Server struct {
 	router       *mux.Router
-	logger       *logrus.Logger
+	//logger       *logrus.Logger
 	store        store.Store
 	sessionStore sessions.Store
-	database     *sqlx.DB
+	//database     *sqlx.DB
 	//	html         string
-	mu         sync.Mutex
-	httpServer *http.Server
-	errorLog   *log.Logger
-	infoLog    *log.Logger
-	redis      store_redis.Redis
+	mu sync.Mutex
+	//	httpServer *http.Server
+//	errorLog *log.Logger
+//	infoLog  *log.Logger
+	redis    store_redis.Redis
+	logger logging.Logger
 }
 
 func init() {
@@ -66,7 +68,7 @@ func init() {
 //func newServer(store store.Store, sessionStore sessions.Store, html string) *Server {
 func newServer(store store.Store, sessionStore sessions.Store, redis store_redis.Redis) *Server {
 	// "/home/eugenearch/Code/github.com/eugenefoxx/http-rest-api/logfile.log"
-	f, err := os.OpenFile(LOGFILE, os.O_APPEND|os.O_RDWR|os.O_CREATE, 0666)
+/*	f, err := os.OpenFile(LOGFILE, os.O_APPEND|os.O_RDWR|os.O_CREATE, 0666)
 	if err != nil {
 		//log.Fatal(err)
 		fmt.Printf("error opening file: %v", err)
@@ -75,24 +77,25 @@ func newServer(store store.Store, sessionStore sessions.Store, redis store_redis
 	fmt.Println(f.Name())
 
 	infoLog := log.New(f, "INFO\t", log.Ldate|log.Ltime|log.Lshortfile)
-	errorLog := log.New(f, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
+	errorLog := log.New(f, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)*/
 
 	s := &Server{
 		router:       mux.NewRouter(), // mux.NewRouter()  NewRouter()
-		logger:       logrus.New(),
+	//	logger:       logrus.New(),
+		logger: logging.GetLogger(),
 		store:        store,
 		sessionStore: sessionStore,
-		errorLog:     errorLog,
-		infoLog:      infoLog,
+	//	errorLog:     errorLog,
+	//	infoLog:      infoLog,
 		mu:           sync.Mutex{},
 		redis:        redis,
-		httpServer: &http.Server{
+		/*	httpServer: &http.Server{
 			WriteTimeout:   15 * time.Second,
 			ReadTimeout:    15 * time.Second,
 			IdleTimeout:    60 * time.Second,
 			MaxHeaderBytes: 1 << 20,
 			ErrorLog:       errorLog,
-		},
+		},*/
 	}
 
 	s.configureRouter()
@@ -110,7 +113,7 @@ func (s *Server) configureRouter() {
 	s.router.Use(s.setRequestID)
 	s.router.Use(s.logRequest)
 	//	s.router.Use(handlers.CORS(handlers.AllowedOrigins([]string{"http://localhost:3001"}), handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}), handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE"})))
-
+	s.router.Use(handlers.CORS(handlers.AllowedOrigins([]string{"*"})))
 	s.router.HandleFunc("/test", s.diaplayPage())
 
 	s.router.HandleFunc("/users", s.pagehandleUsersCreate()).Methods("GET")
@@ -123,10 +126,13 @@ func (s *Server) configureRouter() {
 	s.router.HandleFunc("/login", s.handleSessionsCreate()).Methods("POST")
 	s.router.HandleFunc("/logout", s.signOut()).Methods("GET")
 
+	private := s.router.PathPrefix("/private").Subrouter()
+	private.Use(s.authenticateUser)
+	private.HandleFunc("/whoami", s.handleWhoami()).Methods("GET")
 	// /operation/***
 	operation := s.router.PathPrefix("/operation").Subrouter()
-	//	operation.Use(s.authenticateUser)
-	operation.Use(s.AuthMiddleware)
+	operation.Use(s.authenticateUser)
+	//operation.Use(s.AuthMiddleware)
 	operation.HandleFunc("/whoami", s.handleWhoami()).Methods("GET")
 
 	// api_server_management_quality_personal.go
@@ -205,7 +211,7 @@ func (s *Server) configureRouter() {
 	s.router.HandleFunc("/", s.upload()).Methods("GET")
 	s.router.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("./web"))))
 	fmt.Println("Webserver StarLine launch.")
-	s.infoLog.Printf("Webserver StarLine launch.")
+	//s.infoLog.Printf("Webserver StarLine launch.")
 
 }
 
@@ -235,18 +241,20 @@ func (s *Server) diaplayPage() http.HandlerFunc {
 
 }
 
-func ho(r *http.Request) {
+func (s *Server) ho(r *http.Request) {
 	user := r.Context().Value(ctxKeyUser).(*model.User)
-	fmt.Println(user)
+	fmt.Println("user ho", user)
 }
 
 func (s *Server) handleWhoami() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		user := r.Context().Value(ctxKeyUser).(*model.User)
-		fmt.Println(user)
+		fmt.Println("handleWhoami", user)
 		s.respond(w, r, http.StatusOK, r.Context().Value(ctxKeyUser).(*model.User))
 	}
 }
+
+
 
 func (s *Server) setRequestID(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -260,6 +268,7 @@ func (s *Server) setRequestID(next http.Handler) http.Handler {
 func (s *Server) logRequest(next http.Handler) http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		/*
 		// open a file
 		f, err := os.OpenFile(LOGFILE, os.O_APPEND|os.O_CREATE|os.O_RDWR, 0666)
 		if err != nil {
@@ -297,6 +306,23 @@ func (s *Server) logRequest(next http.Handler) http.Handler {
 			time.Now().Sub(start),
 		)
 
+		*/
+		logger := s.logger.WithFields(logrus.Fields{
+			"remote_addr": r.RemoteAddr,
+			"request_id":  r.Context().Value(ctxKeyRequestID),
+		})
+		logger.Infof("started %s %s", r.Method, r.RequestURI)
+		start := time.Now()
+		// переопределение ResponseWriter
+		rw := &responseWriter{w, http.StatusOK}
+		next.ServeHTTP(rw, r)
+
+		logger.Infof(
+			"completed witn %d %s in %v",
+			rw.code,
+			http.StatusText(rw.code), //2bit.ru/media/images/items/248/247158-413538.jpgtp.StatusText(rw.code),
+			time.Now().Sub(start),
+		)
 		//	var log = logrus.New()
 		//	log.Out = os.Stdout
 		//	file, err := os.OpenFile("/tmp/logrus.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
@@ -357,6 +383,7 @@ func (s *Server) handleUsersCreate() http.HandlerFunc {
 		//		return
 		//	}
 		fmt.Println("зашел на регистрацию")
+		s.logger.Info("Starting registration")
 		//	email := r.FormValue("email")
 		//	password := r.FormValue("password")
 		//	firstname := r.FormValue("firstname")
@@ -371,7 +398,8 @@ func (s *Server) handleUsersCreate() http.HandlerFunc {
 
 		req.LastName = r.FormValue("lastname")
 
-		s.infoLog.Printf("Create account: %v, %v, %v, %v\n", req.Email, req.Password, req.FirstName, req.LastName)
+		//s.infoLog.Printf("Create account: %v, %v, %v, %v\n", req.Email, req.Password, req.FirstName, req.LastName)
+		s.logger.Infof("Create account: %v, %v, %v, %v\n", req.Email, req.Password, req.FirstName, req.LastName)
 		//	target := "/users"
 
 		//	fmt.Println(req.Password)
@@ -384,20 +412,21 @@ func (s *Server) handleUsersCreate() http.HandlerFunc {
 			LastName:  req.LastName,  // lastname req.LastName
 		}
 		//json.NewEncoder(w).Encode(u)
-		//s.Lock()
+
 		if err := s.store.User().Create(u); err != nil {
 			s.error(w, r, http.StatusUnprocessableEntity, err)
 			return
 		}
 
 		u.Sanitize()
-		//s.Unlock()
+
 		//	s.respond(w, r, http.StatusCreated, u)
 		//	target = "/one"
 		//	http.Redirect(w, r, target, 302)
 
 		//	}
 		fmt.Println("регистрируюсь")
+		s.logger.Info("End registration")
 		//tpl.ExecuteTemplate(w, "login.html", nil)
 		tpl.ExecuteTemplate(w, "register.html", nil)
 		///	err = tpl.ExecuteTemplate(w, "layout", nil)
@@ -457,7 +486,9 @@ func (s *Server) updateSessionsCreate() http.HandlerFunc {
 		req.PasswordOld = r.FormValue("passwordold")
 		req.Password = r.FormValue("password")
 
-		s.infoLog.Printf("Update password: email - %v, passwordold - %v, password - %v\n",
+		//s.infoLog.Printf("Update password: email - %v, passwordold - %v, password - %v\n",
+		//	req.Email, req.PasswordOld, req.Password)
+		s.logger.Infof("Update password: email - %v, passwordold - %v, password - %v\n",
 			req.Email, req.PasswordOld, req.Password)
 
 		up, err := s.store.User().FindByEmail(req.Email, req.Email)
@@ -480,6 +511,7 @@ func (s *Server) updateSessionsCreate() http.HandlerFunc {
 		u.Sanitize()
 
 		fmt.Println("обновляю пароль")
+		s.logger.Info("Update password")
 		http.Redirect(w, r, "/", 303)
 		err = tpl.ExecuteTemplate(w, "updateUser.html", nil)
 		if err != nil {
@@ -498,7 +530,7 @@ func (s *Server) upload() http.HandlerFunc {
 		//tpl.ExecuteTemplate(w, "base", nil)
 		//fmt.Print("Test Upload")
 		p := &Page{
-			TitleDOC: "Start",
+			TitleDOC: "Главная",
 			//	Navbar:   "ContentNav",
 			LoggedIn: false,
 		}
@@ -506,8 +538,36 @@ func (s *Server) upload() http.HandlerFunc {
 		//tpl.Execute(w, nil)
 	}
 }
+/*
+func (s *Server) RecognationUser(h http.Handler)  *model.User {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
 
+		id, ok := session.Values["user_id"]
+		if !ok {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		u, err := s.store.User().Find(id.(int))
+		if err != nil {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		return *model.User, nil
+	}
+}
+*/
 func (s *Server) main() http.HandlerFunc {
+	type Loggin struct{
+		Email string `json:"email"`
+	}
+
 	//tpl = template.Must(template.New("").Delims("<<", ">>").ParseFiles(s.html + "layout.html"))
 	//tpl = template.Must(template.New("").Delims("<<", ">>").ParseFiles(s.html+"layout1.html", s.html+"login1.html"))
 	//tpl = template.Must(template.New("base").ParseFiles(s.html + "layout1.html"))
@@ -527,6 +587,19 @@ func (s *Server) main() http.HandlerFunc {
 		GroupP5 := false
 		LoggedIn := false
 		fmt.Println("Test Main")
+		fmt.Println("test authenticateUser - ", s.authenticateUser)
+		fmt.Println("handleWhoami -", s.handleWhoami)
+	//	tt := s.handleWhoami()
+
+
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			log.Println(err)
+			s.logger.Errorf(err.Error())
+		}
+		var loggin []Loggin
+		json.Unmarshal(body, &loggin)
+		fmt.Printf("body loggin: %s", body)
 		//	u := s.authenticateUser()
 		//	fmt.Println(u)
 		//	var body, _ = helper.LoadFile("./web/templates/index.html")
@@ -549,8 +622,8 @@ func (s *Server) main() http.HandlerFunc {
 			return
 		}
 		fmt.Println("/main - user:", u.Email, u.ID, u.Role)
-		s.infoLog.Printf("main, user - %s, %d, %s", u.Email, u.ID, u.Role)
-
+		//s.infoLog.Printf("main, user - %s, %d, %s", u.Email, u.ID, u.Role)
+		s.logger.Infof("main, user - %s, %d, %s", u.Email, u.ID, u.Role)
 		if u.Groups == "склад" || u.Groups == "качество" || u.Groups == "" || u.Groups == "администратор" {
 
 			if u.Role == "Administrator" {
@@ -608,7 +681,7 @@ func (s *Server) main() http.HandlerFunc {
 			//	}
 
 			data := map[string]interface{}{
-				"TitleDOC": "MAIN",
+				"TitleDOC": "Главная",
 				"User":     u.LastName,
 				"Username": u.FirstName,
 				//"GET":                 GET,
@@ -679,7 +752,7 @@ func (s *Server) main() http.HandlerFunc {
 			//	}
 
 			data := map[string]interface{}{
-				"TitleDOC": "MAIN",
+				"TitleDOC": "Главная",
 				"User":     u.LastName,
 				"Username": u.FirstName,
 				//"GET":                 GET,
@@ -712,16 +785,18 @@ func (s *Server) authenticateUser(next http.Handler) http.Handler {
 
 		id, ok := session.Values["user_id"]
 		if !ok {
+			http.Redirect(w, r, "/", http.StatusSeeOther)
 			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
 			return
 		}
 
 		u, err := s.store.User().Find(id.(int))
 		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+		//	s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
 			return
 		}
-		fmt.Println("???", u.Email)
+		fmt.Println("authenticateUser: ", u.Email, u.Role, u.Tabel)
 		next.ServeHTTP(w, r.WithContext(context.WithValue(r.Context(), ctxKeyUser, u)))
 	})
 }
@@ -844,7 +919,8 @@ func (s *Server) handleSessionsCreate() http.HandlerFunc {
 		email := r.FormValue("email")
 		password := r.FormValue("password")
 		fmt.Println("email:   ", email)
-		s.infoLog.Printf("Loggin: %v, %v\n", email, password)
+		//s.infoLog.Printf("Loggin: %v, %v\n", email, password)
+		s.logger.Infof("Loggin: %v, %v\n", email, password)
 		//	target := "/sessions"
 
 		//	s.Lock()
@@ -1185,7 +1261,8 @@ func (s *Server) shipmentBySAP() http.HandlerFunc {
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
 			log.Println(err)
-			s.errorLog.Printf(err.Error())
+			s.logger.Infof(err.Error())
+			s.logger.Errorf(err.Error())
 		}
 
 		var hdata []reqA
@@ -1193,11 +1270,13 @@ func (s *Server) shipmentBySAP() http.HandlerFunc {
 		json.Unmarshal(body, &hdata)
 		//	json.Marshal(body)
 		fmt.Printf("body json: %s", body)
-		s.infoLog.Printf("Loading body json shipmentBySAP: %s\n", body)
+		//s.infoLog.Printf("Loading body json shipmentBySAP: %s\n", body)
+		s.logger.Infof("Loading body json shipmentBySAP: %s\n", body)
 		//	fmt.Printf("1 тест %s", &hdata.Material)
 		//	fmt.Println("tect2 %s", hdata, "\n")
 		fmt.Println("\njson  struct hdata", hdata)
-		s.infoLog.Printf("Loading hdata json shipmentBySAP: %v\n", hdata)
+		//s.infoLog.Printf("Loading hdata json shipmentBySAP: %v\n", hdata)
+		s.logger.Infof("Loading hdata json shipmentBySAP: %v\n", hdata)
 		//req := &request{}
 		//	if err := json.NewDecoder(r.Body).Decode(&hdata); err != nil {
 		//		s.error(w, r, http.StatusBadRequest, err)
@@ -1271,7 +1350,8 @@ func (s *Server) shipmentBySAP() http.HandlerFunc {
 
 		for _, v := range hdata {
 			fmt.Println(v.Material, v.Qty, v.Comment, user.ID, user.LastName)
-			s.infoLog.Printf("shipmentBySAP: %v, %v, %v, %v, %v\n", v.Material, v.Qty, v.Comment, user.ID, user.LastName)
+			//s.infoLog.Printf("shipmentBySAP: %v, %v, %v, %v, %v\n", v.Material, v.Qty, v.Comment, user.ID, user.LastName)
+			s.logger.Infof("shipmentBySAP: %v, %v, %v, %v, %v\n", v.Material, v.Qty, v.Comment, user.ID, user.LastName)
 			checkmaterial, _ := strconv.Atoi(v.Material)
 
 			//	checkmaterial := v.Material
@@ -1300,7 +1380,8 @@ func (s *Server) shipmentBySAP() http.HandlerFunc {
 				//if checkmaterial != 7 {
 				if len(v.Material) != 7 {
 					fmt.Println("кол-во не равно 7", v.Material)
-					s.errorLog.Printf("кол-во не равно 7 %v", v.Material)
+					s.logger.Errorf("кол-во не равно 7 %v", v.Material)
+					s.logger.Infof("кол-во не равно 7 %v", v.Material)
 					strN, err := json.Marshal("JSON кол-во не равно 7.")
 					fmt.Println(string(strN))
 					if err != nil {
@@ -1471,7 +1552,8 @@ func (s *Server) showShipmentBySAPBySearchStatic() http.HandlerFunc {
 		materialInt, err := strconv.Atoi(r.FormValue("material"))
 		if err != nil {
 			log.Println(err)
-			s.errorLog.Printf(err.Error())
+			s.logger.Infof(err.Error())
+			s.logger.Errorf(err.Error())
 		}
 
 		search.LastName = r.FormValue("lastname")
@@ -1599,16 +1681,18 @@ func (s *Server) idReturn() http.HandlerFunc {
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
 			log.Println(err)
-			s.errorLog.Printf(err.Error())
+			s.logger.Errorf(err.Error())
 		}
 
 		var rdata []req
 
 		json.Unmarshal(body, &rdata)
 		fmt.Printf("test %s", body)
-		s.infoLog.Printf("idReturn loadin body json %s\n", body)
+		//s.infoLog.Printf("idReturn loadin body json %s\n", body)
+		s.logger.Infof("idReturn loadin body json %s\n", body)
 		fmt.Println("\nall of the rdata", rdata)
-		s.infoLog.Printf("idReturn loadin rdata json %v\n", rdata)
+		//s.infoLog.Printf("idReturn loadin rdata json %v\n", rdata)
+		s.logger.Infof("idReturn loadin rdata json %v\n", rdata)
 
 		session, err := s.sessionStore.Get(r, sessionName)
 		if err != nil {
@@ -1634,7 +1718,8 @@ func (s *Server) idReturn() http.HandlerFunc {
 			material, err := strconv.Atoi(sap)
 			if err != nil {
 				log.Println(err)
-				s.errorLog.Printf(err.Error())
+				s.logger.Errorf(err.Error())
+				s.logger.Infof(err.Error())
 			}
 			idsap := v.ScanID[20:30]
 			idroll := v.IDRoll
@@ -1642,7 +1727,8 @@ func (s *Server) idReturn() http.HandlerFunc {
 			fmt.Println("idroll в 1-м цикле -", idroll)
 			if err != nil {
 				log.Println(err)
-				s.errorLog.Printf(err.Error())
+				s.logger.Errorf(err.Error())
+				s.logger.Infof(err.Error())
 			}
 			v.Lot = v.ScanID[9:19]
 			if (strings.Contains(v.ScanID[0:1], "P") == true) && (len(v.ScanID) == 45) {
@@ -1671,7 +1757,8 @@ func (s *Server) idReturn() http.HandlerFunc {
 			} else {
 				if (strings.Contains(v.ScanID[0:1], "P") == false) && (len(v.ScanID) != 45) {
 					fmt.Println("не верное сканирование :\n" + v.ScanID + "\n")
-					s.errorLog.Printf("не верное сканирование :\n" + v.ScanID + "\n")
+					s.logger.Errorf("не верное сканирование :\n" + v.ScanID + "\n")
+					s.logger.Infof("не верное сканирование :\n" + v.ScanID + "\n")
 					//	fmt.Fprintf(w, "не верное сканирование :"+v.ScanID)
 				}
 				//	tpl.Execute(w, data)

@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/eugenefoxx/http-rest-api-starline/pkg/logging"
 	"log"
 	"os"
 
@@ -24,15 +25,22 @@ func init() {
 func main() {
 	flag.Parse()
 	//	http.Handle("/resources/", http.StripPrefix("/resources", http.FileServer(http.Dir("./web/images"))))
+	logging.Init()
+	logger := logging.GetLogger()
+	logger.Println("logger initialized")
+
 	config := apiserver.NewConfig()
 	_, err := toml.DecodeFile(configPath, config)
 	if err != nil {
+		logger.Errorf(err.Error())
 		log.Fatal(err)
 		ErrorLogger.Printf(err.Error())
+
 	}
 
 	//	s := apiserver.New(config)
 	if err := apiserver.Start(config); err != nil {
+		logger.Errorf(err.Error())
 		log.Fatal(err)
 		ErrorLogger.Printf(err.Error())
 	}

@@ -18,6 +18,7 @@ func (s *Server) PageshowUsersWarehouse() http.HandlerFunc {
 		s.mu.Lock()
 		defer s.mu.Unlock()
 
+		false := false
 		Admin := false
 		WarehouseManager := false
 		GroupP1 := false
@@ -130,14 +131,14 @@ func (s *Server) CreateUserWarehouse() http.HandlerFunc {
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
 			log.Println(err)
-			s.errorLog.Printf(err.Error())
+			s.logger.Errorf(err.Error())
 		}
 		var hdata []requestFrom
 		json.Unmarshal(body, &hdata)
 		fmt.Printf("body json: %s", body)
-		s.infoLog.Printf("Loading body json: %s\n", body)
+		s.logger.Infof("Loading body json: %s\n", body)
 		fmt.Println("\njson  struct hdata", hdata)
-		s.infoLog.Printf("Loading hdata json: %v\n", hdata)
+		s.logger.Infof("Loading hdata json: %v\n", hdata)
 
 		Groupp1 := "склад"
 		Groupp5 := "склад П5"
@@ -166,7 +167,7 @@ func (s *Server) CreateUserWarehouse() http.HandlerFunc {
 				//	WarehouseManager = true
 				for _, v := range hdata {
 					fmt.Println(v.Email, v.FirstName, v.LastName, v.Password, v.Role, v.Tabel)
-					s.infoLog.Printf("P1 create warehouse employee:: %v, %v, %v, %v, %v, %v\n", v.Email, v.FirstName, v.LastName, v.Password, v.Role, v.Tabel)
+					s.logger.Infof("P1 create warehouse employee:: %v, %v, %v, %v, %v, %v\n", v.Email, v.FirstName, v.LastName, v.Password, v.Role, v.Tabel)
 					u := &model.User{
 						Email:     v.Email,
 						Password:  v.Password,
@@ -191,7 +192,7 @@ func (s *Server) CreateUserWarehouse() http.HandlerFunc {
 				//	WarehouseManager = true
 				for _, v := range hdata {
 					fmt.Println("create stockkeeper P5", v.Email, v.FirstName, v.LastName, v.Password, v.Role, v.Tabel)
-					s.infoLog.Printf("P5 create warehouse employee: %v, %v, %v, %v, %v, %v\n", v.Email, v.FirstName, v.LastName, v.Password, v.Role, v.Tabel)
+					s.logger.Infof("P5 create warehouse employee: %v, %v, %v, %v, %v, %v\n", v.Email, v.FirstName, v.LastName, v.Password, v.Role, v.Tabel)
 
 					u := &model.User{
 						Email:     v.Email,
@@ -256,7 +257,7 @@ func (s *Server) PageupdateUserWarehouse() http.HandlerFunc {
 		fmt.Println("var id - ", id)
 		if err != nil {
 			log.Println(err)
-			s.errorLog.Printf(err.Error())
+			s.logger.Errorf(err.Error())
 		}
 
 		get, err := s.store.User().EditUserByManager(id)
@@ -298,7 +299,7 @@ func (s *Server) UpdateUserWarehouse() http.HandlerFunc {
 		id, err := strconv.Atoi(vars["ID"])
 		if err != nil {
 			log.Println(err)
-			s.errorLog.Printf(err.Error())
+			s.logger.Errorf(err.Error())
 		}
 		req.ID = id
 		req.Email = r.FormValue("email")
@@ -308,7 +309,7 @@ func (s *Server) UpdateUserWarehouse() http.HandlerFunc {
 		//fmt.Println("Роль - ", req.Role)
 		req.Tabel = r.FormValue("tabel")
 		fmt.Println("ID - ", req.ID)
-		s.infoLog.Printf("Update warehouse employee: %v, %v, %v, %v, %v, %v\n", req.ID, req.Email, req.Firstname, req.Lastname, req.Role, req.Tabel)
+		s.logger.Infof("Update warehouse employee: %v, %v, %v, %v, %v, %v\n", req.ID, req.Email, req.Firstname, req.Lastname, req.Role, req.Tabel)
 		u := &model.User{
 			ID:        req.ID,
 			Email:     req.Email,
@@ -341,7 +342,7 @@ func (s *Server) DeleteUserWarehouse() http.HandlerFunc {
 		id, err := strconv.Atoi(vars["ID"])
 		if err != nil {
 			log.Println(err)
-			s.errorLog.Printf(err.Error())
+			s.logger.Errorf(err.Error())
 		}
 		req.ID = id
 

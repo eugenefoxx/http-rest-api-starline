@@ -148,7 +148,7 @@ func (s *Server) UploadFileToInspection() http.HandlerFunc {
 		for i, line := range lines {
 			//	fmt.Println(line)
 			//	fmt.Printf("%v %v\n", i, line)
-			s.infoLog.Printf("%v %v\n", i, line)
+			s.logger.Infof("%v %v\n", i, line)
 			//	fmt.Println(line[0:45])
 			//	fmt.Println(line[0:1])
 			//fmt.Println("Test", len(line))
@@ -157,7 +157,7 @@ func (s *Server) UploadFileToInspection() http.HandlerFunc {
 			re3 := regexp.MustCompile(`P\d{7}LR\d{10}Q\d{5}D\d{8}`)
 			if re.MatchString(line) != true && re2.MatchString(line) != true && re3.MatchString(line) != true {
 				fmt.Println("не верное сканирование MatchString :\n" + line + "\n")
-				s.errorLog.Printf("Не верное сканирование из файла загрузки на входной контроль, П1: %v", line)
+				s.logger.Errorf("Не верное сканирование из файла загрузки на входной контроль, П1: %v", line)
 				//	fmt.Fprintf(w, "не верное сканирование :"+v.ScanID)
 				w.Write([]byte("Запись не соответствует: " + line))
 				//	break
@@ -172,20 +172,20 @@ func (s *Server) UploadFileToInspection() http.HandlerFunc {
 					idMaterial := v[0:45]
 
 					fmt.Println("Пропускаем:\n" + idMaterial + "\n")
-					s.infoLog.Printf("Запись строки на загрузку с файла на входной контроль, П1: %v", idMaterial)
+					s.logger.Infof("Запись строки на загрузку с файла на входной контроль, П1: %v", idMaterial)
 					sapStr := v[1:8]
 					var sap int
 					sap, err := strconv.Atoi(sapStr)
 					if err != nil {
 						fmt.Println(err)
-						s.errorLog.Printf(err.Error())
+						s.logger.Errorf(err.Error())
 					}
 					idrollStr := v[20:30]
 					var idrollIns int
 					idrollIns, err = strconv.Atoi(idrollStr)
 					if err != nil {
 						fmt.Println(err)
-						s.errorLog.Printf(err.Error())
+						s.logger.Errorf(err.Error())
 					}
 					var lot string
 					lot = v[9:19]
@@ -194,7 +194,7 @@ func (s *Server) UploadFileToInspection() http.HandlerFunc {
 					qtyIns, err = strconv.Atoi(qtyStr)
 					if err != nil {
 						fmt.Println(err)
-						s.errorLog.Printf(err.Error())
+						s.logger.Errorf(err.Error())
 					}
 					var productionDate string
 					productionDate = v[37:45]
@@ -229,7 +229,7 @@ func (s *Server) UploadFileToInspection() http.HandlerFunc {
 				} else {
 					if (strings.Contains(v[0:1], "P") == false) && (len(v) != 45) {
 						fmt.Println("не верное сканирование :\n" + v + "\n")
-						s.errorLog.Printf("Не верное сканирование из файла загрузки на входной контроль, П1: %v", v)
+						s.logger.Errorf("Не верное сканирование из файла загрузки на входной контроль, П1: %v", v)
 						//	fmt.Fprintf(w, "не верное сканирование :"+v.ScanID)
 						w.Write([]byte("Запись не соответствует: " + v))
 						return
@@ -241,20 +241,20 @@ func (s *Server) UploadFileToInspection() http.HandlerFunc {
 					idMaterial := v[0:35]
 
 					fmt.Println("Пропускаем:\n" + idMaterial + "\n")
-					s.infoLog.Printf("Запись строки на загрузку с файла на входной контроль, П1: %v", idMaterial)
+					s.logger.Infof("Запись строки на загрузку с файла на входной контроль, П1: %v", idMaterial)
 					sapStr := v[1:8]
 					var sap int
 					sap, err := strconv.Atoi(sapStr)
 					if err != nil {
 						fmt.Println(err)
-						s.errorLog.Printf(err.Error())
+						s.logger.Errorf(err.Error())
 					}
 					idrollStr := v[10:20]
 					var idrollIns int
 					idrollIns, err = strconv.Atoi(idrollStr)
 					if err != nil {
 						fmt.Println(err)
-						s.errorLog.Printf(err.Error())
+						s.logger.Errorf(err.Error())
 					}
 					var lot string
 					lot = "без партии" //v.ScanID[9:19]
@@ -263,7 +263,7 @@ func (s *Server) UploadFileToInspection() http.HandlerFunc {
 					qtyIns, err = strconv.Atoi(qtyStr)
 					if err != nil {
 						fmt.Println(err)
-						s.errorLog.Printf(err.Error())
+						s.logger.Errorf(err.Error())
 					}
 					var productionDate string
 					productionDate = v[27:35]
@@ -298,7 +298,7 @@ func (s *Server) UploadFileToInspection() http.HandlerFunc {
 				} else {
 					if (strings.Contains(v[0:1], "P") == false) && (len(v) != 35) {
 						fmt.Println("не верное сканирование :\n" + v + "\n")
-						s.errorLog.Printf("Не верное сканирование из файла загрузки на входной контроль, П1: %v", v)
+						s.logger.Errorf("Не верное сканирование из файла загрузки на входной контроль, П1: %v", v)
 						//	fmt.Fprintf(w, "не верное сканирование :"+v.ScanID)
 						w.Write([]byte("Запись не соответствует: " + v))
 						return
@@ -319,20 +319,20 @@ func (s *Server) UploadFileToInspection() http.HandlerFunc {
 					idMaterial := v[0:45]
 
 					fmt.Println("Пропускаем:\n" + idMaterial + "\n")
-					s.infoLog.Printf("Запись строки на загрузку с файла на входной контроль, П5: %v", idMaterial)
+					s.logger.Infof("Запись строки на загрузку с файла на входной контроль, П5: %v", idMaterial)
 					sapStr := v[1:8]
 					var sap int
 					sap, err := strconv.Atoi(sapStr)
 					if err != nil {
 						fmt.Println(err)
-						s.errorLog.Printf(err.Error())
+						s.logger.Errorf(err.Error())
 					}
 					idrollStr := v[20:30]
 					var idrollIns int
 					idrollIns, err = strconv.Atoi(idrollStr)
 					if err != nil {
 						fmt.Println(err)
-						s.errorLog.Printf(err.Error())
+						s.logger.Errorf(err.Error())
 					}
 					var lot string
 					lot = v[9:19]
@@ -341,7 +341,7 @@ func (s *Server) UploadFileToInspection() http.HandlerFunc {
 					qtyIns, err = strconv.Atoi(qtyStr)
 					if err != nil {
 						fmt.Println(err)
-						s.errorLog.Printf(err.Error())
+						s.logger.Errorf(err.Error())
 					}
 					var productionDate string
 					productionDate = v[37:45]
@@ -378,7 +378,7 @@ func (s *Server) UploadFileToInspection() http.HandlerFunc {
 				} else {
 					if (strings.Contains(v[0:1], "P") == false) && (len(v) != 45) {
 						fmt.Println("не верное сканирование :" + v)
-						s.errorLog.Printf("Не верное сканирование из файла загрузки на входной контроль, П5: %v", v)
+						s.logger.Errorf("Не верное сканирование из файла загрузки на входной контроль, П5: %v", v)
 						//	fmt.Fprintf(w, "не верное сканирование :"+v.ScanID)
 						w.Write([]byte("Запись не соответствует: " + v))
 						return
@@ -390,20 +390,20 @@ func (s *Server) UploadFileToInspection() http.HandlerFunc {
 					idMaterial := v[0:35]
 
 					fmt.Println("Пропускаем:\n" + idMaterial + "\n")
-					s.infoLog.Printf("Запись строки на загрузку с файла на входной контроль, П5: %v", idMaterial)
+					s.logger.Infof("Запись строки на загрузку с файла на входной контроль, П5: %v", idMaterial)
 					sapStr := v[1:8]
 					var sap int
 					sap, err := strconv.Atoi(sapStr)
 					if err != nil {
 						fmt.Println(err)
-						s.errorLog.Printf(err.Error())
+						s.logger.Errorf(err.Error())
 					}
 					idrollStr := v[10:20]
 					var idrollIns int
 					idrollIns, err = strconv.Atoi(idrollStr)
 					if err != nil {
 						fmt.Println(err)
-						s.errorLog.Printf(err.Error())
+						s.logger.Errorf(err.Error())
 					}
 					var lot string
 					lot = "без партии" //v.ScanID[9:19]
@@ -412,7 +412,7 @@ func (s *Server) UploadFileToInspection() http.HandlerFunc {
 					qtyIns, err = strconv.Atoi(qtyStr)
 					if err != nil {
 						fmt.Println(err)
-						s.errorLog.Printf(err.Error())
+						s.logger.Errorf(err.Error())
 					}
 					var productionDate string
 					productionDate = v[27:35]
@@ -448,7 +448,7 @@ func (s *Server) UploadFileToInspection() http.HandlerFunc {
 				} else {
 					if (strings.Contains(v[0:1], "P") == false) && (len(v) != 35) {
 						fmt.Println("не верное сканирование :\n" + v + "\n")
-						s.errorLog.Printf("Не верное сканирование из файла загрузки на входной контроль, П5: %v", v)
+						s.logger.Errorf("Не верное сканирование из файла загрузки на входной контроль, П5: %v", v)
 						//	fmt.Fprintf(w, "не верное сканирование :"+v.ScanID)
 						w.Write([]byte("Запись не соответствует: " + v))
 						return
@@ -497,7 +497,7 @@ func (s *Server) PageUploadFileToInspectionJSON() http.HandlerFunc {
 			id, err := strconv.Atoi(vars["ID"])
 			if err != nil {
 				log.Println(err)
-				s.errorLog.Printf(err.Error())
+				s.logger.Errorf(err.Error())
 			}
 		*/
 		session, err := s.sessionStore.Get(r, sessionName)
@@ -519,7 +519,7 @@ func (s *Server) PageUploadFileToInspectionJSON() http.HandlerFunc {
 		}
 		fmt.Println("user.Groups - ?", user.Groups)
 		fmt.Println("Test json page update")
-		s.infoLog.Printf("user.Groups - %v", user.Groups)
+		s.logger.Infof("user.Groups - %v", user.Groups)
 		if user.Groups == "склад" {
 			StockkeeperWH = true
 			WarehouseManager = true
@@ -766,7 +766,7 @@ func (s *Server) UploadFileToInspectionJSON() http.HandlerFunc {
 		for i, line := range lines {
 			//	fmt.Println(line)
 			//	fmt.Printf("%v %v\n", i, line)
-			s.infoLog.Printf("%v %v\n", i, line)
+			s.logger.Infof("%v %v\n", i, line)
 			//	fmt.Println(line[0:45])
 			//	fmt.Println(line[0:1])
 			//fmt.Println("Test", len(line))
@@ -775,7 +775,7 @@ func (s *Server) UploadFileToInspectionJSON() http.HandlerFunc {
 			re3 := regexp.MustCompile(`P\d{7}LR\d{10}Q\d{5}D\d{8}`)
 			if re.MatchString(line) != true && re2.MatchString(line) != true && re3.MatchString(line) != true {
 				fmt.Println("не верное сканирование MatchString :\n" + line + "\n")
-				s.errorLog.Printf("Не верное сканирование из файла загрузки на входной контроль, П1: %v", line)
+				s.logger.Errorf("Не верное сканирование из файла загрузки на входной контроль, П1: %v", line)
 				//	fmt.Fprintf(w, "не верное сканирование :"+v.ScanID)
 				//	w.Write([]byte("Запись не соответствует: " + line))
 				//	break
@@ -807,7 +807,7 @@ func (s *Server) UploadFileToInspectionJSON() http.HandlerFunc {
 					if err != nil {
 						fmt.Println(err)
 
-						//	s.errorLog.Printf(err.Error())
+						//	s.logger.Errorf(err.Error())
 
 					}
 					idrollStr := v[20:30]
@@ -815,7 +815,7 @@ func (s *Server) UploadFileToInspectionJSON() http.HandlerFunc {
 					idrollIns, err = strconv.Atoi(idrollStr)
 					if err != nil {
 						fmt.Println(err)
-						s.errorLog.Printf(err.Error())
+						s.logger.Errorf(err.Error())
 					}
 					var lot string
 					lot = v[9:19]
@@ -824,7 +824,7 @@ func (s *Server) UploadFileToInspectionJSON() http.HandlerFunc {
 					qtyIns, err = strconv.Atoi(qtyStr)
 					if err != nil {
 						fmt.Println(err)
-						s.errorLog.Printf(err.Error())
+						s.logger.Errorf(err.Error())
 					}
 					var productionDate string
 					productionDate = v[37:45]
@@ -853,7 +853,7 @@ func (s *Server) UploadFileToInspectionJSON() http.HandlerFunc {
 					} else {
 						if (strings.Contains(v[0:1], "P") == false) && (len(v) != 45) {
 							fmt.Println("не верное сканирование :\n" + v + "\n")
-							s.errorLog.Printf("не верное сканирование :\n" + v + "\n")
+							s.logger.Errorf("не верное сканирование :\n" + v + "\n")
 							//	fmt.Fprintf(w, "не верное сканирование :"+v.ScanID)
 						}
 						//	tpl.Execute(w, data)
@@ -875,14 +875,14 @@ func (s *Server) UploadFileToInspectionJSON() http.HandlerFunc {
 					sap, err := strconv.Atoi(sapStr)
 					if err != nil {
 						fmt.Println(err)
-						s.errorLog.Printf(err.Error())
+						s.logger.Errorf(err.Error())
 					}
 					idrollStr := v[10:20]
 					var idrollIns int
 					idrollIns, err = strconv.Atoi(idrollStr)
 					if err != nil {
 						fmt.Println(err)
-						s.errorLog.Printf(err.Error())
+						s.logger.Errorf(err.Error())
 					}
 					var lot string
 					lot = "без партии" //v.ScanID[9:19]
@@ -891,7 +891,7 @@ func (s *Server) UploadFileToInspectionJSON() http.HandlerFunc {
 					qtyIns, err = strconv.Atoi(qtyStr)
 					if err != nil {
 						fmt.Println(err)
-						s.errorLog.Printf(err.Error())
+						s.logger.Errorf(err.Error())
 					}
 					var productionDate string
 					productionDate = v[27:35]
@@ -920,7 +920,7 @@ func (s *Server) UploadFileToInspectionJSON() http.HandlerFunc {
 					} else {
 						if (strings.Contains(v[0:1], "P") == false) && (len(v) != 35) {
 							fmt.Println("не верное сканирование :\n" + v + "\n")
-							s.errorLog.Printf("не верное сканирование :\n" + v + "\n")
+							s.logger.Errorf("не верное сканирование :\n" + v + "\n")
 							//	fmt.Fprintf(w, "не верное сканирование :"+v.ScanID)
 						}
 						//	tpl.Execute(w, data)
@@ -948,7 +948,7 @@ func (s *Server) UploadFileToInspectionJSON() http.HandlerFunc {
 					if err != nil {
 						fmt.Println(err)
 
-						//	s.errorLog.Printf(err.Error())
+						//	s.logger.Errorf(err.Error())
 
 					}
 					idrollStr := v[20:30]
@@ -956,7 +956,7 @@ func (s *Server) UploadFileToInspectionJSON() http.HandlerFunc {
 					idrollIns, err = strconv.Atoi(idrollStr)
 					if err != nil {
 						fmt.Println(err)
-						s.errorLog.Printf(err.Error())
+						s.logger.Errorf(err.Error())
 					}
 					var lot string
 					lot = v[9:19]
@@ -965,7 +965,7 @@ func (s *Server) UploadFileToInspectionJSON() http.HandlerFunc {
 					qtyIns, err = strconv.Atoi(qtyStr)
 					if err != nil {
 						fmt.Println(err)
-						s.errorLog.Printf(err.Error())
+						s.logger.Errorf(err.Error())
 					}
 					var productionDate string
 					productionDate = v[37:45]
@@ -1012,7 +1012,7 @@ func (s *Server) UploadFileToInspectionJSON() http.HandlerFunc {
 					} else {
 						if (strings.Contains(v[0:1], "P") == false) && (len(v) != 45) {
 							fmt.Println("не верное сканирование :\n" + v + "\n")
-							s.errorLog.Printf("не верное сканирование :\n" + v + "\n")
+							s.logger.Errorf("не верное сканирование :\n" + v + "\n")
 							//	fmt.Fprintf(w, "не верное сканирование :"+v.ScanID)
 						}
 						//	tpl.Execute(w, data)
@@ -1034,14 +1034,14 @@ func (s *Server) UploadFileToInspectionJSON() http.HandlerFunc {
 					sap, err := strconv.Atoi(sapStr)
 					if err != nil {
 						fmt.Println(err)
-						s.errorLog.Printf(err.Error())
+						s.logger.Errorf(err.Error())
 					}
 					idrollStr := v[10:20]
 					var idrollIns int
 					idrollIns, err = strconv.Atoi(idrollStr)
 					if err != nil {
 						fmt.Println(err)
-						s.errorLog.Printf(err.Error())
+						s.logger.Errorf(err.Error())
 					}
 					var lot string
 					lot = "без партии" //v.ScanID[9:19]
@@ -1050,7 +1050,7 @@ func (s *Server) UploadFileToInspectionJSON() http.HandlerFunc {
 					qtyIns, err = strconv.Atoi(qtyStr)
 					if err != nil {
 						fmt.Println(err)
-						s.errorLog.Printf(err.Error())
+						s.logger.Errorf(err.Error())
 					}
 					var productionDate string
 					productionDate = v[27:35]
@@ -1090,7 +1090,7 @@ func (s *Server) UploadFileToInspectionJSON() http.HandlerFunc {
 					} else {
 						if (strings.Contains(v[0:1], "P") == false) && (len(v) != 35) {
 							fmt.Println("не верное сканирование :\n" + v + "\n")
-							s.errorLog.Printf("не верное сканирование :\n" + v + "\n")
+							s.logger.Errorf("не верное сканирование :\n" + v + "\n")
 							//	fmt.Fprintf(w, "не верное сканирование :"+v.ScanID)
 						}
 						//	tpl.Execute(w, data)

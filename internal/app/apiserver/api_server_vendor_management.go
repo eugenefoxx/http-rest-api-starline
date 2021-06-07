@@ -139,15 +139,15 @@ func (s *Server) InsertVendor() http.HandlerFunc {
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
 			log.Println(err)
-			s.errorLog.Printf(err.Error())
+			s.logger.Errorf(err.Error())
 		}
 
 		var hdata []requestFrom
 		json.Unmarshal(body, &hdata)
 		fmt.Printf("body json: %s", body)
-		s.infoLog.Printf("Loading body json: %s", body)
+		s.logger.Infof("Loading body json: %s", body)
 		fmt.Println("\njson  struct hdata", hdata)
-		s.infoLog.Printf("Loading hdata json: %v", hdata)
+		s.logger.Infof("Loading hdata json: %v", hdata)
 
 		session, err := s.sessionStore.Get(r, sessionName)
 		if err != nil {
@@ -186,7 +186,7 @@ func (s *Server) InsertVendor() http.HandlerFunc {
 
 		for _, v := range hdata {
 			fmt.Println(v.CodeDebitor, v.NameDebitor)
-			s.infoLog.Printf("Create vendor: %s, %s", v.CodeDebitor, v.NameDebitor)
+			s.logger.Infof("Create vendor: %s, %s", v.CodeDebitor, v.NameDebitor)
 			u := &model.Vendor{
 				CodeDebitor: v.CodeDebitor,
 				NameDebitor: v.NameDebitor,
@@ -368,7 +368,7 @@ func (s *Server) PageupdateVendor() http.HandlerFunc {
 		id, err := strconv.Atoi(vars["ID"])
 		if err != nil {
 			log.Println(err)
-			s.errorLog.Printf(err.Error())
+			s.logger.Errorf(err.Error())
 		}
 		//fmt.Println("ID - ?", id)
 
@@ -410,14 +410,14 @@ func (s *Server) UpdateVendor() http.HandlerFunc {
 		id, err := strconv.Atoi(vars["ID"])
 		if err != nil {
 			log.Println(err)
-			s.errorLog.Printf(err.Error())
+			s.logger.Errorf(err.Error())
 		}
 
 		req.ID = id
 		req.CodeDebitor = r.FormValue("codedebitor")
 		req.NameDebitor = r.FormValue("namedebitor")
 		fmt.Println("ID - ", req.ID)
-		s.infoLog.Printf("Update vendor: %v, %v, %v\n", req.ID, req.CodeDebitor, req.NameDebitor)
+		s.logger.Infof("Update vendor: %v, %v, %v\n", req.ID, req.CodeDebitor, req.NameDebitor)
 		u := &model.Vendor{
 			ID:          req.ID,
 			CodeDebitor: req.CodeDebitor,
@@ -455,11 +455,11 @@ func (s *Server) DeleteVendor() http.HandlerFunc {
 		id, err := strconv.Atoi(vars["ID"])
 		if err != nil {
 			log.Println(err)
-			s.errorLog.Printf(err.Error())
+			s.logger.Errorf(err.Error())
 		}
 
 		req.ID = id
-		s.infoLog.Printf("Deleted vendor id: %v\n", req.ID)
+		s.logger.Infof("Deleted vendor id: %v\n", req.ID)
 		//	req.CodeDebitor = r.FormValue("codedebitor")
 		//	req.NameDebitor = r.FormValue("namedebitor")
 		//	req.SPPElement = r.FormValue("sppelement")

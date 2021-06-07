@@ -103,7 +103,8 @@ func (s *Server) InInspection() http.HandlerFunc {
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
 			log.Println(err)
-			s.errorLog.Printf(err.Error())
+			s.logger.Errorf(err.Error())
+			
 		}
 
 		var rdata []req
@@ -113,9 +114,11 @@ func (s *Server) InInspection() http.HandlerFunc {
 		json.Unmarshal(body, &rdata1)
 		json.Unmarshal(body, &slice)
 		fmt.Printf("test ininspection %s", body)
-		s.infoLog.Printf("Loading json body %s", body)
+		//s.infoLog.Printf("Loading json body %s", body)
+		s.logger.Infof("Loading json body %s", body)
 		fmt.Println("\nall of the rdata ininspection", rdata)
-		s.infoLog.Printf("Loading json rdata %v", rdata)
+		//s.infoLog.Printf("Loading json rdata %v", rdata)
+		s.logger.Infof("Loading json rdata %v", rdata)
 		//	rdata2 := removeDuplicates(rdata1)
 		//	fmt.Print(rdata2)
 		fmt.Printf("slice: %q\n", slice)
@@ -146,20 +149,21 @@ func (s *Server) InInspection() http.HandlerFunc {
 					idMaterial := v.ScanID[0:45]
 
 					//	fmt.Println("Пропускаем:\n" + idMaterial + "\n")
-					s.infoLog.Printf("Запись строки сканирования на входной контроль, П1: %v", idMaterial)
+					//s.infoLog.Printf("Запись строки сканирования на входной контроль, П1: %v", idMaterial)
+					s.logger.Infof("Запись строки сканирования на входной контроль, П1: %v", idMaterial)
 					sapStr := v.ScanID[1:8]
 					sap := v.SAP
 					sap, err := strconv.Atoi(sapStr)
 					if err != nil {
 						fmt.Println(err)
-						s.errorLog.Printf(err.Error())
+						s.logger.Errorf(err.Error())
 					}
 					idrollStr := v.ScanID[20:30]
 					idrollIns := v.Roll
 					idrollIns, err = strconv.Atoi(idrollStr)
 					if err != nil {
 						fmt.Println(err)
-						s.errorLog.Printf(err.Error())
+						s.logger.Errorf(err.Error())
 					}
 					v.Lot = v.ScanID[9:19]
 					qtyStr := v.ScanID[31:36]
@@ -167,7 +171,7 @@ func (s *Server) InInspection() http.HandlerFunc {
 					qtyIns, err = strconv.Atoi(qtyStr)
 					if err != nil {
 						fmt.Println(err)
-						s.errorLog.Printf(err.Error())
+						s.logger.Errorf(err.Error())
 					}
 					v.ProductionDate = v.ScanID[37:45]
 					v.NumberVendor = v.ScanID[9:15]
@@ -194,7 +198,7 @@ func (s *Server) InInspection() http.HandlerFunc {
 					} else {
 						if (strings.Contains(v.ScanID[0:1], "P") == false) && (len(v.ScanID) != 45) {
 							fmt.Println("не верное сканирование :\n" + v.ScanID + "\n")
-							s.errorLog.Printf("Не верное сканирование на входной контроль, П1: %v", v)
+							s.logger.Errorf("Не верное сканирование на входной контроль, П1: %v", v)
 							//	fmt.Fprintf(w, "не верное сканирование :"+v.ScanID)
 						}
 						//	tpl.Execute(w, data)
@@ -211,20 +215,21 @@ func (s *Server) InInspection() http.HandlerFunc {
 					idMaterial := v.ScanID[0:35]
 
 					//	fmt.Println("Пропускаем:\n" + idMaterial + "\n")
-					s.infoLog.Printf("Запись строки сканирования на входной контроль, П1: %v", idMaterial)
+					//s.infoLog.Printf("Запись строки сканирования на входной контроль, П1: %v", idMaterial)
+					s.logger.Infof("Запись строки сканирования на входной контроль, П1: %v", idMaterial)
 					sapStr := v.ScanID[1:8]
 					sap := v.SAP
 					sap, err := strconv.Atoi(sapStr)
 					if err != nil {
 						fmt.Println(err)
-						s.errorLog.Printf(err.Error())
+						s.logger.Errorf(err.Error())
 					}
 					idrollStr := v.ScanID[10:20]
 					idrollIns := v.Roll
 					idrollIns, err = strconv.Atoi(idrollStr)
 					if err != nil {
 						fmt.Println(err)
-						s.errorLog.Printf(err.Error())
+						s.logger.Errorf(err.Error())
 					}
 					v.Lot = "без партии" //v.ScanID[9:19]
 					qtyStr := v.ScanID[21:26]
@@ -232,7 +237,7 @@ func (s *Server) InInspection() http.HandlerFunc {
 					qtyIns, err = strconv.Atoi(qtyStr)
 					if err != nil {
 						fmt.Println(err)
-						s.errorLog.Printf(err.Error())
+						s.logger.Errorf(err.Error())
 					}
 					v.ProductionDate = v.ScanID[27:35]
 					v.NumberVendor = "без поставщика" //v.ScanID[9:15]
@@ -259,7 +264,7 @@ func (s *Server) InInspection() http.HandlerFunc {
 					} else {
 						if (strings.Contains(v.ScanID[0:1], "P") == false) && (len(v.ScanID) != 35) {
 							fmt.Println("не верное сканирование :\n" + v.ScanID + "\n")
-							s.errorLog.Printf("Не верное сканирование на входной контроль, П1: %v", v)
+							s.logger.Errorf("Не верное сканирование на входной контроль, П1: %v", v)
 							//	fmt.Fprintf(w, "не верное сканирование :"+v.ScanID)
 						}
 						//	tpl.Execute(w, data)
@@ -281,20 +286,21 @@ func (s *Server) InInspection() http.HandlerFunc {
 					idMaterial := v.ScanID[0:45]
 
 					//	fmt.Println("Пропускаем:\n" + idMaterial + "\n")
-					s.infoLog.Printf("Запись строки сканирования на входной контроль, П5: %v", idMaterial)
+					//s.infoLog.Printf("Запись строки сканирования на входной контроль, П5: %v", idMaterial)
+					s.logger.Infof("Запись строки сканирования на входной контроль, П5: %v", idMaterial)
 					sapStr := v.ScanID[1:8]
 					sap := v.SAP
 					sap, err := strconv.Atoi(sapStr)
 					if err != nil {
 						fmt.Println(err)
-						s.errorLog.Printf(err.Error())
+						s.logger.Errorf(err.Error())
 					}
 					idrollStr := v.ScanID[20:30]
 					idrollIns := v.Roll
 					idrollIns, err = strconv.Atoi(idrollStr)
 					if err != nil {
 						fmt.Println(err)
-						s.errorLog.Printf(err.Error())
+						s.logger.Errorf(err.Error())
 					}
 					v.Lot = v.ScanID[9:19]
 					qtyStr := v.ScanID[31:36]
@@ -302,7 +308,7 @@ func (s *Server) InInspection() http.HandlerFunc {
 					qtyIns, err = strconv.Atoi(qtyStr)
 					if err != nil {
 						fmt.Println(err)
-						s.errorLog.Printf(err.Error())
+						s.logger.Errorf(err.Error())
 					}
 					v.ProductionDate = v.ScanID[37:45]
 					v.NumberVendor = v.ScanID[9:15]
@@ -329,7 +335,7 @@ func (s *Server) InInspection() http.HandlerFunc {
 					} else {
 						if (strings.Contains(v.ScanID[0:1], "P") == false) && (len(v.ScanID) != 45) {
 							fmt.Println("не верное сканирование :\n" + v.ScanID + "\n")
-							s.errorLog.Printf("Не верное сканирование на входной контроль, П5: %v", v)
+							s.logger.Errorf("Не верное сканирование на входной контроль, П5: %v", v)
 							//	fmt.Fprintf(w, "не верное сканирование :"+v.ScanID)
 						}
 						//	tpl.Execute(w, data)
@@ -346,20 +352,21 @@ func (s *Server) InInspection() http.HandlerFunc {
 					idMaterial := v.ScanID[0:35]
 
 					//	fmt.Println("Пропускаем:\n" + idMaterial + "\n")
-					s.infoLog.Printf("Запись строки сканирования на входной контроль, П5: %v", idMaterial)
+					//s.infoLog.Printf("Запись строки сканирования на входной контроль, П5: %v", idMaterial)
+					s.logger.Infof("Запись строки сканирования на входной контроль, П5: %v", idMaterial)
 					sapStr := v.ScanID[1:8]
 					sap := v.SAP
 					sap, err := strconv.Atoi(sapStr)
 					if err != nil {
 						fmt.Println(err)
-						s.errorLog.Printf(err.Error())
+						s.logger.Errorf(err.Error())
 					}
 					idrollStr := v.ScanID[10:20]
 					idrollIns := v.Roll
 					idrollIns, err = strconv.Atoi(idrollStr)
 					if err != nil {
 						fmt.Println(err)
-						s.errorLog.Printf(err.Error())
+						s.logger.Errorf(err.Error())
 					}
 					v.Lot = "без партии" //v.ScanID[9:19]
 					qtyStr := v.ScanID[21:26]
@@ -367,7 +374,7 @@ func (s *Server) InInspection() http.HandlerFunc {
 					qtyIns, err = strconv.Atoi(qtyStr)
 					if err != nil {
 						fmt.Println(err)
-						s.errorLog.Printf(err.Error())
+						s.logger.Errorf(err.Error())
 					}
 					v.ProductionDate = v.ScanID[27:35]
 					v.NumberVendor = "без поставщика" //v.ScanID[9:15]
@@ -394,7 +401,7 @@ func (s *Server) InInspection() http.HandlerFunc {
 					} else {
 						if (strings.Contains(v.ScanID[0:1], "P") == false) && (len(v.ScanID) != 35) {
 							fmt.Println("не верное сканирование :\n" + v.ScanID + "\n")
-							s.errorLog.Printf("Не верное сканирование на входной контроль, П5: %v", v)
+							s.logger.Errorf("Не верное сканирование на входной контроль, П5: %v", v)
 							//	fmt.Fprintf(w, "не верное сканирование :"+v.ScanID)
 						}
 						//	tpl.Execute(w, data)
@@ -570,19 +577,23 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 			materialInt, err := strconv.Atoi(r.FormValue("material"))
 			if err != nil {
 				fmt.Println(err)
-				s.errorLog.Printf(err.Error())
+				s.logger.Errorf(err.Error())
 			}
 			search.Date1 = r.FormValue("date1")
 			fmt.Println("date1 - ", search.Date1)
-			s.infoLog.Printf("date1 - %v", search.Date1)
+			//s.infoLog.Printf("date1 - %v", search.Date1)
+			s.logger.Infof("date1 - %v", search.Date1)
 			search.Date2 = r.FormValue("date2")
 			fmt.Println("date2 - ", search.Date2)
-			s.infoLog.Printf("date2 - %v", search.Date2)
+			//s.infoLog.Printf("date2 - %v", search.Date2)
+			s.logger.Infof("date2 - %v", search.Date2)
 			search.Material = materialInt
 			fmt.Println("material - ", search.Material)
-			s.infoLog.Printf("material - %v", search.Material)
+			//s.infoLog.Printf("material - %v", search.Material)
+			s.logger.Infof("material - %v", search.Material)
 			search.EO = r.FormValue("eo")
-			s.infoLog.Printf("eo - %v", search.EO)
+			//s.infoLog.Printf("eo - %v", search.EO)
+			s.logger.Infof("eo - %v", search.EO)
 
 			currentData := time.Now()
 			searchDateNow := currentData.Format("2006-01-02")
@@ -926,19 +937,23 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 			materialInt, err := strconv.Atoi(r.FormValue("material"))
 			if err != nil {
 				fmt.Println(err)
-				s.errorLog.Printf(err.Error())
+				s.logger.Errorf(err.Error())
 			}
 			search.Date1 = r.FormValue("date1")
 			fmt.Println("date1 - ", search.Date1)
-			s.infoLog.Printf("date1 - %v", search.Date1)
+			//s.infoLog.Printf("date1 - %v", search.Date1)
+			s.logger.Infof("date1 - %v", search.Date1)
 			search.Date2 = r.FormValue("date2")
 			fmt.Println("date2 - ", search.Date2)
-			s.infoLog.Printf("date2 - %v", search.Date2)
+			//s.infoLog.Printf("date2 - %v", search.Date2)
+			s.logger.Infof("date2 - %v", search.Date2)
 			search.Material = materialInt
 			fmt.Println("material - ", search.Material)
-			s.infoLog.Printf("material - %v", search.Material)
+			//s.infoLog.Printf("material - %v", search.Material)
+			s.logger.Infof("material - %v", search.Material)
 			search.EO = r.FormValue("eo")
-			s.infoLog.Printf("eo - %v", search.EO)
+			//s.infoLog.Printf("eo - %v", search.EO)
+			s.logger.Infof("eo - %v", search.EO)
 
 			currentData := time.Now()
 			searchDateNow := currentData.Format("2006-01-02")
@@ -1413,19 +1428,19 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 			materialInt, err := strconv.Atoi(r.FormValue("material"))
 			if err != nil {
 				fmt.Println(err)
-				s.errorLog.Printf(err.Error())
+				s.logger.Errorf(err.Error())
 			}
 			search.Date1 = r.FormValue("date1")
 			fmt.Println("date1 - ", search.Date1)
-			s.infoLog.Printf("date1 - %v", search.Date1)
+			//s.infoLog.Printf("date1 - %v", search.Date1)
 			search.Date2 = r.FormValue("date2")
 			fmt.Println("date2 - ", search.Date2)
-			s.infoLog.Printf("date2 - %v", search.Date2)
+			//s.infoLog.Printf("date2 - %v", search.Date2)
 			search.Material = materialInt
 			fmt.Println("material - ", search.Material)
-			s.infoLog.Printf("material - %v", search.Material)
+			//s.infoLog.Printf("material - %v", search.Material)
 			search.EO = r.FormValue("eo")
-			s.infoLog.Printf("eo - %v", search.EO)
+			//s.infoLog.Printf("eo - %v", search.EO)
 
 			currentData := time.Now()
 			searchDateNow := currentData.Format("2006-01-02")
@@ -1760,19 +1775,23 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 			materialInt, err := strconv.Atoi(r.FormValue("material"))
 			if err != nil {
 				fmt.Println(err)
-				s.errorLog.Printf(err.Error())
+				s.logger.Errorf(err.Error())
 			}
 			search.Date1 = r.FormValue("date1")
 			fmt.Println("date1 - ", search.Date1)
-			s.infoLog.Printf("date1 - %v", search.Date1)
+			//s.infoLog.Printf("date1 - %v", search.Date1)
+			s.logger.Infof("date1 - %v", search.Date1)
 			search.Date2 = r.FormValue("date2")
 			fmt.Println("date2 - ", search.Date2)
-			s.infoLog.Printf("date2 - %v", search.Date2)
+			//s.infoLog.Printf("date2 - %v", search.Date2)
+			s.logger.Infof("date2 - %v", search.Date2)
 			search.Material = materialInt
 			fmt.Println("material - ", search.Material)
-			s.infoLog.Printf("material - %v", search.Material)
+			//s.infoLog.Printf("material - %v", search.Material)
+			s.logger.Infof("material - %v", search.Material)
 			search.EO = r.FormValue("eo")
-			s.infoLog.Printf("eo - %v", search.EO)
+			//s.infoLog.Printf("eo - %v", search.EO)
+			s.logger.Infof("eo - %v", search.EO)
 
 			currentData := time.Now()
 			searchDateNow := currentData.Format("2006-01-02")
@@ -2665,7 +2684,7 @@ func (s *Server) PageupdateInspection() http.HandlerFunc {
 		id, err := strconv.Atoi(vars["ID"])
 		if err != nil {
 			log.Println(err)
-			s.errorLog.Printf(err.Error())
+			s.logger.Errorf(err.Error())
 		}
 
 		session, err := s.sessionStore.Get(r, sessionName)
@@ -2686,7 +2705,8 @@ func (s *Server) PageupdateInspection() http.HandlerFunc {
 			return
 		}
 		fmt.Println("user.Groups - ?", user.Groups)
-		s.infoLog.Printf("test user.Groups - %s", user.Groups)
+		//s.infoLog.Printf("test user.Groups - %s", user.Groups)
+		s.logger.Infof("test user.Groups - %s", user.Groups)
 
 		if user.Groups == "качество" || user.Groups == "администратор" {
 			GroupP1 = true
@@ -2802,7 +2822,7 @@ func (s *Server) PageupdateInspectionJSON() http.HandlerFunc {
 		id, err := strconv.Atoi(vars["ID"])
 		if err != nil {
 			log.Println(err)
-			s.errorLog.Printf(err.Error())
+			s.logger.Errorf(err.Error())
 		}
 
 		session, err := s.sessionStore.Get(r, sessionName)
@@ -2824,7 +2844,8 @@ func (s *Server) PageupdateInspectionJSON() http.HandlerFunc {
 		}
 		fmt.Println("user.Groups - ?", user.Groups)
 		fmt.Println("Test json page update")
-		s.infoLog.Printf("user.Groups - %v", user.Groups)
+		//s.infoLog.Printf("user.Groups - %v", user.Groups)
+		s.logger.Infof("user.Groups - %v", user.Groups)
 		/*
 			if (user.Groups == "качество" && user.Role == "главный инженер по качеству") ||
 				(user.Groups == "качество" && user.Role == "инженер по качеству") {
@@ -2987,7 +3008,7 @@ func (s *Server) PageupdateInspectionJSONmix() http.HandlerFunc {
 		id, err := strconv.Atoi(vars["ID"])
 		if err != nil {
 			log.Println(err)
-			s.errorLog.Printf(err.Error())
+			s.logger.Errorf(err.Error())
 		}
 
 		session, err := s.sessionStore.Get(r, sessionName)
@@ -3009,7 +3030,8 @@ func (s *Server) PageupdateInspectionJSONmix() http.HandlerFunc {
 		}
 		fmt.Println("user.Groups - ?", user.Groups)
 		fmt.Println("Test json page update")
-		s.infoLog.Printf("user.Groups - %v", user.Groups)
+		//s.infoLog.Printf("user.Groups - %v", user.Groups)
+		s.logger.Infof("user.Groups - %v", user.Groups)
 
 		if (user.Groups == "качество" && user.Role == "главный инженер по качеству") ||
 			(user.Groups == "качество" && user.Role == "инженер по качеству") {
@@ -3148,7 +3170,7 @@ func (s *Server) UpdateInspection() http.HandlerFunc {
 		id, err := strconv.Atoi(vars["ID"])
 		if err != nil {
 			log.Println(err)
-			s.errorLog.Printf(err.Error())
+			s.logger.Errorf(err.Error())
 		}
 
 		currentTime := time.Now()
@@ -3322,16 +3344,18 @@ func (s *Server) UpdateInspectionJSON() http.HandlerFunc {
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
 			log.Println(err)
-			s.errorLog.Printf(err.Error())
+			s.logger.Errorf(err.Error())
 		}
 		var hdata []requestJSON
 		//var hdata map[string]interface{}
 		json.Unmarshal(body, &hdata)
 		//json.Unmarshal([]byte(body), &hdata)
 		fmt.Printf("body requestJSON: %s", body)
-		s.infoLog.Printf("Loading body requestJSON: %v\n", body)
+		//s.infoLog.Printf("Loading body requestJSON: %v\n", body)
+		s.logger.Infof("Loading body requestJSON: %v\n", body)
 		fmt.Println("\njson  struct hdata requestJSON", hdata)
-		s.infoLog.Printf("Loading hdata requestJSON: %v\n", hdata)
+		//s.infoLog.Printf("Loading hdata requestJSON: %v\n", hdata)
+		s.logger.Infof("Loading hdata requestJSON: %v\n", hdata)
 		//hdata2 := hdata["hdata2"].(map[string]interface{})
 
 		for _, v := range hdata {
@@ -3342,7 +3366,7 @@ func (s *Server) UpdateInspectionJSON() http.HandlerFunc {
 			//idRoll, err := strconv.Atoi(v.(string))
 			if err != nil {
 				log.Println(err)
-				s.errorLog.Printf(err.Error())
+				s.logger.Errorf(err.Error())
 			}
 
 			u := &model.Inspection{
@@ -3477,16 +3501,18 @@ func (s *Server) UpdateInspectionJSONmix() http.HandlerFunc {
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
 			log.Println(err)
-			s.errorLog.Printf(err.Error())
+			s.logger.Errorf(err.Error())
 		}
 		var hdata []requestJSON
 		//var hdata map[string]interface{}
 		json.Unmarshal(body, &hdata)
 		//json.Unmarshal([]byte(body), &hdata)
 		fmt.Printf("body requestJSON: %s", body)
-		s.infoLog.Printf("Loading body requestJSON: %v\n", body)
+		//s.infoLog.Printf("Loading body requestJSON: %v\n", body)
+		s.logger.Infof("Loading body requestJSON: %v\n", body)
 		fmt.Println("\njson  struct hdata requestJSON", hdata)
-		s.infoLog.Printf("Loading hdata requestJSON: %v\n", hdata)
+		//s.infoLog.Printf("Loading hdata requestJSON: %v\n", hdata)
+		s.logger.Infof("Loading hdata requestJSON: %v\n", hdata)
 		//hdata2 := hdata["hdata2"].(map[string]interface{})
 
 		for _, v := range hdata {
@@ -3496,7 +3522,7 @@ func (s *Server) UpdateInspectionJSONmix() http.HandlerFunc {
 			//idRoll, err := strconv.Atoi(v.(string))
 			if err != nil {
 				log.Println(err)
-				s.errorLog.Printf(err.Error())
+				s.logger.Errorf(err.Error())
 			}
 			u := &model.Inspection{
 				ID:         idRoll,
@@ -3577,7 +3603,7 @@ func (s *Server) DeleteInspection() http.HandlerFunc {
 		id, err := strconv.Atoi(vars["ID"])
 		if err != nil {
 			log.Println(err)
-			s.errorLog.Printf(err.Error())
+			s.logger.Errorf(err.Error())
 		}
 
 		req.ID = id
@@ -3736,7 +3762,7 @@ func (s *Server) PageacceptWarehouseInspection() http.HandlerFunc {
 		id, err := strconv.Atoi(vars["ID"])
 		if err != nil {
 			log.Println(err)
-			s.errorLog.Printf(err.Error())
+			s.logger.Errorf(err.Error())
 		}
 
 		session, err := s.sessionStore.Get(r, sessionName)
@@ -3757,7 +3783,8 @@ func (s *Server) PageacceptWarehouseInspection() http.HandlerFunc {
 			return
 		}
 		fmt.Println("user.Groups - ?", user.Groups)
-		s.infoLog.Printf("user.Groups - %v\n", user.Groups)
+		//s.infoLog.Printf("user.Groups - %v\n", user.Groups)
+		s.logger.Infof("user.Groups - %v\n", user.Groups)
 
 		if user.Groups == "склад" {
 			GroupP1 = true
@@ -3858,7 +3885,7 @@ func (s *Server) AcceptWarehouseInspection() http.HandlerFunc {
 		id, err := strconv.Atoi(vars["ID"])
 		if err != nil {
 			log.Println(err)
-			s.errorLog.Printf(err.Error())
+			s.logger.Errorf(err.Error())
 		}
 
 		currentTime := time.Now()
@@ -3946,7 +3973,7 @@ func (s *Server) PageacceptWarehouseInspectionJSON() http.HandlerFunc {
 		id, err := strconv.Atoi(vars["ID"])
 		if err != nil {
 			log.Println(err)
-			s.errorLog.Printf(err.Error())
+			s.logger.Errorf(err.Error())
 		}
 
 		session, err := s.sessionStore.Get(r, sessionName)
@@ -3967,7 +3994,8 @@ func (s *Server) PageacceptWarehouseInspectionJSON() http.HandlerFunc {
 			return
 		}
 		fmt.Println("user.Groups - ?", user.Groups)
-		s.infoLog.Printf("user.Groups - %v\n", user.Groups)
+		//s.infoLog.Printf("user.Groups - %v\n", user.Groups)
+		s.logger.Info("user.Groups - %v\n", user.Groups)
 
 		if user.Groups == "склад" {
 			GroupP1 = true
@@ -4101,16 +4129,18 @@ func (s *Server) AcceptWarehouseInspectionJSON() http.HandlerFunc {
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
 			log.Println(err)
-			s.errorLog.Printf(err.Error())
+			s.logger.Errorf(err.Error())
 		}
 		var hdata []requestJSON
 		//var hdata map[string]interface{}
 		json.Unmarshal(body, &hdata)
 		//json.Unmarshal([]byte(body), &hdata)
 		fmt.Printf("body requestJSON: %s", body)
-		s.infoLog.Printf("Accept body requestJSON: %v\n", body)
+		//s.infoLog.Printf("Accept body requestJSON: %v\n", body)
+		s.logger.Infof("Accept body requestJSON: %v\n", body)
 		fmt.Println("\njson  struct hdata requestJSON", hdata)
-		s.infoLog.Printf("Accept hdata requestJSON: %v\n", hdata)
+		//s.infoLog.Printf("Accept hdata requestJSON: %v\n", hdata)
+		s.logger.Infof("Accept hdata requestJSON: %v\n", hdata)
 		//hdata2 := hdata["hdata2"].(map[string]interface{})
 
 		for _, v := range hdata {
@@ -4119,7 +4149,7 @@ func (s *Server) AcceptWarehouseInspectionJSON() http.HandlerFunc {
 			//idRoll, err := strconv.Atoi(v.(string))
 			if err != nil {
 				log.Println(err)
-				s.errorLog.Printf(err.Error())
+				s.logger.Errorf(err.Error())
 			}
 			u := &model.Inspection{
 				ID:             idRoll,
@@ -4204,15 +4234,17 @@ func (s *Server) AcceptGroupsWarehouseInspection() http.HandlerFunc {
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
 			log.Println(err)
-			s.errorLog.Printf(err.Error())
+			s.logger.Errorf(err.Error())
 		}
 
 		var rdata []req
 		json.Unmarshal(body, &rdata)
 		fmt.Printf("test AcceptGroupsWarehouseInspection %s", body)
-		s.infoLog.Printf("Loading json accept list EO %s", body)
+		//s.infoLog.Printf("Loading json accept list EO %s", body)
+		s.logger.Infof("Loading json accept list EO %s", body)
 		fmt.Println("\nall of the rdata AcceptGroupsWarehouseInspection", rdata)
-		s.infoLog.Printf("Loading json rdata list EO %v", rdata)
+		//s.infoLog.Printf("Loading json rdata list EO %v", rdata)
+		s.logger.Infof("Loading json rdata list EO %v", rdata)
 
 		currentTime := time.Now()
 
@@ -4260,7 +4292,7 @@ func (s *Server) AcceptGroupsWarehouseInspection() http.HandlerFunc {
 					} else {
 						if (strings.Contains(v.ScanID[0:1], "P") == false) && (len(v.ScanID) != 45) {
 							fmt.Println("не верное сканирование :\n" + v.ScanID + "\n")
-							s.errorLog.Printf("не верное сканирование :\n" + v.ScanID + "\n")
+							s.logger.Errorf("не верное сканирование :\n" + v.ScanID + "\n")
 							//	fmt.Fprintf(w, "не верное сканирование :"+v.ScanID)
 						}
 						//	tpl.Execute(w, data)
@@ -4289,7 +4321,7 @@ func (s *Server) AcceptGroupsWarehouseInspection() http.HandlerFunc {
 					} else {
 						if (strings.Contains(v.ScanID[0:1], "P") == false) && (len(v.ScanID) != 35) {
 							fmt.Println("не верное сканирование :\n" + v.ScanID + "\n")
-							s.errorLog.Printf("не верное сканирование :\n" + v.ScanID + "\n")
+							s.logger.Errorf("не верное сканирование :\n" + v.ScanID + "\n")
 							//	fmt.Fprintf(w, "не верное сканирование :"+v.ScanID)
 						}
 						//	tpl.Execute(w, data)
@@ -4322,7 +4354,7 @@ func (s *Server) AcceptGroupsWarehouseInspection() http.HandlerFunc {
 					} else {
 						if (strings.Contains(v.ScanID[0:1], "P") == false) && (len(v.ScanID) != 45) {
 							fmt.Println("не верное сканирование :\n" + v.ScanID + "\n")
-							s.errorLog.Printf("не верное сканирование :\n" + v.ScanID + "\n")
+							s.logger.Errorf("не верное сканирование :\n" + v.ScanID + "\n")
 							//	fmt.Fprintf(w, "не верное сканирование :"+v.ScanID)
 						}
 						//	tpl.Execute(w, data)
@@ -4351,7 +4383,7 @@ func (s *Server) AcceptGroupsWarehouseInspection() http.HandlerFunc {
 					} else {
 						if (strings.Contains(v.ScanID[0:1], "P") == false) && (len(v.ScanID) != 35) {
 							fmt.Println("не верное сканирование :\n" + v.ScanID + "\n")
-							s.errorLog.Printf("не верное сканирование :\n" + v.ScanID + "\n")
+							s.logger.Errorf("не верное сканирование :\n" + v.ScanID + "\n")
 							//	fmt.Fprintf(w, "не верное сканирование :"+v.ScanID)
 						}
 						//	tpl.Execute(w, data)

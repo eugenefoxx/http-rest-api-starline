@@ -5,9 +5,13 @@ import (
 	//	"fmt"
 
 	"context"
-	"fmt"
+	"flag"
+	"github.com/eugenefoxx/http-rest-api-starline/pkg/logging"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	//	"os"
@@ -24,6 +28,11 @@ import (
 
 // Start ...
 func Start(config *Config) error {
+	logger := logging.GetLogger()
+	var wait time.Duration
+	flag.DurationVar(&wait, "graceful-timeout", time.Second*15, "the duration for which the server gracefully wait for existing connections to finish - e.g. 15s or 1m")
+	flag.Parse()
+
 	db, err := newDB(config.DatabaseURL)
 	if err != nil {
 		return err
@@ -49,24 +58,54 @@ func Start(config *Config) error {
 
 	redis_store := redisstore.New(redis)
 
-	fmt.Printf("redis is run  %v\n", redis)
+	//fmt.Printf("redis is run  %v\n", redis)
 
 	srv := newServer(store, sessionStore, redis_store)
-	/*
-		srvv := &http.Server{
-			Addr: config.BindAddr,
-			// Good practice to set timeouts to avoid Slowloris attacks.
-			WriteTimeout: time.Second * 15,
-			ReadTimeout:  time.Second * 15,
-			IdleTimeout:  time.Second * 60,
-		}
-	*/
+
 	//	return http.ListenAndServe(config.BindAddr, srv)
 	// http.Handle("/resources/", http.StripPrefix("/resources", http.FileServer(http.Dir("./web/images"))))
 	//return http.ListenAndServe(config.BindAddr, srv)
-	serv := http.ListenAndServe(config.BindAddr, srv)
 
-	return serv
+	//servv := http.ListenAndServe(config.BindAddr, srv)
+	server := &http.Server{
+		Addr: config.BindAddr,
+		// Good practice to set timeouts to avoid Slowloris attacks.
+		WriteTimeout: time.Second * 15,
+		ReadTimeout:  time.Second * 15,
+		IdleTimeout:  time.Second * 60,
+		Handler:      srv, // Pass our instance of gorilla/mux in.
+	}
+
+	// Run our server in a goroutine so that it doesn't block.
+	go func() {
+		if err := server.ListenAndServe(); err != nil {
+			logger.Errorf(err.Error())
+			log.Println(err)
+		}
+	}()
+
+	c := make(chan os.Signal, 1)
+	// We'll accept graceful shutdowns when quit via SIGINT (Ctrl+C)
+	// SIGKILL, SIGQUIT or SIGTERM (Ctrl+/) will not be caught.
+	signal.Notify(c, os.Interrupt, syscall.SIGABRT, syscall.SIGQUIT, syscall.SIGHUP, syscall.SIGTERM)
+
+	// Block until we receive our signal.
+	<-c
+
+	// Create a deadline to wait for.
+	ctx, cancel := context.WithTimeout(context.Background(), wait)
+	defer cancel()
+	// Doesn't block if no connections, but will otherwise wait
+	// until the timeout deadline.
+	server.Shutdown(ctx)
+	// Optionally, you could run srv.Shutdown in a goroutine and block on
+	// <-ctx.Done() if your application should wait for other services
+	// to finalize based on context cancellation.
+	log.Println("shutting down")
+	logger.Error("shutting down")
+	os.Exit(0)
+
+	return nil
 }
 
 func newDB(databaseURL string) (*sqlx.DB, error) {
