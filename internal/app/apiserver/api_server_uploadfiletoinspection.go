@@ -34,23 +34,7 @@ func (s *Server) UploadFileToInspection() http.HandlerFunc {
 			w.Header().Set("Access-Control-Allow-Methods", "POST")
 			w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 		*/
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		id, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(id.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		const statusTransfer = "отгружено на ВК"
 
@@ -166,7 +150,7 @@ func (s *Server) UploadFileToInspection() http.HandlerFunc {
 
 		}
 
-		if user.Groups == "склад" {
+		if user.Groups == groupWarehouse {
 			for _, v := range lines {
 				if (strings.Contains(v[0:1], "P") == true) && (len(v) == 45) {
 					idMaterial := v[0:45]
@@ -310,7 +294,7 @@ func (s *Server) UploadFileToInspection() http.HandlerFunc {
 			w.Write([]byte("Файл успешно загружен"))
 		}
 		fmt.Println("Test1")
-		if user.Groups == "склад П5" {
+		if user.Groups == groupWarehouseP5 {
 			fmt.Println("Test2")
 			for _, v := range lines {
 				fmt.Println("Test3")
@@ -483,15 +467,7 @@ func (s *Server) PageUploadFileToInspectionJSON() http.HandlerFunc {
 		//	if r.Method == http.MethodOptions {
 		//		return
 		//	}
-		Admin := false
-		//	SuperIngenerQuality := false
-		//	IngenerQuality := false
-		//	Inspector := false
-		StockkeeperWH := false
-		WarehouseManager := false
-		GroupP1 := false
-		GroupP5 := false
-		LoggedIn := false
+
 		/*
 			vars := mux.Vars(r)
 			id, err := strconv.Atoi(vars["ID"])
@@ -500,43 +476,27 @@ func (s *Server) PageUploadFileToInspectionJSON() http.HandlerFunc {
 				s.logger.Errorf(err.Error())
 			}
 		*/
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		idd, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(idd.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 		fmt.Println("user.Groups - ?", user.Groups)
 		fmt.Println("Test json page update")
 		s.logger.Infof("user.Groups - %v", user.Groups)
-		if user.Groups == "склад" {
-			StockkeeperWH = true
-			WarehouseManager = true
+		if user.Groups == groupWarehouse {
+			statusStockkeeperWH = true
+			statusWarehouseManager = true
 		}
 
-		if user.Groups == "качество" {
-			GroupP1 = true
-			if user.Role == "Administrator" {
-				Admin = true
-				LoggedIn = true
-			} else if user.Role == "кладовщик склада" {
-				StockkeeperWH = true
-				LoggedIn = true
-				fmt.Println("кладовщик склада - ", StockkeeperWH)
-			} else if user.Role == "старший кладовщик склада" {
-				WarehouseManager = true
-				LoggedIn = true
+		if user.Groups == groupWarehouse {
+			statusGroupP1 = true
+			if user.Role == roleAdministrator {
+				statusAdmin = true
+				statusLoggedIn = true
+			} else if user.Role == roleStockkeeperWH {
+				statusStockkeeperWH = true
+				statusLoggedIn = true
+				fmt.Println("кладовщик склада - ", statusStockkeeperWH)
+			} else if user.Role == roleWarehouseManager {
+				statusWarehouseManager = true
+				statusLoggedIn = true
 			}
 			/*else if user.Role == "главный инженер по качеству" {
 				SuperIngenerQuality = true
@@ -560,37 +520,37 @@ func (s *Server) PageUploadFileToInspectionJSON() http.HandlerFunc {
 				}
 			*/
 			data := map[string]interface{}{
-				"Admin":            Admin,
-				"WarehouseManager": WarehouseManager,
-				"StockkeeperWH":    StockkeeperWH,
+				"Admin":            statusAdmin,
+				"WarehouseManager": statusWarehouseManager,
+				"StockkeeperWH":    statusStockkeeperWH,
 				//	"SuperIngenerQuality": SuperIngenerQuality,
 				//	"IngenerQuality":      IngenerQuality,
 				//	"Inspector":           Inspector,
-				"GroupP1": GroupP1,
+				"GroupP1": statusGroupP1,
 				//"GET":      get,
-				"LoggedIn": LoggedIn,
+				"LoggedIn": statusLoggedIn,
 				"User":     user.LastName,
 				"Username": user.FirstName,
 			}
-			err = tpl.ExecuteTemplate(w, "uploadfile.html", data)
+			err := tpl.ExecuteTemplate(w, "uploadfile.html", data)
 			if err != nil {
 				http.Error(w, err.Error(), 400)
 				return
 			}
 		}
-		if user.Groups == "качество П5" {
-			GroupP5 = true
+		if user.Groups == groupWarehouseP5 {
+			statusGroupP5 = true
 			fmt.Println("Test Upload Page")
-			if user.Role == "Administrator" {
-				Admin = true
-				LoggedIn = true
-			} else if user.Role == "кладовщик склада" {
-				StockkeeperWH = true
-				LoggedIn = true
-				fmt.Println("кладовщик склада - ", StockkeeperWH)
-			} else if user.Role == "старший кладовщик склада" {
-				WarehouseManager = true
-				LoggedIn = true
+			if user.Role == roleAdministrator {
+				statusAdmin = true
+				statusLoggedIn = true
+			} else if user.Role == roleStockkeeperWH {
+				statusStockkeeperWH = true
+				statusLoggedIn = true
+				fmt.Println("кладовщик склада - ", statusStockkeeperWH)
+			} else if user.Role == roleWarehouseManager {
+				statusWarehouseManager = true
+				statusLoggedIn = true
 			}
 			/*else if user.Role == "главный инженер по качеству" {
 				SuperIngenerQuality = true
@@ -614,19 +574,19 @@ func (s *Server) PageUploadFileToInspectionJSON() http.HandlerFunc {
 				}
 			*/
 			data := map[string]interface{}{
-				"Admin":            Admin,
-				"WarehouseManager": WarehouseManager,
-				"StockkeeperWH":    StockkeeperWH,
+				"Admin":            statusAdmin,
+				"WarehouseManager": statusWarehouseManager,
+				"StockkeeperWH":    statusStockkeeperWH,
 				//	"SuperIngenerQuality": SuperIngenerQuality,
 				//	"IngenerQuality":      IngenerQuality,
 				//	"Inspector":           Inspector,
-				"GroupP5": GroupP5,
+				"GroupP5": statusGroupP5,
 				//"GET":      get,
-				"LoggedIn": LoggedIn,
+				"LoggedIn": statusLoggedIn,
 				"User":     user.LastName,
 				"Username": user.FirstName,
 			}
-			err = tpl.ExecuteTemplate(w, "uploadfile.html", data)
+			err := tpl.ExecuteTemplate(w, "uploadfile.html", data)
 			if err != nil {
 				http.Error(w, err.Error(), 400)
 				return
@@ -653,23 +613,7 @@ func (s *Server) UploadFileToInspectionJSON() http.HandlerFunc {
 		w.Header().Set("Access-Control-Allow-Methods", "POST")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		id, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(id.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		const statusTransfer = "отгружено на ВК"
 		fmt.Println("test")
@@ -795,7 +739,7 @@ func (s *Server) UploadFileToInspectionJSON() http.HandlerFunc {
 
 		}
 
-		if user.Groups == "склад" || user.Groups == "качество" {
+		if user.Groups == groupWarehouse || user.Groups == groupQuality {
 			for _, v := range lines {
 				if (strings.Contains(v[0:1], "P") == true) && (len(v) == 45) {
 					idMaterial := v[0:45]
@@ -936,7 +880,7 @@ func (s *Server) UploadFileToInspectionJSON() http.HandlerFunc {
 			}
 		}
 
-		if user.Groups == "склад П5" || user.Groups == "качество П5" {
+		if user.Groups == groupWarehouseP5 || user.Groups == groupQualityP5 {
 			for _, v := range lines {
 				if (strings.Contains(v[0:1], "P") == true) && (len(v) == 45) {
 					idMaterial := v[0:45]

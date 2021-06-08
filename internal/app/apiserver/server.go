@@ -40,6 +40,38 @@ var (
 	errNotAuthenticated         = errors.New("not authenticated")
 	tpl                         *template.Template
 	//LOGFILE                     = "/tmp/apiServer.log"
+	// statement to frontend
+	statusAdmin bool
+	statusStockkeeper bool
+	statusWarehouseManager bool
+	statusSuperIngenerQuality bool
+	statusIngenerQuality bool
+	statusStockkeeperWH bool
+	statusInspector bool
+	statusGroupP1 bool
+	statusGroupP5 bool
+	statusLoggedIn bool
+
+
+
+)
+
+const (
+	// variable for role and group
+	roleAdministrator = "Administrator"
+	roleWarehouseManager = "старший кладовщик склада"
+	roleStockkeeper = "кладовщик"
+	roleSuperIngenerQuality = "главный инженер по качеству"
+	roleIngenerQuality = "инженер по качеству"
+	roleStockkeeperWH = "кладовщик склада"
+	roleInspector = "контролер качества"
+
+	groupWarehouse = "склад"
+	groupQuality = "качество"
+	groupEmpty  = ""
+	groupAdministrator = "администратор"
+	groupWarehouseP5 = "склад П5"
+	groupQualityP5 = "качество П5"
 )
 
 type ctxKey int8
@@ -129,6 +161,7 @@ func (s *Server) configureRouter() {
 	private := s.router.PathPrefix("/private").Subrouter()
 	private.Use(s.authenticateUser)
 	private.HandleFunc("/whoami", s.handleWhoami()).Methods("GET")
+	//private.HandleFunc("/ho", s.ho().Methods("GET"))
 	// /operation/***
 	operation := s.router.PathPrefix("/operation").Subrouter()
 	operation.Use(s.authenticateUser)
@@ -564,9 +597,6 @@ func (s *Server) RecognationUser(h http.Handler)  *model.User {
 }
 */
 func (s *Server) main() http.HandlerFunc {
-	type Loggin struct{
-		Email string `json:"email"`
-	}
 
 	//tpl = template.Must(template.New("").Delims("<<", ">>").ParseFiles(s.html + "layout.html"))
 	//tpl = template.Must(template.New("").Delims("<<", ">>").ParseFiles(s.html+"layout1.html", s.html+"login1.html"))
@@ -576,90 +606,48 @@ func (s *Server) main() http.HandlerFunc {
 	//tpl = template.Must(template.New("").Delims("<<", ">>").ParseFiles("web/templates/layout.html"))
 	//tpl = template.Must(template.ParseFiles("web/templates/index.html"))
 	return func(w http.ResponseWriter, r *http.Request) {
-		Admin := false
-		Stockkeeper := false
-		WarehouseManager := false
-		SuperIngenerQuality := false
-		IngenerQuality := false
-		StockkeeperWH := false
-		Inspector := false
-		GroupP1 := false
-		GroupP5 := false
-		LoggedIn := false
-		fmt.Println("Test Main")
-		fmt.Println("test authenticateUser - ", s.authenticateUser)
-		fmt.Println("handleWhoami -", s.handleWhoami)
-	//	tt := s.handleWhoami()
+		u:= r.Context().Value(ctxKeyUser).(*model.User)
 
-
-		body, err := ioutil.ReadAll(r.Body)
-		if err != nil {
-			log.Println(err)
-			s.logger.Errorf(err.Error())
-		}
-		var loggin []Loggin
-		json.Unmarshal(body, &loggin)
-		fmt.Printf("body loggin: %s", body)
-		//	u := s.authenticateUser()
-		//	fmt.Println(u)
-		//	var body, _ = helper.LoadFile("./web/templates/index.html")
-		//	fmt.Fprintf(w, body)
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		id, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		u, err := s.store.User().Find(id.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
 		fmt.Println("/main - user:", u.Email, u.ID, u.Role)
 		//s.infoLog.Printf("main, user - %s, %d, %s", u.Email, u.ID, u.Role)
 		s.logger.Infof("main, user - %s, %d, %s", u.Email, u.ID, u.Role)
-		if u.Groups == "склад" || u.Groups == "качество" || u.Groups == "" || u.Groups == "администратор" {
+		if u.Groups == groupWarehouse || u.Groups == groupQuality || u.Groups == groupEmpty || u.Groups == groupAdministrator {
 
-			if u.Role == "Administrator" {
-				Admin = true
-				LoggedIn = true
-				GroupP1 = true
+			if u.Role == roleAdministrator {
+				statusAdmin = true
+				statusLoggedIn = true
+				statusGroupP1 = true
 
-			} else if u.Role == "кладовщик" {
-				Stockkeeper = true
-				LoggedIn = true
-				GroupP1 = true
+			} else if u.Role == roleStockkeeper {
+				statusStockkeeper = true
+				statusLoggedIn = true
+				statusGroupP1 = true
 
-			} else if u.Role == "главный инженер по качеству" {
-				SuperIngenerQuality = true
-				LoggedIn = true
-				GroupP1 = true
+			} else if u.Role == roleSuperIngenerQuality {
+				statusSuperIngenerQuality = true
+				statusLoggedIn = true
+				statusGroupP1 = true
 
-			} else if u.Role == "инженер по качеству" {
-				IngenerQuality = true
-				LoggedIn = true
-				GroupP1 = true
+			} else if u.Role == roleIngenerQuality {
+				statusIngenerQuality = true
+				statusLoggedIn = true
+				statusGroupP1 = true
 
-			} else if u.Role == "кладовщик склада" {
-				StockkeeperWH = true
-				LoggedIn = true
-				GroupP1 = true
+			} else if u.Role == roleStockkeeperWH {
+				statusStockkeeperWH = true
+				statusLoggedIn = true
+				statusGroupP1 = true
 
-			} else if u.Role == "контролер качества" {
-				Inspector = true
-				LoggedIn = true
-				GroupP1 = true
+			} else if u.Role == roleInspector {
+				statusInspector = true
+				statusLoggedIn = true
+				statusGroupP1 = true
 
-			} else if u.Role == "старший кладовщик склада" {
-				WarehouseManager = true
-				LoggedIn = true
-				GroupP1 = true
+			} else if u.Role == roleWarehouseManager {
+				statusWarehouseManager = true
+				statusLoggedIn = true
+				statusGroupP1 = true
+				fmt.Println("yes yes %v, %v", u.Groups, u.Role)
 			}
 
 			//	data := &Page{
@@ -685,15 +673,15 @@ func (s *Server) main() http.HandlerFunc {
 				"User":     u.LastName,
 				"Username": u.FirstName,
 				//"GET":                 GET,
-				"Admin":               Admin,
-				"Stockkeeper":         Stockkeeper,
-				"SuperIngenerQuality": SuperIngenerQuality,
-				"WarehouseManager":    WarehouseManager,
-				"IngenerQuality":      IngenerQuality,
-				"StockkeeperWH":       StockkeeperWH,
-				"Inspector":           Inspector,
-				"GroupP1":             GroupP1,
-				"LoggedIn":            LoggedIn,
+				"Admin":               statusAdmin,
+				"Stockkeeper":         statusStockkeeper,
+				"SuperIngenerQuality": statusSuperIngenerQuality,
+				"WarehouseManager":    statusWarehouseManager,
+				"IngenerQuality":      statusIngenerQuality,
+				"StockkeeperWH":       statusStockkeeperWH,
+				"Inspector":           statusInspector,
+				"GroupP1":             statusGroupP1,
+				"LoggedIn":            statusLoggedIn,
 			}
 
 			//tpl.ExecuteTemplate(w, "home.html", data)
@@ -702,35 +690,35 @@ func (s *Server) main() http.HandlerFunc {
 			tpl.ExecuteTemplate(w, "index.html", data) // index3.html
 		}
 
-		if u.Groups == "склад П5" || u.Groups == "качество П5" {
-			GroupP5 = true
-			if u.Role == "Administrator" {
-				Admin = true
-				LoggedIn = true
+		if u.Groups == groupWarehouseP5 || u.Groups == groupQualityP5 {
+			statusGroupP5 = true
+			if u.Role == roleAdministrator {
+				statusAdmin = true
+				statusLoggedIn = true
 
-			} else if u.Role == "кладовщик" {
-				Stockkeeper = true
-				LoggedIn = true
+			} else if u.Role == roleStockkeeper {
+				statusStockkeeper = true
+				statusLoggedIn = true
 
-			} else if u.Role == "главный инженер по качеству" {
-				SuperIngenerQuality = true
-				LoggedIn = true
+			} else if u.Role == roleSuperIngenerQuality {
+				statusSuperIngenerQuality = true
+				statusLoggedIn = true
 
-			} else if u.Role == "инженер по качеству" {
-				IngenerQuality = true
-				LoggedIn = true
+			} else if u.Role == roleIngenerQuality {
+				statusIngenerQuality = true
+				statusLoggedIn = true
 
-			} else if u.Role == "кладовщик склада" {
-				StockkeeperWH = true
-				LoggedIn = true
+			} else if u.Role == roleStockkeeperWH {
+				statusStockkeeperWH = true
+				statusLoggedIn = true
 
-			} else if u.Role == "контролер качества" {
-				Inspector = true
-				LoggedIn = true
+			} else if u.Role == roleInspector {
+				statusInspector = true
+				statusLoggedIn = true
 
-			} else if u.Role == "старший кладовщик склада" {
-				WarehouseManager = true
-				LoggedIn = true
+			} else if u.Role == roleWarehouseManager {
+				statusWarehouseManager = true
+				statusLoggedIn = true
 			}
 
 			//	data := &Page{
@@ -756,15 +744,15 @@ func (s *Server) main() http.HandlerFunc {
 				"User":     u.LastName,
 				"Username": u.FirstName,
 				//"GET":                 GET,
-				"Admin":               Admin,
-				"Stockkeeper":         Stockkeeper,
-				"SuperIngenerQuality": SuperIngenerQuality,
-				"WarehouseManager":    WarehouseManager,
-				"IngenerQuality":      IngenerQuality,
-				"StockkeeperWH":       StockkeeperWH,
-				"Inspector":           Inspector,
-				"GroupP5":             GroupP5,
-				"LoggedIn":            LoggedIn,
+				"Admin":               statusAdmin,
+				"Stockkeeper":         statusStockkeeper,
+				"SuperIngenerQuality": statusSuperIngenerQuality,
+				"WarehouseManager":    statusWarehouseManager,
+				"IngenerQuality":      statusIngenerQuality,
+				"StockkeeperWH":       statusStockkeeperWH,
+				"Inspector":           statusInspector,
+				"GroupP5":             statusGroupP5,
+				"LoggedIn":            statusLoggedIn,
 			}
 
 			//tpl.ExecuteTemplate(w, "home.html", data)
@@ -904,16 +892,6 @@ func (s *Server) handleSessionsCreate() http.HandlerFunc {
 
 		//	fmt.Printf("%s", req)
 		//		if r.Method == http.MethodPost
-		Admin := false
-		Stockkeeper := false
-		SuperIngenerQuality := false
-		WarehouseManager := false
-		IngenerQuality := false
-		StockkeeperWH := false
-		Inspector := false
-		GroupP5 := false
-		GroupP1 := false
-		LoggedIn := false
 
 		r.ParseForm()
 		email := r.FormValue("email")
@@ -934,33 +912,33 @@ func (s *Server) handleSessionsCreate() http.HandlerFunc {
 			return
 		}
 		//	s.Unlock()
-		if u.Groups == "склад" || u.Groups == "качество" || u.Groups == "" || u.Groups == "администратор" {
-			GroupP1 = true
-			if u.Role == "Administrator" {
-				Admin = true
-				LoggedIn = true
+		if u.Groups == groupWarehouse || u.Groups == groupQuality || u.Groups == groupEmpty || u.Groups == groupAdministrator {
+			statusGroupP1 = true
+			if u.Role == roleAdministrator {
+				statusAdmin = true
+				statusLoggedIn = true
 
-			} else if u.Role == "кладовщик" {
-				Stockkeeper = true
-				LoggedIn = true
+			} else if u.Role == roleStockkeeper {
+				statusStockkeeper = true
+				statusLoggedIn = true
 
-			} else if u.Role == "главный инженер по качеству" {
-				SuperIngenerQuality = true
-				LoggedIn = true
-			} else if u.Role == "инженер по качеству" {
-				IngenerQuality = true
-				LoggedIn = true
-			} else if u.Role == "кладовщик склада" {
-				StockkeeperWH = true
-				LoggedIn = true
+			} else if u.Role == roleSuperIngenerQuality {
+				statusSuperIngenerQuality = true
+				statusLoggedIn = true
+			} else if u.Role == roleIngenerQuality {
+				statusIngenerQuality = true
+				statusLoggedIn = true
+			} else if u.Role == roleStockkeeperWH {
+				statusStockkeeperWH = true
+				statusLoggedIn = true
 
-			} else if u.Role == "контролер качества" {
-				Inspector = true
-				LoggedIn = true
+			} else if u.Role == roleInspector {
+				statusInspector = true
+				statusLoggedIn = true
 
-			} else if u.Role == "старший кладовщик склада" {
-				WarehouseManager = true
-				LoggedIn = true
+			} else if u.Role == roleWarehouseManager {
+				statusWarehouseManager = true
+				statusLoggedIn = true
 			}
 
 			//	GET := map[string]bool{
@@ -1007,15 +985,15 @@ func (s *Server) handleSessionsCreate() http.HandlerFunc {
 				"User":     u.LastName,
 				"Username": u.FirstName,
 				//		"GET":  GET,
-				"Admin":               Admin,
-				"Stockkeeper":         Stockkeeper,
-				"SuperIngenerQuality": SuperIngenerQuality,
-				"WarehouseManager":    WarehouseManager,
-				"IngenerQuality":      IngenerQuality,
-				"StockkeeperWH":       StockkeeperWH,
-				"Inspector":           Inspector,
-				"GroupP1":             GroupP1,
-				"LoggedIn":            LoggedIn,
+				"Admin":               statusAdmin,
+				"Stockkeeper":         statusStockkeeper,
+				"SuperIngenerQuality": statusSuperIngenerQuality,
+				"WarehouseManager":    statusWarehouseManager,
+				"IngenerQuality":      statusIngenerQuality,
+				"StockkeeperWH":       statusStockkeeperWH,
+				"Inspector":           statusInspector,
+				"GroupP1":             statusGroupP1,
+				"LoggedIn":            statusLoggedIn,
 			}
 			//	tpl.ExecuteTemplate(w, "base", data) //  "index.html"
 			tpl.ExecuteTemplate(w, "index.html", data)
@@ -1027,33 +1005,33 @@ func (s *Server) handleSessionsCreate() http.HandlerFunc {
 			http.Redirect(w, r, "/", http.StatusFound)
 		}
 
-		if u.Groups == "склад П5" || u.Groups == "качество П5" {
-			GroupP5 = true
-			if u.Role == "Administrator" {
-				Admin = true
-				LoggedIn = true
+		if u.Groups == groupWarehouseP5 || u.Groups == groupQualityP5 {
+			statusGroupP5 = true
+			if u.Role == roleAdministrator {
+				statusAdmin = true
+				statusLoggedIn = true
 
-			} else if u.Role == "кладовщик" {
-				Stockkeeper = true
-				LoggedIn = true
+			} else if u.Role == roleStockkeeper {
+				statusStockkeeper = true
+				statusLoggedIn = true
 
-			} else if u.Role == "главный инженер по качеству" {
-				SuperIngenerQuality = true
-				LoggedIn = true
-			} else if u.Role == "инженер по качеству" {
-				IngenerQuality = true
-				LoggedIn = true
-			} else if u.Role == "кладовщик склада" {
-				StockkeeperWH = true
-				LoggedIn = true
+			} else if u.Role == roleSuperIngenerQuality {
+				statusSuperIngenerQuality = true
+				statusLoggedIn = true
+			} else if u.Role == roleIngenerQuality {
+				statusIngenerQuality = true
+				statusLoggedIn = true
+			} else if u.Role == roleStockkeeperWH {
+				statusStockkeeperWH = true
+				statusLoggedIn = true
 
-			} else if u.Role == "контролер качества" {
-				Inspector = true
-				LoggedIn = true
+			} else if u.Role == roleInspector {
+				statusInspector = true
+				statusLoggedIn = true
 
-			} else if u.Role == "старший кладовщик склада" {
-				WarehouseManager = true
-				LoggedIn = true
+			} else if u.Role == roleWarehouseManager {
+				statusWarehouseManager = true
+				statusLoggedIn = true
 			}
 
 			//	GET := map[string]bool{
@@ -1100,15 +1078,15 @@ func (s *Server) handleSessionsCreate() http.HandlerFunc {
 				"User":     u.LastName,
 				"Username": u.FirstName,
 				//		"GET":  GET,
-				"Admin":               Admin,
-				"Stockkeeper":         Stockkeeper,
-				"SuperIngenerQuality": SuperIngenerQuality,
-				"WarehouseManager":    WarehouseManager,
-				"IngenerQuality":      IngenerQuality,
-				"StockkeeperWH":       StockkeeperWH,
-				"Inspector":           Inspector,
-				"GroupP5":             GroupP5,
-				"LoggedIn":            LoggedIn,
+				"Admin":               statusAdmin,
+				"Stockkeeper":         statusStockkeeper,
+				"SuperIngenerQuality": statusSuperIngenerQuality,
+				"WarehouseManager":    statusWarehouseManager,
+				"IngenerQuality":      statusIngenerQuality,
+				"StockkeeperWH":       statusStockkeeperWH,
+				"Inspector":           statusInspector,
+				"GroupP5":             statusGroupP5,
+				"LoggedIn":            statusLoggedIn,
 			}
 			//	tpl.ExecuteTemplate(w, "base", data) //  "index.html"
 			tpl.ExecuteTemplate(w, "index.html", data)
@@ -1175,42 +1153,23 @@ func (s *Server) pageshipmentBySAP() http.HandlerFunc {
 		//		"user": "Я тут",
 		//	}
 
-		Admin := false
-		Stockkeeper := false
-		LoggedIn := false
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
+		u:= r.Context().Value(ctxKeyUser).(*model.User)
+		if u.Role == roleAdministrator {
+			statusAdmin = true
+			statusLoggedIn = true
 
-		id, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		u, err := s.store.User().Find(id.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-		if u.Role == "Administrator" {
-			Admin = true
-			LoggedIn = true
-
-		} else if u.Role == "кладовщик" {
-			Stockkeeper = true
-			LoggedIn = true
+		} else if u.Role == roleStockkeeper {
+			statusStockkeeper = true
+			statusLoggedIn = true
 
 		}
 		data := map[string]interface{}{
 			"TitleDOC":    "Отгрузка изделий",
 			"User":        u.LastName,
 			"Username":    u.FirstName,
-			"Admin":       Admin,
-			"Stockkeeper": Stockkeeper,
-			"LoggedIn":    LoggedIn,
+			"Admin":       statusAdmin,
+			"Stockkeeper": statusStockkeeper,
+			"LoggedIn":    statusLoggedIn,
 		}
 		tpl.ExecuteTemplate(w, "insertsapbyship6.html", data)
 		///	err = tpl.ExecuteTemplate(w, "layout", data)
@@ -1319,23 +1278,7 @@ func (s *Server) shipmentBySAP() http.HandlerFunc {
 		//	comment := req.Comment
 		//	использую	comment := r.FormValue("comment")
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		id, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(id.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 		//	hdata.ID = user.ID
 		//	hdata.LastName = user.LastName
 
@@ -1453,42 +1396,24 @@ func (s *Server) pageshowShipmentBySAPBySearchStatic() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		//	var body, _ = helper.LoadFile("./web/templates/showdatebysapbysearchstatic.html")
 		//	fmt.Fprintf(w, body)
-		Admin := false
-		Stockkeeper := false
-		LoggedIn := false
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
 
-		id, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
+		u:= r.Context().Value(ctxKeyUser).(*model.User)
+		if u.Role == roleAdministrator {
+			statusAdmin = true
+			statusLoggedIn = true
 
-		u, err := s.store.User().Find(id.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-		if u.Role == "Administrator" {
-			Admin = true
-			LoggedIn = true
-
-		} else if u.Role == "кладовщик" {
-			Stockkeeper = true
-			LoggedIn = true
+		} else if u.Role == roleStockkeeper {
+			statusStockkeeper = true
+			statusLoggedIn = true
 
 		}
 		data := map[string]interface{}{
 			"TitleDOC":    "Отгрузка изделий",
 			"User":        u.LastName,
 			"Username":    u.FirstName,
-			"Admin":       Admin,
-			"Stockkeeper": Stockkeeper,
-			"LoggedIn":    LoggedIn,
+			"Admin":       statusAdmin,
+			"Stockkeeper": statusStockkeeper,
+			"LoggedIn":    statusLoggedIn,
 		}
 		tpl.ExecuteTemplate(w, "showdatebysapbysearchstatic.html", data)
 		///	if err = tpl.ExecuteTemplate(w, "layout", data); err != nil {
@@ -1507,9 +1432,6 @@ func (s *Server) showShipmentBySAPBySearchStatic() http.HandlerFunc {
 		Material int    `json:"material"`
 	}
 
-	Admin := false
-	Stockkeeper := false
-	LoggedIn := false
 	//tpl, err := template.New("").Delims("<<", ">>").ParseFiles("web/templates/showdatebysap2.html")
 	///tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "showdatebysap2.html")
 	///if err != nil {
@@ -1520,30 +1442,14 @@ func (s *Server) showShipmentBySAPBySearchStatic() http.HandlerFunc {
 		s.mu.Lock()
 		defer s.mu.Unlock()
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
+		u:= r.Context().Value(ctxKeyUser).(*model.User)
+		if u.Role == roleAdministrator {
+			statusAdmin = true
+			statusLoggedIn = true
 
-		id, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		u, err := s.store.User().Find(id.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-		if u.Role == "Administrator" {
-			Admin = true
-			LoggedIn = true
-
-		} else if u.Role == "кладовщик" {
-			Stockkeeper = true
-			LoggedIn = true
+		} else if u.Role == roleStockkeeper {
+			statusStockkeeper = true
+			statusLoggedIn = true
 
 		}
 
@@ -1585,9 +1491,9 @@ func (s *Server) showShipmentBySAPBySearchStatic() http.HandlerFunc {
 			"TitleDOC":    "Отгрузка изделий",
 			"User":        u.LastName,
 			"Username":    u.FirstName,
-			"Admin":       Admin,
-			"Stockkeeper": Stockkeeper,
-			"LoggedIn":    LoggedIn,
+			"Admin":       statusAdmin,
+			"Stockkeeper": statusStockkeeper,
+			"LoggedIn":    statusLoggedIn,
 			"GET":         get,
 		}
 
@@ -1610,42 +1516,23 @@ func (s *Server) pageidReturn() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		//	var body, _ = helper.LoadFile("./web/templates/insertidreturn2.html")
 		//	fmt.Fprintf(w, body)
-		Admin := false
-		Stockkeeper := false
-		LoggedIn := false
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
+		u:= r.Context().Value(ctxKeyUser).(*model.User)
+		if u.Role == roleAdministrator {
+			statusAdmin = true
+			statusLoggedIn = true
 
-		id, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		u, err := s.store.User().Find(id.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-		if u.Role == "Administrator" {
-			Admin = true
-			LoggedIn = true
-
-		} else if u.Role == "кладовщик" {
-			Stockkeeper = true
-			LoggedIn = true
+		} else if u.Role == roleStockkeeper {
+			statusStockkeeper = true
+			statusLoggedIn = true
 
 		}
 		data := map[string]interface{}{
 			"TitleDOC":    "Проверка катушек",
 			"User":        u.LastName,
 			"Username":    u.FirstName,
-			"Admin":       Admin,
-			"Stockkeeper": Stockkeeper,
-			"LoggedIn":    LoggedIn,
+			"Admin":       statusAdmin,
+			"Stockkeeper": statusStockkeeper,
+			"LoggedIn":    statusLoggedIn,
 		}
 		tpl.ExecuteTemplate(w, "insertidreturn2.html", data)
 		///	err = tpl.ExecuteTemplate(w, "layout", nil)
@@ -1694,23 +1581,7 @@ func (s *Server) idReturn() http.HandlerFunc {
 		//s.infoLog.Printf("idReturn loadin rdata json %v\n", rdata)
 		s.logger.Infof("idReturn loadin rdata json %v\n", rdata)
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		id, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(id.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		for _, v := range rdata {
 			sap := v.ScanID[1:8]
@@ -1894,33 +1765,13 @@ func (s *Server) showUsersQuality() http.HandlerFunc {
 		s.mu.Lock()
 		defer s.mu.Unlock()
 
-		Admin := false
-		SuperIngenerQuality := false
-		LoggedIn := false
-
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		id, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(id.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-		if user.Role == "Administrator" {
-			Admin = true
-			LoggedIn = true
-		} else if user.Role == "главный инженер по качеству" {
-			SuperIngenerQuality = true
-			LoggedIn = true
+		user := r.Context().Value(ctxKeyUser).(*model.User)
+		if user.Role == roleAdministrator {
+			statusAdmin = true
+			statusLoggedIn = true
+		} else if user.Role == roleSuperIngenerQuality {
+			statusSuperIngenerQuality = true
+			statusLoggedIn = true
 		}
 
 		get, err := s.store.User().ListUsersQuality()
@@ -1933,9 +1784,9 @@ func (s *Server) showUsersQuality() http.HandlerFunc {
 			"TitleDOC":            "Сотрудники качества",
 			"User":                user.LastName,
 			"Username":            user.FirstName,
-			"Admin":               Admin,
-			"SuperIngenerQuality": SuperIngenerQuality,
-			"LoggedIn":            LoggedIn,
+			"Admin":               statusAdmin,
+			"SuperIngenerQuality": statusSuperIngenerQuality,
+			"LoggedIn":            statusLoggedIn,
 			"GET":                 get,
 		}
 		err = tpl.ExecuteTemplate(w, "showUsersQuality.html", data)

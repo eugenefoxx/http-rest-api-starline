@@ -1,6 +1,9 @@
 package apiserver
 
-import "net/http"
+import (
+	"github.com/eugenefoxx/http-rest-api-starline/internal/app/model"
+	"net/http"
+)
 
 func (s *Server) PageshowUsersQualityP5() http.HandlerFunc {
 
@@ -8,37 +11,16 @@ func (s *Server) PageshowUsersQualityP5() http.HandlerFunc {
 		s.mu.Lock()
 		defer s.mu.Unlock()
 
-		Admin := false
-		SuperIngenerQuality := false
-		GroupP5 := false
-		LoggedIn := false
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		id, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(id.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		if user.Groups == "качество П5" {
-			GroupP5 = true
-			if user.Role == "Administrator" {
-				Admin = true
-				LoggedIn = true
-			} else if user.Role == "главный инженер по качеству" {
-				SuperIngenerQuality = true
-				LoggedIn = true
+		if user.Groups == groupQualityP5 {
+			statusGroupP5 = true
+			if user.Role == roleAdministrator {
+				statusAdmin = true
+				statusLoggedIn = true
+			} else if user.Role == roleSuperIngenerQuality {
+				statusSuperIngenerQuality = true
+				statusLoggedIn = true
 			}
 		}
 
@@ -52,10 +34,10 @@ func (s *Server) PageshowUsersQualityP5() http.HandlerFunc {
 			"TitleDOC":            "Сотрудники качества",
 			"User":                user.LastName,
 			"Username":            user.FirstName,
-			"Admin":               Admin,
-			"SuperIngenerQuality": SuperIngenerQuality,
-			"GroupP5":             GroupP5,
-			"LoggedIn":            LoggedIn,
+			"Admin":               statusAdmin,
+			"SuperIngenerQuality": statusSuperIngenerQuality,
+			"GroupP5":             statusGroupP5,
+			"LoggedIn":            statusLoggedIn,
 			"GET":                 get,
 		}
 		err = tpl.ExecuteTemplate(w, "showUsersQuality.html", data)

@@ -18,40 +18,17 @@ func (s *Server) PageshowUsersWarehouse() http.HandlerFunc {
 		s.mu.Lock()
 		defer s.mu.Unlock()
 
-		false := false
-		Admin := false
-		WarehouseManager := false
-		GroupP1 := false
-		GroupP5 := false
-		LoggedIn := false
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		id, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(id.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		if user.Groups == "склад" {
-			GroupP1 = true
+		if user.Groups == groupWarehouse {
+			statusGroupP1 = true
 			group := "склад"
-			if user.Role == "Administrator" {
-				Admin = true
-				LoggedIn = true
-			} else if user.Role == "старший кладовщик склада" {
-				WarehouseManager = true
-				LoggedIn = true
+			if user.Role == roleAdministrator {
+				statusAdmin = true
+				statusLoggedIn = true
+			} else if user.Role == roleWarehouseManager {
+				statusWarehouseManager = true
+				statusLoggedIn = true
 			}
 
 			get, err := s.store.User().ListUsersWarehouse(group)
@@ -64,10 +41,10 @@ func (s *Server) PageshowUsersWarehouse() http.HandlerFunc {
 				"TitleDOC":         "Сотрудники склада",
 				"User":             user.LastName,
 				"Username":         user.FirstName,
-				"Admin":            Admin,
-				"WarehouseManager": WarehouseManager,
-				"GroupP1":          GroupP1,
-				"LoggedIn":         LoggedIn,
+				"Admin":            statusAdmin,
+				"WarehouseManager": statusWarehouseManager,
+				"GroupP1":          statusGroupP1,
+				"LoggedIn":         statusLoggedIn,
 				"GET":              get,
 			}
 			err = tpl.ExecuteTemplate(w, "showUsersWarehouse.html", data)
@@ -77,15 +54,15 @@ func (s *Server) PageshowUsersWarehouse() http.HandlerFunc {
 			}
 		}
 
-		if user.Groups == "склад П5" {
-			GroupP5 = true
+		if user.Groups == groupWarehouseP5 {
+			statusGroupP5 = true
 			group := "склад П5"
-			if user.Role == "Administrator" {
-				Admin = true
-				LoggedIn = true
-			} else if user.Role == "старший кладовщик склада" {
-				WarehouseManager = true
-				LoggedIn = true
+			if user.Role == roleAdministrator {
+				statusAdmin = true
+				statusLoggedIn = true
+			} else if user.Role == roleWarehouseManager {
+				statusWarehouseManager = true
+				statusLoggedIn = true
 			}
 
 			get, err := s.store.User().ListUsersWarehouse(group)
@@ -98,10 +75,10 @@ func (s *Server) PageshowUsersWarehouse() http.HandlerFunc {
 				"TitleDOC":         "Сотрудники склада",
 				"User":             user.LastName,
 				"Username":         user.FirstName,
-				"Admin":            Admin,
-				"WarehouseManager": WarehouseManager,
-				"GroupP5":          GroupP5,
-				"LoggedIn":         LoggedIn,
+				"Admin":            statusAdmin,
+				"WarehouseManager": statusWarehouseManager,
+				"GroupP5":          statusGroupP5,
+				"LoggedIn":         statusLoggedIn,
 				"GET":              get,
 			}
 			err = tpl.ExecuteTemplate(w, "showUsersWarehouse.html", data)
@@ -143,27 +120,11 @@ func (s *Server) CreateUserWarehouse() http.HandlerFunc {
 		Groupp1 := "склад"
 		Groupp5 := "склад П5"
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		idd, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(idd.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		//group := "склад"
-		if user.Groups == "склад" {
-			if user.Role == "старший кладовщик склада" {
+		if user.Groups == groupWarehouse {
+			if user.Role == roleWarehouseManager {
 				//	WarehouseManager = true
 				for _, v := range hdata {
 					fmt.Println(v.Email, v.FirstName, v.LastName, v.Password, v.Role, v.Tabel)
@@ -187,8 +148,8 @@ func (s *Server) CreateUserWarehouse() http.HandlerFunc {
 			}
 		}
 
-		if user.Groups == "склад П5" {
-			if user.Role == "старший кладовщик склада" {
+		if user.Groups == groupWarehouseP5 {
+			if user.Role == roleWarehouseManager {
 				//	WarehouseManager = true
 				for _, v := range hdata {
 					fmt.Println("create stockkeeper P5", v.Email, v.FirstName, v.LastName, v.Password, v.Role, v.Tabel)
@@ -221,35 +182,15 @@ func (s *Server) PageupdateUserWarehouse() http.HandlerFunc {
 		s.mu.Lock()
 		defer s.mu.Unlock()
 
-		Admin := false
-		WarehouseManager := false
-		LoggedIn := false
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		idd, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(idd.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		if user.Role == "Administrator" {
-			Admin = true
-			LoggedIn = true
-		} else if user.Role == "старший кладовщик склада" {
-			WarehouseManager = true
-			LoggedIn = true
-			fmt.Println("SuperIngenerQuality pageupdateUserQuality - ", WarehouseManager)
+		if user.Role == roleAdministrator {
+			statusAdmin = true
+			statusLoggedIn = true
+		} else if user.Role == roleWarehouseManager {
+			statusWarehouseManager = true
+			statusLoggedIn = true
+			fmt.Println("SuperIngenerQuality pageupdateUserQuality - ", statusWarehouseManager)
 		}
 
 		vars := mux.Vars(r)
@@ -268,9 +209,9 @@ func (s *Server) PageupdateUserWarehouse() http.HandlerFunc {
 
 		data := map[string]interface{}{
 			"GET":              get,
-			"Admin":            Admin,
-			"WarehouseManager": WarehouseManager,
-			"LoggedIn":         LoggedIn,
+			"Admin":            statusAdmin,
+			"WarehouseManager": statusWarehouseManager,
+			"LoggedIn":         statusLoggedIn,
 			"User":             user.LastName,
 			"Username":         user.FirstName,
 		}
