@@ -39,6 +39,7 @@ var (
 	errIncorrectEmailOrPassword = errors.New("incorrect email or password")
 	errNotAuthenticated         = errors.New("not authenticated")
 	tpl                         *template.Template
+	//storecookie *sessions.CookieStore
 	//LOGFILE                     = "/tmp/apiServer.log"
 	// statement to frontend
 	statusAdmin bool
@@ -51,9 +52,6 @@ var (
 	statusGroupP1 bool
 	statusGroupP5 bool
 	statusLoggedIn bool
-
-
-
 )
 
 const (
@@ -81,6 +79,7 @@ type Server struct {
 	//logger       *logrus.Logger
 	store        store.Store
 	sessionStore sessions.Store
+	//sessionStore sessions.CookieStore
 	//database     *sqlx.DB
 	//	html         string
 	mu sync.Mutex
@@ -93,6 +92,12 @@ type Server struct {
 
 func init() {
 	tpl = template.Must(tpl.ParseGlob("web/templates/*.html"))
+
+	/*storecookie = sessions.NewCookieStore()
+
+	storecookie.Options = &sessions.Options{
+		MaxAge: 60 * 15,
+	}*/
 
 	//tpl = template.Must(tpl.ParseGlob("/home/eugenearch/Code/github.com/eugenefoxx/http-rest-api-starline/web/templates/*.html"))
 }
@@ -340,6 +345,7 @@ func (s *Server) logRequest(next http.Handler) http.Handler {
 		)
 
 		*/
+
 		logger := s.logger.WithFields(logrus.Fields{
 			"remote_addr": r.RemoteAddr,
 			"request_id":  r.Context().Value(ctxKeyRequestID),
@@ -606,8 +612,26 @@ func (s *Server) main() http.HandlerFunc {
 	//tpl = template.Must(template.New("").Delims("<<", ">>").ParseFiles("web/templates/layout.html"))
 	//tpl = template.Must(template.ParseFiles("web/templates/index.html"))
 	return func(w http.ResponseWriter, r *http.Request) {
-		u:= r.Context().Value(ctxKeyUser).(*model.User)
+		//u:= r.Context().Value(ctxKeyUser).(*model.User)
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
 
+		id, ok := session.Values["user_id"]
+		if !ok {
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		u, err := s.store.User().Find(id.(int))
+		if err != nil {
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+			//	s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
 		fmt.Println("/main - user:", u.Email, u.ID, u.Role)
 		//s.infoLog.Printf("main, user - %s, %d, %s", u.Email, u.ID, u.Role)
 		s.logger.Infof("main, user - %s, %d, %s", u.Email, u.ID, u.Role)
@@ -765,6 +789,7 @@ func (s *Server) main() http.HandlerFunc {
 
 func (s *Server) authenticateUser(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
 		session, err := s.sessionStore.Get(r, sessionName)
 		if err != nil {
 			s.error(w, r, http.StatusInternalServerError, err)
@@ -955,11 +980,14 @@ func (s *Server) handleSessionsCreate() http.HandlerFunc {
 				return
 			}
 
+			//session.Options.MaxAge = 60 * 480
+
 			session.Values["user_id"] = u.ID
 			if err := s.sessionStore.Save(r, w, session); err != nil {
 				s.error(w, r, http.StatusInternalServerError, err)
 				return
 			}
+
 			s.respond(w, r, http.StatusOK, nil)
 
 			fmt.Println("handleSessionsCreate()", u.Email, u.Role)
@@ -1048,6 +1076,8 @@ func (s *Server) handleSessionsCreate() http.HandlerFunc {
 				return
 			}
 
+			//session.Options.MaxAge = 60 * 480
+
 			session.Values["user_id"] = u.ID
 			if err := s.sessionStore.Save(r, w, session); err != nil {
 				s.error(w, r, http.StatusInternalServerError, err)
@@ -1106,11 +1136,11 @@ func (s *Server) signOut() http.HandlerFunc {
 		defer s.mu.Unlock()
 
 		session, err := s.sessionStore.Get(r, sessionName)
-		//	if err != nil {
-		//		s.error(w, r, http.StatusInternalServerError, err)
-		//		return
-		//	}
-		//	session.Values["user_id"] = false
+			if err != nil {
+				s.error(w, r, http.StatusInternalServerError, err)
+				return
+			}
+		//session.Values["user_id"] = -1
 
 		session.Options.MaxAge = -1
 		/*
@@ -1120,10 +1150,6 @@ func (s *Server) signOut() http.HandlerFunc {
 			session.Values["user_id"] = u.ID
 			session.Values["user_id"] = false */
 		session.Save(r, w)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
 		fmt.Println("Очистка куки")
 		/*
 			c, err := r.Cookie(sessionName)
@@ -1220,7 +1246,6 @@ func (s *Server) shipmentBySAP() http.HandlerFunc {
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
 			log.Println(err)
-			s.logger.Infof(err.Error())
 			s.logger.Errorf(err.Error())
 		}
 
@@ -1825,12 +1850,13 @@ func (s *Server) Pagination(r *http.Request, limit int) (int, int) {
 	return page, begin
 }
 
-func RenderJSON(w http.ResponseWriter, val interface{}, statusCode int) {
+func (s *Server) RenderJSON(w http.ResponseWriter, val interface{}, statusCode int) {
 	w.Header().Set("Content-Type", "application/json; charset-UTF8")
 	w.WriteHeader(statusCode)
 	err := json.NewEncoder(w).Encode(val)
 	if err != nil {
 		log.Println(err)
-		ErrorLogger.Printf(err.Error())
+		//ErrorLogger.Printf(err.Error())
+		s.logger.Errorf(err.Error())
 	}
 }

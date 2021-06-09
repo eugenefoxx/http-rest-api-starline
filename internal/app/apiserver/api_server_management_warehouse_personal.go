@@ -18,7 +18,26 @@ func (s *Server) PageshowUsersWarehouse() http.HandlerFunc {
 		s.mu.Lock()
 		defer s.mu.Unlock()
 
-		user := r.Context().Value(ctxKeyUser).(*model.User)
+		//user := r.Context().Value(ctxKeyUser).(*model.User)
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		id, ok := session.Values["user_id"]
+		if !ok {
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		user, err := s.store.User().Find(id.(int))
+		if err != nil {
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+			//	s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
 
 		if user.Groups == groupWarehouse {
 			statusGroupP1 = true
@@ -120,7 +139,26 @@ func (s *Server) CreateUserWarehouse() http.HandlerFunc {
 		Groupp1 := "склад"
 		Groupp5 := "склад П5"
 
-		user := r.Context().Value(ctxKeyUser).(*model.User)
+		//user := r.Context().Value(ctxKeyUser).(*model.User)
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		id, ok := session.Values["user_id"]
+		if !ok {
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		user, err := s.store.User().Find(id.(int))
+		if err != nil {
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+			//	s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
 
 		//group := "склад"
 		if user.Groups == groupWarehouse {
@@ -182,7 +220,26 @@ func (s *Server) PageupdateUserWarehouse() http.HandlerFunc {
 		s.mu.Lock()
 		defer s.mu.Unlock()
 
-		user := r.Context().Value(ctxKeyUser).(*model.User)
+		//user := r.Context().Value(ctxKeyUser).(*model.User)
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		idd, ok := session.Values["user_id"]
+		if !ok {
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		user, err := s.store.User().Find(idd.(int))
+		if err != nil {
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+			//	s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
 
 		if user.Role == roleAdministrator {
 			statusAdmin = true

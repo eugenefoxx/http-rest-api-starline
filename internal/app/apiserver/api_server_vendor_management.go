@@ -35,7 +35,26 @@ func (s *Server) PageinsertVendor() http.HandlerFunc {
 		//			return
 		//		}
 
-		user := r.Context().Value(ctxKeyUser).(*model.User)
+		// user := r.Context().Value(ctxKeyUser).(*model.User)
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		id, ok := session.Values["user_id"]
+		if !ok {
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		user, err := s.store.User().Find(id.(int))
+		if err != nil {
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+			//	s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
 		//	GET := map[string]bool{
 		//		"admin": admin,
 		//		//	"stockkeeper":         stockkeeper,
