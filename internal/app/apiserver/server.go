@@ -40,16 +40,16 @@ var (
 	errNotAuthenticated         = errors.New("not authenticated")
 	tpl                         *template.Template
 	//LOGFILE                     = "/tmp/apiServer.log"
-	statusAdmin = false
-	statusStockkeeper = false
-	statusWarehouseManager = false
-	statusSuperIngenerQuality = false
-	statusIngenerQuality = false
-	statusStockkeeperWH = false
-	statusInspector = false
-	statusGroupP1 = false
-	statusGroupP5 = false
-	statusLoggedIn = false
+	statusAdmin bool
+	statusStockkeeper bool
+	statusWarehouseManager bool
+	statusSuperIngenerQuality bool
+	statusIngenerQuality bool
+	statusStockkeeperWH bool
+	statusInspector bool
+	statusGroupP1 bool
+	statusGroupP5 bool
+	statusLoggedIn bool
 )
 
 const (
@@ -598,6 +598,17 @@ func (s *Server) main() http.HandlerFunc {
 		Email string `json:"email"`
 	}
 
+	statusAdmin := false
+	statusStockkeeper := false
+	statusWarehouseManager := false
+	statusSuperIngenerQuality := false
+	statusIngenerQuality := false
+	statusStockkeeperWH := false
+	statusInspector := false
+	statusGroupP1 := false
+	statusGroupP5 := false
+	statusLoggedIn := false
+
 	//tpl = template.Must(template.New("").Delims("<<", ">>").ParseFiles(s.html + "layout.html"))
 	//tpl = template.Must(template.New("").Delims("<<", ">>").ParseFiles(s.html+"layout1.html", s.html+"login1.html"))
 	//tpl = template.Must(template.New("base").ParseFiles(s.html + "layout1.html"))
@@ -606,16 +617,7 @@ func (s *Server) main() http.HandlerFunc {
 	//tpl = template.Must(template.New("").Delims("<<", ">>").ParseFiles("web/templates/layout.html"))
 	//tpl = template.Must(template.ParseFiles("web/templates/index.html"))
 	return func(w http.ResponseWriter, r *http.Request) {
-		Admin := false
-		Stockkeeper := false
-		WarehouseManager := false
-		SuperIngenerQuality := false
-		IngenerQuality := false
-		StockkeeperWH := false
-		Inspector := false
-		GroupP1 := false
-		GroupP5 := false
-		LoggedIn := false
+
 		fmt.Println("Test Main")
 		fmt.Println("test authenticateUser - ", s.authenticateUser)
 		fmt.Println("handleWhoami -", s.handleWhoami)
@@ -655,40 +657,40 @@ func (s *Server) main() http.HandlerFunc {
 		//s.infoLog.Printf("main, user - %s, %d, %s", u.Email, u.ID, u.Role)
 		s.logger.Infof("main, user - %s, %d, %s", u.Email, u.ID, u.Role)
 		if u.Groups == groupWarehouse || u.Groups == groupQuality || u.Groups == groupEmpty || u.Groups == groupAdministrator {
-			GroupP1 = true
+			statusGroupP1 = true
 			if u.Role == roleAdministrator {
-				Admin = true
-				LoggedIn = true
+				statusAdmin = true
+				statusLoggedIn = true
 
 
 			} else if u.Role == roleStockkeeper {
-				Stockkeeper = true
-				LoggedIn = true
+				statusStockkeeper = true
+				statusLoggedIn = true
 
 
 			} else if u.Role == roleSuperIngenerQuality {
-				SuperIngenerQuality = true
-				LoggedIn = true
+				statusSuperIngenerQuality = true
+				statusLoggedIn = true
 
 
 			} else if u.Role == roleIngenerQuality {
-				IngenerQuality = true
-				LoggedIn = true
+				statusIngenerQuality = true
+				statusLoggedIn = true
 
 
 			} else if u.Role == roleStockkeeperWH {
-				StockkeeperWH = true
-				LoggedIn = true
+				statusStockkeeperWH = true
+				statusLoggedIn = true
 
 
 			} else if u.Role == roleInspector {
-				Inspector = true
-				LoggedIn = true
+				statusInspector = true
+				statusLoggedIn = true
 
 
 			} else if u.Role == roleWarehouseManager {
-				WarehouseManager = true
-				LoggedIn = true
+				statusWarehouseManager = true
+				statusLoggedIn = true
 
 			}
 
@@ -715,15 +717,15 @@ func (s *Server) main() http.HandlerFunc {
 				"User":     u.LastName,
 				"Username": u.FirstName,
 				//"GET":                 GET,
-				"Admin":               Admin,
-				"Stockkeeper":         Stockkeeper,
-				"SuperIngenerQuality": SuperIngenerQuality,
-				"WarehouseManager":    WarehouseManager,
-				"IngenerQuality":      IngenerQuality,
-				"StockkeeperWH":       StockkeeperWH,
-				"Inspector":           Inspector,
-				"GroupP1":             GroupP1,
-				"LoggedIn":            LoggedIn,
+				"Admin":               statusAdmin,
+				"Stockkeeper":         statusStockkeeper,
+				"SuperIngenerQuality": statusSuperIngenerQuality,
+				"WarehouseManager":    statusWarehouseManager,
+				"IngenerQuality":      statusIngenerQuality,
+				"StockkeeperWH":       statusStockkeeperWH,
+				"Inspector":           statusInspector,
+				"GroupP1":             statusGroupP1,
+				"LoggedIn":            statusLoggedIn,
 			}
 
 			//tpl.ExecuteTemplate(w, "home.html", data)
@@ -733,34 +735,34 @@ func (s *Server) main() http.HandlerFunc {
 		}
 
 		if u.Groups == groupWarehouseP5 || u.Groups == groupQualityP5 {
-			GroupP5 = true
+			statusGroupP5 = true
 			if u.Role == roleAdministrator {
-				Admin = true
-				LoggedIn = true
+				statusAdmin = true
+				statusLoggedIn = true
 
 			} else if u.Role == roleStockkeeper {
-				Stockkeeper = true
-				LoggedIn = true
+				statusStockkeeper = true
+				statusLoggedIn = true
 
 			} else if u.Role == roleSuperIngenerQuality {
-				SuperIngenerQuality = true
-				LoggedIn = true
+				statusSuperIngenerQuality = true
+				statusLoggedIn = true
 
 			} else if u.Role == roleIngenerQuality {
-				IngenerQuality = true
-				LoggedIn = true
+				statusIngenerQuality = true
+				statusLoggedIn = true
 
 			} else if u.Role == roleStockkeeperWH {
-				StockkeeperWH = true
-				LoggedIn = true
+				statusStockkeeperWH = true
+				statusLoggedIn = true
 
 			} else if u.Role == roleInspector {
-				Inspector = true
-				LoggedIn = true
+				statusInspector = true
+				statusLoggedIn = true
 
 			} else if u.Role == roleWarehouseManager {
-				WarehouseManager = true
-				LoggedIn = true
+				statusWarehouseManager = true
+				statusLoggedIn = true
 			}
 
 			//	data := &Page{
@@ -786,15 +788,15 @@ func (s *Server) main() http.HandlerFunc {
 				"User":     u.LastName,
 				"Username": u.FirstName,
 				//"GET":                 GET,
-				"Admin":               Admin,
-				"Stockkeeper":         Stockkeeper,
-				"SuperIngenerQuality": SuperIngenerQuality,
-				"WarehouseManager":    WarehouseManager,
-				"IngenerQuality":      IngenerQuality,
-				"StockkeeperWH":       StockkeeperWH,
-				"Inspector":           Inspector,
-				"GroupP5":             GroupP5,
-				"LoggedIn":            LoggedIn,
+				"Admin":               statusAdmin,
+				"Stockkeeper":         statusStockkeeper,
+				"SuperIngenerQuality": statusSuperIngenerQuality,
+				"WarehouseManager":    statusWarehouseManager,
+				"IngenerQuality":      statusIngenerQuality,
+				"StockkeeperWH":       statusStockkeeperWH,
+				"Inspector":           statusInspector,
+				"GroupP5":             statusGroupP5,
+				"LoggedIn":            statusLoggedIn,
 			}
 
 			//tpl.ExecuteTemplate(w, "home.html", data)
