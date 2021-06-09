@@ -40,6 +40,36 @@ var (
 	errNotAuthenticated         = errors.New("not authenticated")
 	tpl                         *template.Template
 	//LOGFILE                     = "/tmp/apiServer.log"
+	statusAdmin = false
+	statusStockkeeper = false
+	statusWarehouseManager = false
+	statusSuperIngenerQuality = false
+	statusIngenerQuality = false
+	statusStockkeeperWH = false
+	statusInspector = false
+	statusGroupP1 = false
+	statusGroupP5 = false
+	statusLoggedIn = false
+)
+
+const (
+	// variable for role and group
+	roleAdministrator = "Administrator"
+	roleWarehouseManager = "старший кладовщик склада"
+	roleStockkeeper = "кладовщик"
+	roleSuperIngenerQuality = "главный инженер по качеству"
+	roleIngenerQuality = "инженер по качеству"
+	roleStockkeeperWH = "кладовщик склада"
+	roleInspector = "контролер качества"
+
+	groupWarehouse = "склад"
+	groupQuality = "качество"
+	groupEmpty  = ""
+	groupAdministrator = "администратор"
+	groupWarehouseP5 = "склад П5"
+	groupQualityP5 = "качество П5"
+
+
 )
 
 type ctxKey int8
@@ -624,42 +654,42 @@ func (s *Server) main() http.HandlerFunc {
 		fmt.Println("/main - user:", u.Email, u.ID, u.Role)
 		//s.infoLog.Printf("main, user - %s, %d, %s", u.Email, u.ID, u.Role)
 		s.logger.Infof("main, user - %s, %d, %s", u.Email, u.ID, u.Role)
-		if u.Groups == "склад" || u.Groups == "качество" || u.Groups == "" || u.Groups == "администратор" {
-
-			if u.Role == "Administrator" {
+		if u.Groups == groupWarehouse || u.Groups == groupQuality || u.Groups == groupEmpty || u.Groups == groupAdministrator {
+			GroupP1 = true
+			if u.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
-				GroupP1 = true
 
-			} else if u.Role == "кладовщик" {
+
+			} else if u.Role == roleStockkeeper {
 				Stockkeeper = true
 				LoggedIn = true
-				GroupP1 = true
 
-			} else if u.Role == "главный инженер по качеству" {
+
+			} else if u.Role == roleSuperIngenerQuality {
 				SuperIngenerQuality = true
 				LoggedIn = true
-				GroupP1 = true
 
-			} else if u.Role == "инженер по качеству" {
+
+			} else if u.Role == roleIngenerQuality {
 				IngenerQuality = true
 				LoggedIn = true
-				GroupP1 = true
 
-			} else if u.Role == "кладовщик склада" {
+
+			} else if u.Role == roleStockkeeperWH {
 				StockkeeperWH = true
 				LoggedIn = true
-				GroupP1 = true
 
-			} else if u.Role == "контролер качества" {
+
+			} else if u.Role == roleInspector {
 				Inspector = true
 				LoggedIn = true
-				GroupP1 = true
 
-			} else if u.Role == "старший кладовщик склада" {
+
+			} else if u.Role == roleWarehouseManager {
 				WarehouseManager = true
 				LoggedIn = true
-				GroupP1 = true
+
 			}
 
 			//	data := &Page{
@@ -675,7 +705,7 @@ func (s *Server) main() http.HandlerFunc {
 			//	GET := map[string]bool{
 			//		"Admin":               Admin,
 			//		"Stockkeeper":         Stockkeeper,
-			//		"главный инженер по качеству": SuperIngenerQuality,
+			//		roleSuperIngenerQuality: SuperIngenerQuality,
 			//		"StockkeeperWH":       StockkeeperWH,
 			//		"Inspector":           Inspector,
 			//	}
@@ -702,33 +732,33 @@ func (s *Server) main() http.HandlerFunc {
 			tpl.ExecuteTemplate(w, "index.html", data) // index3.html
 		}
 
-		if u.Groups == "склад П5" || u.Groups == "качество П5" {
+		if u.Groups == groupWarehouseP5 || u.Groups == groupQualityP5 {
 			GroupP5 = true
-			if u.Role == "Administrator" {
+			if u.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
 
-			} else if u.Role == "кладовщик" {
+			} else if u.Role == roleStockkeeper {
 				Stockkeeper = true
 				LoggedIn = true
 
-			} else if u.Role == "главный инженер по качеству" {
+			} else if u.Role == roleSuperIngenerQuality {
 				SuperIngenerQuality = true
 				LoggedIn = true
 
-			} else if u.Role == "инженер по качеству" {
+			} else if u.Role == roleIngenerQuality {
 				IngenerQuality = true
 				LoggedIn = true
 
-			} else if u.Role == "кладовщик склада" {
+			} else if u.Role == roleStockkeeperWH {
 				StockkeeperWH = true
 				LoggedIn = true
 
-			} else if u.Role == "контролер качества" {
+			} else if u.Role == roleInspector {
 				Inspector = true
 				LoggedIn = true
 
-			} else if u.Role == "старший кладовщик склада" {
+			} else if u.Role == roleWarehouseManager {
 				WarehouseManager = true
 				LoggedIn = true
 			}
@@ -746,7 +776,7 @@ func (s *Server) main() http.HandlerFunc {
 			//	GET := map[string]bool{
 			//		"Admin":               Admin,
 			//		"Stockkeeper":         Stockkeeper,
-			//		"главный инженер по качеству": SuperIngenerQuality,
+			//		roleSuperIngenerQuality: SuperIngenerQuality,
 			//		"StockkeeperWH":       StockkeeperWH,
 			//		"Inspector":           Inspector,
 			//	}
@@ -934,31 +964,31 @@ func (s *Server) handleSessionsCreate() http.HandlerFunc {
 			return
 		}
 		//	s.Unlock()
-		if u.Groups == "склад" || u.Groups == "качество" || u.Groups == "" || u.Groups == "администратор" {
+		if u.Groups == groupWarehouse || u.Groups == groupQuality || u.Groups == "" || u.Groups == groupAdministrator {
 			GroupP1 = true
-			if u.Role == "Administrator" {
-				Admin = true
+			if u.Role == roleAdministrator {
+				statusAdmin = true
 				LoggedIn = true
 
-			} else if u.Role == "кладовщик" {
+			} else if u.Role == roleStockkeeper {
 				Stockkeeper = true
 				LoggedIn = true
 
-			} else if u.Role == "главный инженер по качеству" {
+			} else if u.Role == roleSuperIngenerQuality {
 				SuperIngenerQuality = true
 				LoggedIn = true
-			} else if u.Role == "инженер по качеству" {
+			} else if u.Role == roleIngenerQuality {
 				IngenerQuality = true
 				LoggedIn = true
-			} else if u.Role == "кладовщик склада" {
+			} else if u.Role == roleStockkeeperWH {
 				StockkeeperWH = true
 				LoggedIn = true
 
-			} else if u.Role == "контролер качества" {
+			} else if u.Role == roleInspector {
 				Inspector = true
 				LoggedIn = true
 
-			} else if u.Role == "старший кладовщик склада" {
+			} else if u.Role == roleWarehouseManager {
 				WarehouseManager = true
 				LoggedIn = true
 			}
@@ -966,7 +996,7 @@ func (s *Server) handleSessionsCreate() http.HandlerFunc {
 			//	GET := map[string]bool{
 			//		"admin":               admin,
 			//		"stockkeeper":         stockkeeper,
-			//		"главный инженер по качеству": superIngenerQuality,
+			//		roleSuperIngenerQuality: superIngenerQuality,
 			//		"stockkeeperWH":       stockkeeperWH,
 			//		"inspector":           inspector,
 			//	}
@@ -1007,7 +1037,7 @@ func (s *Server) handleSessionsCreate() http.HandlerFunc {
 				"User":     u.LastName,
 				"Username": u.FirstName,
 				//		"GET":  GET,
-				"Admin":               Admin,
+				"Admin":               statusAdmin,
 				"Stockkeeper":         Stockkeeper,
 				"SuperIngenerQuality": SuperIngenerQuality,
 				"WarehouseManager":    WarehouseManager,
@@ -1027,31 +1057,31 @@ func (s *Server) handleSessionsCreate() http.HandlerFunc {
 			http.Redirect(w, r, "/", http.StatusFound)
 		}
 
-		if u.Groups == "склад П5" || u.Groups == "качество П5" {
+		if u.Groups == groupWarehouseP5 || u.Groups == groupQualityP5 {
 			GroupP5 = true
-			if u.Role == "Administrator" {
+			if u.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
 
-			} else if u.Role == "кладовщик" {
+			} else if u.Role == roleStockkeeper {
 				Stockkeeper = true
 				LoggedIn = true
 
-			} else if u.Role == "главный инженер по качеству" {
+			} else if u.Role == roleSuperIngenerQuality {
 				SuperIngenerQuality = true
 				LoggedIn = true
-			} else if u.Role == "инженер по качеству" {
+			} else if u.Role == roleIngenerQuality {
 				IngenerQuality = true
 				LoggedIn = true
-			} else if u.Role == "кладовщик склада" {
+			} else if u.Role == roleStockkeeperWH {
 				StockkeeperWH = true
 				LoggedIn = true
 
-			} else if u.Role == "контролер качества" {
+			} else if u.Role == roleInspector {
 				Inspector = true
 				LoggedIn = true
 
-			} else if u.Role == "старший кладовщик склада" {
+			} else if u.Role == roleWarehouseManager {
 				WarehouseManager = true
 				LoggedIn = true
 			}
@@ -1059,7 +1089,7 @@ func (s *Server) handleSessionsCreate() http.HandlerFunc {
 			//	GET := map[string]bool{
 			//		"admin":               admin,
 			//		"stockkeeper":         stockkeeper,
-			//		"главный инженер по качеству": superIngenerQuality,
+			//		roleSuperIngenerQuality: superIngenerQuality,
 			//		"stockkeeperWH":       stockkeeperWH,
 			//		"inspector":           inspector,
 			//	}
@@ -1195,11 +1225,11 @@ func (s *Server) pageshipmentBySAP() http.HandlerFunc {
 			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
 			return
 		}
-		if u.Role == "Administrator" {
+		if u.Role == roleAdministrator {
 			Admin = true
 			LoggedIn = true
 
-		} else if u.Role == "кладовщик" {
+		} else if u.Role == roleStockkeeper {
 			Stockkeeper = true
 			LoggedIn = true
 
@@ -1473,11 +1503,11 @@ func (s *Server) pageshowShipmentBySAPBySearchStatic() http.HandlerFunc {
 			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
 			return
 		}
-		if u.Role == "Administrator" {
+		if u.Role == roleAdministrator {
 			Admin = true
 			LoggedIn = true
 
-		} else if u.Role == "кладовщик" {
+		} else if u.Role == roleStockkeeper {
 			Stockkeeper = true
 			LoggedIn = true
 
@@ -1537,11 +1567,11 @@ func (s *Server) showShipmentBySAPBySearchStatic() http.HandlerFunc {
 			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
 			return
 		}
-		if u.Role == "Administrator" {
+		if u.Role == roleAdministrator {
 			Admin = true
 			LoggedIn = true
 
-		} else if u.Role == "кладовщик" {
+		} else if u.Role == roleStockkeeper {
 			Stockkeeper = true
 			LoggedIn = true
 
@@ -1630,11 +1660,11 @@ func (s *Server) pageidReturn() http.HandlerFunc {
 			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
 			return
 		}
-		if u.Role == "Administrator" {
+		if u.Role == roleAdministrator {
 			Admin = true
 			LoggedIn = true
 
-		} else if u.Role == "кладовщик" {
+		} else if u.Role == roleStockkeeper {
 			Stockkeeper = true
 			LoggedIn = true
 
@@ -1915,10 +1945,10 @@ func (s *Server) showUsersQuality() http.HandlerFunc {
 			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
 			return
 		}
-		if user.Role == "Administrator" {
+		if user.Role == roleAdministrator {
 			Admin = true
 			LoggedIn = true
-		} else if user.Role == "главный инженер по качеству" {
+		} else if user.Role == roleSuperIngenerQuality {
 			SuperIngenerQuality = true
 			LoggedIn = true
 		}

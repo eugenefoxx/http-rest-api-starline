@@ -31,12 +31,12 @@ func (s *Server) PageshowUsersQualityP5() http.HandlerFunc {
 			return
 		}
 
-		if user.Groups == "качество П5" {
+		if user.Groups == groupQualityP5 {
 			GroupP5 = true
-			if user.Role == "Administrator" {
+			if user.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
-			} else if user.Role == "главный инженер по качеству" {
+			} else if user.Role == roleSuperIngenerQuality {
 				SuperIngenerQuality = true
 				LoggedIn = true
 			}

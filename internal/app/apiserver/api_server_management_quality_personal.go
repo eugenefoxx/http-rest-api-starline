@@ -42,12 +42,12 @@ func (s *Server) PageshowUsersQuality() http.HandlerFunc {
 			return
 		}
 
-		if user.Groups == "качество" {
+		if user.Groups == groupQuality {
 			GroupP1 = true
-			if user.Role == "Administrator" {
+			if user.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
-			} else if user.Role == "главный инженер по качеству" {
+			} else if user.Role == roleSuperIngenerQuality {
 				SuperIngenerQuality = true
 				LoggedIn = true
 			}
@@ -82,12 +82,12 @@ func (s *Server) PageshowUsersQuality() http.HandlerFunc {
 			}
 		}
 
-		if user.Groups == "качество П5" {
+		if user.Groups == groupQualityP5 {
 			GroupP5 = true
-			if user.Role == "Administrator" {
+			if user.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
-			} else if user.Role == "главный инженер по качеству" {
+			} else if user.Role == roleSuperIngenerQuality {
 				SuperIngenerQuality = true
 				LoggedIn = true
 			}
@@ -148,8 +148,8 @@ func (s *Server) CreateUserQuality() http.HandlerFunc {
 		fmt.Println("\njson  struct hdata", hdata)
 		s.logger.Infof("Loading hdata json: %v\n", hdata)
 
-		Groupp1 := "качество"
-		Groupp5 := "качество П5"
+		Groupp1 := groupQuality
+		Groupp5 := groupQualityP5
 
 		session, err := s.sessionStore.Get(r, sessionName)
 		if err != nil {
@@ -169,11 +169,11 @@ func (s *Server) CreateUserQuality() http.HandlerFunc {
 			return
 		}
 
-		if user.Groups == "качество" {
-			if user.Role == "Administrator" {
+		if user.Groups == groupQuality {
+			if user.Role == roleAdministrator {
 				//	Admin = true
 				//	LoggedIn = true
-			} else if user.Role == "главный инженер по качеству" {
+			} else if user.Role == roleSuperIngenerQuality {
 				SuperIngenerQuality = true
 				//	LoggedIn = true
 				fmt.Println("SuperIngenerQuality pageupdateUserQuality - ", SuperIngenerQuality)
@@ -199,11 +199,11 @@ func (s *Server) CreateUserQuality() http.HandlerFunc {
 
 			}
 		}
-		if user.Groups == "качество П5" {
-			if user.Role == "Administrator" {
+		if user.Groups == groupQualityP5 {
+			if user.Role == roleAdministrator {
 				//	Admin = true
 				//	LoggedIn = true
-			} else if user.Role == "главный инженер по качеству" {
+			} else if user.Role == roleSuperIngenerQuality {
 				SuperIngenerQuality = true
 				//	LoggedIn = true
 				fmt.Println("SuperIngenerQuality pageupdateUserQuality - ", SuperIngenerQuality)
@@ -262,10 +262,10 @@ func (s *Server) PageupdateUserQuality() http.HandlerFunc {
 			return
 		}
 
-		if user.Role == "Administrator" {
+		if user.Role == roleAdministrator {
 			Admin = true
 			LoggedIn = true
-		} else if user.Role == "главный инженер по качеству" {
+		} else if user.Role == roleSuperIngenerQuality {
 			SuperIngenerQuality = true
 			LoggedIn = true
 			fmt.Println("SuperIngenerQuality pageupdateUserQuality - ", SuperIngenerQuality)

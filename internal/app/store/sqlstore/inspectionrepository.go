@@ -512,7 +512,7 @@ func (r *InspectionRepository) EditInspection(id int) (*model.Inspection, error)
 
 	u := &model.Inspection{}
 	//	fmt.Println("EditInspection -", groups)
-	//	if groups == "качество" {
+	//	if groups == groupQuality {
 	if err := r.store.db.QueryRow(
 		"SELECT id, Coalesce (status, ''), Coalesce (note, '') FROM transfer WHERE id = $1",
 		id,
@@ -536,7 +536,7 @@ func (r *InspectionRepository) EditInspectionP5(id int) (*model.Inspection, erro
 
 	u := &model.Inspection{}
 	//	fmt.Println("EditInspection -", groups)
-	//	if groups == "качество" {
+	//	if groups == groupQuality {
 	if err := r.store.db.QueryRow(
 		"SELECT id, Coalesce (status, ''), Coalesce (note, '') FROM transferp5 WHERE id = $1",
 		id,
@@ -558,7 +558,7 @@ func (r *InspectionRepository) EditInspectionP5(id int) (*model.Inspection, erro
 
 func (r *InspectionRepository) UpdateInspection(s *model.Inspection) error {
 
-	//	if groups == "качество" {
+	//	if groups == groupQuality {
 	_, err := r.store.db.Exec(
 		"UPDATE transfer SET status = $1, note = $2, update = $3, dateupdate = $4, timeupdate = $5 FROM users WHERE transfer.id = $6 AND users.groups = $7",
 		s.Status,
@@ -580,7 +580,7 @@ func (r *InspectionRepository) UpdateInspection(s *model.Inspection) error {
 
 func (r *InspectionRepository) UpdateInspectionP5(s *model.Inspection) error {
 
-	//	if groups == "качество" {
+	//	if groups == groupQuality {
 	_, err := r.store.db.Exec(
 		"UPDATE transferp5 SET status = $1, note = $2, update = $3, dateupdate = $4, timeupdate = $5 FROM users WHERE transferp5.id = $6 AND users.groups = $7",
 		s.Status,
@@ -629,7 +629,7 @@ func (r *InspectionRepository) EditInspectionForWarehouse(id int) (*model.Inspec
 
 	u := &model.Inspection{}
 	//	fmt.Println("EditInspection -", groups)
-	//	if groups == "качество" {
+	//	if groups == groupQuality {
 	if err := r.store.db.QueryRow(
 		"SELECT id, Coalesce (notewarehouse, '') FROM transfer WHERE id = $1",
 		id,
@@ -699,7 +699,7 @@ func (r *InspectionRepository) EditAcceptWarehouseInspection(id int) (*model.Ins
 	u := &model.Inspection{}
 	fmt.Println("EditAcceptWarehouseInspection -")
 
-	//	if groups == "склад" {
+	//	if groups == groupWarehouse {
 
 	if err := r.store.db.QueryRow(
 		"SELECT id, Coalesce (location, '') FROM transfer WHERE id = $1",
@@ -722,7 +722,7 @@ func (r *InspectionRepository) EditAcceptWarehouseInspectionP5(id int) (*model.I
 	u := &model.Inspection{}
 	fmt.Println("EditAcceptWarehouseInspectionP5 -")
 
-	//	if groups == "склад" {
+	//	if groups == groupWarehouse {
 
 	if err := r.store.db.QueryRow(
 		"SELECT id, Coalesce (location, '') FROM transferp5 WHERE id = $1",
@@ -742,7 +742,7 @@ func (r *InspectionRepository) EditAcceptWarehouseInspectionP5(id int) (*model.I
 }
 
 func (r *InspectionRepository) AcceptWarehouseInspection(s *model.Inspection) error {
-	//	if groups == "склад" {
+	//	if groups == groupWarehouse {
 	_, err := r.store.db.Exec(
 		"UPDATE transfer SET location = $1, lastnameaccept = $2, dateaccept = $3, timeaccept = $4 FROM users WHERE transfer.id = $5 AND users.groups = $6",
 		s.Location,
@@ -760,7 +760,7 @@ func (r *InspectionRepository) AcceptWarehouseInspection(s *model.Inspection) er
 }
 
 func (r *InspectionRepository) AcceptWarehouseInspectionP5(s *model.Inspection) error {
-	//	if groups == "склад" {
+	//	if groups == groupWarehouse {
 	_, err := r.store.db.Exec(
 		"UPDATE transferp5 SET location = $1, lastnameaccept = $2, dateaccept = $3, timeaccept = $4 FROM users WHERE transferp5.id = $5 AND users.groups = $6",
 		s.Location,
@@ -778,7 +778,7 @@ func (r *InspectionRepository) AcceptWarehouseInspectionP5(s *model.Inspection) 
 }
 
 func (r *InspectionRepository) AcceptGroupsWarehouseInspection(s *model.Inspection) error {
-	//	if groups == "склад" {
+	//	if groups == groupWarehouse {
 	_, err := r.store.db.Exec(
 		"UPDATE transfer SET location = $1, lastnameaccept = $2, dateaccept = $3, timeaccept = $4 FROM users WHERE transfer.idmaterial = $5 AND users.groups = $6",
 		s.Location,
@@ -796,7 +796,7 @@ func (r *InspectionRepository) AcceptGroupsWarehouseInspection(s *model.Inspecti
 }
 
 func (r *InspectionRepository) AcceptGroupsWarehouseInspectionP5(s *model.Inspection) error {
-	//	if groups == "склад" {
+	//	if groups == groupWarehouse {
 	_, err := r.store.db.Exec(
 		"UPDATE transferp5 SET location = $1, lastnameaccept = $2, dateaccept = $3, timeaccept = $4 FROM users WHERE transferp5.idmaterial = $5 AND users.groups = $6",
 		s.Location,

@@ -45,17 +45,17 @@ func (s *Server) PageinInspection() http.HandlerFunc {
 			return
 		}
 
-		if user.Role == "Administrator" {
+		if user.Role == roleAdministrator {
 			Admin = true
 			LoggedIn = true
-		} else if user.Role == "кладовщик склада" {
+		} else if user.Role == roleStockkeeperWH {
 			StockkeeperWH = true
 			LoggedIn = true
 			fmt.Println("кладовщик склада - ", StockkeeperWH)
-		} else if user.Role == "главный инженер по качеству" {
+		} else if user.Role == roleSuperIngenerQuality {
 			SuperIngenerQuality = true
 			LoggedIn = true
-		} else if user.Role == "старший кладовщик склада" {
+		} else if user.Role == roleWarehouseManager {
 			WarehouseManager = true
 			LoggedIn = true
 		}
@@ -143,7 +143,7 @@ func (s *Server) InInspection() http.HandlerFunc {
 
 		const statusTransfer = "отгружено на ВК"
 
-		if user.Groups == "склад" || user.Groups == "качество" {
+		if user.Groups == groupWarehouse || user.Groups == groupQuality {
 			for _, v := range rdata {
 				if (strings.Contains(v.ScanID[0:1], "P") == true) && (len(v.ScanID) == 45) {
 					idMaterial := v.ScanID[0:45]
@@ -280,7 +280,7 @@ func (s *Server) InInspection() http.HandlerFunc {
 			}
 		}
 
-		if user.Groups == "склад П5" || user.Groups == "качество П5" {
+		if user.Groups == groupWarehouseP5 || user.Groups == groupQualityP5 {
 			for _, v := range rdata {
 				if (strings.Contains(v.ScanID[0:1], "P") == true) && (len(v.ScanID) == 45) {
 					idMaterial := v.ScanID[0:45]
@@ -459,28 +459,28 @@ func (s *Server) PagehistoryInspection() http.HandlerFunc {
 			return
 		}
 
-		if user.Groups == "качество" || user.Groups == "склад" || user.Groups == "качество П5" || user.Groups == "склад П5" {
+		if user.Groups == groupQuality || user.Groups == groupWarehouse || user.Groups == groupQualityP5 || user.Groups == groupWarehouseP5 {
 			GroupP1 = true
 			GroupP5 = true
-			if user.Role == "Administrator" {
+			if user.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
-			} else if user.Role == "кладовщик склада" {
+			} else if user.Role == roleStockkeeperWH {
 				StockkeeperWH = true
 				LoggedIn = true
 				fmt.Println("кладовщик склада - ", StockkeeperWH)
-			} else if user.Role == "главный инженер по качеству" {
+			} else if user.Role == roleSuperIngenerQuality {
 				SuperIngenerQuality = true
 				LoggedIn = true
-			} else if user.Role == "инженер по качеству" {
+			} else if user.Role == roleIngenerQuality {
 				IngenerQuality = true
 				LoggedIn = true
-			} else if user.Groups == "качество" {
+			} else if user.Groups == groupQuality {
 				Quality = true
 				Inspector = true
 				LoggedIn = true
 				fmt.Println("pageInspection quality - ", Quality)
-			} else if user.Role == "старший кладовщик склада" {
+			} else if user.Role == roleWarehouseManager {
 				WarehouseManager = true
 				LoggedIn = true
 			}
@@ -547,28 +547,28 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 			return
 		}
 
-		if user.Groups == "качество" || user.Groups == "склад" {
+		if user.Groups == groupQuality || user.Groups == groupWarehouse {
 			GroupP1 = true
 
-			if user.Role == "Administrator" {
+			if user.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
-			} else if user.Role == "кладовщик склада" {
+			} else if user.Role == roleStockkeeperWH {
 				StockkeeperWH = true
 				LoggedIn = true
 				fmt.Println("кладовщик склада - ", StockkeeperWH)
-			} else if user.Role == "главный инженер по качеству" {
+			} else if user.Role == roleSuperIngenerQuality {
 				SuperIngenerQuality = true
 				LoggedIn = true
-			} else if user.Role == "инженер по качеству" {
+			} else if user.Role == roleIngenerQuality {
 				IngenerQuality = true
 				LoggedIn = true
-			} else if user.Role == "контролер качества" {
+			} else if user.Role == roleInspector {
 				Quality = true
 				Inspector = true
 				LoggedIn = true
 				fmt.Println("pageInspection quality - ", Quality)
-			} else if user.Role == "старший кладовщик склада" {
+			} else if user.Role == roleWarehouseManager {
 				WarehouseManager = true
 				LoggedIn = true
 			}
@@ -907,28 +907,28 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 			}
 		}
 
-		if user.Groups == "качество П5" || user.Groups == "склад П5" {
+		if user.Groups == groupQualityP5 || user.Groups == groupWarehouseP5 {
 
 			GroupP5 = true
-			if user.Role == "Administrator" {
+			if user.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
-			} else if user.Role == "кладовщик склада" {
+			} else if user.Role == roleStockkeeperWH {
 				StockkeeperWH = true
 				LoggedIn = true
 				fmt.Println("кладовщик склада - ", StockkeeperWH)
-			} else if user.Role == "главный инженер по качеству" {
+			} else if user.Role == roleSuperIngenerQuality {
 				SuperIngenerQuality = true
 				LoggedIn = true
-			} else if user.Role == "инженер по качеству" {
+			} else if user.Role == roleIngenerQuality {
 				IngenerQuality = true
 				LoggedIn = true
-			} else if user.Role == "контролер качества" {
+			} else if user.Role == roleInspector {
 				Quality = true
 				Inspector = true
 				LoggedIn = true
 				fmt.Println("pageInspection quality - ", Quality)
-			} else if user.Role == "старший кладовщик склада" {
+			} else if user.Role == roleWarehouseManager {
 				WarehouseManager = true
 				LoggedIn = true
 			}
@@ -1263,7 +1263,7 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 					"Username":            user.FirstName,
 					"Admin":               Admin,
 					"StockkeeperWH":       StockkeeperWH,
-					"главный инженер по качеству": SuperIngenerQuality,
+					roleSuperIngenerQuality: SuperIngenerQuality,
 					"Quality":             Quality,
 					"LoggedIn":            LoggedIn,
 					"GET":                 get,
@@ -1312,28 +1312,28 @@ func (s *Server) PagehistoryInspectionP5() http.HandlerFunc {
 			return
 		}
 
-		if user.Groups == "качество П5" || user.Groups == "склад П5" || user.Groups == "качество" || user.Groups == "склад" {
+		if user.Groups == groupQualityP5 || user.Groups == groupWarehouseP5 || user.Groups == groupQuality || user.Groups == groupWarehouse {
 			GroupP5 = true
 			GroupP1 = true
-			if user.Role == "Administrator" {
+			if user.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
-			} else if user.Role == "кладовщик склада" {
+			} else if user.Role == roleStockkeeperWH {
 				StockkeeperWH = true
 				LoggedIn = true
 				fmt.Println("кладовщик склада - ", StockkeeperWH)
-			} else if user.Role == "главный инженер по качеству" {
+			} else if user.Role == roleSuperIngenerQuality {
 				SuperIngenerQuality = true
 				LoggedIn = true
-			} else if user.Role == "инженер по качеству" {
+			} else if user.Role == roleIngenerQuality {
 				IngenerQuality = true
 				LoggedIn = true
-			} else if user.Groups == "качество" {
+			} else if user.Groups == groupQuality {
 				Quality = true
 				Inspector = true
 				LoggedIn = true
 				fmt.Println("pageInspection quality - ", Quality)
-			} else if user.Role == "старший кладовщик склада" {
+			} else if user.Role == roleWarehouseManager {
 				WarehouseManager = true
 				LoggedIn = true
 			}
@@ -1399,27 +1399,27 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 			return
 		}
 
-		if user.Groups == "качество П5" || user.Groups == "склад П5" {
+		if user.Groups == groupQualityP5 || user.Groups == groupWarehouseP5 {
 			GroupP5 = true
-			if user.Role == "Administrator" {
+			if user.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
-			} else if user.Role == "кладовщик склада" {
+			} else if user.Role == roleStockkeeperWH {
 				StockkeeperWH = true
 				LoggedIn = true
 				fmt.Println("кладовщик склада - ", StockkeeperWH)
-			} else if user.Role == "главный инженер по качеству" {
+			} else if user.Role == roleSuperIngenerQuality {
 				SuperIngenerQuality = true
 				LoggedIn = true
-			} else if user.Role == "инженер по качеству" {
+			} else if user.Role == roleIngenerQuality {
 				IngenerQuality = true
 				LoggedIn = true
-			} else if user.Role == "контролер качества" {
+			} else if user.Role == roleInspector {
 				Quality = true
 				Inspector = true
 				LoggedIn = true
 				fmt.Println("pageInspection quality - ", Quality)
-			} else if user.Role == "старший кладовщик склада" {
+			} else if user.Role == roleWarehouseManager {
 				WarehouseManager = true
 				LoggedIn = true
 			}
@@ -1746,27 +1746,27 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 			}
 		}
 
-		if user.Groups == "качество" || user.Groups == "склад" {
+		if user.Groups == groupQuality || user.Groups == groupWarehouse {
 			GroupP1 = true
-			if user.Role == "Administrator" {
+			if user.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
-			} else if user.Role == "кладовщик склада" {
+			} else if user.Role == roleStockkeeperWH {
 				StockkeeperWH = true
 				LoggedIn = true
 				fmt.Println("кладовщик склада - ", StockkeeperWH)
-			} else if user.Role == "главный инженер по качеству" {
+			} else if user.Role == roleSuperIngenerQuality {
 				SuperIngenerQuality = true
 				LoggedIn = true
-			} else if user.Role == "инженер по качеству" {
+			} else if user.Role == roleIngenerQuality {
 				IngenerQuality = true
 				LoggedIn = true
-			} else if user.Role == "контролер качества" {
+			} else if user.Role == roleInspector {
 				Quality = true
 				Inspector = true
 				LoggedIn = true
 				fmt.Println("pageInspection quality - ", Quality)
-			} else if user.Role == "старший кладовщик склада" {
+			} else if user.Role == roleWarehouseManager {
 				WarehouseManager = true
 				LoggedIn = true
 			}
@@ -2141,30 +2141,30 @@ func (s *Server) PageInspection() http.HandlerFunc {
 			return
 		}
 
-		if user.Groups == "качество" || user.Groups == "склад" {
+		if user.Groups == groupQuality || user.Groups == groupWarehouse {
 			GroupP1 = true
-			if user.Role == "главный инженер по качеству" {
+			if user.Role == roleSuperIngenerQuality {
 				SuperIngenerQuality = true
 				SuperIngenerQuality2 = true
 				MixP1P5 = true
 				LoggedIn = true
 				fmt.Println("pageInspection SuperIngenerQuality - ", SuperIngenerQuality)
-			} else if user.Role == "кладовщик склада" {
+			} else if user.Role == roleStockkeeperWH {
 				StockkeeperWH = true
 				//	Warehouse = false
 				//	WarehouseManager = true
 				LoggedIn = true
-			} else if user.Role == "инженер по качеству" {
+			} else if user.Role == roleIngenerQuality {
 				IngenerQuality = true
-			} else if user.Role == "контролер качества" {
+			} else if user.Role == roleInspector {
 				Inspector = true
-			} else if user.Role == "старший кладовщик склада" {
+			} else if user.Role == roleWarehouseManager {
 				WarehouseManager = true
 				LoggedIn = true
-			} /* else if user.Role == "Administrator" {
+			} /* else if user.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
-			}*/ /**else if user.Groups == "качество" {
+			}*/ /**else if user.Groups == groupQuality {
 				//	Quality = true
 				Inspector = true
 				IngenerQuality = true
@@ -2258,29 +2258,29 @@ func (s *Server) PageInspection() http.HandlerFunc {
 			//	json.NewEncoder(w).Encode(get)
 		}
 
-		if user.Groups == "качество П5" || user.Groups == "склад П5" {
+		if user.Groups == groupQualityP5 || user.Groups == groupWarehouseP5 {
 			GroupP5 = true
-			if user.Role == "главный инженер по качеству" {
+			if user.Role == roleSuperIngenerQuality {
 				SuperIngenerQuality = true
 				SuperIngenerQuality2 = true
 				LoggedIn = true
 				fmt.Println("pageInspection SuperIngenerQuality - ", SuperIngenerQuality)
-			} else if user.Role == "кладовщик склада" {
+			} else if user.Role == roleStockkeeperWH {
 				StockkeeperWH = true
 				//	Warehouse = false
 				//	WarehouseManager = true
 				LoggedIn = true
-			} else if user.Role == "инженер по качеству" {
+			} else if user.Role == roleIngenerQuality {
 				IngenerQuality = true
-			} else if user.Role == "контролер качества" {
+			} else if user.Role == roleInspector {
 				Inspector = true
-			} else if user.Role == "старший кладовщик склада" {
+			} else if user.Role == roleWarehouseManager {
 				WarehouseManager = true
 				LoggedIn = true
-			} /* else if user.Role == "Administrator" {
+			} /* else if user.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
-			}*/ /**else if user.Groups == "качество" {
+			}*/ /**else if user.Groups == groupQuality {
 				//	Quality = true
 				Inspector = true
 				IngenerQuality = true
@@ -2416,33 +2416,33 @@ func (s *Server) PageInspectionMix() http.HandlerFunc {
 			return
 		}
 
-		if user.Groups == "качество" && user.Role == "главный инженер по качеству" ||
-			user.Groups == "качество" && user.Role == "инженер по качеству" {
+		if user.Groups == groupQuality && user.Role == roleSuperIngenerQuality ||
+			user.Groups == groupQuality && user.Role == roleIngenerQuality {
 			//	MixP1P5 = true
 			GroupP1 = true
-			if user.Role == "главный инженер по качеству" {
+			if user.Role == roleSuperIngenerQuality {
 				SuperIngenerQuality = true
 				SuperIngenerQuality2 = true
 				LoggedIn = true
 				fmt.Println("pageInspection SuperIngenerQuality - ", SuperIngenerQuality)
-			} else if user.Role == "инженер по качеству" {
+			} else if user.Role == roleIngenerQuality {
 				IngenerQuality = true
-			} /* else if user.Role == "кладовщик склада" {
+			} /* else if user.Role == roleStockkeeperWH {
 				StockkeeperWH = true
 				//	Warehouse = false
 				//	WarehouseManager = true
 				LoggedIn = true
 			} */
-			/* else if user.Role == "контролер качества" {
+			/* else if user.Role == roleInspector {
 				Inspector = true
-			} else if user.Role == "старший кладовщик склада" {
+			} else if user.Role == roleWarehouseManager {
 				WarehouseManager = true
 				LoggedIn = true
 			} */
-			/* else if user.Role == "Administrator" {
+			/* else if user.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
-			}*/ /**else if user.Groups == "качество" {
+			}*/ /**else if user.Groups == groupQuality {
 				//	Quality = true
 				Inspector = true
 				IngenerQuality = true
@@ -2536,33 +2536,33 @@ func (s *Server) PageInspectionMix() http.HandlerFunc {
 			//	json.NewEncoder(w).Encode(get)
 		}
 
-		if user.Groups == "качество П5" && user.Role == "главный инженер по качеству" ||
-			user.Groups == "качество П5" && user.Role == "инженер по качеству" {
+		if user.Groups == groupQualityP5 && user.Role == roleSuperIngenerQuality ||
+			user.Groups == groupQualityP5 && user.Role == roleIngenerQuality {
 			//	MixP1P5 = true
 			GroupP5 = true
-			if user.Role == "главный инженер по качеству" {
+			if user.Role == roleSuperIngenerQuality {
 				SuperIngenerQuality = true
 				SuperIngenerQuality2 = true
 				LoggedIn = true
 				fmt.Println("pageInspection SuperIngenerQuality - ", SuperIngenerQuality)
-			} else if user.Role == "инженер по качеству" {
+			} else if user.Role == roleIngenerQuality {
 				IngenerQuality = true
-			} /* else if user.Role == "кладовщик склада" {
+			} /* else if user.Role == roleStockkeeperWH {
 				StockkeeperWH = true
 				//	Warehouse = false
 				//	WarehouseManager = true
 				LoggedIn = true
 			} */
-			/* else if user.Role == "контролер качества" {
+			/* else if user.Role == roleInspector {
 				Inspector = true
-			} else if user.Role == "старший кладовщик склада" {
+			} else if user.Role == roleWarehouseManager {
 				WarehouseManager = true
 				LoggedIn = true
 			} */
-			/* else if user.Role == "Administrator" {
+			/* else if user.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
-			}*/ /**else if user.Groups == "качество" {
+			}*/ /**else if user.Groups == groupQuality {
 				//	Quality = true
 				Inspector = true
 				IngenerQuality = true
@@ -2708,20 +2708,20 @@ func (s *Server) PageupdateInspection() http.HandlerFunc {
 		//s.infoLog.Printf("test user.Groups - %s", user.Groups)
 		s.logger.Infof("test user.Groups - %s", user.Groups)
 
-		if user.Groups == "качество" || user.Groups == "администратор" {
+		if user.Groups == groupQuality || user.Groups == groupAdministrator {
 			GroupP1 = true
-			if user.Role == "Administrator" {
+			if user.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
-			} else if user.Role == "главный инженер по качеству" {
+			} else if user.Role == roleSuperIngenerQuality {
 				SuperIngenerQuality = true
 				LoggedIn = true
 				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
-			} else if user.Role == "инженер по качеству" {
+			} else if user.Role == roleIngenerQuality {
 				IngenerQuality = true
 				LoggedIn = true
 				fmt.Println("IngenerQuality - ", IngenerQuality)
-			} else if user.Role == "контролер качества" {
+			} else if user.Role == roleInspector {
 				Inspector = true
 				LoggedIn = true
 
@@ -2751,20 +2751,20 @@ func (s *Server) PageupdateInspection() http.HandlerFunc {
 				return
 			}
 		}
-		if user.Groups == "качество П5" {
+		if user.Groups == groupQualityP5 {
 			GroupP5 = true
-			if user.Role == "Administrator" {
+			if user.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
-			} else if user.Role == "главный инженер по качеству" {
+			} else if user.Role == roleSuperIngenerQuality {
 				SuperIngenerQuality = true
 				LoggedIn = true
 				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
-			} else if user.Role == "инженер по качеству" {
+			} else if user.Role == roleIngenerQuality {
 				IngenerQuality = true
 				LoggedIn = true
 				fmt.Println("IngenerQuality - ", IngenerQuality)
-			} else if user.Role == "контролер качества" {
+			} else if user.Role == roleInspector {
 				Inspector = true
 				LoggedIn = true
 
@@ -2847,22 +2847,22 @@ func (s *Server) PageupdateInspectionJSON() http.HandlerFunc {
 		//s.infoLog.Printf("user.Groups - %v", user.Groups)
 		s.logger.Infof("user.Groups - %v", user.Groups)
 		/*
-			if (user.Groups == "качество" && user.Role == "главный инженер по качеству") ||
-				(user.Groups == "качество" && user.Role == "инженер по качеству") {
+			if (user.Groups == groupQuality && user.Role == roleSuperIngenerQuality) ||
+				(user.Groups == groupQuality && user.Role == roleIngenerQuality) {
 				fmt.Println("Test mix page update")
 				GroupP1 = true
-				if user.Role == "Administrator" {
+				if user.Role == roleAdministrator {
 					Admin = true
 					LoggedIn = true
-				} else if user.Role == "главный инженер по качеству" {
+				} else if user.Role == roleSuperIngenerQuality {
 					SuperIngenerQuality = true
 					LoggedIn = true
 					fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
-				} else if user.Role == "инженер по качеству" {
+				} else if user.Role == roleIngenerQuality {
 					IngenerQuality = true
 					LoggedIn = true
 					fmt.Println("IngenerQuality - ", IngenerQuality)
-				} /*else if user.Role == "контролер качества" {
+				} /*else if user.Role == roleInspector {
 					Inspector = true
 					LoggedIn = true
 
@@ -2893,20 +2893,20 @@ func (s *Server) PageupdateInspectionJSON() http.HandlerFunc {
 				}
 			}
 		*/
-		if user.Groups == "качество" {
+		if user.Groups == groupQuality {
 			GroupP1 = true
-			if user.Role == "Administrator" {
+			if user.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
-			} else if user.Role == "главный инженер по качеству" {
+			} else if user.Role == roleSuperIngenerQuality {
 				SuperIngenerQuality = true
 				LoggedIn = true
 				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
-			} else if user.Role == "инженер по качеству" {
+			} else if user.Role == roleIngenerQuality {
 				IngenerQuality = true
 				LoggedIn = true
 				fmt.Println("IngenerQuality - ", IngenerQuality)
-			} else if user.Role == "контролер качества" {
+			} else if user.Role == roleInspector {
 				Inspector = true
 				LoggedIn = true
 
@@ -2936,20 +2936,20 @@ func (s *Server) PageupdateInspectionJSON() http.HandlerFunc {
 				return
 			}
 		}
-		if user.Groups == "качество П5" {
+		if user.Groups == groupQualityP5 {
 			GroupP5 = true
-			if user.Role == "Administrator" {
+			if user.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
-			} else if user.Role == "главный инженер по качеству" {
+			} else if user.Role == roleSuperIngenerQuality {
 				SuperIngenerQuality = true
 				LoggedIn = true
 				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
-			} else if user.Role == "инженер по качеству" {
+			} else if user.Role == roleIngenerQuality {
 				IngenerQuality = true
 				LoggedIn = true
 				fmt.Println("IngenerQuality - ", IngenerQuality)
-			} else if user.Role == "контролер качества" {
+			} else if user.Role == roleInspector {
 				Inspector = true
 				LoggedIn = true
 
@@ -3033,22 +3033,22 @@ func (s *Server) PageupdateInspectionJSONmix() http.HandlerFunc {
 		//s.infoLog.Printf("user.Groups - %v", user.Groups)
 		s.logger.Infof("user.Groups - %v", user.Groups)
 
-		if (user.Groups == "качество" && user.Role == "главный инженер по качеству") ||
-			(user.Groups == "качество" && user.Role == "инженер по качеству") {
+		if (user.Groups == groupQuality && user.Role == roleSuperIngenerQuality) ||
+			(user.Groups == groupQuality && user.Role == roleIngenerQuality) {
 			fmt.Println("Test mix page update")
 			GroupP1 = true
-			if user.Role == "Administrator" {
+			if user.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
-			} else if user.Role == "главный инженер по качеству" {
+			} else if user.Role == roleSuperIngenerQuality {
 				SuperIngenerQuality = true
 				LoggedIn = true
 				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
-			} else if user.Role == "инженер по качеству" {
+			} else if user.Role == roleIngenerQuality {
 				IngenerQuality = true
 				LoggedIn = true
 				fmt.Println("IngenerQuality - ", IngenerQuality)
-			} /*else if user.Role == "контролер качества" {
+			} /*else if user.Role == roleInspector {
 				Inspector = true
 				LoggedIn = true
 
@@ -3079,22 +3079,22 @@ func (s *Server) PageupdateInspectionJSONmix() http.HandlerFunc {
 			}
 		}
 
-		if (user.Groups == "качество П5" && user.Role == "главный инженер по качеству") ||
-			(user.Groups == "качество П5" && user.Role == "инженер по качеству") {
+		if (user.Groups == groupQualityP5 && user.Role == roleSuperIngenerQuality) ||
+			(user.Groups == groupQualityP5 && user.Role == roleIngenerQuality) {
 			fmt.Println("Test mix page update")
 			GroupP5 = true
-			if user.Role == "Administrator" {
+			if user.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
-			} else if user.Role == "главный инженер по качеству" {
+			} else if user.Role == roleSuperIngenerQuality {
 				SuperIngenerQuality = true
 				LoggedIn = true
 				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
-			} else if user.Role == "инженер по качеству" {
+			} else if user.Role == roleIngenerQuality {
 				IngenerQuality = true
 				LoggedIn = true
 				fmt.Println("IngenerQuality - ", IngenerQuality)
-			} /*else if user.Role == "контролер качества" {
+			} /*else if user.Role == roleInspector {
 				Inspector = true
 				LoggedIn = true
 
@@ -3162,8 +3162,8 @@ func (s *Server) UpdateInspection() http.HandlerFunc {
 		w.Header().Set("Access-Control-Allow-Methods", "POST")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
-		//GroupP1 = "качество"
-		//GroupP5 = "качество"
+		//GroupP1 = groupQuality
+		//GroupP5 = groupQuality
 
 		req := &request{}
 		vars := mux.Vars(r)
@@ -3230,7 +3230,7 @@ func (s *Server) UpdateInspection() http.HandlerFunc {
 			Timeupdate: currentTime,   // Timeaccept
 			Groups:     user.Groups,
 		}*/
-		if user.Groups == "качество" {
+		if user.Groups == groupQuality {
 
 			if err := s.store.Inspection().UpdateInspection(u); err != nil {
 				s.error(w, r, http.StatusUnprocessableEntity, err)
@@ -3259,7 +3259,7 @@ func (s *Server) UpdateInspection() http.HandlerFunc {
 				}*/
 			http.Redirect(w, r, "/operation/statusinspection", 303)
 		}
-		if user.Groups == "качество П5" {
+		if user.Groups == groupQualityP5 {
 
 			if err := s.store.Inspection().UpdateInspectionP5(u); err != nil {
 				s.error(w, r, http.StatusUnprocessableEntity, err)
@@ -3378,8 +3378,8 @@ func (s *Server) UpdateInspectionJSON() http.HandlerFunc {
 				Timeupdate: currentTime,   // Timeaccept
 				Groups:     user.Groups,
 			}
-			/*	if user.Groups == "качество" && user.Role == "главный инженер по качеству" ||
-				user.Groups == "качество" && user.Role == "инженер по качеству" {
+			/*	if user.Groups == groupQuality && user.Role == roleSuperIngenerQuality ||
+				user.Groups == groupQuality && user.Role == roleIngenerQuality {
 				if err := s.store.Inspection().UpdateInspectionP5(u); err != nil {
 					s.error(w, r, http.StatusUnprocessableEntity, err)
 					return
@@ -3399,7 +3399,7 @@ func (s *Server) UpdateInspectionJSON() http.HandlerFunc {
 				// send the response
 				json.NewEncoder(w).Encode(res)
 			}*/
-			if user.Groups == "качество" {
+			if user.Groups == groupQuality {
 				if err := s.store.Inspection().UpdateInspection(u); err != nil {
 					s.error(w, r, http.StatusUnprocessableEntity, err)
 					return
@@ -3420,7 +3420,7 @@ func (s *Server) UpdateInspectionJSON() http.HandlerFunc {
 				// send the response
 				json.NewEncoder(w).Encode(res)
 			}
-			if user.Groups == "качество П5" {
+			if user.Groups == groupQualityP5 {
 				if err := s.store.Inspection().UpdateInspectionP5(u); err != nil {
 					s.error(w, r, http.StatusUnprocessableEntity, err)
 					return
@@ -3533,8 +3533,8 @@ func (s *Server) UpdateInspectionJSONmix() http.HandlerFunc {
 				Timeupdate: currentTime,   // Timeaccept
 				Groups:     user.Groups,
 			}
-			if user.Groups == "качество" && user.Role == "главный инженер по качеству" ||
-				user.Groups == "качество" && user.Role == "инженер по качеству" {
+			if user.Groups == groupQuality && user.Role == roleSuperIngenerQuality ||
+				user.Groups == groupQuality && user.Role == roleIngenerQuality {
 				if err := s.store.Inspection().UpdateInspectionP5(u); err != nil {
 					s.error(w, r, http.StatusUnprocessableEntity, err)
 					return
@@ -3555,8 +3555,8 @@ func (s *Server) UpdateInspectionJSONmix() http.HandlerFunc {
 				json.NewEncoder(w).Encode(res)
 			}
 
-			if user.Groups == "качество П5" && user.Role == "главный инженер по качеству" ||
-				user.Groups == "качество П5" && user.Role == "инженер по качеству" {
+			if user.Groups == groupQualityP5 && user.Role == roleSuperIngenerQuality ||
+				user.Groups == groupQualityP5 && user.Role == roleIngenerQuality {
 				if err := s.store.Inspection().UpdateInspection(u); err != nil {
 					s.error(w, r, http.StatusUnprocessableEntity, err)
 					return
@@ -3630,7 +3630,7 @@ func (s *Server) DeleteInspection() http.HandlerFunc {
 			return
 		}
 
-		if user.Groups == "склад" || user.Groups == "качество" {
+		if user.Groups == groupWarehouse || user.Groups == groupQuality {
 			//	s.Lock()
 			fmt.Println("call")
 			if err := s.store.Inspection().DeleteItemInspection(u); err != nil {
@@ -3640,7 +3640,7 @@ func (s *Server) DeleteInspection() http.HandlerFunc {
 			//	s.Unlock()
 			http.Redirect(w, r, "/operation/statusinspection", 303)
 		}
-		if user.Groups == "склад П5" || user.Groups == "качество П5" {
+		if user.Groups == groupWarehouseP5 || user.Groups == groupQualityP5 {
 			//	s.Lock()
 			fmt.Println("call P5")
 			if err := s.store.Inspection().DeleteItemInspectionP5(u); err != nil {
@@ -3690,25 +3690,25 @@ func (s *Server) PageListAcceptWHInspection() http.HandlerFunc { // acceptinspec
 			return
 		}
 
-		if user.Groups == "склад" {
+		if user.Groups == groupWarehouse {
 			stockkeeperWH = true
 			WarehouseManager = true
 		}
 		/*
-			if user.Groups == "качество" {
+			if user.Groups == groupQuality {
 				quality = true
-			} else if user.Groups == "склад" {
+			} else if user.Groups == groupWarehouse {
 				stockkeeperWH = true
 			}
 		*/
-		if user.Role == "Administrator" {
+		if user.Role == roleAdministrator {
 			Admin = true
 			LoggedIn = true
-		} else if user.Role == "кладовщик склада" {
+		} else if user.Role == roleStockkeeperWH {
 			StockkeeperWH = true
 			LoggedIn = true
 			fmt.Println("кладовщик склада - ", StockkeeperWH)
-		} else if user.Role == "старший кладовщик склада" {
+		} else if user.Role == roleWarehouseManager {
 			WarehouseManager = true
 			LoggedIn = true
 		}
@@ -3723,7 +3723,7 @@ func (s *Server) PageListAcceptWHInspection() http.HandlerFunc { // acceptinspec
 			//	"quality":   quality,
 			"Warehouse":        stockkeeperWH,
 			"WarehouseManager": WarehouseManager,
-			//	"главный инженер по качеству": superIngenerQuality,
+			//	roleSuperIngenerQuality: superIngenerQuality,
 			"GET": get,
 			//	"status":    statusStr,
 			"Admin":         Admin,
@@ -3786,17 +3786,17 @@ func (s *Server) PageacceptWarehouseInspection() http.HandlerFunc {
 		//s.infoLog.Printf("user.Groups - %v\n", user.Groups)
 		s.logger.Infof("user.Groups - %v\n", user.Groups)
 
-		if user.Groups == "склад" {
+		if user.Groups == groupWarehouse {
 			GroupP1 = true
-			if user.Role == "Administrator" {
+			if user.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
 
-			} else if user.Role == "кладовщик склада" {
+			} else if user.Role == roleStockkeeperWH {
 				StockkeeperWH = true
 				LoggedIn = true
 
-			} else if user.Role == "старший кладовщик склада" {
+			} else if user.Role == roleWarehouseManager {
 				WarehouseManager = true
 				LoggedIn = true
 			}
@@ -3825,17 +3825,17 @@ func (s *Server) PageacceptWarehouseInspection() http.HandlerFunc {
 				return
 			}
 		}
-		if user.Groups == "склад П5" {
+		if user.Groups == groupWarehouseP5 {
 			GroupP5 = true
-			if user.Role == "Administrator" {
+			if user.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
 
-			} else if user.Role == "кладовщик склада" {
+			} else if user.Role == roleStockkeeperWH {
 				StockkeeperWH = true
 				LoggedIn = true
 
-			} else if user.Role == "старший кладовщик склада" {
+			} else if user.Role == roleWarehouseManager {
 				WarehouseManager = true
 				LoggedIn = true
 			}
@@ -3919,7 +3919,7 @@ func (s *Server) AcceptWarehouseInspection() http.HandlerFunc {
 			Timeaccept:     currentTime,   // Timeaccept
 			Groups:         user.Groups,
 		}
-		if user.Groups == "склад" {
+		if user.Groups == groupWarehouse {
 
 			if err := s.store.Inspection().AcceptWarehouseInspection(u); err != nil {
 				s.error(w, r, http.StatusUnprocessableEntity, err)
@@ -3934,7 +3934,7 @@ func (s *Server) AcceptWarehouseInspection() http.HandlerFunc {
 			//http.Redirect(w, r, "/statusinspectionforwh", 303)
 			http.Redirect(w, r, "/operation/statusinspection", 303)
 		}
-		if user.Groups == "склад П5" {
+		if user.Groups == groupWarehouseP5 {
 			fmt.Println("Test accept")
 
 			if err := s.store.Inspection().AcceptWarehouseInspectionP5(u); err != nil {
@@ -3997,17 +3997,17 @@ func (s *Server) PageacceptWarehouseInspectionJSON() http.HandlerFunc {
 		//s.infoLog.Printf("user.Groups - %v\n", user.Groups)
 		s.logger.Info("user.Groups - %v\n", user.Groups)
 
-		if user.Groups == "склад" {
+		if user.Groups == groupWarehouse {
 			GroupP1 = true
-			if user.Role == "Administrator" {
+			if user.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
 
-			} else if user.Role == "кладовщик склада" {
+			} else if user.Role == roleStockkeeperWH {
 				StockkeeperWH = true
 				LoggedIn = true
 
-			} else if user.Role == "старший кладовщик склада" {
+			} else if user.Role == roleWarehouseManager {
 				WarehouseManager = true
 				LoggedIn = true
 			}
@@ -4036,17 +4036,17 @@ func (s *Server) PageacceptWarehouseInspectionJSON() http.HandlerFunc {
 				return
 			}
 		}
-		if user.Groups == "склад П5" {
+		if user.Groups == groupWarehouseP5 {
 			GroupP5 = true
-			if user.Role == "Administrator" {
+			if user.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
 
-			} else if user.Role == "кладовщик склада" {
+			} else if user.Role == roleStockkeeperWH {
 				StockkeeperWH = true
 				LoggedIn = true
 
-			} else if user.Role == "старший кладовщик склада" {
+			} else if user.Role == roleWarehouseManager {
 				WarehouseManager = true
 				LoggedIn = true
 			}
@@ -4159,7 +4159,7 @@ func (s *Server) AcceptWarehouseInspectionJSON() http.HandlerFunc {
 				Timeaccept:     currentTime,   // Timeaccept
 				Groups:         user.Groups,
 			}
-			if user.Groups == "склад" {
+			if user.Groups == groupWarehouse {
 
 				if err := s.store.Inspection().AcceptWarehouseInspection(u); err != nil {
 					s.error(w, r, http.StatusUnprocessableEntity, err)
@@ -4184,7 +4184,7 @@ func (s *Server) AcceptWarehouseInspectionJSON() http.HandlerFunc {
 				json.NewEncoder(w).Encode(res)
 				//	http.Redirect(w, r, "/operation/statusinspection", 303)
 			}
-			if user.Groups == "склад П5" {
+			if user.Groups == groupWarehouseP5 {
 				fmt.Println("Test accept")
 
 				if err := s.store.Inspection().AcceptWarehouseInspectionP5(u); err != nil {
@@ -4268,7 +4268,7 @@ func (s *Server) AcceptGroupsWarehouseInspection() http.HandlerFunc {
 
 		const statusTransfer = "Принято на склад с ВК"
 
-		if user.Groups == "склад" {
+		if user.Groups == groupWarehouse {
 			for _, v := range rdata {
 				if (strings.Contains(v.ScanID[0:1], "P") == true) && (len(v.ScanID) == 45) {
 					idMaterial := v.ScanID[0:45]
@@ -4330,7 +4330,7 @@ func (s *Server) AcceptGroupsWarehouseInspection() http.HandlerFunc {
 				}
 			}
 		}
-		if user.Groups == "склад П5" {
+		if user.Groups == groupWarehouseP5 {
 			for _, v := range rdata {
 				if (strings.Contains(v.ScanID[0:1], "P") == true) && (len(v.ScanID) == 45) {
 					idMaterial := v.ScanID[0:45]

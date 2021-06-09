@@ -166,7 +166,7 @@ func (s *Server) UploadFileToInspection() http.HandlerFunc {
 
 		}
 
-		if user.Groups == "склад" {
+		if user.Groups == groupWarehouse {
 			for _, v := range lines {
 				if (strings.Contains(v[0:1], "P") == true) && (len(v) == 45) {
 					idMaterial := v[0:45]
@@ -310,7 +310,7 @@ func (s *Server) UploadFileToInspection() http.HandlerFunc {
 			w.Write([]byte("Файл успешно загружен"))
 		}
 		fmt.Println("Test1")
-		if user.Groups == "склад П5" {
+		if user.Groups == groupWarehouseP5 {
 			fmt.Println("Test2")
 			for _, v := range lines {
 				fmt.Println("Test3")
@@ -520,33 +520,33 @@ func (s *Server) PageUploadFileToInspectionJSON() http.HandlerFunc {
 		fmt.Println("user.Groups - ?", user.Groups)
 		fmt.Println("Test json page update")
 		s.logger.Infof("user.Groups - %v", user.Groups)
-		if user.Groups == "склад" {
+		if user.Groups == groupWarehouse {
 			StockkeeperWH = true
 			WarehouseManager = true
 		}
 
-		if user.Groups == "качество" {
+		if user.Groups == groupQuality {
 			GroupP1 = true
-			if user.Role == "Administrator" {
+			if user.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
-			} else if user.Role == "кладовщик склада" {
+			} else if user.Role == roleStockkeeperWH {
 				StockkeeperWH = true
 				LoggedIn = true
 				fmt.Println("кладовщик склада - ", StockkeeperWH)
-			} else if user.Role == "старший кладовщик склада" {
+			} else if user.Role == roleWarehouseManager {
 				WarehouseManager = true
 				LoggedIn = true
 			}
-			/*else if user.Role == "главный инженер по качеству" {
+			/*else if user.Role == roleSuperIngenerQuality {
 				SuperIngenerQuality = true
 				LoggedIn = true
 				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
-			} else if user.Role == "инженер по качеству" {
+			} else if user.Role == roleIngenerQuality {
 				IngenerQuality = true
 				LoggedIn = true
 				fmt.Println("IngenerQuality - ", IngenerQuality)
-			} else if user.Role == "контролер качества" {
+			} else if user.Role == roleInspector {
 				Inspector = true
 				LoggedIn = true
 
@@ -578,29 +578,29 @@ func (s *Server) PageUploadFileToInspectionJSON() http.HandlerFunc {
 				return
 			}
 		}
-		if user.Groups == "качество П5" {
+		if user.Groups == groupQualityP5 {
 			GroupP5 = true
 			fmt.Println("Test Upload Page")
-			if user.Role == "Administrator" {
+			if user.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
-			} else if user.Role == "кладовщик склада" {
+			} else if user.Role == roleStockkeeperWH {
 				StockkeeperWH = true
 				LoggedIn = true
 				fmt.Println("кладовщик склада - ", StockkeeperWH)
-			} else if user.Role == "старший кладовщик склада" {
+			} else if user.Role == roleWarehouseManager {
 				WarehouseManager = true
 				LoggedIn = true
 			}
-			/*else if user.Role == "главный инженер по качеству" {
+			/*else if user.Role == roleSuperIngenerQuality {
 				SuperIngenerQuality = true
 				LoggedIn = true
 				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
-			} else if user.Role == "инженер по качеству" {
+			} else if user.Role == roleIngenerQuality {
 				IngenerQuality = true
 				LoggedIn = true
 				fmt.Println("IngenerQuality - ", IngenerQuality)
-			} else if user.Role == "контролер качества" {
+			} else if user.Role == roleInspector {
 				Inspector = true
 				LoggedIn = true
 
@@ -795,7 +795,7 @@ func (s *Server) UploadFileToInspectionJSON() http.HandlerFunc {
 
 		}
 
-		if user.Groups == "склад" || user.Groups == "качество" {
+		if user.Groups == groupWarehouse || user.Groups == groupQuality {
 			for _, v := range lines {
 				if (strings.Contains(v[0:1], "P") == true) && (len(v) == 45) {
 					idMaterial := v[0:45]
@@ -936,7 +936,7 @@ func (s *Server) UploadFileToInspectionJSON() http.HandlerFunc {
 			}
 		}
 
-		if user.Groups == "склад П5" || user.Groups == "качество П5" {
+		if user.Groups == groupWarehouseP5 || user.Groups == groupQualityP5 {
 			for _, v := range lines {
 				if (strings.Contains(v[0:1], "P") == true) && (len(v) == 45) {
 					idMaterial := v[0:45]

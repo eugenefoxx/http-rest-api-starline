@@ -58,16 +58,16 @@ func (s *Server) PageinsertVendor() http.HandlerFunc {
 		//	GET := map[string]bool{
 		//		"admin": admin,
 		//		//	"stockkeeper":         stockkeeper,
-		//		"главный инженер по качеству": superIngenerQuality,
+		//		roleSuperIngenerQuality: superIngenerQuality,
 		//	"stockkeeperWH":       stockkeeperWH,
 		//	"inspector":           inspector,
 		//	}
-		if user.Groups == "качество" {
+		if user.Groups == groupQuality {
 			GroupP1 = true
-			if user.Role == "Administrator" {
+			if user.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
-			} else if user.Role == "главный инженер по качеству" {
+			} else if user.Role == roleSuperIngenerQuality {
 				SuperIngenerQuality = true
 				LoggedIn = true
 				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
@@ -85,12 +85,12 @@ func (s *Server) PageinsertVendor() http.HandlerFunc {
 			tpl.ExecuteTemplate(w, "insertvendor.html", data)
 		}
 
-		if user.Groups == "качество П5" {
+		if user.Groups == groupQualityP5 {
 			GroupP5 = true
-			if user.Role == "Administrator" {
+			if user.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
-			} else if user.Role == "главный инженер по качеству" {
+			} else if user.Role == roleSuperIngenerQuality {
 				SuperIngenerQuality = true
 				LoggedIn = true
 				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
@@ -170,15 +170,15 @@ func (s *Server) InsertVendor() http.HandlerFunc {
 		//	GET := map[string]bool{
 		//		"admin": admin,
 		//	"stockkeeper":         stockkeeper,
-		//		"главный инженер по качеству": superIngenerQuality,
+		//		roleSuperIngenerQuality: superIngenerQuality,
 		//	"stockkeeperWH":       stockkeeperWH,
 		//	"inspector":           inspector,
 		//	}
 
-		if user.Role == "Administrator" {
+		if user.Role == roleAdministrator {
 			Admin = true
 			LoggedIn = true
-		} else if user.Role == "главный инженер по качеству" {
+		} else if user.Role == roleSuperIngenerQuality {
 			SuperIngenerQuality = true
 			LoggedIn = true
 			fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
@@ -256,12 +256,12 @@ func (s *Server) PageVendor() http.HandlerFunc {
 			return
 		}
 
-		if user.Groups == "качество" {
+		if user.Groups == groupQuality {
 			GroupP1 = true
-			if user.Role == "Administrator" {
+			if user.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
-			} else if user.Role == "главный инженер по качеству" {
+			} else if user.Role == roleSuperIngenerQuality {
 				SuperIngenerQuality = true
 				LoggedIn = true
 				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
@@ -288,12 +288,12 @@ func (s *Server) PageVendor() http.HandlerFunc {
 			//json.NewEncoder(w).Encode(get)
 			//fmt.Println("json.NewEncoder(w).Encode(get)")
 		}
-		if user.Groups == "качество П5" {
+		if user.Groups == groupQualityP5 {
 			GroupP5 = true
-			if user.Role == "Administrator" {
+			if user.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
-			} else if user.Role == "главный инженер по качеству" {
+			} else if user.Role == roleSuperIngenerQuality {
 				SuperIngenerQuality = true
 				LoggedIn = true
 				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
@@ -355,10 +355,10 @@ func (s *Server) PageupdateVendor() http.HandlerFunc {
 			return
 		}
 
-		if user.Role == "Administrator" {
+		if user.Role == roleAdministrator {
 			Admin = true
 			LoggedIn = true
-		} else if user.Role == "главный инженер по качеству" {
+		} else if user.Role == roleSuperIngenerQuality {
 			SuperIngenerQuality = true
 			LoggedIn = true
 			fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)

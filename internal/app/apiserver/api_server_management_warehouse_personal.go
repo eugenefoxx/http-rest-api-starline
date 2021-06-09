@@ -43,13 +43,13 @@ func (s *Server) PageshowUsersWarehouse() http.HandlerFunc {
 			return
 		}
 
-		if user.Groups == "склад" {
+		if user.Groups == groupWarehouse {
 			GroupP1 = true
-			group := "склад"
-			if user.Role == "Administrator" {
+			group := groupWarehouse
+			if user.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
-			} else if user.Role == "старший кладовщик склада" {
+			} else if user.Role == roleWarehouseManager {
 				WarehouseManager = true
 				LoggedIn = true
 			}
@@ -77,13 +77,13 @@ func (s *Server) PageshowUsersWarehouse() http.HandlerFunc {
 			}
 		}
 
-		if user.Groups == "склад П5" {
+		if user.Groups == groupWarehouseP5 {
 			GroupP5 = true
-			group := "склад П5"
-			if user.Role == "Administrator" {
+			group := groupWarehouseP5
+			if user.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
-			} else if user.Role == "старший кладовщик склада" {
+			} else if user.Role == roleWarehouseManager {
 				WarehouseManager = true
 				LoggedIn = true
 			}
@@ -140,8 +140,8 @@ func (s *Server) CreateUserWarehouse() http.HandlerFunc {
 		fmt.Println("\njson  struct hdata", hdata)
 		s.logger.Infof("Loading hdata json: %v\n", hdata)
 
-		Groupp1 := "склад"
-		Groupp5 := "склад П5"
+		Groupp1 := groupWarehouse
+		Groupp5 := groupWarehouseP5
 
 		session, err := s.sessionStore.Get(r, sessionName)
 		if err != nil {
@@ -161,9 +161,9 @@ func (s *Server) CreateUserWarehouse() http.HandlerFunc {
 			return
 		}
 
-		//group := "склад"
-		if user.Groups == "склад" {
-			if user.Role == "старший кладовщик склада" {
+		//group := groupWarehouse
+		if user.Groups == groupWarehouse {
+			if user.Role == roleWarehouseManager {
 				//	WarehouseManager = true
 				for _, v := range hdata {
 					fmt.Println(v.Email, v.FirstName, v.LastName, v.Password, v.Role, v.Tabel)
@@ -187,8 +187,8 @@ func (s *Server) CreateUserWarehouse() http.HandlerFunc {
 			}
 		}
 
-		if user.Groups == "склад П5" {
-			if user.Role == "старший кладовщик склада" {
+		if user.Groups == groupWarehouseP5 {
+			if user.Role == roleWarehouseManager {
 				//	WarehouseManager = true
 				for _, v := range hdata {
 					fmt.Println("create stockkeeper P5", v.Email, v.FirstName, v.LastName, v.Password, v.Role, v.Tabel)
@@ -243,10 +243,10 @@ func (s *Server) PageupdateUserWarehouse() http.HandlerFunc {
 			return
 		}
 
-		if user.Role == "Administrator" {
+		if user.Role == roleAdministrator {
 			Admin = true
 			LoggedIn = true
-		} else if user.Role == "старший кладовщик склада" {
+		} else if user.Role == roleWarehouseManager {
 			WarehouseManager = true
 			LoggedIn = true
 			fmt.Println("SuperIngenerQuality pageupdateUserQuality - ", WarehouseManager)
