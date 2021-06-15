@@ -27,23 +27,7 @@ func (s *Server) PageinInspection() http.HandlerFunc {
 		SuperIngenerQuality := false
 		LoggedIn := false
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		id, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(id.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		if user.Role == roleAdministrator {
 			Admin = true
@@ -123,23 +107,7 @@ func (s *Server) InInspection() http.HandlerFunc {
 		//	fmt.Print(rdata2)
 		fmt.Printf("slice: %q\n", slice)
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		id, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(id.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		const statusTransfer = "отгружено на ВК"
 
@@ -441,23 +409,7 @@ func (s *Server) PagehistoryInspection() http.HandlerFunc {
 		GroupP5 := false
 		LoggedIn := false
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		id, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(id.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		if user.Groups == groupQuality || user.Groups == groupWarehouse || user.Groups == groupQualityP5 || user.Groups == groupWarehouseP5 {
 			GroupP1 = true
@@ -529,23 +481,7 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 		GroupP5 := false
 		LoggedIn := false
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		id, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(id.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		if user.Groups == groupQuality || user.Groups == groupWarehouse {
 			GroupP1 = true
@@ -1294,23 +1230,7 @@ func (s *Server) PagehistoryInspectionP5() http.HandlerFunc {
 		GroupP5 := false
 		LoggedIn := false
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		id, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(id.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		if user.Groups == groupQualityP5 || user.Groups == groupWarehouseP5 || user.Groups == groupQuality || user.Groups == groupWarehouse {
 			GroupP5 = true
@@ -1381,23 +1301,7 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 		GroupP1 := false
 		LoggedIn := false
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		id, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(id.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		if user.Groups == groupQualityP5 || user.Groups == groupWarehouseP5 {
 			GroupP5 = true
@@ -2123,23 +2027,7 @@ func (s *Server) PageInspection() http.HandlerFunc {
 		MixP1P5 := false
 		LoggedIn := true
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		id, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(id.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		if user.Groups == groupQuality || user.Groups == groupWarehouse {
 			GroupP1 = true
@@ -2398,23 +2286,7 @@ func (s *Server) PageInspectionMix() http.HandlerFunc {
 		//MixP1P5 := false
 		LoggedIn := true
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		id, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(id.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		if user.Groups == groupQuality && user.Role == roleSuperIngenerQuality ||
 			user.Groups == groupQuality && user.Role == roleIngenerQuality {
@@ -2687,23 +2559,8 @@ func (s *Server) PageupdateInspection() http.HandlerFunc {
 			s.logger.Errorf(err.Error())
 		}
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
-		idd, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(idd.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
 		fmt.Println("user.Groups - ?", user.Groups)
 		//s.infoLog.Printf("test user.Groups - %s", user.Groups)
 		s.logger.Infof("test user.Groups - %s", user.Groups)
@@ -2825,23 +2682,8 @@ func (s *Server) PageupdateInspectionJSON() http.HandlerFunc {
 			s.logger.Errorf(err.Error())
 		}
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
-		idd, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(idd.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
 		fmt.Println("user.Groups - ?", user.Groups)
 		fmt.Println("Test json page update")
 		//s.infoLog.Printf("user.Groups - %v", user.Groups)
@@ -3011,23 +2853,8 @@ func (s *Server) PageupdateInspectionJSONmix() http.HandlerFunc {
 			s.logger.Errorf(err.Error())
 		}
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
-		idd, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(idd.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
 		fmt.Println("user.Groups - ?", user.Groups)
 		fmt.Println("Test json page update")
 		//s.infoLog.Printf("user.Groups - %v", user.Groups)
@@ -3175,23 +3002,7 @@ func (s *Server) UpdateInspection() http.HandlerFunc {
 
 		currentTime := time.Now()
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		idd, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(idd.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		req.ID = id
 		req.Status = r.FormValue("status")
@@ -3323,23 +3134,7 @@ func (s *Server) UpdateInspectionJSON() http.HandlerFunc {
 
 		currentTime := time.Now()
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		idd, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(idd.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
@@ -3480,23 +3275,7 @@ func (s *Server) UpdateInspectionJSONmix() http.HandlerFunc {
 
 		currentTime := time.Now()
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		idd, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(idd.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
@@ -3612,23 +3391,7 @@ func (s *Server) DeleteInspection() http.HandlerFunc {
 			ID: req.ID,
 		}
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		idd, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(idd.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		if user.Groups == groupWarehouse || user.Groups == groupQuality {
 			//	s.Lock()
@@ -3672,23 +3435,7 @@ func (s *Server) PageListAcceptWHInspection() http.HandlerFunc { // acceptinspec
 		//quality := false
 		//	statusStr := false
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		id, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(id.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		if user.Groups == groupWarehouse {
 			stockkeeperWH = true
@@ -3765,23 +3512,8 @@ func (s *Server) PageacceptWarehouseInspection() http.HandlerFunc {
 			s.logger.Errorf(err.Error())
 		}
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
-		idd, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(idd.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
 		fmt.Println("user.Groups - ?", user.Groups)
 		//s.infoLog.Printf("user.Groups - %v\n", user.Groups)
 		s.logger.Infof("user.Groups - %v\n", user.Groups)
@@ -3890,23 +3622,7 @@ func (s *Server) AcceptWarehouseInspection() http.HandlerFunc {
 
 		currentTime := time.Now()
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		idd, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(idd.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		req.ID = id
 		req.Location = r.FormValue("location")
@@ -3976,23 +3692,8 @@ func (s *Server) PageacceptWarehouseInspectionJSON() http.HandlerFunc {
 			s.logger.Errorf(err.Error())
 		}
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
-		idd, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(idd.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
 		fmt.Println("user.Groups - ?", user.Groups)
 		//s.infoLog.Printf("user.Groups - %v\n", user.Groups)
 		s.logger.Info("user.Groups - %v\n", user.Groups)
@@ -4105,23 +3806,8 @@ func (s *Server) AcceptWarehouseInspectionJSON() http.HandlerFunc {
 
 		currentTime := time.Now()
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
-		idd, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(idd.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
 		/*
 			req.ID = id
 			req.Location = r.FormValue("location")
@@ -4248,23 +3934,7 @@ func (s *Server) AcceptGroupsWarehouseInspection() http.HandlerFunc {
 
 		currentTime := time.Now()
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		id, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(id.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		const statusTransfer = "Принято на склад с ВК"
 

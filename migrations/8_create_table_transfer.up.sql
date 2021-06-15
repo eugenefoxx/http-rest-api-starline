@@ -17,8 +17,7 @@ CREATE TABLE transfer
     lastname VARCHAR NOT NULL,
     update VARCHAR NULL,
     dateupdate DATE,
-    timeupdate TIME
-    DEFAULT,
+    timeupdate TIME,
     lastnameaccept VARCHAR NULL,
     dateaccept DATE,
     timeaccept TIME

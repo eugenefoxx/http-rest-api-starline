@@ -40,21 +40,7 @@ func (s *Server) PageinsertVendor() http.HandlerFunc {
 		GroupP5 := false
 		LoggedIn := false
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-		id, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-		user, err := s.store.User().Find(id.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 		//	GET := map[string]bool{
 		//		"admin": admin,
 		//		//	"stockkeeper":         stockkeeper,
@@ -82,7 +68,11 @@ func (s *Server) PageinsertVendor() http.HandlerFunc {
 				"Username": user.FirstName,
 			}
 			fmt.Println("Check -")
-			tpl.ExecuteTemplate(w, "insertvendor.html", data)
+			err := tpl.ExecuteTemplate(w, "insertvendor.html", data)
+			if err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}
 		}
 
 		if user.Groups == groupQualityP5 {
@@ -105,7 +95,11 @@ func (s *Server) PageinsertVendor() http.HandlerFunc {
 				"Username": user.FirstName,
 			}
 			fmt.Println("Check -")
-			tpl.ExecuteTemplate(w, "insertvendor.html", data)
+			err := tpl.ExecuteTemplate(w, "insertvendor.html", data)
+			if err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}
 		}
 	}
 }
@@ -149,23 +143,7 @@ func (s *Server) InsertVendor() http.HandlerFunc {
 		fmt.Println("\njson  struct hdata", hdata)
 		s.logger.Infof("Loading hdata json: %v", hdata)
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		id, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(id.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		//	GET := map[string]bool{
 		//		"admin": admin,
@@ -210,7 +188,11 @@ func (s *Server) InsertVendor() http.HandlerFunc {
 
 		//err = tpl.ExecuteTemplate(w, "layout", data)
 		//	err = tpl.ExecuteTemplate(w, "layout", v)
-		tpl.ExecuteTemplate(w, "insertvendor.html", data)
+		err = tpl.ExecuteTemplate(w, "insertvendor.html", data)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
 
 	}
 
@@ -238,23 +220,7 @@ func (s *Server) PageVendor() http.HandlerFunc {
 		GroupP5 := false
 		LoggedIn := false
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		id, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(id.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		if user.Groups == groupQuality {
 			GroupP1 = true
@@ -283,7 +249,11 @@ func (s *Server) PageVendor() http.HandlerFunc {
 				"Username":            user.FirstName,
 			}
 
-			tpl.ExecuteTemplate(w, "showvendor.html", data)
+			err = tpl.ExecuteTemplate(w, "showvendor.html", data)
+			if err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}
 			// send all the vendors as response
 			//json.NewEncoder(w).Encode(get)
 			//fmt.Println("json.NewEncoder(w).Encode(get)")
@@ -315,7 +285,11 @@ func (s *Server) PageVendor() http.HandlerFunc {
 				"Username":            user.FirstName,
 			}
 
-			tpl.ExecuteTemplate(w, "showvendor.html", data)
+			err = tpl.ExecuteTemplate(w, "showvendor.html", data)
+			if err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}
 			// send all the vendors as response
 			//json.NewEncoder(w).Encode(get)
 			//fmt.Println("json.NewEncoder(w).Encode(get)")
@@ -337,23 +311,7 @@ func (s *Server) PageupdateVendor() http.HandlerFunc {
 		SuperIngenerQuality := false
 		LoggedIn := false
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		idd, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(idd.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		if user.Role == roleAdministrator {
 			Admin = true
@@ -386,8 +344,11 @@ func (s *Server) PageupdateVendor() http.HandlerFunc {
 			"User":                user.LastName,
 			"Username":            user.FirstName,
 		}
-		tpl.ExecuteTemplate(w, "updatevendor.html", data)
-
+		err = tpl.ExecuteTemplate(w, "updatevendor.html", data)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
 	}
 }
 

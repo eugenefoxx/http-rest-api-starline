@@ -62,8 +62,6 @@ func Start(config *Config) error {
 
 	srv := newServer(store, sessionStore, redis_store)
 
-	//	return http.ListenAndServe(config.BindAddr, srv)
-	// http.Handle("/resources/", http.StripPrefix("/resources", http.FileServer(http.Dir("./web/images"))))
 	//return http.ListenAndServe(config.BindAddr, srv)
 
 	//servv := http.ListenAndServe(config.BindAddr, srv)

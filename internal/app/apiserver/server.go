@@ -8,7 +8,7 @@ import (
 	"github.com/eugenefoxx/http-rest-api-starline/pkg/logging"
 	"github.com/gorilla/handlers"
 	"sync"
-//	"unsafe"
+	//	"unsafe"
 
 	"github.com/eugenefoxx/http-rest-api-starline/internal/app/model"
 	"github.com/eugenefoxx/http-rest-api-starline/internal/app/store"
@@ -40,42 +40,40 @@ var (
 	errNotAuthenticated         = errors.New("not authenticated")
 	tpl                         *template.Template
 	//LOGFILE                     = "/tmp/apiServer.log"
-	statusAdmin bool
-	statusStockkeeper bool
-	statusWarehouseManager bool
-	statusSuperIngenerQuality bool
-	statusIngenerQuality bool
-	statusStockkeeperWH bool
-	statusInspector bool
-	statusGroupP1 bool
-	statusGroupP5 bool
-	statusLoggedIn bool
+	/*statusAdmin = false
+	statusStockkeeper = false
+	statusWarehouseManager = false
+	statusSuperIngenerQuality = false
+	statusIngenerQuality = false
+	statusStockkeeperWH = false
+	statusInspector = false
+	statusGroupP1 = false
+	statusGroupP5 = false
+	statusLoggedIn = false*/
 )
 
 const (
 	// variable for role and group
-	roleAdministrator = "Administrator"
-	roleWarehouseManager = "старший кладовщик склада"
-	roleStockkeeper = "кладовщик"
+	roleAdministrator       = "Administrator"
+	roleWarehouseManager    = "старший кладовщик склада"
+	roleStockkeeper         = "кладовщик"
 	roleSuperIngenerQuality = "главный инженер по качеству"
-	roleIngenerQuality = "инженер по качеству"
-	roleStockkeeperWH = "кладовщик склада"
-	roleInspector = "контролер качества"
+	roleIngenerQuality      = "инженер по качеству"
+	roleStockkeeperWH       = "кладовщик склада"
+	roleInspector           = "контролер качества"
 
-	groupWarehouse = "склад"
-	groupQuality = "качество"
-	groupEmpty  = ""
+	groupWarehouse     = "склад"
+	groupQuality       = "качество"
+	groupEmpty         = ""
 	groupAdministrator = "администратор"
-	groupWarehouseP5 = "склад П5"
-	groupQualityP5 = "качество П5"
-
-
+	groupWarehouseP5   = "склад П5"
+	groupQualityP5     = "качество П5"
 )
 
 type ctxKey int8
 
 type Server struct {
-	router       *mux.Router
+	router *mux.Router
 	//logger       *logrus.Logger
 	store        store.Store
 	sessionStore sessions.Store
@@ -83,9 +81,9 @@ type Server struct {
 	//	html         string
 	mu sync.Mutex
 	//	httpServer *http.Server
-//	errorLog *log.Logger
-//	infoLog  *log.Logger
-	redis    store_redis.Redis
+	//	errorLog *log.Logger
+	//	infoLog  *log.Logger
+	redis  store_redis.Redis
 	logger logging.Logger
 }
 
@@ -98,27 +96,27 @@ func init() {
 //func newServer(store store.Store, sessionStore sessions.Store, html string) *Server {
 func newServer(store store.Store, sessionStore sessions.Store, redis store_redis.Redis) *Server {
 	// "/home/eugenearch/Code/github.com/eugenefoxx/http-rest-api/logfile.log"
-/*	f, err := os.OpenFile(LOGFILE, os.O_APPEND|os.O_RDWR|os.O_CREATE, 0666)
-	if err != nil {
-		//log.Fatal(err)
-		fmt.Printf("error opening file: %v", err)
-	}
-	//	defer f.Close()
-	fmt.Println(f.Name())
+	/*	f, err := os.OpenFile(LOGFILE, os.O_APPEND|os.O_RDWR|os.O_CREATE, 0666)
+		if err != nil {
+			//log.Fatal(err)
+			fmt.Printf("error opening file: %v", err)
+		}
+		//	defer f.Close()
+		fmt.Println(f.Name())
 
-	infoLog := log.New(f, "INFO\t", log.Ldate|log.Ltime|log.Lshortfile)
-	errorLog := log.New(f, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)*/
+		infoLog := log.New(f, "INFO\t", log.Ldate|log.Ltime|log.Lshortfile)
+		errorLog := log.New(f, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)*/
 
 	s := &Server{
-		router:       mux.NewRouter(), // mux.NewRouter()  NewRouter()
-	//	logger:       logrus.New(),
-		logger: logging.GetLogger(),
+		router: mux.NewRouter(), // mux.NewRouter()  NewRouter()
+		//	logger:       logrus.New(),
+		logger:       logging.GetLogger(),
 		store:        store,
 		sessionStore: sessionStore,
-	//	errorLog:     errorLog,
-	//	infoLog:      infoLog,
-		mu:           sync.Mutex{},
-		redis:        redis,
+		//	errorLog:     errorLog,
+		//	infoLog:      infoLog,
+		mu:    sync.Mutex{},
+		redis: redis,
 		/*	httpServer: &http.Server{
 			WriteTimeout:   15 * time.Second,
 			ReadTimeout:    15 * time.Second,
@@ -154,6 +152,7 @@ func (s *Server) configureRouter() {
 
 	s.router.HandleFunc("/login", s.pagehandleSessionsCreate()).Methods("GET")
 	s.router.HandleFunc("/login", s.handleSessionsCreate()).Methods("POST")
+
 	s.router.HandleFunc("/logout", s.signOut()).Methods("GET")
 
 	private := s.router.PathPrefix("/private").Subrouter()
@@ -235,7 +234,7 @@ func (s *Server) configureRouter() {
 	//operationp5.HandleFunc("/createusersquality", s.CreateUserQuality()).Methods("POST")
 
 	//s.router.HandleFunc("/main", s.AuthMiddleware(s.main())).Methods("GET")
-	operation.HandleFunc("/main", s.main()).Methods("GET")
+	operation.HandleFunc("/main", s.home()).Methods("GET")
 	//operationp5.HandleFunc("/main", s.main()).Methods("GET")
 
 	s.router.HandleFunc("/", s.upload()).Methods("GET")
@@ -266,7 +265,11 @@ func (s *Server) diaplayPage() http.HandlerFunc {
 			Navbar:   "ContentNav",
 			//	Check:    false,
 		}
-		tpl.ExecuteTemplate(w, "index1.html", p) // ← Обработка шаблона с передачей данных
+		err := tpl.ExecuteTemplate(w, "index1.html", p) // ← Обработка шаблона с передачей данных
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
 	}
 
 }
@@ -278,13 +281,11 @@ func (s *Server) ho(r *http.Request) {
 
 func (s *Server) handleWhoami() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		user := r.Context().Value(ctxKeyUser).(*model.User)
-		fmt.Println("handleWhoami", user)
+		//	user := r.Context().Value(ctxKeyUser).(*model.User)
+		//	fmt.Println("handleWhoami", user)
 		s.respond(w, r, http.StatusOK, r.Context().Value(ctxKeyUser).(*model.User))
 	}
 }
-
-
 
 func (s *Server) setRequestID(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -299,42 +300,42 @@ func (s *Server) logRequest(next http.Handler) http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		/*
-		// open a file
-		f, err := os.OpenFile(LOGFILE, os.O_APPEND|os.O_CREATE|os.O_RDWR, 0666)
-		if err != nil {
-			fmt.Printf("error opening file: %v", err)
-		}
+			// open a file
+			f, err := os.OpenFile(LOGFILE, os.O_APPEND|os.O_CREATE|os.O_RDWR, 0666)
+			if err != nil {
+				fmt.Printf("error opening file: %v", err)
+			}
 
-		// don't forget to close it
-		//defer f.Close()
+			// don't forget to close it
+			//defer f.Close()
 
-		// Log as JSON instead of the default ASCII formatter.
-		s.logger.SetFormatter(&logrus.TextFormatter{}) //(&s.logger.JSONFormatter{})
+			// Log as JSON instead of the default ASCII formatter.
+			s.logger.SetFormatter(&logrus.TextFormatter{}) //(&s.logger.JSONFormatter{})
 
-		// Output to stderr instead of stdout, could also be a file.
-		s.logger.SetOutput(f)
+			// Output to stderr instead of stdout, could also be a file.
+			s.logger.SetOutput(f)
 
-		// Only log the warning severity or above.
-		s.logger.SetLevel(s.logger.Level)
+			// Only log the warning severity or above.
+			s.logger.SetLevel(s.logger.Level)
 
-		logger := s.logger.WithFields(logrus.Fields{
-			"remote_addr": r.RemoteAddr,
-			"request_id":  r.Context().Value(ctxKeyRequestID),
-		})
+			logger := s.logger.WithFields(logrus.Fields{
+				"remote_addr": r.RemoteAddr,
+				"request_id":  r.Context().Value(ctxKeyRequestID),
+			})
 
-		logger.Infof("started %s %s", r.Method, r.RequestURI)
+			logger.Infof("started %s %s", r.Method, r.RequestURI)
 
-		start := time.Now()
-		// переопределение ResponseWriter
-		rw := &responseWriter{w, http.StatusOK}
-		next.ServeHTTP(rw, r)
+			start := time.Now()
+			// переопределение ResponseWriter
+			rw := &responseWriter{w, http.StatusOK}
+			next.ServeHTTP(rw, r)
 
-		logger.Infof(
-			"completed witn %d %s in %v",
-			rw.code,
-			http.StatusText(rw.code), //2bit.ru/media/images/items/248/247158-413538.jpgtp.StatusText(rw.code),
-			time.Now().Sub(start),
-		)
+			logger.Infof(
+				"completed witn %d %s in %v",
+				rw.code,
+				http.StatusText(rw.code), //2bit.ru/media/images/items/248/247158-413538.jpgtp.StatusText(rw.code),
+				time.Now().Sub(start),
+			)
 
 		*/
 		logger := s.logger.WithFields(logrus.Fields{
@@ -381,7 +382,11 @@ func (s *Server) pagehandleUsersCreate() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		//	var body, _ = helper.LoadFile("./web/templates/register.html")
 		//	fmt.Fprintf(w, body)
-		tpl.ExecuteTemplate(w, "register.html", nil)
+		err := tpl.ExecuteTemplate(w, "register.html", nil)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
 		///	err = tpl.ExecuteTemplate(w, "layout", nil)
 		///	if err != nil {
 		///		http.Error(w, err.Error(), 400)
@@ -420,12 +425,8 @@ func (s *Server) handleUsersCreate() http.HandlerFunc {
 		//	lastname := r.FormValue("lastname")
 
 		req.Email = r.FormValue("email")
-		//fmt.Println(req.Email)
-
 		req.Password = r.FormValue("password")
-
 		req.FirstName = r.FormValue("firstname")
-
 		req.LastName = r.FormValue("lastname")
 
 		//s.infoLog.Printf("Create account: %v, %v, %v, %v\n", req.Email, req.Password, req.FirstName, req.LastName)
@@ -458,7 +459,11 @@ func (s *Server) handleUsersCreate() http.HandlerFunc {
 		fmt.Println("регистрируюсь")
 		s.logger.Info("End registration")
 		//tpl.ExecuteTemplate(w, "login.html", nil)
-		tpl.ExecuteTemplate(w, "register.html", nil)
+		err := tpl.ExecuteTemplate(w, "register.html", nil)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
 		///	err = tpl.ExecuteTemplate(w, "layout", nil)
 		///	if err != nil {
 		///		http.Error(w, err.Error(), 400)
@@ -477,7 +482,11 @@ func (s *Server) pageupdateSessionsCreate() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		//	var body, _ = helper.LoadFile("./web/templates/login.html") // "./web/templates/login.html"
 		//	fmt.Fprintf(w, body)
-		tpl.ExecuteTemplate(w, "updateUser.html", nil)
+		err := tpl.ExecuteTemplate(w, "updateUser.html", nil)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
 		///	err = tpl.ExecuteTemplate(w, "layout", nil)
 		///	if err != nil {
 		///		http.Error(w, err.Error(), 400)
@@ -564,10 +573,15 @@ func (s *Server) upload() http.HandlerFunc {
 			//	Navbar:   "ContentNav",
 			LoggedIn: false,
 		}
-		tpl.ExecuteTemplate(w, "index0.html", p)
+		err := tpl.ExecuteTemplate(w, "index0.html", p)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
 		//tpl.Execute(w, nil)
 	}
 }
+
 /*
 func (s *Server) RecognationUser(h http.Handler)  *model.User {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -593,21 +607,10 @@ func (s *Server) RecognationUser(h http.Handler)  *model.User {
 	}
 }
 */
-func (s *Server) main() http.HandlerFunc {
-	type Loggin struct{
+func (s *Server) home() http.HandlerFunc {
+	type Loggin struct {
 		Email string `json:"email"`
 	}
-
-	statusAdmin := false
-	statusStockkeeper := false
-	statusWarehouseManager := false
-	statusSuperIngenerQuality := false
-	statusIngenerQuality := false
-	statusStockkeeperWH := false
-	statusInspector := false
-	statusGroupP1 := false
-	statusGroupP5 := false
-	statusLoggedIn := false
 
 	//tpl = template.Must(template.New("").Delims("<<", ">>").ParseFiles(s.html + "layout.html"))
 	//tpl = template.Must(template.New("").Delims("<<", ">>").ParseFiles(s.html+"layout1.html", s.html+"login1.html"))
@@ -617,25 +620,17 @@ func (s *Server) main() http.HandlerFunc {
 	//tpl = template.Must(template.New("").Delims("<<", ">>").ParseFiles("web/templates/layout.html"))
 	//tpl = template.Must(template.ParseFiles("web/templates/index.html"))
 	return func(w http.ResponseWriter, r *http.Request) {
+		Admin := false
+		Stockkeeper := false
+		WarehouseManager := false
+		SuperIngenerQuality := false
+		IngenerQuality := false
+		StockkeeperWH := false
+		Inspector := false
+		GroupP1 := false
+		GroupP5 := false
+		LoggedIn := false
 
-		fmt.Println("Test Main")
-		fmt.Println("test authenticateUser - ", s.authenticateUser)
-		fmt.Println("handleWhoami -", s.handleWhoami)
-	//	tt := s.handleWhoami()
-
-
-		body, err := ioutil.ReadAll(r.Body)
-		if err != nil {
-			log.Println(err)
-			s.logger.Errorf(err.Error())
-		}
-		var loggin []Loggin
-		json.Unmarshal(body, &loggin)
-		fmt.Printf("body loggin: %s", body)
-		//	u := s.authenticateUser()
-		//	fmt.Println(u)
-		//	var body, _ = helper.LoadFile("./web/templates/index.html")
-		//	fmt.Fprintf(w, body)
 		session, err := s.sessionStore.Get(r, sessionName)
 		if err != nil {
 			s.error(w, r, http.StatusInternalServerError, err)
@@ -657,40 +652,34 @@ func (s *Server) main() http.HandlerFunc {
 		//s.infoLog.Printf("main, user - %s, %d, %s", u.Email, u.ID, u.Role)
 		s.logger.Infof("main, user - %s, %d, %s", u.Email, u.ID, u.Role)
 		if u.Groups == groupWarehouse || u.Groups == groupQuality || u.Groups == groupEmpty || u.Groups == groupAdministrator {
-			statusGroupP1 = true
+			GroupP1 = true
 			if u.Role == roleAdministrator {
-				statusAdmin = true
-				statusLoggedIn = true
-
+				Admin = true
+				LoggedIn = true
 
 			} else if u.Role == roleStockkeeper {
-				statusStockkeeper = true
-				statusLoggedIn = true
-
+				Stockkeeper = true
+				LoggedIn = true
 
 			} else if u.Role == roleSuperIngenerQuality {
-				statusSuperIngenerQuality = true
-				statusLoggedIn = true
-
+				SuperIngenerQuality = true
+				LoggedIn = true
 
 			} else if u.Role == roleIngenerQuality {
-				statusIngenerQuality = true
-				statusLoggedIn = true
-
+				IngenerQuality = true
+				LoggedIn = true
 
 			} else if u.Role == roleStockkeeperWH {
-				statusStockkeeperWH = true
-				statusLoggedIn = true
-
+				StockkeeperWH = true
+				LoggedIn = true
 
 			} else if u.Role == roleInspector {
-				statusInspector = true
-				statusLoggedIn = true
-
+				Inspector = true
+				LoggedIn = true
 
 			} else if u.Role == roleWarehouseManager {
-				statusWarehouseManager = true
-				statusLoggedIn = true
+				WarehouseManager = true
+				LoggedIn = true
 
 			}
 
@@ -717,52 +706,56 @@ func (s *Server) main() http.HandlerFunc {
 				"User":     u.LastName,
 				"Username": u.FirstName,
 				//"GET":                 GET,
-				"Admin":               statusAdmin,
-				"Stockkeeper":         statusStockkeeper,
-				"SuperIngenerQuality": statusSuperIngenerQuality,
-				"WarehouseManager":    statusWarehouseManager,
-				"IngenerQuality":      statusIngenerQuality,
-				"StockkeeperWH":       statusStockkeeperWH,
-				"Inspector":           statusInspector,
-				"GroupP1":             statusGroupP1,
-				"LoggedIn":            statusLoggedIn,
+				"Admin":               Admin,
+				"Stockkeeper":         Stockkeeper,
+				"SuperIngenerQuality": SuperIngenerQuality,
+				"WarehouseManager":    WarehouseManager,
+				"IngenerQuality":      IngenerQuality,
+				"StockkeeperWH":       StockkeeperWH,
+				"Inspector":           Inspector,
+				"GroupP1":             GroupP1,
+				"LoggedIn":            LoggedIn,
 			}
 
 			//tpl.ExecuteTemplate(w, "home.html", data)
 			//tpl.ExecuteTemplate(w, "layout", data)
 			//tpl.ExecuteTemplate(w, "base", data)
-			tpl.ExecuteTemplate(w, "index.html", data) // index3.html
+			err := tpl.ExecuteTemplate(w, "index.html", data) // index3.html
+			if err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}
 		}
 
 		if u.Groups == groupWarehouseP5 || u.Groups == groupQualityP5 {
-			statusGroupP5 = true
+			GroupP5 = true
 			if u.Role == roleAdministrator {
-				statusAdmin = true
-				statusLoggedIn = true
+				Admin = true
+				LoggedIn = true
 
 			} else if u.Role == roleStockkeeper {
-				statusStockkeeper = true
-				statusLoggedIn = true
+				Stockkeeper = true
+				LoggedIn = true
 
 			} else if u.Role == roleSuperIngenerQuality {
-				statusSuperIngenerQuality = true
-				statusLoggedIn = true
+				SuperIngenerQuality = true
+				LoggedIn = true
 
 			} else if u.Role == roleIngenerQuality {
-				statusIngenerQuality = true
-				statusLoggedIn = true
+				IngenerQuality = true
+				LoggedIn = true
 
 			} else if u.Role == roleStockkeeperWH {
-				statusStockkeeperWH = true
-				statusLoggedIn = true
+				StockkeeperWH = true
+				LoggedIn = true
 
 			} else if u.Role == roleInspector {
-				statusInspector = true
-				statusLoggedIn = true
+				Inspector = true
+				LoggedIn = true
 
 			} else if u.Role == roleWarehouseManager {
-				statusWarehouseManager = true
-				statusLoggedIn = true
+				WarehouseManager = true
+				LoggedIn = true
 			}
 
 			//	data := &Page{
@@ -788,21 +781,25 @@ func (s *Server) main() http.HandlerFunc {
 				"User":     u.LastName,
 				"Username": u.FirstName,
 				//"GET":                 GET,
-				"Admin":               statusAdmin,
-				"Stockkeeper":         statusStockkeeper,
-				"SuperIngenerQuality": statusSuperIngenerQuality,
-				"WarehouseManager":    statusWarehouseManager,
-				"IngenerQuality":      statusIngenerQuality,
-				"StockkeeperWH":       statusStockkeeperWH,
-				"Inspector":           statusInspector,
-				"GroupP5":             statusGroupP5,
-				"LoggedIn":            statusLoggedIn,
+				"Admin":               Admin,
+				"Stockkeeper":         Stockkeeper,
+				"SuperIngenerQuality": SuperIngenerQuality,
+				"WarehouseManager":    WarehouseManager,
+				"IngenerQuality":      IngenerQuality,
+				"StockkeeperWH":       StockkeeperWH,
+				"Inspector":           Inspector,
+				"GroupP5":             GroupP5,
+				"LoggedIn":            LoggedIn,
 			}
 
 			//tpl.ExecuteTemplate(w, "home.html", data)
 			//tpl.ExecuteTemplate(w, "layout", data)
 			//tpl.ExecuteTemplate(w, "base", data)
-			tpl.ExecuteTemplate(w, "index.html", data) // index3.html
+			err := tpl.ExecuteTemplate(w, "index.html", data) // index3.html
+			if err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}
 		}
 	}
 }
@@ -825,7 +822,7 @@ func (s *Server) authenticateUser(next http.Handler) http.Handler {
 		u, err := s.store.User().Find(id.(int))
 		if err != nil {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
-		//	s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			//	s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
 			return
 		}
 		fmt.Println("authenticateUser: ", u.Email, u.Role, u.Tabel)
@@ -887,8 +884,12 @@ func (s *Server) pagehandleSessionsCreate() http.HandlerFunc {
 			TitleDOC: "Login",
 			//	Navbar:   "ContentNav",
 		}
-		fmt.Println("Test")
-		tpl.ExecuteTemplate(w, "login.html", p)
+
+		err := tpl.ExecuteTemplate(w, "login.html", p)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
 	}
 }
 
@@ -912,16 +913,11 @@ func (s *Server) handleSessionsCreate() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		s.mu.Lock()
 		defer s.mu.Unlock()
+		/*	w.Header().Set("Content-Type", "application/json")
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Access-Control-Allow-Methods", "POST")
+			w.Header().Set("Access-Control-Allow-Headers", "Content-Type")*/
 
-		/*	f, err := os.OpenFile(LOGFILE, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-
-			if err != nil {
-				fmt.Println(err)
-				//	return
-			}
-			defer f.Close()
-			iLog := log.New(f, "func handleSessionsCreate ", log.LstdFlags)
-			iLog.SetFlags(log.LstdFlags | log.Lshortfile)*/
 		//	reqBody, err := ioutil.ReadAll(r.Body)
 		//	if err != nil {
 		//		log.Fatal(err)
@@ -947,7 +943,10 @@ func (s *Server) handleSessionsCreate() http.HandlerFunc {
 		GroupP1 := false
 		LoggedIn := false
 
-		r.ParseForm()
+		err := r.ParseForm()
+		if err != nil {
+			s.logger.Errorf(err.Error())
+		}
 		email := r.FormValue("email")
 		password := r.FormValue("password")
 		fmt.Println("email:   ", email)
@@ -962,105 +961,24 @@ func (s *Server) handleSessionsCreate() http.HandlerFunc {
 		//	fmt.Println("Match:   ", match)
 		if err != nil || !u.ComparePassword(password) {
 			s.error(w, r, http.StatusUnauthorized, errIncorrectEmailOrPassword)
-
 			return
 		}
-		//	s.Unlock()
-		if u.Groups == groupWarehouse || u.Groups == groupQuality || u.Groups == "" || u.Groups == groupAdministrator {
-			GroupP1 = true
-			if u.Role == roleAdministrator {
-				statusAdmin = true
-				LoggedIn = true
-
-			} else if u.Role == roleStockkeeper {
-				Stockkeeper = true
-				LoggedIn = true
-
-			} else if u.Role == roleSuperIngenerQuality {
-				SuperIngenerQuality = true
-				LoggedIn = true
-			} else if u.Role == roleIngenerQuality {
-				IngenerQuality = true
-				LoggedIn = true
-			} else if u.Role == roleStockkeeperWH {
-				StockkeeperWH = true
-				LoggedIn = true
-
-			} else if u.Role == roleInspector {
-				Inspector = true
-				LoggedIn = true
-
-			} else if u.Role == roleWarehouseManager {
-				WarehouseManager = true
-				LoggedIn = true
-			}
-
-			//	GET := map[string]bool{
-			//		"admin":               admin,
-			//		"stockkeeper":         stockkeeper,
-			//		roleSuperIngenerQuality: superIngenerQuality,
-			//		"stockkeeperWH":       stockkeeperWH,
-			//		"inspector":           inspector,
-			//	}
-
-			session, err := s.sessionStore.Get(r, sessionName)
-			if err != nil {
-				s.error(w, r, http.StatusInternalServerError, err)
-				return
-			}
-
-			session.Values["user_id"] = u.ID
-			if err := s.sessionStore.Save(r, w, session); err != nil {
-				s.error(w, r, http.StatusInternalServerError, err)
-				return
-			}
-			s.respond(w, r, http.StatusOK, nil)
-
-			fmt.Println("handleSessionsCreate()", u.Email, u.Role)
-			//	iLog.Println("залогинился пользователь", u.Email)
-			//	s.redirectMain()
-			//	s.pageredirectMain()
-			//	_, ok := session.Values["user_id"]
-			//	if !ok {
-
-			//	return
-			//	}
-			//	data := &Page{
-			//		Admin:               Admin,
-			//		Stockkeeper:         Stockkeeper,
-			//		SuperIngenerQuality: SuperIngenerQuality,
-			//		StockkeeperWH:       StockkeeperWH,
-			//		Inspector:           Inspector,
-			//		User:                u.LastName,
-			//		ID:                  u.FirstName,
-			//		LoggedIn:            LoggedIn,
-			//	}
-			data := map[string]interface{}{
-				"User":     u.LastName,
-				"Username": u.FirstName,
-				//		"GET":  GET,
-				"Admin":               statusAdmin,
-				"Stockkeeper":         Stockkeeper,
-				"SuperIngenerQuality": SuperIngenerQuality,
-				"WarehouseManager":    WarehouseManager,
-				"IngenerQuality":      IngenerQuality,
-				"StockkeeperWH":       StockkeeperWH,
-				"Inspector":           Inspector,
-				"GroupP1":             GroupP1,
-				"LoggedIn":            LoggedIn,
-			}
-			//	tpl.ExecuteTemplate(w, "base", data) //  "index.html"
-			tpl.ExecuteTemplate(w, "index.html", data)
-			//err = tpl.ExecuteTemplate(w, "base", data)
-			//if err != nil {
-			//	http.Error(w, err.Error(), 400)
-			//	return
-			//}
-			http.Redirect(w, r, "/", http.StatusFound)
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+		session.Options.MaxAge = 60 * 480
+		session.Values["user_id"] = u.ID
+		if err := s.sessionStore.Save(r, w, session); err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
 		}
 
-		if u.Groups == groupWarehouseP5 || u.Groups == groupQualityP5 {
-			GroupP5 = true
+		fmt.Println("handleSessionsCreate()", u.Email, u.Role)
+
+		if u.Groups == groupWarehouse || u.Groups == groupQuality || u.Groups == "" || u.Groups == groupAdministrator {
+			GroupP1 = true
 			if u.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
@@ -1095,21 +1013,114 @@ func (s *Server) handleSessionsCreate() http.HandlerFunc {
 			//		"stockkeeperWH":       stockkeeperWH,
 			//		"inspector":           inspector,
 			//	}
+			/*
+				session, err := s.sessionStore.Get(r, sessionName)
+				if err != nil {
+					s.error(w, r, http.StatusInternalServerError, err)
+					return
+				}
 
-			session, err := s.sessionStore.Get(r, sessionName)
-			if err != nil {
-				s.error(w, r, http.StatusInternalServerError, err)
-				return
+				session.Values["user_id"] = u.ID
+				if err := s.sessionStore.Save(r, w, session); err != nil {
+					s.error(w, r, http.StatusInternalServerError, err)
+					return
+				}
+				s.respond(w, r, http.StatusOK, nil)
+
+				fmt.Println("handleSessionsCreate()", u.Email, u.Role)
+			*/
+			//	iLog.Println("залогинился пользователь", u.Email)
+			//	s.redirectMain()
+			//	s.pageredirectMain()
+			//	_, ok := session.Values["user_id"]
+			//	if !ok {
+
+			//	return
+			//	}
+			//	data := &Page{
+			//		Admin:               Admin,
+			//		Stockkeeper:         Stockkeeper,
+			//		SuperIngenerQuality: SuperIngenerQuality,
+			//		StockkeeperWH:       StockkeeperWH,
+			//		Inspector:           Inspector,
+			//		User:                u.LastName,
+			//		ID:                  u.FirstName,
+			//		LoggedIn:            LoggedIn,
+			//	}
+			data := map[string]interface{}{
+				"User":     u.LastName,
+				"Username": u.FirstName,
+				//		"GET":  GET,
+				"Admin":               Admin,
+				"Stockkeeper":         Stockkeeper,
+				"SuperIngenerQuality": SuperIngenerQuality,
+				"WarehouseManager":    WarehouseManager,
+				"IngenerQuality":      IngenerQuality,
+				"StockkeeperWH":       StockkeeperWH,
+				"Inspector":           Inspector,
+				"GroupP1":             GroupP1,
+				"LoggedIn":            LoggedIn,
 			}
-
-			session.Values["user_id"] = u.ID
-			if err := s.sessionStore.Save(r, w, session); err != nil {
-				s.error(w, r, http.StatusInternalServerError, err)
+			//	tpl.ExecuteTemplate(w, "base", data) //  "index.html"
+			err := tpl.ExecuteTemplate(w, "index.html", data)
+			//err = tpl.ExecuteTemplate(w, "base", data)
+			if err != nil {
+				http.Error(w, err.Error(), 400)
 				return
 			}
 			s.respond(w, r, http.StatusOK, nil)
+			//http.Redirect(w, r, "/operation/main", http.StatusFound)
+		}
 
-			fmt.Println("handleSessionsCreate()", u.Email, u.Role)
+		if u.Groups == groupWarehouseP5 || u.Groups == groupQualityP5 {
+			GroupP5 = true
+			if u.Role == roleAdministrator {
+				Admin = true
+				LoggedIn = true
+			} else if u.Role == roleStockkeeper {
+				Stockkeeper = true
+				LoggedIn = true
+			} else if u.Role == roleSuperIngenerQuality {
+				SuperIngenerQuality = true
+				LoggedIn = true
+			} else if u.Role == roleIngenerQuality {
+				IngenerQuality = true
+				LoggedIn = true
+			} else if u.Role == roleStockkeeperWH {
+				StockkeeperWH = true
+				LoggedIn = true
+			} else if u.Role == roleInspector {
+				Inspector = true
+				LoggedIn = true
+			} else if u.Role == roleWarehouseManager {
+				WarehouseManager = true
+				LoggedIn = true
+			}
+
+			//	GET := map[string]bool{
+			//		"admin":               admin,
+			//		"stockkeeper":         stockkeeper,
+			//		roleSuperIngenerQuality: superIngenerQuality,
+			//		"stockkeeperWH":       stockkeeperWH,
+			//		"inspector":           inspector,
+			//	}
+			/*
+				session, err := s.sessionStore.Get(r, sessionName)
+				if err != nil {
+					s.error(w, r, http.StatusInternalServerError, err)
+					return
+				}
+
+				session.Values["user_id"] = u.ID
+				if err := s.sessionStore.Save(r, w, session); err != nil {
+					s.error(w, r, http.StatusInternalServerError, err)
+					return
+				}
+				s.respond(w, r, http.StatusOK, nil)
+
+				fmt.Println("handleSessionsCreate()", u.Email, u.Role)
+
+			*/
 			//	iLog.Println("залогинился пользователь", u.Email)
 			//	s.redirectMain()
 			//	s.pageredirectMain()
@@ -1143,27 +1154,28 @@ func (s *Server) handleSessionsCreate() http.HandlerFunc {
 				"LoggedIn":            LoggedIn,
 			}
 			//	tpl.ExecuteTemplate(w, "base", data) //  "index.html"
-			tpl.ExecuteTemplate(w, "index.html", data)
+			err := tpl.ExecuteTemplate(w, "index.html", data)
 			//err = tpl.ExecuteTemplate(w, "base", data)
-			//if err != nil {
-			//	http.Error(w, err.Error(), 400)
-			//	return
-			//}
-			http.Redirect(w, r, "/", http.StatusFound)
+			if err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}
+			s.respond(w, r, http.StatusOK, nil)
+			//http.Redirect(w, r, "/", http.StatusFound)
 		}
 	}
 }
 
 func (s *Server) signOut() http.HandlerFunc {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
 		s.mu.Lock()
 		defer s.mu.Unlock()
 
 		session, err := s.sessionStore.Get(r, sessionName)
-		//	if err != nil {
-		//		s.error(w, r, http.StatusInternalServerError, err)
-		//		return
-		//	}
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
 		//	session.Values["user_id"] = false
 
 		session.Options.MaxAge = -1
@@ -1173,7 +1185,7 @@ func (s *Server) signOut() http.HandlerFunc {
 			u, err := s.store.User().Find(id)
 			session.Values["user_id"] = u.ID
 			session.Values["user_id"] = false */
-		session.Save(r, w)
+		err = session.Save(r, w)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -1190,7 +1202,7 @@ func (s *Server) signOut() http.HandlerFunc {
 		*/
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		//	tpl.ExecuteTemplate(w, "login.html", nil)
-	})
+	}
 }
 
 func (s *Server) pageshipmentBySAP() http.HandlerFunc {
@@ -1244,12 +1256,12 @@ func (s *Server) pageshipmentBySAP() http.HandlerFunc {
 			"Stockkeeper": Stockkeeper,
 			"LoggedIn":    LoggedIn,
 		}
-		tpl.ExecuteTemplate(w, "insertsapbyship6.html", data)
+		err = tpl.ExecuteTemplate(w, "insertsapbyship6.html", data)
 		///	err = tpl.ExecuteTemplate(w, "layout", data)
-		///	if err != nil {
-		///		http.Error(w, err.Error(), 400)
-		///		return
-		//	}
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
 		//		if err = tpl.ExecuteTemplate(w, "layout", nil); err != nil {
 		//			s.error(w, r, http.StatusUnprocessableEntity, err)
 		//			return
@@ -1299,7 +1311,10 @@ func (s *Server) shipmentBySAP() http.HandlerFunc {
 
 		var hdata []reqA
 
-		json.Unmarshal(body, &hdata)
+		err = json.Unmarshal(body, &hdata)
+		if err != nil {
+			s.logger.Errorf(err.Error())
+		}
 		//	json.Marshal(body)
 		fmt.Printf("body json: %s", body)
 		//s.infoLog.Printf("Loading body json shipmentBySAP: %s\n", body)
@@ -1419,7 +1434,10 @@ func (s *Server) shipmentBySAP() http.HandlerFunc {
 					if err != nil {
 						http.Error(w, err.Error(), http.StatusInternalServerError)
 					}
-					w.Write(strN)
+					_, err = w.Write(strN)
+					if err != nil {
+						s.logger.Errorf(err.Error())
+					}
 					//	break
 				}
 
@@ -1455,7 +1473,10 @@ func (s *Server) shipmentBySAP() http.HandlerFunc {
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
-		w.Write(strB)
+		_, err = w.Write(strB)
+		if err != nil {
+			s.logger.Errorf(err.Error())
+		}
 		err = tpl.ExecuteTemplate(w, "insertsapbyship6.html", nil)
 		//	err = tpl.ExecuteTemplate(w, "layout", v)
 		if err != nil {
@@ -1522,7 +1543,11 @@ func (s *Server) pageshowShipmentBySAPBySearchStatic() http.HandlerFunc {
 			"Stockkeeper": Stockkeeper,
 			"LoggedIn":    LoggedIn,
 		}
-		tpl.ExecuteTemplate(w, "showdatebysapbysearchstatic.html", data)
+		err = tpl.ExecuteTemplate(w, "showdatebysapbysearchstatic.html", data)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
 		///	if err = tpl.ExecuteTemplate(w, "layout", data); err != nil {
 		///		s.error(w, r, http.StatusUnprocessableEntity, err)
 		///		return
@@ -1679,7 +1704,11 @@ func (s *Server) pageidReturn() http.HandlerFunc {
 			"Stockkeeper": Stockkeeper,
 			"LoggedIn":    LoggedIn,
 		}
-		tpl.ExecuteTemplate(w, "insertidreturn2.html", data)
+		err = tpl.ExecuteTemplate(w, "insertidreturn2.html", data)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
 		///	err = tpl.ExecuteTemplate(w, "layout", nil)
 		///	if err != nil {
 		///		http.Error(w, err.Error(), 400)
@@ -1718,7 +1747,10 @@ func (s *Server) idReturn() http.HandlerFunc {
 
 		var rdata []req
 
-		json.Unmarshal(body, &rdata)
+		err = json.Unmarshal(body, &rdata)
+		if err != nil {
+			s.logger.Errorf(err.Error())
+		}
 		fmt.Printf("test %s", body)
 		//s.infoLog.Printf("idReturn loadin body json %s\n", body)
 		s.logger.Infof("idReturn loadin body json %s\n", body)
@@ -1801,13 +1833,13 @@ func (s *Server) idReturn() http.HandlerFunc {
 		//	data := map[string]interface{}{
 		//		"fuck": "OK",
 		//	}
-		tpl.ExecuteTemplate(w, "insertidreturn2.html", nil)
+		err = tpl.ExecuteTemplate(w, "insertidreturn2.html", nil)
 		///	err = tpl.ExecuteTemplate(w, "layout", nil)
 		//	tpl.ExecuteTemplate(w, "layout", data)
-		///	if err != nil {
-		///		http.Error(w, err.Error(), 400)
-		///		return
-		///	}
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
 
 	}
 }
@@ -1930,23 +1962,8 @@ func (s *Server) showUsersQuality() http.HandlerFunc {
 		SuperIngenerQuality := false
 		LoggedIn := false
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
-		id, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(id.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
 		if user.Role == roleAdministrator {
 			Admin = true
 			LoggedIn = true
@@ -1987,7 +2004,10 @@ func (s *Server) error(w http.ResponseWriter, r *http.Request, code int, err err
 func (s *Server) respond(w http.ResponseWriter, r *http.Request, code int, data interface{}) {
 	w.WriteHeader(code)
 	if data != nil {
-		json.NewEncoder(w).Encode(data)
+		err := json.NewEncoder(w).Encode(data)
+		if err != nil {
+			s.logger.Errorf(err.Error())
+		}
 	}
 }
 

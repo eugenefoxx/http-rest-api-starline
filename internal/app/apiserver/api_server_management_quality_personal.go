@@ -24,23 +24,7 @@ func (s *Server) PageshowUsersQuality() http.HandlerFunc {
 		GroupP5 := false
 		LoggedIn := false
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		id, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(id.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		if user.Groups == groupQuality {
 			GroupP1 = true
@@ -151,23 +135,7 @@ func (s *Server) CreateUserQuality() http.HandlerFunc {
 		Groupp1 := groupQuality
 		Groupp5 := groupQualityP5
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		idd, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(idd.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		if user.Groups == groupQuality {
 			if user.Role == roleAdministrator {
@@ -244,23 +212,7 @@ func (s *Server) PageupdateUserQuality() http.HandlerFunc {
 		SuperIngenerQuality := false
 		LoggedIn := false
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		idd, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(idd.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		if user.Role == roleAdministrator {
 			Admin = true

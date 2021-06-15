@@ -1,6 +1,9 @@
 package apiserver
 
-import "net/http"
+import (
+	"github.com/eugenefoxx/http-rest-api-starline/internal/app/model"
+	"net/http"
+)
 
 func (s *Server) PageshowUsersQualityP5() http.HandlerFunc {
 
@@ -13,23 +16,7 @@ func (s *Server) PageshowUsersQualityP5() http.HandlerFunc {
 		GroupP5 := false
 		LoggedIn := false
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		id, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(id.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		if user.Groups == groupQualityP5 {
 			GroupP5 = true
