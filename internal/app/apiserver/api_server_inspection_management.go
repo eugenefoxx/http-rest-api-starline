@@ -21,31 +21,35 @@ func (s *Server) PageinInspection() http.HandlerFunc {
 	///	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
+		Admin := false
+		StockkeeperWH := false
+		WarehouseManager := false
+		SuperIngenerQuality := false
+		LoggedIn := false
 
 		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		if user.Role == roleAdministrator {
-			statusAdmin = true
-			statusLoggedIn = true
-
+			Admin = true
+			LoggedIn = true
 		} else if user.Role == roleStockkeeperWH {
-			statusStockkeeperWH = true
-			statusLoggedIn = true
-			fmt.Println("кладовщик склада - ", statusStockkeeperWH)
+			StockkeeperWH = true
+			LoggedIn = true
+			fmt.Println("кладовщик склада - ", StockkeeperWH)
 		} else if user.Role == roleSuperIngenerQuality {
-			statusSuperIngenerQuality = true
-			statusLoggedIn = true
+			SuperIngenerQuality = true
+			LoggedIn = true
 		} else if user.Role == roleWarehouseManager {
-			statusWarehouseManager = true
-			statusLoggedIn = true
+			WarehouseManager = true
+			LoggedIn = true
 		}
 		data := map[string]interface{}{
-			"Admin":               statusAdmin,
-			"StockkeeperWH":       statusStockkeeperWH,
-			"WarehouseManager":    statusWarehouseManager,
-			"SuperIngenerQuality": statusSuperIngenerQuality,
+			"Admin":               Admin,
+			"StockkeeperWH":       StockkeeperWH,
+			"WarehouseManager":    WarehouseManager,
+			"SuperIngenerQuality": SuperIngenerQuality,
 			//	"GET":           get,
-			"LoggedIn": statusLoggedIn,
+			"LoggedIn": LoggedIn,
 			"User":     user.LastName,
 			"Username": user.FirstName,
 		}
@@ -394,46 +398,56 @@ func (s *Server) InInspection() http.HandlerFunc {
 func (s *Server) PagehistoryInspection() http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
+		Admin := false
+		StockkeeperWH := false
+		WarehouseManager := false
+		SuperIngenerQuality := false
+		IngenerQuality := false
+		Quality := false
+		Inspector := false
+		GroupP1 := false
+		GroupP5 := false
+		LoggedIn := false
+
 		user := r.Context().Value(ctxKeyUser).(*model.User)
 
-		if user.Groups == groupQuality || user.Groups == groupWarehouse || user.Groups == groupQualityP5 ||
-			user.Groups == groupWarehouseP5 {
-			statusGroupP1 = true
-			statusGroupP5 = true
+		if user.Groups == groupQuality || user.Groups == groupWarehouse || user.Groups == groupQualityP5 || user.Groups == groupWarehouseP5 {
+			GroupP1 = true
+			GroupP5 = true
 			if user.Role == roleAdministrator {
-				statusAdmin = true
-				statusLoggedIn = true
+				Admin = true
+				LoggedIn = true
 			} else if user.Role == roleStockkeeperWH {
-				statusStockkeeperWH = true
-				statusLoggedIn = true
-				fmt.Println("кладовщик склада - ", statusStockkeeperWH)
+				StockkeeperWH = true
+				LoggedIn = true
+				fmt.Println("кладовщик склада - ", StockkeeperWH)
 			} else if user.Role == roleSuperIngenerQuality {
-				statusSuperIngenerQuality = true
-				statusLoggedIn = true
+				SuperIngenerQuality = true
+				LoggedIn = true
 			} else if user.Role == roleIngenerQuality {
-				statusIngenerQuality = true
-				statusLoggedIn = true
+				IngenerQuality = true
+				LoggedIn = true
 			} else if user.Groups == groupQuality {
-				//statusQuality = true
-				statusInspector = true
-				statusLoggedIn = true
-			//	fmt.Println("pageInspection quality - ", Quality)
+				Quality = true
+				Inspector = true
+				LoggedIn = true
+				fmt.Println("pageInspection quality - ", Quality)
 			} else if user.Role == roleWarehouseManager {
-				statusWarehouseManager = true
-				statusLoggedIn = true
+				WarehouseManager = true
+				LoggedIn = true
 			}
 			data := map[string]interface{}{
-				"Admin":               statusAdmin,
-				"StockkeeperWH":       statusStockkeeperWH,
-				"SuperIngenerQuality": statusSuperIngenerQuality,
-				"WarehouseManager":    statusWarehouseManager,
-				"IngenerQuality":      statusIngenerQuality,
-			//	"Quality":             statusQuality,
-				"Inspector":           statusInspector,
-				"GroupP1":             statusGroupP1,
-				"GroupP5":             statusGroupP5,
+				"Admin":               Admin,
+				"StockkeeperWH":       StockkeeperWH,
+				"SuperIngenerQuality": SuperIngenerQuality,
+				"WarehouseManager":    WarehouseManager,
+				"IngenerQuality":      IngenerQuality,
+				"Quality":             Quality,
+				"Inspector":           Inspector,
+				"GroupP1":             GroupP1,
+				"GroupP5":             GroupP5,
 				//	"GET":           get,
-				"LoggedIn": statusLoggedIn,
+				"LoggedIn": LoggedIn,
 				"User":     user.LastName,
 				"Username": user.FirstName,
 			}
@@ -456,32 +470,43 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 		s.mu.Lock()
 		defer s.mu.Unlock()
 
+		Admin := false
+		StockkeeperWH := false
+		WarehouseManager := false
+		SuperIngenerQuality := false
+		IngenerQuality := false
+		Quality := false
+		Inspector := false
+		GroupP1 := false
+		GroupP5 := false
+		LoggedIn := false
+
 		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		if user.Groups == groupQuality || user.Groups == groupWarehouse {
-			statusGroupP1 = true
+			GroupP1 = true
 
 			if user.Role == roleAdministrator {
-				statusAdmin = true
-				statusLoggedIn = true
+				Admin = true
+				LoggedIn = true
 			} else if user.Role == roleStockkeeperWH {
-				statusStockkeeperWH = true
-				statusLoggedIn = true
-				fmt.Println("кладовщик склада - ", statusStockkeeperWH)
+				StockkeeperWH = true
+				LoggedIn = true
+				fmt.Println("кладовщик склада - ", StockkeeperWH)
 			} else if user.Role == roleSuperIngenerQuality {
-				statusSuperIngenerQuality = true
-				statusLoggedIn = true
+				SuperIngenerQuality = true
+				LoggedIn = true
 			} else if user.Role == roleIngenerQuality {
-				statusIngenerQuality = true
-				statusLoggedIn = true
+				IngenerQuality = true
+				LoggedIn = true
 			} else if user.Role == roleInspector {
-				//statusQuality = true
-				statusInspector = true
-				statusLoggedIn = true
-			//	fmt.Println("pageInspection quality - ", Quality)
+				Quality = true
+				Inspector = true
+				LoggedIn = true
+				fmt.Println("pageInspection quality - ", Quality)
 			} else if user.Role == roleWarehouseManager {
-				statusWarehouseManager = true
-				statusLoggedIn = true
+				WarehouseManager = true
+				LoggedIn = true
 			}
 
 			search := &req{}
@@ -515,16 +540,16 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 					"TitleDOC":            "Отчет по истроии ВК",
 					"User":                user.LastName,
 					"Username":            user.FirstName,
-					"Admin":               statusAdmin,
-					"WarehouseManager":    statusWarehouseManager,
-					"StockkeeperWH":       statusStockkeeperWH,
-					"SuperIngenerQuality": statusSuperIngenerQuality,
-					"IngenerQuality":      statusIngenerQuality,
-					//"Quality":             statusQuality,
-					"Inspector":           statusInspector,
-					"GroupP1":             statusGroupP1,
+					"Admin":               Admin,
+					"WarehouseManager":    WarehouseManager,
+					"StockkeeperWH":       StockkeeperWH,
+					"SuperIngenerQuality": SuperIngenerQuality,
+					"IngenerQuality":      IngenerQuality,
+					"Quality":             Quality,
+					"Inspector":           Inspector,
+					"GroupP1":             GroupP1,
 					//"GroupP5":             GroupP5,
-					"LoggedIn": statusLoggedIn,
+					"LoggedIn": LoggedIn,
 					//	"GET":                 get,
 				}
 
@@ -561,15 +586,15 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						"TitleDOC":            "Отчет по истроии ВК",
 						"User":                user.LastName,
 						"Username":            user.FirstName,
-						"Admin":               statusAdmin,
-						"WarehouseManager":    statusWarehouseManager,
-						"StockkeeperWH":       statusStockkeeperWH,
-						"SuperIngenerQuality": statusSuperIngenerQuality,
-						"IngenerQuality":      statusIngenerQuality,
-						//"Quality":             statusQuality,
-						"Inspector":           statusInspector,
-						"LoggedIn":            statusLoggedIn,
-						"GroupP1":             statusGroupP1,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
+						"GroupP1":             GroupP1,
 						"Pobedit":             "Победит 1",
 						//"GroupP5":             GroupP5,
 						"GET": get,
@@ -598,15 +623,15 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						"TitleDOC":            "Отчет по истроии ВК",
 						"User":                user.LastName,
 						"Username":            user.FirstName,
-						"Admin":               statusAdmin,
-						"WarehouseManager":    statusWarehouseManager,
-						"StockkeeperWH":       statusStockkeeperWH,
-						"SuperIngenerQuality": statusSuperIngenerQuality,
-						"IngenerQuality":      statusIngenerQuality,
-						//"Quality":             statusQuality,
-						"Inspector":           statusInspector,
-						"LoggedIn":            statusLoggedIn,
-						"GroupP1":             statusGroupP1,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
+						"GroupP1":             GroupP1,
 						"Pobedit":             "Победит 1",
 						//	"GroupP5":             GroupP5,
 						"GET": get,
@@ -633,15 +658,15 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						"TitleDOC":            "Отчет по истроии ВК",
 						"User":                user.LastName,
 						"Username":            user.FirstName,
-						"Admin":               statusAdmin,
-						"WarehouseManager":    statusWarehouseManager,
-						"StockkeeperWH":       statusStockkeeperWH,
-						"SuperIngenerQuality": statusSuperIngenerQuality,
-						"IngenerQuality":      statusIngenerQuality,
-						//"Quality":             statusQuality,
-						"Inspector":           statusInspector,
-						"LoggedIn":            statusLoggedIn,
-						"GroupP1":             statusGroupP1,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
+						"GroupP1":             GroupP1,
 						"Pobedit":             "Победит 1",
 						//	"GroupP5":             GroupP5,
 						"GET": get,
@@ -665,15 +690,15 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						"TitleDOC":            "Отчет по истроии ВК",
 						"User":                user.LastName,
 						"Username":            user.FirstName,
-						"Admin":               statusAdmin,
-						"WarehouseManager":    statusWarehouseManager,
-						"StockkeeperWH":       statusStockkeeperWH,
-						"SuperIngenerQuality": statusSuperIngenerQuality,
-						"IngenerQuality":      statusIngenerQuality,
-						//"Quality":             statusQuality,
-						"Inspector":           statusInspector,
-						"LoggedIn":            statusLoggedIn,
-						"GroupP1":             statusGroupP1,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
+						"GroupP1":             GroupP1,
 						"Pobedit":             "Победит 1",
 						//	"GroupP5":             GroupP5,
 						"GET": get,
@@ -697,15 +722,15 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						"TitleDOC":            "Отчет по истроии ВК",
 						"User":                user.LastName,
 						"Username":            user.FirstName,
-						"Admin":               statusAdmin,
-						"WarehouseManager":    statusWarehouseManager,
-						"StockkeeperWH":       statusStockkeeperWH,
-						"SuperIngenerQuality": statusSuperIngenerQuality,
-						"IngenerQuality":      statusIngenerQuality,
-					//	"Quality":             statusQuality,
-						"Inspector":           statusInspector,
-						"LoggedIn":            statusLoggedIn,
-						"GroupP1":             statusGroupP1,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
+						"GroupP1":             GroupP1,
 						"Pobedit":             "Победит 1",
 						//	"GroupP5":             GroupP5,
 						"GET": get,
@@ -731,15 +756,15 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						"TitleDOC":            "Отчет по истроии ВК",
 						"User":                user.LastName,
 						"Username":            user.FirstName,
-						"Admin":               statusAdmin,
-						"WarehouseManager":    statusWarehouseManager,
-						"StockkeeperWH":       statusStockkeeperWH,
-						"SuperIngenerQuality": statusSuperIngenerQuality,
-						"IngenerQuality":      statusIngenerQuality,
-						//"Quality":             statusQuality,
-						"Inspector":           statusInspector,
-						"LoggedIn":            statusLoggedIn,
-						"GroupP1":             statusGroupP1,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
+						"GroupP1":             GroupP1,
 						"Pobedit":             "Победит 1",
 						//	"GroupP5":             GroupP5,
 						"GET": get,
@@ -763,15 +788,15 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						"TitleDOC":            "Отчет по истроии ВК",
 						"User":                user.LastName,
 						"Username":            user.FirstName,
-						"Admin":               statusAdmin,
-						"WarehouseManager":    statusWarehouseManager,
-						"StockkeeperWH":       statusStockkeeperWH,
-						"SuperIngenerQuality": statusSuperIngenerQuality,
-						"IngenerQuality":      statusIngenerQuality,
-						//"Quality":            statusQuality,
-						"Inspector":           statusInspector,
-						"LoggedIn":            statusLoggedIn,
-						"GroupP1":             statusGroupP1,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
+						"GroupP1":             GroupP1,
 						"Pobedit":             "Победит 1",
 						//	"GroupP5":             GroupP5,
 						"GET": get,
@@ -795,15 +820,15 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						"TitleDOC":            "Отчет по истроии ВК",
 						"User":                user.LastName,
 						"Username":            user.FirstName,
-						"Admin":               statusAdmin,
-						"WarehouseManager":    statusWarehouseManager,
-						"StockkeeperWH":       statusStockkeeperWH,
-						"SuperIngenerQuality": statusSuperIngenerQuality,
-						"IngenerQuality":      statusIngenerQuality,
-						//"Quality":             statusQuality,
-						"Inspector":           statusInspector,
-						"LoggedIn":            statusLoggedIn,
-						"GroupP1":             statusGroupP1,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
+						"GroupP1":             GroupP1,
 						"Pobedit":             "Победит 1",
 						//	"GroupP5":             GroupP5,
 						"GET": get,
@@ -820,28 +845,28 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 
 		if user.Groups == groupQualityP5 || user.Groups == groupWarehouseP5 {
 
-			statusGroupP5 = true
+			GroupP5 = true
 			if user.Role == roleAdministrator {
-				statusAdmin = true
-				statusLoggedIn = true
+				Admin = true
+				LoggedIn = true
 			} else if user.Role == roleStockkeeperWH {
-				statusStockkeeperWH = true
-				statusLoggedIn = true
-				fmt.Println("кладовщик склада - ", statusStockkeeperWH)
+				StockkeeperWH = true
+				LoggedIn = true
+				fmt.Println("кладовщик склада - ", StockkeeperWH)
 			} else if user.Role == roleSuperIngenerQuality {
-				statusSuperIngenerQuality = true
-				statusLoggedIn = true
+				SuperIngenerQuality = true
+				LoggedIn = true
 			} else if user.Role == roleIngenerQuality {
-				statusIngenerQuality = true
-				statusLoggedIn = true
+				IngenerQuality = true
+				LoggedIn = true
 			} else if user.Role == roleInspector {
-				//statusQuality = true
-				statusInspector = true
-				statusLoggedIn = true
-				//fmt.Println("pageInspection quality - ", statusQuality)
+				Quality = true
+				Inspector = true
+				LoggedIn = true
+				fmt.Println("pageInspection quality - ", Quality)
 			} else if user.Role == roleWarehouseManager {
-				statusWarehouseManager = true
-				statusLoggedIn = true
+				WarehouseManager = true
+				LoggedIn = true
 			}
 
 			search := &req{}
@@ -875,16 +900,16 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 					"TitleDOC":            "Отчет по истроии ВК",
 					"User":                user.LastName,
 					"Username":            user.FirstName,
-					"Admin":               statusAdmin,
-					"WarehouseManager":    statusWarehouseManager,
-					"StockkeeperWH":       statusStockkeeperWH,
-					"SuperIngenerQuality": statusSuperIngenerQuality,
-					"IngenerQuality":      statusIngenerQuality,
-					//"Quality":             statusQuality,
-					"Inspector":           statusInspector,
+					"Admin":               Admin,
+					"WarehouseManager":    WarehouseManager,
+					"StockkeeperWH":       StockkeeperWH,
+					"SuperIngenerQuality": SuperIngenerQuality,
+					"IngenerQuality":      IngenerQuality,
+					"Quality":             Quality,
+					"Inspector":           Inspector,
 					//	"GroupP1":             GroupP1,
-					"GroupP5":  statusGroupP5,
-					"LoggedIn": statusLoggedIn,
+					"GroupP5":  GroupP5,
+					"LoggedIn": LoggedIn,
 					//	"GET":                 get,
 				}
 
@@ -911,16 +936,16 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						"TitleDOC":            "Отчет по истроии ВК",
 						"User":                user.LastName,
 						"Username":            user.FirstName,
-						"Admin":               statusAdmin,
-						"WarehouseManager":    statusWarehouseManager,
-						"StockkeeperWH":       statusStockkeeperWH,
-						"SuperIngenerQuality": statusSuperIngenerQuality,
-						"IngenerQuality":      statusIngenerQuality,
-						//"Quality":             statusQuality,
-						"Inspector":           statusInspector,
-						"LoggedIn":            statusLoggedIn,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
 						//	"GroupP1":             GroupP1,
-						"GroupP5": statusGroupP5,
+						"GroupP5": GroupP5,
 						"Pobedit": "Победит 1",
 						"GET":     get,
 					}
@@ -948,16 +973,16 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						"TitleDOC":            "Отчет по истроии ВК",
 						"User":                user.LastName,
 						"Username":            user.FirstName,
-						"Admin":               statusAdmin,
-						"WarehouseManager":    statusWarehouseManager,
-						"StockkeeperWH":       statusStockkeeperWH,
-						"SuperIngenerQuality": statusSuperIngenerQuality,
-						"IngenerQuality":      statusIngenerQuality,
-						//"Quality":             statusQuality,
-						"Inspector":           statusInspector,
-						"LoggedIn":            statusLoggedIn,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
 						//	"GroupP1":             GroupP1,
-						"GroupP5": statusGroupP5,
+						"GroupP5": GroupP5,
 						"Pobedit": "Победит 1",
 						"GET":     get,
 					}
@@ -983,16 +1008,16 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						"TitleDOC":            "Отчет по истроии ВК",
 						"User":                user.LastName,
 						"Username":            user.FirstName,
-						"Admin":               statusAdmin,
-						"WarehouseManager":    statusWarehouseManager,
-						"StockkeeperWH":       statusStockkeeperWH,
-						"SuperIngenerQuality": statusSuperIngenerQuality,
-						"IngenerQuality":      statusIngenerQuality,
-						//"Quality":             statusQuality,
-						"Inspector":           statusInspector,
-						"LoggedIn":            statusLoggedIn,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
 						//	"GroupP1":             GroupP1,
-						"GroupP5": statusGroupP5,
+						"GroupP5": GroupP5,
 						"Pobedit": "Победит 1",
 						"GET":     get,
 					}
@@ -1015,16 +1040,16 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						"TitleDOC":            "Отчет по истроии ВК",
 						"User":                user.LastName,
 						"Username":            user.FirstName,
-						"Admin":               statusAdmin,
-						"WarehouseManager":    statusWarehouseManager,
-						"StockkeeperWH":       statusStockkeeperWH,
-						"SuperIngenerQuality": statusSuperIngenerQuality,
-						"IngenerQuality":      statusIngenerQuality,
-						//"Quality":             statusQuality,
-						"Inspector":           statusInspector,
-						"LoggedIn":            statusLoggedIn,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
 						//	"GroupP1":             GroupP1,
-						"GroupP5": statusGroupP5,
+						"GroupP5": GroupP5,
 						"Pobedit": "Победит 1",
 						"GET":     get,
 					}
@@ -1047,16 +1072,16 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						"TitleDOC":            "Отчет по истроии ВК",
 						"User":                user.LastName,
 						"Username":            user.FirstName,
-						"Admin":               statusAdmin,
-						"WarehouseManager":    statusWarehouseManager,
-						"StockkeeperWH":       statusStockkeeperWH,
-						"SuperIngenerQuality": statusSuperIngenerQuality,
-						"IngenerQuality":      statusIngenerQuality,
-						//"Quality":             statusQuality,
-						"Inspector":           statusInspector,
-						"LoggedIn":            statusLoggedIn,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
 						//	"GroupP1":             GroupP1,
-						"GroupP5": statusGroupP5,
+						"GroupP5": GroupP5,
 						"Pobedit": "Победит 1",
 						"GET":     get,
 					}
@@ -1081,16 +1106,16 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						"TitleDOC":            "Отчет по истроии ВК",
 						"User":                user.LastName,
 						"Username":            user.FirstName,
-						"Admin":               statusAdmin,
-						"WarehouseManager":    statusWarehouseManager,
-						"StockkeeperWH":       statusStockkeeperWH,
-						"SuperIngenerQuality": statusSuperIngenerQuality,
-						"IngenerQuality":      statusIngenerQuality,
-						//"Quality":             statusQuality,
-						"Inspector":           statusInspector,
-						"LoggedIn":            statusLoggedIn,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
 						//	"GroupP1":             GroupP1,
-						"GroupP5": statusGroupP5,
+						"GroupP5": GroupP5,
 						"Pobedit": "Победит 1",
 						"GET":     get,
 					}
@@ -1113,16 +1138,16 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						"TitleDOC":            "Отчет по истроии ВК",
 						"User":                user.LastName,
 						"Username":            user.FirstName,
-						"Admin":               statusAdmin,
-						"WarehouseManager":    statusWarehouseManager,
-						"StockkeeperWH":       statusStockkeeperWH,
-						"SuperIngenerQuality": statusSuperIngenerQuality,
-						"IngenerQuality":      statusIngenerQuality,
-						//"Quality":             statusQuality,
-						"Inspector":           statusInspector,
-						"LoggedIn":            statusLoggedIn,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
 						//	"GroupP1":             GroupP1,
-						"GroupP5": statusGroupP5,
+						"GroupP5": GroupP5,
 						"Pobedit": "Победит 1",
 						"GET":     get,
 					}
@@ -1145,16 +1170,16 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						"TitleDOC":            "Отчет по истроии ВК",
 						"User":                user.LastName,
 						"Username":            user.FirstName,
-						"Admin":               statusAdmin,
-						"WarehouseManager":    statusWarehouseManager,
-						"StockkeeperWH":       statusStockkeeperWH,
-						"SuperIngenerQuality": statusSuperIngenerQuality,
-						"IngenerQuality":      statusIngenerQuality,
-						//"Quality":             statusQuality,
-						"Inspector":           statusInspector,
-						"LoggedIn":            statusLoggedIn,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
 						//	"GroupP1":             GroupP1,
-						"GroupP5": statusGroupP5,
+						"GroupP5": GroupP5,
 						"Pobedit": "Победит 1",
 						"GET":     get,
 					}
@@ -1174,7 +1199,7 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 					"Username":            user.FirstName,
 					"Admin":               Admin,
 					"StockkeeperWH":       StockkeeperWH,
-					"главный инженер по качеству": SuperIngenerQuality,
+					roleSuperIngenerQuality: SuperIngenerQuality,
 					"Quality":             Quality,
 					"LoggedIn":            LoggedIn,
 					"GET":                 get,
@@ -1194,47 +1219,56 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 func (s *Server) PagehistoryInspectionP5() http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
+		Admin := false
+		StockkeeperWH := false
+		WarehouseManager := false
+		SuperIngenerQuality := false
+		IngenerQuality := false
+		Quality := false
+		Inspector := false
+		GroupP1 := false
+		GroupP5 := false
+		LoggedIn := false
 
 		user := r.Context().Value(ctxKeyUser).(*model.User)
 
-		if user.Groups == groupQualityP5 || user.Groups == groupWarehouseP5 || user.Groups == groupQuality ||
-			user.Groups == groupWarehouse {
-			statusGroupP5 = true
-			statusGroupP1 = true
+		if user.Groups == groupQualityP5 || user.Groups == groupWarehouseP5 || user.Groups == groupQuality || user.Groups == groupWarehouse {
+			GroupP5 = true
+			GroupP1 = true
 			if user.Role == roleAdministrator {
-				statusAdmin = true
-				statusLoggedIn = true
+				Admin = true
+				LoggedIn = true
 			} else if user.Role == roleStockkeeperWH {
-				statusStockkeeperWH = true
-				statusLoggedIn = true
-				fmt.Println("кладовщик склада - ", statusStockkeeperWH)
+				StockkeeperWH = true
+				LoggedIn = true
+				fmt.Println("кладовщик склада - ", StockkeeperWH)
 			} else if user.Role == roleSuperIngenerQuality {
-				statusSuperIngenerQuality = true
-				statusLoggedIn = true
+				SuperIngenerQuality = true
+				LoggedIn = true
 			} else if user.Role == roleIngenerQuality {
-				statusIngenerQuality = true
-				statusLoggedIn = true
+				IngenerQuality = true
+				LoggedIn = true
 			} else if user.Groups == groupQuality {
-				//Quality = true
-				statusInspector = true
-				statusLoggedIn = true
-				//fmt.Println("pageInspection quality - ", Quality)
+				Quality = true
+				Inspector = true
+				LoggedIn = true
+				fmt.Println("pageInspection quality - ", Quality)
 			} else if user.Role == roleWarehouseManager {
-				statusWarehouseManager = true
-				statusLoggedIn = true
+				WarehouseManager = true
+				LoggedIn = true
 			}
 			data := map[string]interface{}{
-				"Admin":               statusAdmin,
-				"StockkeeperWH":       statusStockkeeperWH,
-				"SuperIngenerQuality": statusSuperIngenerQuality,
-				"WarehouseManager":    statusWarehouseManager,
-				"IngenerQuality":      statusIngenerQuality,
-				//"Quality":             statusQuality,
-				"Inspector":           statusInspector,
-				"GroupP5":             statusGroupP5,
-				"GroupP1":             statusGroupP1,
+				"Admin":               Admin,
+				"StockkeeperWH":       StockkeeperWH,
+				"SuperIngenerQuality": SuperIngenerQuality,
+				"WarehouseManager":    WarehouseManager,
+				"IngenerQuality":      IngenerQuality,
+				"Quality":             Quality,
+				"Inspector":           Inspector,
+				"GroupP5":             GroupP5,
+				"GroupP1":             GroupP1,
 				//	"GET":           get,
-				"LoggedIn": statusLoggedIn,
+				"LoggedIn": LoggedIn,
 				"User":     user.LastName,
 				"Username": user.FirstName,
 			}
@@ -1256,31 +1290,42 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 		s.mu.Lock()
 		defer s.mu.Unlock()
 
+		Admin := false
+		StockkeeperWH := false
+		WarehouseManager := false
+		SuperIngenerQuality := false
+		IngenerQuality := false
+		Quality := false
+		Inspector := false
+		GroupP5 := false
+		GroupP1 := false
+		LoggedIn := false
+
 		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		if user.Groups == groupQualityP5 || user.Groups == groupWarehouseP5 {
-			statusGroupP5 = true
+			GroupP5 = true
 			if user.Role == roleAdministrator {
-				statusAdmin = true
-				statusLoggedIn = true
+				Admin = true
+				LoggedIn = true
 			} else if user.Role == roleStockkeeperWH {
-				statusStockkeeperWH = true
-				statusLoggedIn = true
-				fmt.Println("кладовщик склада - ", statusStockkeeperWH)
+				StockkeeperWH = true
+				LoggedIn = true
+				fmt.Println("кладовщик склада - ", StockkeeperWH)
 			} else if user.Role == roleSuperIngenerQuality {
-				statusSuperIngenerQuality = true
-				statusLoggedIn = true
+				SuperIngenerQuality = true
+				LoggedIn = true
 			} else if user.Role == roleIngenerQuality {
-				statusIngenerQuality = true
-				statusLoggedIn = true
+				IngenerQuality = true
+				LoggedIn = true
 			} else if user.Role == roleInspector {
-				//Quality = true
-				statusInspector = true
-				statusLoggedIn = true
-				//fmt.Println("pageInspection quality - ", Quality)
+				Quality = true
+				Inspector = true
+				LoggedIn = true
+				fmt.Println("pageInspection quality - ", Quality)
 			} else if user.Role == roleWarehouseManager {
-				statusWarehouseManager = true
-				statusLoggedIn = true
+				WarehouseManager = true
+				LoggedIn = true
 			}
 
 			search := &req{}
@@ -1310,17 +1355,17 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 					"TitleDOC":            "Отчет по истроии ВК",
 					"User":                user.LastName,
 					"Username":            user.FirstName,
-					"Admin":               statusAdmin,
-					"WarehouseManager":    statusWarehouseManager,
-					"StockkeeperWH":       statusStockkeeperWH,
-					"SuperIngenerQuality": statusSuperIngenerQuality,
-					"IngenerQuality":      statusIngenerQuality,
-					//"Quality":             Quality,
-					"Inspector":           statusInspector,
-					"GroupP5":             statusGroupP5,
+					"Admin":               Admin,
+					"WarehouseManager":    WarehouseManager,
+					"StockkeeperWH":       StockkeeperWH,
+					"SuperIngenerQuality": SuperIngenerQuality,
+					"IngenerQuality":      IngenerQuality,
+					"Quality":             Quality,
+					"Inspector":           Inspector,
+					"GroupP5":             GroupP5,
 					"Pobedit":             "Победит 5",
 					//"GroupP1":             GroupP1,
-					"LoggedIn": statusLoggedIn,
+					"LoggedIn": LoggedIn,
 					//	"GET":                 get,
 				}
 
@@ -1347,17 +1392,17 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 						"TitleDOC":            "Отчет по истроии ВК",
 						"User":                user.LastName,
 						"Username":            user.FirstName,
-						"Admin":               statusAdmin,
-						"WarehouseManager":    statusWarehouseManager,
-						"StockkeeperWH":       statusStockkeeperWH,
-						"SuperIngenerQuality": statusSuperIngenerQuality,
-						"IngenerQuality":      statusIngenerQuality,
-						//"Quality":             Quality,
-						"Inspector":           statusInspector,
-						"LoggedIn":            statusLoggedIn,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
 						"Pobedit":             "Победит 5",
 						//"GroupP1":             GroupP1,
-						"GroupP5": statusGroupP5,
+						"GroupP5": GroupP5,
 						"GET":     get,
 					}
 
@@ -1385,17 +1430,17 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 						"TitleDOC":            "Отчет по истроии ВК",
 						"User":                user.LastName,
 						"Username":            user.FirstName,
-						"Admin":               statusAdmin,
-						"WarehouseManager":    statusWarehouseManager,
-						"StockkeeperWH":       statusStockkeeperWH,
-						"SuperIngenerQuality": statusSuperIngenerQuality,
-						"IngenerQuality":      statusIngenerQuality,
-						//"Quality":             Quality,
-						"Inspector":           statusInspector,
-						"LoggedIn":            statusLoggedIn,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
 						"Pobedit":             "Победит 5",
 						//	"GroupP1":             GroupP1,
-						"GroupP5": statusGroupP5,
+						"GroupP5": GroupP5,
 						"GET":     get,
 					}
 					//	RenderJSON(w, get, http.StatusOK)
@@ -1420,16 +1465,16 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 						"TitleDOC":            "Отчет по истроии ВК",
 						"User":                user.LastName,
 						"Username":            user.FirstName,
-						"Admin":               statusAdmin,
-						"WarehouseManager":    statusWarehouseManager,
-						"StockkeeperWH":       statusStockkeeperWH,
-						"SuperIngenerQuality": statusSuperIngenerQuality,
-						"IngenerQuality":      statusIngenerQuality,
-						//"Quality":             Quality,
-						"Inspector":           statusInspector,
-						"LoggedIn":            statusLoggedIn,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
 						//	"GroupP1":             GroupP1,
-						"GroupP5": statusGroupP5,
+						"GroupP5": GroupP5,
 						"Pobedit": "Победит 5",
 						"GET":     get,
 					}
@@ -1452,16 +1497,16 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 						"TitleDOC":            "Отчет по истроии ВК",
 						"User":                user.LastName,
 						"Username":            user.FirstName,
-						"Admin":               statusAdmin,
-						"WarehouseManager":    statusWarehouseManager,
-						"StockkeeperWH":       statusStockkeeperWH,
-						"SuperIngenerQuality": statusSuperIngenerQuality,
-						"IngenerQuality":      statusIngenerQuality,
-					//	"Quality":             Quality,
-						"Inspector":           statusInspector,
-						"LoggedIn":            statusLoggedIn,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
 						//	"GroupP1":             GroupP1,
-						"GroupP5": statusGroupP5,
+						"GroupP5": GroupP5,
 						"Pobedit": "Победит 5",
 						"GET":     get,
 					}
@@ -1484,16 +1529,16 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 						"TitleDOC":            "Отчет по истроии ВК",
 						"User":                user.LastName,
 						"Username":            user.FirstName,
-						"Admin":               statusAdmin,
-						"WarehouseManager":    statusWarehouseManager,
-						"StockkeeperWH":       statusStockkeeperWH,
-						"SuperIngenerQuality": statusSuperIngenerQuality,
-						"IngenerQuality":      statusIngenerQuality,
-					//	"Quality":             Quality,
-						"Inspector":           statusInspector,
-						"LoggedIn":            statusLoggedIn,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
 						//	"GroupP1":             GroupP1,
-						"GroupP5": statusGroupP5,
+						"GroupP5": GroupP5,
 						"Pobedit": "Победит 5",
 						"GET":     get,
 					}
@@ -1518,16 +1563,16 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 						"TitleDOC":            "Отчет по истроии ВК",
 						"User":                user.LastName,
 						"Username":            user.FirstName,
-						"Admin":               statusAdmin,
-						"WarehouseManager":    statusWarehouseManager,
-						"StockkeeperWH":       statusStockkeeperWH,
-						"SuperIngenerQuality": statusSuperIngenerQuality,
-						"IngenerQuality":      statusIngenerQuality,
-						//"Quality":             statusQuality,
-						"Inspector":           statusInspector,
-						"LoggedIn":           statusLoggedIn,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
 						//	"GroupP1":             GroupP1,
-						"GroupP5": statusGroupP5,
+						"GroupP5": GroupP5,
 						"Pobedit": "Победит 5",
 						"GET":     get,
 					}
@@ -1550,16 +1595,16 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 						"TitleDOC":            "Отчет по истроии ВК",
 						"User":                user.LastName,
 						"Username":            user.FirstName,
-						"Admin":               statusAdmin,
-						"WarehouseManager":    statusWarehouseManager,
-						"StockkeeperWH":       statusStockkeeperWH,
-						"SuperIngenerQuality": statusSuperIngenerQuality,
-						"IngenerQuality":      statusIngenerQuality,
-						//"Quality":             Quality,
-						"Inspector":           statusInspector,
-						"LoggedIn":            statusLoggedIn,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
 						//	"GroupP1":             GroupP1,
-						"GroupP5": statusGroupP5,
+						"GroupP5": GroupP5,
 						"Pobedit": "Победит 5",
 						"GET":     get,
 					}
@@ -1582,16 +1627,16 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 						"TitleDOC":            "Отчет по истроии ВК",
 						"User":                user.LastName,
 						"Username":            user.FirstName,
-						"Admin":               statusAdmin,
-						"WarehouseManager":    statusWarehouseManager,
-						"StockkeeperWH":       statusStockkeeperWH,
-						"SuperIngenerQuality": statusSuperIngenerQuality,
-						"IngenerQuality":      statusIngenerQuality,
-						//"Quality":             Quality,
-						"Inspector":           statusInspector,
-						"LoggedIn":            statusLoggedIn,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
 						//	"GroupP1":             GroupP1,
-						"GroupP5": statusGroupP5,
+						"GroupP5": GroupP5,
 						"Pobedit": "Победит 5",
 						"GET":     get,
 					}
@@ -1606,28 +1651,28 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 		}
 
 		if user.Groups == groupQuality || user.Groups == groupWarehouse {
-			statusGroupP1 = true
+			GroupP1 = true
 			if user.Role == roleAdministrator {
-				statusAdmin = true
-				statusLoggedIn = true
+				Admin = true
+				LoggedIn = true
 			} else if user.Role == roleStockkeeperWH {
-				statusStockkeeperWH = true
-				statusLoggedIn = true
-				fmt.Println("кладовщик склада - ", statusStockkeeperWH)
+				StockkeeperWH = true
+				LoggedIn = true
+				fmt.Println("кладовщик склада - ", StockkeeperWH)
 			} else if user.Role == roleSuperIngenerQuality {
-				statusSuperIngenerQuality = true
-				statusLoggedIn = true
+				SuperIngenerQuality = true
+				LoggedIn = true
 			} else if user.Role == roleIngenerQuality {
-				statusIngenerQuality = true
-				statusLoggedIn = true
+				IngenerQuality = true
+				LoggedIn = true
 			} else if user.Role == roleInspector {
-				//Quality = true
-				statusInspector = true
-				statusLoggedIn = true
-			//	fmt.Println("pageInspection quality - ", Quality)
+				Quality = true
+				Inspector = true
+				LoggedIn = true
+				fmt.Println("pageInspection quality - ", Quality)
 			} else if user.Role == roleWarehouseManager {
-				statusWarehouseManager = true
-				statusLoggedIn = true
+				WarehouseManager = true
+				LoggedIn = true
 			}
 
 			search := &req{}
@@ -1661,17 +1706,17 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 					"TitleDOC":            "Отчет по истроии ВК",
 					"User":                user.LastName,
 					"Username":            user.FirstName,
-					"Admin":               statusAdmin,
-					"WarehouseManager":    statusWarehouseManager,
-					"StockkeeperWH":       statusStockkeeperWH,
-					"SuperIngenerQuality": statusSuperIngenerQuality,
-					"IngenerQuality":      statusIngenerQuality,
-					//"Quality":             statusQuality,
-					"Inspector":           statusInspector,
+					"Admin":               Admin,
+					"WarehouseManager":    WarehouseManager,
+					"StockkeeperWH":       StockkeeperWH,
+					"SuperIngenerQuality": SuperIngenerQuality,
+					"IngenerQuality":      IngenerQuality,
+					"Quality":             Quality,
+					"Inspector":           Inspector,
 					//	"GroupP5":             GroupP5,
-					"GroupP1":  statusGroupP1,
+					"GroupP1":  GroupP1,
 					"Pobedit":  "Победит 5",
-					"LoggedIn": statusLoggedIn,
+					"LoggedIn": LoggedIn,
 					//	"GET":                 get,
 				}
 
@@ -1698,15 +1743,15 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 						"TitleDOC":            "Отчет по истроии ВК",
 						"User":                user.LastName,
 						"Username":            user.FirstName,
-						"Admin":               statusAdmin,
-						"WarehouseManager":    statusWarehouseManager,
-						"StockkeeperWH":       statusStockkeeperWH,
-						"SuperIngenerQuality": statusSuperIngenerQuality,
-						"IngenerQuality":      statusIngenerQuality,
-						//"Quality":             Quality,
-						"Inspector":           statusInspector,
-						"LoggedIn":            statusLoggedIn,
-						"GroupP1":             statusGroupP1,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
+						"GroupP1":             GroupP1,
 						"Pobedit":             "Победит 5",
 						//	"GroupP5":             GroupP5,
 						"GET": get,
@@ -1736,15 +1781,15 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 						"TitleDOC":            "Отчет по истроии ВК",
 						"User":                user.LastName,
 						"Username":            user.FirstName,
-						"Admin":               statusAdmin,
-						"WarehouseManager":    statusWarehouseManager,
-						"StockkeeperWH":       statusStockkeeperWH,
-						"SuperIngenerQuality": statusSuperIngenerQuality,
-						"IngenerQuality":      statusIngenerQuality,
-						//"Quality":             Quality,
-						"Inspector":           statusInspector,
-						"LoggedIn":            statusLoggedIn,
-						"GroupP1":             statusGroupP1,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
+						"GroupP1":             GroupP1,
 						"Pobedit":             "Победит 5",
 						//	"GroupP5":             GroupP5,
 						"GET": get,
@@ -1771,15 +1816,15 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 						"TitleDOC":            "Отчет по истроии ВК",
 						"User":                user.LastName,
 						"Username":            user.FirstName,
-						"Admin":               statusAdmin,
-						"WarehouseManager":    statusWarehouseManager,
-						"StockkeeperWH":       statusStockkeeperWH,
-						"SuperIngenerQuality": statusSuperIngenerQuality,
-						"IngenerQuality":      statusIngenerQuality,
-						//"Quality":             Quality,
-						"Inspector":           statusInspector,
-						"LoggedIn":            statusLoggedIn,
-						"GroupP1":             statusGroupP1,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
+						"GroupP1":             GroupP1,
 						"Pobedit":             "Победит 5",
 						//	"GroupP5":             GroupP5,
 						"GET": get,
@@ -1803,15 +1848,15 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 						"TitleDOC":            "Отчет по истроии ВК",
 						"User":                user.LastName,
 						"Username":            user.FirstName,
-						"Admin":               statusAdmin,
-						"WarehouseManager":    statusWarehouseManager,
-						"StockkeeperWH":       statusStockkeeperWH,
-						"SuperIngenerQuality": statusSuperIngenerQuality,
-						"IngenerQuality":      statusIngenerQuality,
-						//"Quality":             Quality,
-						"Inspector":           statusInspector,
-						"LoggedIn":            statusLoggedIn,
-						"GroupP1":             statusGroupP1,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
+						"GroupP1":             GroupP1,
 						"Pobedit":             "Победит 5",
 						//	"GroupP5":             GroupP5,
 						"GET": get,
@@ -1835,15 +1880,15 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 						"TitleDOC":            "Отчет по истроии ВК",
 						"User":                user.LastName,
 						"Username":            user.FirstName,
-						"Admin":               statusAdmin,
-						"WarehouseManager":    statusWarehouseManager,
-						"StockkeeperWH":       statusStockkeeperWH,
-						"SuperIngenerQuality": statusSuperIngenerQuality,
-						"IngenerQuality":      statusIngenerQuality,
-						//"Quality":             Quality,
-						"Inspector":           statusInspector,
-						"LoggedIn":            statusLoggedIn,
-						"GroupP1":             statusGroupP1,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
+						"GroupP1":             GroupP1,
 						"Pobedit":             "Победит 5",
 						//	"GroupP5":             GroupP5,
 						"GET": get,
@@ -1869,15 +1914,15 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 						"TitleDOC":            "Отчет по истроии ВК",
 						"User":                user.LastName,
 						"Username":            user.FirstName,
-						"Admin":               statusAdmin,
-						"WarehouseManager":    statusWarehouseManager,
-						"StockkeeperWH":       statusStockkeeperWH,
-						"SuperIngenerQuality": statusSuperIngenerQuality,
-						"IngenerQuality":      statusIngenerQuality,
-						//"Quality":             Quality,
-						"Inspector":           statusInspector,
-						"LoggedIn":            statusLoggedIn,
-						"GroupP1":             statusGroupP1,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
+						"GroupP1":             GroupP1,
 						"Pobedit":             "Победит 5",
 						//	"GroupP5":             GroupP5,
 						"GET": get,
@@ -1901,15 +1946,15 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 						"TitleDOC":            "Отчет по истроии ВК",
 						"User":                user.LastName,
 						"Username":            user.FirstName,
-						"Admin":               statusAdmin,
-						"WarehouseManager":    statusWarehouseManager,
-						"StockkeeperWH":       statusStockkeeperWH,
-						"SuperIngenerQuality": statusSuperIngenerQuality,
-						"IngenerQuality":      statusIngenerQuality,
-						//"Quality":             Quality,
-						"Inspector":           statusInspector,
-						"LoggedIn":            statusLoggedIn,
-						"GroupP1":             statusGroupP1,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
+						"GroupP1":             GroupP1,
 						"Pobedit":             "Победит 5",
 						//	"GroupP5":             GroupP5,
 						"GET": get,
@@ -1933,15 +1978,15 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 						"TitleDOC":            "Отчет по истроии ВК",
 						"User":                user.LastName,
 						"Username":            user.FirstName,
-						"Admin":               statusAdmin,
-						"WarehouseManager":    statusWarehouseManager,
-						"StockkeeperWH":       statusStockkeeperWH,
-						"SuperIngenerQuality": statusSuperIngenerQuality,
-						"IngenerQuality":      statusIngenerQuality,
-						//"Quality":             Quality,
-						"Inspector":           statusInspector,
-						"LoggedIn":            statusLoggedIn,
-						"GroupP1":             statusGroupP1,
+						"Admin":               Admin,
+						"WarehouseManager":    WarehouseManager,
+						"StockkeeperWH":       StockkeeperWH,
+						"SuperIngenerQuality": SuperIngenerQuality,
+						"IngenerQuality":      IngenerQuality,
+						"Quality":             Quality,
+						"Inspector":           Inspector,
+						"LoggedIn":            LoggedIn,
+						"GroupP1":             GroupP1,
 						"Pobedit":             "Победит 5",
 						//	"GroupP5":             GroupP5,
 						"GET": get,
@@ -1968,33 +2013,46 @@ func (s *Server) PageInspection() http.HandlerFunc {
 		s.mu.Lock()
 		defer s.mu.Unlock()
 		//w.Header().Add("Content-Type", "application/json")
+		//	Admin := true
+		//	Warehouse := true
+		StockkeeperWH := false
+		WarehouseManager := false
+		//	Quality := false
+		Inspector := false
+		SuperIngenerQuality := false
+		IngenerQuality := false
+		SuperIngenerQuality2 := false
+		GroupP1 := false
+		GroupP5 := false
+		MixP1P5 := false
+		LoggedIn := true
 
 		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		if user.Groups == groupQuality || user.Groups == groupWarehouse {
-			statusGroupP1 = true
+			GroupP1 = true
 			if user.Role == roleSuperIngenerQuality {
-				statusSuperIngenerQuality = true
-				//statusSuperIngenerQuality2 = true
-				//MixP1P5 = true
-				statusLoggedIn = true
-				fmt.Println("pageInspection SuperIngenerQuality - ", statusSuperIngenerQuality)
+				SuperIngenerQuality = true
+				SuperIngenerQuality2 = true
+				MixP1P5 = true
+				LoggedIn = true
+				fmt.Println("pageInspection SuperIngenerQuality - ", SuperIngenerQuality)
 			} else if user.Role == roleStockkeeperWH {
-				statusStockkeeperWH = true
+				StockkeeperWH = true
 				//	Warehouse = false
 				//	WarehouseManager = true
-				statusLoggedIn = true
+				LoggedIn = true
 			} else if user.Role == roleIngenerQuality {
-				statusIngenerQuality = true
+				IngenerQuality = true
 			} else if user.Role == roleInspector {
-				statusInspector = true
+				Inspector = true
 			} else if user.Role == roleWarehouseManager {
-				statusWarehouseManager = true
-				statusLoggedIn = true
-			} /* else if user.Role == "Administrator" {
+				WarehouseManager = true
+				LoggedIn = true
+			} /* else if user.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
-			}*/ /**else if user.Groups == "качество" {
+			}*/ /**else if user.Groups == groupQuality {
 				//	Quality = true
 				Inspector = true
 				IngenerQuality = true
@@ -2062,15 +2120,15 @@ func (s *Server) PageInspection() http.HandlerFunc {
 				"Username": user.FirstName,
 				//	"Admin":                Admin,
 				//	"Quality":              Quality,
-				"Inspector":        statusInspector,
-				"IngenerQuality":   statusIngenerQuality,
-				"WarehouseManager": statusWarehouseManager,
+				"Inspector":        Inspector,
+				"IngenerQuality":   IngenerQuality,
+				"WarehouseManager": WarehouseManager,
 				//	"Warehouse":            Warehouse,
-				"StockkeeperWH":         statusStockkeeperWH,
-				"SuperIngenerQuality":   statusSuperIngenerQuality,
-				//"SuperIngenerQuality2":  statusSuperIngenerQuality2,
-				"GroupP1":               statusGroupP1,
-				//"MixP1P5":               MixP1P5,
+				"StockkeeperWH":         StockkeeperWH,
+				"SuperIngenerQuality":   SuperIngenerQuality,
+				"SuperIngenerQuality2":  SuperIngenerQuality2,
+				"GroupP1":               GroupP1,
+				"MixP1P5":               MixP1P5,
 				"GET":                   get,
 				"ListVendor":            listVendor,
 				"CountTotal":            countTotal,
@@ -2080,7 +2138,7 @@ func (s *Server) PageInspection() http.HandlerFunc {
 				"GetStatic":             getStatic,
 				"HoldCountDebitor":      holdCountDebitor,
 				"NotVerifyDebitor":      notVerifyDebitor,
-				"LoggedIn":              statusLoggedIn,
+				"LoggedIn":              LoggedIn,
 				"Pobedit":               "Победит 1",
 			}
 
@@ -2089,28 +2147,28 @@ func (s *Server) PageInspection() http.HandlerFunc {
 		}
 
 		if user.Groups == groupQualityP5 || user.Groups == groupWarehouseP5 {
-			statusGroupP5 = true
+			GroupP5 = true
 			if user.Role == roleSuperIngenerQuality {
-				statusSuperIngenerQuality = true
-				//statusSuperIngenerQuality2 = true
-				statusLoggedIn = true
-				fmt.Println("pageInspection SuperIngenerQuality - ", statusSuperIngenerQuality)
+				SuperIngenerQuality = true
+				SuperIngenerQuality2 = true
+				LoggedIn = true
+				fmt.Println("pageInspection SuperIngenerQuality - ", SuperIngenerQuality)
 			} else if user.Role == roleStockkeeperWH {
-				statusStockkeeperWH = true
+				StockkeeperWH = true
 				//	Warehouse = false
 				//	WarehouseManager = true
-				statusLoggedIn = true
+				LoggedIn = true
 			} else if user.Role == roleIngenerQuality {
-				statusIngenerQuality = true
+				IngenerQuality = true
 			} else if user.Role == roleInspector {
-				statusInspector = true
+				Inspector = true
 			} else if user.Role == roleWarehouseManager {
-				statusWarehouseManager = true
-				statusLoggedIn = true
-			} /* else if user.Role == "Administrator" {
+				WarehouseManager = true
+				LoggedIn = true
+			} /* else if user.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
-			}*/ /**else if user.Groups == "качество" {
+			}*/ /**else if user.Groups == groupQuality {
 				//	Quality = true
 				Inspector = true
 				IngenerQuality = true
@@ -2178,14 +2236,14 @@ func (s *Server) PageInspection() http.HandlerFunc {
 				"Username": user.FirstName,
 				//	"Admin":                Admin,
 				//	"Quality":              Quality,
-				"Inspector":        statusInspector,
-				"IngenerQuality":   statusIngenerQuality,
-				"WarehouseManager": statusWarehouseManager,
+				"Inspector":        Inspector,
+				"IngenerQuality":   IngenerQuality,
+				"WarehouseManager": WarehouseManager,
 				//	"Warehouse":            Warehouse,
-				"StockkeeperWH":         statusStockkeeperWH,
-				"SuperIngenerQuality":   statusSuperIngenerQuality,
-				//"SuperIngenerQuality2":  SuperIngenerQuality2,
-				"GroupP5":               statusGroupP5,
+				"StockkeeperWH":         StockkeeperWH,
+				"SuperIngenerQuality":   SuperIngenerQuality,
+				"SuperIngenerQuality2":  SuperIngenerQuality2,
+				"GroupP5":               GroupP5,
 				"GET":                   get,
 				"ListVendor":            listVendor,
 				"CountTotal":            countTotal,
@@ -2195,7 +2253,7 @@ func (s *Server) PageInspection() http.HandlerFunc {
 				"HoldCountDebitor":      holdCountDebitor,
 				"NotVerifyDebitor":      notVerifyDebitor,
 				"CountVerifyComponents": countVerifyComponents,
-				"LoggedIn":              statusLoggedIn,
+				"LoggedIn":              LoggedIn,
 				"Pobedit":               "Победит 5",
 			}
 
@@ -2214,36 +2272,49 @@ func (s *Server) PageInspectionMix() http.HandlerFunc {
 		s.mu.Lock()
 		defer s.mu.Unlock()
 		//w.Header().Add("Content-Type", "application/json")
+		//	Admin := true
+		//	Warehouse := true
+		StockkeeperWH := false
+		WarehouseManager := false
+		//	Quality := false
+		Inspector := false
+		SuperIngenerQuality := false
+		IngenerQuality := false
+		SuperIngenerQuality2 := false
+		GroupP1 := false
+		GroupP5 := false
+		//MixP1P5 := false
+		LoggedIn := true
 
 		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		if user.Groups == groupQuality && user.Role == roleSuperIngenerQuality ||
 			user.Groups == groupQuality && user.Role == roleIngenerQuality {
 			//	MixP1P5 = true
-			statusGroupP1 = true
+			GroupP1 = true
 			if user.Role == roleSuperIngenerQuality {
-				statusSuperIngenerQuality = true
-				//SuperIngenerQuality2 = true
-				statusLoggedIn = true
-				fmt.Println("pageInspection SuperIngenerQuality - ", statusSuperIngenerQuality)
+				SuperIngenerQuality = true
+				SuperIngenerQuality2 = true
+				LoggedIn = true
+				fmt.Println("pageInspection SuperIngenerQuality - ", SuperIngenerQuality)
 			} else if user.Role == roleIngenerQuality {
-				statusIngenerQuality = true
-			} /* else if user.Role == "кладовщик склада" {
+				IngenerQuality = true
+			} /* else if user.Role == roleStockkeeperWH {
 				StockkeeperWH = true
 				//	Warehouse = false
 				//	WarehouseManager = true
 				LoggedIn = true
 			} */
-			/* else if user.Role == "контролер качества" {
+			/* else if user.Role == roleInspector {
 				Inspector = true
-			} else if user.Role == "старший кладовщик склада" {
+			} else if user.Role == roleWarehouseManager {
 				WarehouseManager = true
 				LoggedIn = true
 			} */
-			/* else if user.Role == "Administrator" {
+			/* else if user.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
-			}*/ /**else if user.Groups == "качество" {
+			}*/ /**else if user.Groups == groupQuality {
 				//	Quality = true
 				Inspector = true
 				IngenerQuality = true
@@ -2311,15 +2382,15 @@ func (s *Server) PageInspectionMix() http.HandlerFunc {
 				"Username": user.FirstName,
 				//	"Admin":                Admin,
 				//	"Quality":              Quality,
-				"Inspector":        statusInspector,
-				"IngenerQuality":   statusIngenerQuality,
-				"WarehouseManager": statusWarehouseManager,
+				"Inspector":        Inspector,
+				"IngenerQuality":   IngenerQuality,
+				"WarehouseManager": WarehouseManager,
 				//	"Warehouse":            Warehouse,
-				"StockkeeperWH":        statusStockkeeperWH,
-				"SuperIngenerQuality":  statusSuperIngenerQuality,
-				//"SuperIngenerQuality2": SuperIngenerQuality2,
+				"StockkeeperWH":        StockkeeperWH,
+				"SuperIngenerQuality":  SuperIngenerQuality,
+				"SuperIngenerQuality2": SuperIngenerQuality2,
 				//"MixP1P5":              MixP1P5,
-				"GroupP1":               statusGroupP1,
+				"GroupP1":               GroupP1,
 				"GET":                   get,
 				"ListVendor":            listVendor,
 				"CountTotal":            countTotal,
@@ -2329,7 +2400,7 @@ func (s *Server) PageInspectionMix() http.HandlerFunc {
 				"HoldCountDebitor":      holdCountDebitor,
 				"NotVerifyDebitor":      notVerifyDebitor,
 				"CountVerifyComponents": countVerifyComponents,
-				"LoggedIn":              statusLoggedIn,
+				"LoggedIn":              LoggedIn,
 				"Pobedit":               "Победит 5",
 			}
 
@@ -2340,30 +2411,30 @@ func (s *Server) PageInspectionMix() http.HandlerFunc {
 		if user.Groups == groupQualityP5 && user.Role == roleSuperIngenerQuality ||
 			user.Groups == groupQualityP5 && user.Role == roleIngenerQuality {
 			//	MixP1P5 = true
-			statusGroupP5 = true
+			GroupP5 = true
 			if user.Role == roleSuperIngenerQuality {
-				statusSuperIngenerQuality = true
-				//SuperIngenerQuality2 = true
-				statusLoggedIn = true
-				fmt.Println("pageInspection SuperIngenerQuality - ", statusSuperIngenerQuality)
+				SuperIngenerQuality = true
+				SuperIngenerQuality2 = true
+				LoggedIn = true
+				fmt.Println("pageInspection SuperIngenerQuality - ", SuperIngenerQuality)
 			} else if user.Role == roleIngenerQuality {
-				statusIngenerQuality = true
-			} /* else if user.Role == "кладовщик склада" {
+				IngenerQuality = true
+			} /* else if user.Role == roleStockkeeperWH {
 				StockkeeperWH = true
 				//	Warehouse = false
 				//	WarehouseManager = true
 				LoggedIn = true
 			} */
-			/* else if user.Role == "контролер качества" {
+			/* else if user.Role == roleInspector {
 				Inspector = true
-			} else if user.Role == "старший кладовщик склада" {
+			} else if user.Role == roleWarehouseManager {
 				WarehouseManager = true
 				LoggedIn = true
 			} */
-			/* else if user.Role == "Administrator" {
+			/* else if user.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
-			}*/ /**else if user.Groups == "качество" {
+			}*/ /**else if user.Groups == groupQuality {
 				//	Quality = true
 				Inspector = true
 				IngenerQuality = true
@@ -2431,15 +2502,15 @@ func (s *Server) PageInspectionMix() http.HandlerFunc {
 				"Username": user.FirstName,
 				//	"Admin":                Admin,
 				//	"Quality":              Quality,
-				"Inspector":        statusInspector,
-				"IngenerQuality":   statusIngenerQuality,
-				"WarehouseManager": statusWarehouseManager,
+				"Inspector":        Inspector,
+				"IngenerQuality":   IngenerQuality,
+				"WarehouseManager": WarehouseManager,
 				//	"Warehouse":            Warehouse,
-				"StockkeeperWH":        statusStockkeeperWH,
-				"SuperIngenerQuality":  statusSuperIngenerQuality,
-				//"SuperIngenerQuality2": SuperIngenerQuality2,
+				"StockkeeperWH":        StockkeeperWH,
+				"SuperIngenerQuality":  SuperIngenerQuality,
+				"SuperIngenerQuality2": SuperIngenerQuality2,
 				//"MixP1P5":              MixP1P5,
-				"GroupP5":               statusGroupP5,
+				"GroupP5":               GroupP5,
 				"GET":                   get,
 				"ListVendor":            listVendor,
 				"CountTotal":            countTotal,
@@ -2449,7 +2520,7 @@ func (s *Server) PageInspectionMix() http.HandlerFunc {
 				"HoldCountDebitor":      holdCountDebitor,
 				"NotVerifyDebitor":      notVerifyDebitor,
 				"CountVerifyComponents": countVerifyComponents,
-				"LoggedIn":              statusLoggedIn,
+				"LoggedIn":              LoggedIn,
 				"Pobedit":               "Победит 1",
 			}
 
@@ -2473,6 +2544,14 @@ func (s *Server) PageupdateInspection() http.HandlerFunc {
 		//	if r.Method == http.MethodOptions {
 		//		return
 		//	}
+		Admin := false
+		SuperIngenerQuality := false
+		IngenerQuality := false
+		Inspector := false
+		GroupP1 := false
+		GroupP5 := false
+		LoggedIn := false
+
 		vars := mux.Vars(r)
 		id, err := strconv.Atoi(vars["ID"])
 		if err != nil {
@@ -2481,26 +2560,27 @@ func (s *Server) PageupdateInspection() http.HandlerFunc {
 		}
 
 		user := r.Context().Value(ctxKeyUser).(*model.User)
+
 		fmt.Println("user.Groups - ?", user.Groups)
 		//s.infoLog.Printf("test user.Groups - %s", user.Groups)
 		s.logger.Infof("test user.Groups - %s", user.Groups)
 
-		if user.Groups == groupQuality || user.Groups == roleAdministrator {
-			statusGroupP1 = true
+		if user.Groups == groupQuality || user.Groups == groupAdministrator {
+			GroupP1 = true
 			if user.Role == roleAdministrator {
-				statusAdmin = true
-				statusLoggedIn = true
+				Admin = true
+				LoggedIn = true
 			} else if user.Role == roleSuperIngenerQuality {
-				statusSuperIngenerQuality = true
-				statusLoggedIn = true
-				fmt.Println("SuperIngenerQuality - ", statusSuperIngenerQuality)
+				SuperIngenerQuality = true
+				LoggedIn = true
+				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
 			} else if user.Role == roleIngenerQuality {
-				statusIngenerQuality = true
-				statusLoggedIn = true
-				fmt.Println("IngenerQuality - ", statusIngenerQuality)
+				IngenerQuality = true
+				LoggedIn = true
+				fmt.Println("IngenerQuality - ", IngenerQuality)
 			} else if user.Role == roleInspector {
-				statusInspector = true
-				statusLoggedIn = true
+				Inspector = true
+				LoggedIn = true
 
 			}
 			//fmt.Println("ID - ?", id)
@@ -2512,13 +2592,13 @@ func (s *Server) PageupdateInspection() http.HandlerFunc {
 			}
 
 			data := map[string]interface{}{
-				"Admin":               statusAdmin,
-				"SuperIngenerQuality": statusSuperIngenerQuality,
-				"IngenerQuality":      statusIngenerQuality,
-				"Inspector":           statusInspector,
+				"Admin":               Admin,
+				"SuperIngenerQuality": SuperIngenerQuality,
+				"IngenerQuality":      IngenerQuality,
+				"Inspector":           Inspector,
 				"GET":                 get,
-				"LoggedIn":            statusLoggedIn,
-				"GroupP1":             statusGroupP1,
+				"LoggedIn":            LoggedIn,
+				"GroupP1":             GroupP1,
 				"User":                user.LastName,
 				"Username":            user.FirstName,
 			}
@@ -2529,21 +2609,21 @@ func (s *Server) PageupdateInspection() http.HandlerFunc {
 			}
 		}
 		if user.Groups == groupQualityP5 {
-			statusGroupP5 = true
+			GroupP5 = true
 			if user.Role == roleAdministrator {
-				statusAdmin = true
-				statusLoggedIn = true
+				Admin = true
+				LoggedIn = true
 			} else if user.Role == roleSuperIngenerQuality {
-				statusSuperIngenerQuality = true
-				statusLoggedIn = true
-				fmt.Println("SuperIngenerQuality - ", statusSuperIngenerQuality)
+				SuperIngenerQuality = true
+				LoggedIn = true
+				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
 			} else if user.Role == roleIngenerQuality {
-				statusIngenerQuality = true
-				statusLoggedIn = true
-				fmt.Println("IngenerQuality - ", statusIngenerQuality)
+				IngenerQuality = true
+				LoggedIn = true
+				fmt.Println("IngenerQuality - ", IngenerQuality)
 			} else if user.Role == roleInspector {
-				statusInspector = true
-				statusLoggedIn = true
+				Inspector = true
+				LoggedIn = true
 
 			}
 			//fmt.Println("ID - ?", id)
@@ -2555,13 +2635,13 @@ func (s *Server) PageupdateInspection() http.HandlerFunc {
 			}
 
 			data := map[string]interface{}{
-				"Admin":               statusAdmin,
-				"SuperIngenerQuality": statusSuperIngenerQuality,
-				"IngenerQuality":      statusIngenerQuality,
-				"Inspector":           statusInspector,
+				"Admin":               Admin,
+				"SuperIngenerQuality": SuperIngenerQuality,
+				"IngenerQuality":      IngenerQuality,
+				"Inspector":           Inspector,
 				"GET":                 get,
-				"LoggedIn":            statusLoggedIn,
-				"GroupP5":             statusGroupP5,
+				"LoggedIn":            LoggedIn,
+				"GroupP5":             GroupP5,
 				"User":                user.LastName,
 				"Username":            user.FirstName,
 			}
@@ -2587,6 +2667,14 @@ func (s *Server) PageupdateInspectionJSON() http.HandlerFunc {
 		//	if r.Method == http.MethodOptions {
 		//		return
 		//	}
+		Admin := false
+		SuperIngenerQuality := false
+		IngenerQuality := false
+		Inspector := false
+		GroupP1 := false
+		GroupP5 := false
+		LoggedIn := false
+
 		vars := mux.Vars(r)
 		id, err := strconv.Atoi(vars["ID"])
 		if err != nil {
@@ -2595,27 +2683,28 @@ func (s *Server) PageupdateInspectionJSON() http.HandlerFunc {
 		}
 
 		user := r.Context().Value(ctxKeyUser).(*model.User)
+
 		fmt.Println("user.Groups - ?", user.Groups)
 		fmt.Println("Test json page update")
 		//s.infoLog.Printf("user.Groups - %v", user.Groups)
 		s.logger.Infof("user.Groups - %v", user.Groups)
 		/*
-			if (user.Groups == "качество" && user.Role == "главный инженер по качеству") ||
-				(user.Groups == "качество" && user.Role == "инженер по качеству") {
+			if (user.Groups == groupQuality && user.Role == roleSuperIngenerQuality) ||
+				(user.Groups == groupQuality && user.Role == roleIngenerQuality) {
 				fmt.Println("Test mix page update")
 				GroupP1 = true
-				if user.Role == "Administrator" {
+				if user.Role == roleAdministrator {
 					Admin = true
 					LoggedIn = true
-				} else if user.Role == "главный инженер по качеству" {
+				} else if user.Role == roleSuperIngenerQuality {
 					SuperIngenerQuality = true
 					LoggedIn = true
 					fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
-				} else if user.Role == "инженер по качеству" {
+				} else if user.Role == roleIngenerQuality {
 					IngenerQuality = true
 					LoggedIn = true
 					fmt.Println("IngenerQuality - ", IngenerQuality)
-				} /*else if user.Role == "контролер качества" {
+				} /*else if user.Role == roleInspector {
 					Inspector = true
 					LoggedIn = true
 
@@ -2647,21 +2736,21 @@ func (s *Server) PageupdateInspectionJSON() http.HandlerFunc {
 			}
 		*/
 		if user.Groups == groupQuality {
-			statusGroupP1 = true
+			GroupP1 = true
 			if user.Role == roleAdministrator {
-				statusAdmin = true
-				statusLoggedIn = true
+				Admin = true
+				LoggedIn = true
 			} else if user.Role == roleSuperIngenerQuality {
-				statusSuperIngenerQuality = true
-				statusLoggedIn = true
-				fmt.Println("SuperIngenerQuality - ", statusSuperIngenerQuality)
+				SuperIngenerQuality = true
+				LoggedIn = true
+				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
 			} else if user.Role == roleIngenerQuality {
-				statusIngenerQuality = true
-				statusLoggedIn = true
-				fmt.Println("IngenerQuality - ", statusIngenerQuality)
+				IngenerQuality = true
+				LoggedIn = true
+				fmt.Println("IngenerQuality - ", IngenerQuality)
 			} else if user.Role == roleInspector {
-				statusInspector = true
-				statusLoggedIn = true
+				Inspector = true
+				LoggedIn = true
 
 			}
 			//fmt.Println("ID - ?", id)
@@ -2673,13 +2762,13 @@ func (s *Server) PageupdateInspectionJSON() http.HandlerFunc {
 			}
 
 			data := map[string]interface{}{
-				"Admin":               statusAdmin,
-				"SuperIngenerQuality": statusSuperIngenerQuality,
-				"IngenerQuality":      statusIngenerQuality,
-				"Inspector":           statusInspector,
-				"GroupP1":             statusGroupP1,
+				"Admin":               Admin,
+				"SuperIngenerQuality": SuperIngenerQuality,
+				"IngenerQuality":      IngenerQuality,
+				"Inspector":           Inspector,
+				"GroupP1":             GroupP1,
 				"GET":                 get,
-				"LoggedIn":            statusLoggedIn,
+				"LoggedIn":            LoggedIn,
 				"User":                user.LastName,
 				"Username":            user.FirstName,
 			}
@@ -2690,21 +2779,21 @@ func (s *Server) PageupdateInspectionJSON() http.HandlerFunc {
 			}
 		}
 		if user.Groups == groupQualityP5 {
-			statusGroupP5 = true
+			GroupP5 = true
 			if user.Role == roleAdministrator {
-				statusAdmin = true
-				statusLoggedIn = true
+				Admin = true
+				LoggedIn = true
 			} else if user.Role == roleSuperIngenerQuality {
-				statusSuperIngenerQuality = true
-				statusLoggedIn = true
-				fmt.Println("SuperIngenerQuality - ", statusSuperIngenerQuality)
+				SuperIngenerQuality = true
+				LoggedIn = true
+				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
 			} else if user.Role == roleIngenerQuality {
-				statusIngenerQuality = true
-				statusLoggedIn = true
-				fmt.Println("IngenerQuality - ", statusIngenerQuality)
+				IngenerQuality = true
+				LoggedIn = true
+				fmt.Println("IngenerQuality - ", IngenerQuality)
 			} else if user.Role == roleInspector {
-				statusInspector = true
-				statusLoggedIn = true
+				Inspector = true
+				LoggedIn = true
 
 			}
 			//fmt.Println("ID - ?", id)
@@ -2716,13 +2805,13 @@ func (s *Server) PageupdateInspectionJSON() http.HandlerFunc {
 			}
 
 			data := map[string]interface{}{
-				"Admin":               statusAdmin,
-				"SuperIngenerQuality": statusSuperIngenerQuality,
-				"IngenerQuality":      statusIngenerQuality,
-				"Inspector":           statusInspector,
-				"GroupP5":             statusGroupP5,
+				"Admin":               Admin,
+				"SuperIngenerQuality": SuperIngenerQuality,
+				"IngenerQuality":      IngenerQuality,
+				"Inspector":           Inspector,
+				"GroupP5":             GroupP5,
 				"GET":                 get,
-				"LoggedIn":            statusLoggedIn,
+				"LoggedIn":            LoggedIn,
 				"User":                user.LastName,
 				"Username":            user.FirstName,
 			}
@@ -2749,6 +2838,14 @@ func (s *Server) PageupdateInspectionJSONmix() http.HandlerFunc {
 		//	if r.Method == http.MethodOptions {
 		//		return
 		//	}
+		Admin := false
+		SuperIngenerQuality := false
+		IngenerQuality := false
+		Inspector := false
+		GroupP1 := false
+		GroupP5 := false
+		LoggedIn := false
+
 		vars := mux.Vars(r)
 		id, err := strconv.Atoi(vars["ID"])
 		if err != nil {
@@ -2757,27 +2854,28 @@ func (s *Server) PageupdateInspectionJSONmix() http.HandlerFunc {
 		}
 
 		user := r.Context().Value(ctxKeyUser).(*model.User)
+
 		fmt.Println("user.Groups - ?", user.Groups)
 		fmt.Println("Test json page update")
 		//s.infoLog.Printf("user.Groups - %v", user.Groups)
 		s.logger.Infof("user.Groups - %v", user.Groups)
 
 		if (user.Groups == groupQuality && user.Role == roleSuperIngenerQuality) ||
-			(user.Groups == groupQuality && user.Role == roleSuperIngenerQuality) {
+			(user.Groups == groupQuality && user.Role == roleIngenerQuality) {
 			fmt.Println("Test mix page update")
-			statusGroupP1 = true
+			GroupP1 = true
 			if user.Role == roleAdministrator {
-				statusAdmin = true
-				statusLoggedIn = true
+				Admin = true
+				LoggedIn = true
 			} else if user.Role == roleSuperIngenerQuality {
-				statusSuperIngenerQuality = true
-				statusLoggedIn = true
-				fmt.Println("SuperIngenerQuality - ", statusSuperIngenerQuality)
+				SuperIngenerQuality = true
+				LoggedIn = true
+				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
 			} else if user.Role == roleIngenerQuality {
-				statusIngenerQuality = true
-				statusLoggedIn = true
-				fmt.Println("IngenerQuality - ", statusIngenerQuality)
-			} /*else if user.Role == "контролер качества" {
+				IngenerQuality = true
+				LoggedIn = true
+				fmt.Println("IngenerQuality - ", IngenerQuality)
+			} /*else if user.Role == roleInspector {
 				Inspector = true
 				LoggedIn = true
 
@@ -2791,13 +2889,13 @@ func (s *Server) PageupdateInspectionJSONmix() http.HandlerFunc {
 			}
 
 			data := map[string]interface{}{
-				"Admin":               statusAdmin,
-				"SuperIngenerQuality": statusSuperIngenerQuality,
-				"IngenerQuality":      statusIngenerQuality,
-				"Inspector":           statusInspector,
-				"GroupP1":             statusGroupP1,
+				"Admin":               Admin,
+				"SuperIngenerQuality": SuperIngenerQuality,
+				"IngenerQuality":      IngenerQuality,
+				"Inspector":           Inspector,
+				"GroupP1":             GroupP1,
 				"GET":                 get,
-				"LoggedIn":            statusLoggedIn,
+				"LoggedIn":            LoggedIn,
 				"User":                user.LastName,
 				"Username":            user.FirstName,
 			}
@@ -2811,19 +2909,19 @@ func (s *Server) PageupdateInspectionJSONmix() http.HandlerFunc {
 		if (user.Groups == groupQualityP5 && user.Role == roleSuperIngenerQuality) ||
 			(user.Groups == groupQualityP5 && user.Role == roleIngenerQuality) {
 			fmt.Println("Test mix page update")
-			statusGroupP5 = true
+			GroupP5 = true
 			if user.Role == roleAdministrator {
-				statusAdmin = true
-				statusLoggedIn = true
+				Admin = true
+				LoggedIn = true
 			} else if user.Role == roleSuperIngenerQuality {
-				statusSuperIngenerQuality = true
-				statusLoggedIn = true
-				fmt.Println("SuperIngenerQuality - ", statusSuperIngenerQuality)
+				SuperIngenerQuality = true
+				LoggedIn = true
+				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
 			} else if user.Role == roleIngenerQuality {
-				statusIngenerQuality = true
-				statusLoggedIn = true
-				fmt.Println("IngenerQuality - ", statusIngenerQuality)
-			} /*else if user.Role == "контролер качества" {
+				IngenerQuality = true
+				LoggedIn = true
+				fmt.Println("IngenerQuality - ", IngenerQuality)
+			} /*else if user.Role == roleInspector {
 				Inspector = true
 				LoggedIn = true
 
@@ -2837,13 +2935,13 @@ func (s *Server) PageupdateInspectionJSONmix() http.HandlerFunc {
 			}
 
 			data := map[string]interface{}{
-				"Admin":               statusAdmin,
-				"SuperIngenerQuality": statusSuperIngenerQuality,
-				"IngenerQuality":      statusIngenerQuality,
-				"Inspector":           statusInspector,
-				"GroupP5":             statusGroupP5,
+				"Admin":               Admin,
+				"SuperIngenerQuality": SuperIngenerQuality,
+				"IngenerQuality":      IngenerQuality,
+				"Inspector":           Inspector,
+				"GroupP5":             GroupP5,
 				"GET":                 get,
-				"LoggedIn":            statusLoggedIn,
+				"LoggedIn":            LoggedIn,
 				"User":                user.LastName,
 				"Username":            user.FirstName,
 			}
@@ -2891,8 +2989,8 @@ func (s *Server) UpdateInspection() http.HandlerFunc {
 		w.Header().Set("Access-Control-Allow-Methods", "POST")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
-		//GroupP1 = "качество"
-		//GroupP5 = "качество"
+		//GroupP1 = groupQuality
+		//GroupP5 = groupQuality
 
 		req := &request{}
 		vars := mux.Vars(r)
@@ -3075,8 +3173,8 @@ func (s *Server) UpdateInspectionJSON() http.HandlerFunc {
 				Timeupdate: currentTime,   // Timeaccept
 				Groups:     user.Groups,
 			}
-			/*	if user.Groups == "качество" && user.Role == "главный инженер по качеству" ||
-				user.Groups == "качество" && user.Role == "инженер по качеству" {
+			/*	if user.Groups == groupQuality && user.Role == roleSuperIngenerQuality ||
+				user.Groups == groupQuality && user.Role == roleIngenerQuality {
 				if err := s.store.Inspection().UpdateInspectionP5(u); err != nil {
 					s.error(w, r, http.StatusUnprocessableEntity, err)
 					return
@@ -3328,29 +3426,38 @@ func (s *Server) PageListAcceptWHInspection() http.HandlerFunc { // acceptinspec
 		s.mu.Lock()
 		defer s.mu.Unlock()
 
+		Admin := false
+		StockkeeperWH := false
+		WarehouseManager := false
+		LoggedIn := false
+		stockkeeperWH := false
+		//superIngenerQuality := true
+		//quality := false
+		//	statusStr := false
+
 		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		if user.Groups == groupWarehouse {
-			statusStockkeeperWH = true
-			statusWarehouseManager = true
+			stockkeeperWH = true
+			WarehouseManager = true
 		}
 		/*
-			if user.Groups == "качество" {
+			if user.Groups == groupQuality {
 				quality = true
-			} else if user.Groups == "склад" {
+			} else if user.Groups == groupWarehouse {
 				stockkeeperWH = true
 			}
 		*/
 		if user.Role == roleAdministrator {
-			statusAdmin = true
-			statusLoggedIn = true
+			Admin = true
+			LoggedIn = true
 		} else if user.Role == roleStockkeeperWH {
-			statusStockkeeperWH = true
-			statusLoggedIn = true
-			fmt.Println("кладовщик склада - ", statusStockkeeperWH)
+			StockkeeperWH = true
+			LoggedIn = true
+			fmt.Println("кладовщик склада - ", StockkeeperWH)
 		} else if user.Role == roleWarehouseManager {
-			statusWarehouseManager = true
-			statusLoggedIn = true
+			WarehouseManager = true
+			LoggedIn = true
 		}
 
 		get, err := s.store.Inspection().ListAcceptWHInspection()
@@ -3361,14 +3468,14 @@ func (s *Server) PageListAcceptWHInspection() http.HandlerFunc { // acceptinspec
 
 		groups := map[string]interface{}{
 			//	"quality":   quality,
-			//"Warehouse":        stockkeeperWH,
-			"WarehouseManager": statusWarehouseManager,
-			//	"главный инженер по качеству": superIngenerQuality,
+			"Warehouse":        stockkeeperWH,
+			"WarehouseManager": WarehouseManager,
+			//	roleSuperIngenerQuality: superIngenerQuality,
 			"GET": get,
 			//	"status":    statusStr,
-			"Admin":         statusAdmin,
-			"StockkeeperWH": statusStockkeeperWH,
-			"LoggedIn":      statusLoggedIn,
+			"Admin":         Admin,
+			"StockkeeperWH": StockkeeperWH,
+			"LoggedIn":      LoggedIn,
 			"User":          user.LastName,
 			"Username":      user.FirstName,
 		}
@@ -3391,6 +3498,13 @@ func (s *Server) PageacceptWarehouseInspection() http.HandlerFunc {
 		s.mu.Lock()
 		defer s.mu.Unlock()
 
+		Admin := false
+		StockkeeperWH := false
+		WarehouseManager := false
+		GroupP1 := false
+		GroupP5 := false
+		LoggedIn := false
+
 		vars := mux.Vars(r)
 		id, err := strconv.Atoi(vars["ID"])
 		if err != nil {
@@ -3399,23 +3513,24 @@ func (s *Server) PageacceptWarehouseInspection() http.HandlerFunc {
 		}
 
 		user := r.Context().Value(ctxKeyUser).(*model.User)
+
 		fmt.Println("user.Groups - ?", user.Groups)
 		//s.infoLog.Printf("user.Groups - %v\n", user.Groups)
 		s.logger.Infof("user.Groups - %v\n", user.Groups)
 
 		if user.Groups == groupWarehouse {
-			statusGroupP1 = true
+			GroupP1 = true
 			if user.Role == roleAdministrator {
-				statusAdmin = true
-				statusLoggedIn = true
+				Admin = true
+				LoggedIn = true
 
 			} else if user.Role == roleStockkeeperWH {
-				statusStockkeeperWH = true
-				statusLoggedIn = true
+				StockkeeperWH = true
+				LoggedIn = true
 
 			} else if user.Role == roleWarehouseManager {
-				statusWarehouseManager = true
-				statusLoggedIn = true
+				WarehouseManager = true
+				LoggedIn = true
 			}
 
 			//fmt.Println("ID - ?", id)
@@ -3429,11 +3544,11 @@ func (s *Server) PageacceptWarehouseInspection() http.HandlerFunc {
 			data := map[string]interface{}{
 				"User":             user.LastName,
 				"Username":         user.FirstName,
-				"Admin":            statusAdmin,
-				"WarehouseManager": statusWarehouseManager,
-				"StockkeeperWH":    statusStockkeeperWH,
-				"GroupP1":          statusGroupP1,
-				"LoggedIn":         statusLoggedIn,
+				"Admin":            Admin,
+				"WarehouseManager": WarehouseManager,
+				"StockkeeperWH":    StockkeeperWH,
+				"GroupP1":          GroupP1,
+				"LoggedIn":         LoggedIn,
 				"GET":              get,
 			}
 			err = tpl.ExecuteTemplate(w, "acceptWarehouseInspection.html", data)
@@ -3443,18 +3558,18 @@ func (s *Server) PageacceptWarehouseInspection() http.HandlerFunc {
 			}
 		}
 		if user.Groups == groupWarehouseP5 {
-			statusGroupP5 = true
+			GroupP5 = true
 			if user.Role == roleAdministrator {
-				statusAdmin = true
-				statusLoggedIn = true
+				Admin = true
+				LoggedIn = true
 
 			} else if user.Role == roleStockkeeperWH {
-				statusStockkeeperWH = true
-				statusLoggedIn = true
+				StockkeeperWH = true
+				LoggedIn = true
 
 			} else if user.Role == roleWarehouseManager {
-				statusWarehouseManager = true
-				statusLoggedIn = true
+				WarehouseManager = true
+				LoggedIn = true
 			}
 
 			//fmt.Println("ID - ?", id)
@@ -3468,11 +3583,11 @@ func (s *Server) PageacceptWarehouseInspection() http.HandlerFunc {
 			data := map[string]interface{}{
 				"User":             user.LastName,
 				"Username":         user.FirstName,
-				"Admin":            statusAdmin,
-				"WarehouseManager": statusWarehouseManager,
-				"StockkeeperWH":    statusStockkeeperWH,
-				"GroupP5":          statusGroupP5,
-				"LoggedIn":         statusLoggedIn,
+				"Admin":            Admin,
+				"WarehouseManager": WarehouseManager,
+				"StockkeeperWH":    StockkeeperWH,
+				"GroupP5":          GroupP5,
+				"LoggedIn":         LoggedIn,
 				"GET":              get,
 			}
 			err = tpl.ExecuteTemplate(w, "acceptWarehouseInspection.html", data)
@@ -3563,6 +3678,13 @@ func (s *Server) PageacceptWarehouseInspectionJSON() http.HandlerFunc {
 		s.mu.Lock()
 		defer s.mu.Unlock()
 
+		Admin := false
+		StockkeeperWH := false
+		WarehouseManager := false
+		GroupP1 := false
+		GroupP5 := false
+		LoggedIn := false
+
 		vars := mux.Vars(r)
 		id, err := strconv.Atoi(vars["ID"])
 		if err != nil {
@@ -3571,23 +3693,24 @@ func (s *Server) PageacceptWarehouseInspectionJSON() http.HandlerFunc {
 		}
 
 		user := r.Context().Value(ctxKeyUser).(*model.User)
+
 		fmt.Println("user.Groups - ?", user.Groups)
 		//s.infoLog.Printf("user.Groups - %v\n", user.Groups)
 		s.logger.Info("user.Groups - %v\n", user.Groups)
 
 		if user.Groups == groupWarehouse {
-			statusGroupP1 = true
+			GroupP1 = true
 			if user.Role == roleAdministrator {
-				statusAdmin = true
-				statusLoggedIn = true
+				Admin = true
+				LoggedIn = true
 
 			} else if user.Role == roleStockkeeperWH {
-				statusStockkeeperWH = true
-				statusLoggedIn = true
+				StockkeeperWH = true
+				LoggedIn = true
 
 			} else if user.Role == roleWarehouseManager {
-				statusWarehouseManager = true
-				statusLoggedIn = true
+				WarehouseManager = true
+				LoggedIn = true
 			}
 
 			//fmt.Println("ID - ?", id)
@@ -3601,11 +3724,11 @@ func (s *Server) PageacceptWarehouseInspectionJSON() http.HandlerFunc {
 			data := map[string]interface{}{
 				"User":             user.LastName,
 				"Username":         user.FirstName,
-				"Admin":            statusAdmin,
-				"WarehouseManager": statusWarehouseManager,
-				"StockkeeperWH":    statusStockkeeperWH,
-				"GroupP1":          statusGroupP1,
-				"LoggedIn":         statusLoggedIn,
+				"Admin":            Admin,
+				"WarehouseManager": WarehouseManager,
+				"StockkeeperWH":    StockkeeperWH,
+				"GroupP1":          GroupP1,
+				"LoggedIn":         LoggedIn,
 				"GET":              get,
 			}
 			err = tpl.ExecuteTemplate(w, "acceptWarehouseInspectionjson.html", data)
@@ -3615,18 +3738,18 @@ func (s *Server) PageacceptWarehouseInspectionJSON() http.HandlerFunc {
 			}
 		}
 		if user.Groups == groupWarehouseP5 {
-			statusGroupP5 = true
+			GroupP5 = true
 			if user.Role == roleAdministrator {
-				statusAdmin = true
-				statusLoggedIn = true
+				Admin = true
+				LoggedIn = true
 
 			} else if user.Role == roleStockkeeperWH {
-				statusStockkeeperWH = true
-				statusLoggedIn = true
+				StockkeeperWH = true
+				LoggedIn = true
 
 			} else if user.Role == roleWarehouseManager {
-				statusWarehouseManager = true
-				statusLoggedIn = true
+				WarehouseManager = true
+				LoggedIn = true
 			}
 
 			//fmt.Println("ID - ?", id)
@@ -3640,11 +3763,11 @@ func (s *Server) PageacceptWarehouseInspectionJSON() http.HandlerFunc {
 			data := map[string]interface{}{
 				"User":             user.LastName,
 				"Username":         user.FirstName,
-				"Admin":            statusAdmin,
-				"WarehouseManager": statusWarehouseManager,
-				"StockkeeperWH":    statusStockkeeperWH,
-				"GroupP5":          statusGroupP5,
-				"LoggedIn":         statusLoggedIn,
+				"Admin":            Admin,
+				"WarehouseManager": WarehouseManager,
+				"StockkeeperWH":    StockkeeperWH,
+				"GroupP5":          GroupP5,
+				"LoggedIn":         LoggedIn,
 				"GET":              get,
 			}
 			err = tpl.ExecuteTemplate(w, "acceptWarehouseInspectionjson.html", data)
@@ -3684,6 +3807,7 @@ func (s *Server) AcceptWarehouseInspectionJSON() http.HandlerFunc {
 		currentTime := time.Now()
 
 		user := r.Context().Value(ctxKeyUser).(*model.User)
+
 		/*
 			req.ID = id
 			req.Location = r.FormValue("location")
@@ -3721,7 +3845,7 @@ func (s *Server) AcceptWarehouseInspectionJSON() http.HandlerFunc {
 				Timeaccept:     currentTime,   // Timeaccept
 				Groups:         user.Groups,
 			}
-			if user.Groups == "склад" {
+			if user.Groups == groupWarehouse {
 
 				if err := s.store.Inspection().AcceptWarehouseInspection(u); err != nil {
 					s.error(w, r, http.StatusUnprocessableEntity, err)
@@ -3746,7 +3870,7 @@ func (s *Server) AcceptWarehouseInspectionJSON() http.HandlerFunc {
 				json.NewEncoder(w).Encode(res)
 				//	http.Redirect(w, r, "/operation/statusinspection", 303)
 			}
-			if user.Groups == "склад П5" {
+			if user.Groups == groupWarehouseP5 {
 				fmt.Println("Test accept")
 
 				if err := s.store.Inspection().AcceptWarehouseInspectionP5(u); err != nil {

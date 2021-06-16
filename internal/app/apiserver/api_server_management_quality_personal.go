@@ -18,16 +18,22 @@ func (s *Server) PageshowUsersQuality() http.HandlerFunc {
 		s.mu.Lock()
 		defer s.mu.Unlock()
 
+		Admin := false
+		SuperIngenerQuality := false
+		GroupP1 := false
+		GroupP5 := false
+		LoggedIn := false
+
 		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		if user.Groups == groupQuality {
-			statusGroupP1 = true
+			GroupP1 = true
 			if user.Role == roleAdministrator {
-				statusAdmin = true
-				statusLoggedIn = true
+				Admin = true
+				LoggedIn = true
 			} else if user.Role == roleSuperIngenerQuality {
-				statusSuperIngenerQuality = true
-				statusLoggedIn = true
+				SuperIngenerQuality = true
+				LoggedIn = true
 			}
 
 			get, err := s.store.User().ListUsersQuality()
@@ -46,10 +52,10 @@ func (s *Server) PageshowUsersQuality() http.HandlerFunc {
 				"TitleDOC":            "Сотрудники качества",
 				"User":                user.LastName,
 				"Username":            user.FirstName,
-				"Admin":               statusAdmin,
-				"SuperIngenerQuality": statusSuperIngenerQuality,
-				"GroupP1":             statusGroupP1,
-				"LoggedIn":            statusLoggedIn,
+				"Admin":               Admin,
+				"SuperIngenerQuality": SuperIngenerQuality,
+				"GroupP1":             GroupP1,
+				"LoggedIn":            LoggedIn,
 				"GET":                 get,
 				//"GetRoleQuality":      getRoleQuality,
 			}
@@ -60,14 +66,14 @@ func (s *Server) PageshowUsersQuality() http.HandlerFunc {
 			}
 		}
 
-		if user.Groups == groupQualityP5 {
-			statusGroupP5 = true
-			if user.Role == roleAdministrator {
-				statusAdmin = true
-				statusLoggedIn = true
-			} else if user.Role == roleSuperIngenerQuality {
-				statusSuperIngenerQuality = true
-				statusLoggedIn = true
+		if user.Groups == "качество П5" {
+			GroupP5 = true
+			if user.Role == "Administrator" {
+				Admin = true
+				LoggedIn = true
+			} else if user.Role == "главный инженер по качеству" {
+				SuperIngenerQuality = true
+				LoggedIn = true
 			}
 
 			get, err := s.store.User().ListUsersQualityP5()
@@ -80,10 +86,10 @@ func (s *Server) PageshowUsersQuality() http.HandlerFunc {
 				"TitleDOC":            "Сотрудники качества",
 				"User":                user.LastName,
 				"Username":            user.FirstName,
-				"Admin":               statusAdmin,
-				"SuperIngenerQuality": statusSuperIngenerQuality,
-				"GroupP5":             statusGroupP5,
-				"LoggedIn":            statusLoggedIn,
+				"Admin":               Admin,
+				"SuperIngenerQuality": SuperIngenerQuality,
+				"GroupP5":             GroupP5,
+				"LoggedIn":            LoggedIn,
 				"GET":                 get,
 			}
 			err = tpl.ExecuteTemplate(w, "showUsersQuality.html", data)
@@ -110,7 +116,7 @@ func (s *Server) CreateUserQuality() http.HandlerFunc {
 		defer s.mu.Unlock()
 
 		//	Admin := false
-		statusSuperIngenerQuality := false
+		SuperIngenerQuality := false
 		//	LoggedIn := false
 
 		body, err := ioutil.ReadAll(r.Body)
@@ -129,16 +135,32 @@ func (s *Server) CreateUserQuality() http.HandlerFunc {
 		Groupp1 := "качество"
 		Groupp5 := "качество П5"
 
-		user := r.Context().Value(ctxKeyUser).(*model.User)
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
 
-		if user.Groups == groupQuality {
-			if user.Role == roleAdministrator {
+		idd, ok := session.Values["user_id"]
+		if !ok {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		user, err := s.store.User().Find(idd.(int))
+		if err != nil {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		if user.Groups == "качество" {
+			if user.Role == "Administrator" {
 				//	Admin = true
 				//	LoggedIn = true
-			} else if user.Role == roleSuperIngenerQuality {
-				statusSuperIngenerQuality = true
+			} else if user.Role == "главный инженер по качеству" {
+				SuperIngenerQuality = true
 				//	LoggedIn = true
-				fmt.Println("SuperIngenerQuality pageupdateUserQuality - ", statusSuperIngenerQuality)
+				fmt.Println("SuperIngenerQuality pageupdateUserQuality - ", SuperIngenerQuality)
 			}
 
 			for _, v := range hdata {
@@ -161,14 +183,14 @@ func (s *Server) CreateUserQuality() http.HandlerFunc {
 
 			}
 		}
-		if user.Groups == groupQualityP5 {
-			if user.Role == roleAdministrator {
+		if user.Groups == "качество П5" {
+			if user.Role == "Administrator" {
 				//	Admin = true
 				//	LoggedIn = true
-			} else if user.Role == roleSuperIngenerQuality {
-				statusSuperIngenerQuality = true
+			} else if user.Role == "главный инженер по качеству" {
+				SuperIngenerQuality = true
 				//	LoggedIn = true
-				fmt.Println("SuperIngenerQuality pageupdateUserQuality - ", statusSuperIngenerQuality)
+				fmt.Println("SuperIngenerQuality pageupdateUserQuality - ", SuperIngenerQuality)
 			}
 
 			for _, v := range hdata {
@@ -202,15 +224,35 @@ func (s *Server) PageupdateUserQuality() http.HandlerFunc {
 		s.mu.Lock()
 		defer s.mu.Unlock()
 
-		user := r.Context().Value(ctxKeyUser).(*model.User)
+		Admin := false
+		SuperIngenerQuality := false
+		LoggedIn := false
 
-		if user.Role == roleAdministrator {
-			statusAdmin = true
-			statusLoggedIn = true
-		} else if user.Role == roleSuperIngenerQuality {
-			statusSuperIngenerQuality = true
-			statusLoggedIn = true
-			fmt.Println("SuperIngenerQuality pageupdateUserQuality - ", statusSuperIngenerQuality)
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		idd, ok := session.Values["user_id"]
+		if !ok {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		user, err := s.store.User().Find(idd.(int))
+		if err != nil {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
+			return
+		}
+
+		if user.Role == "Administrator" {
+			Admin = true
+			LoggedIn = true
+		} else if user.Role == "главный инженер по качеству" {
+			SuperIngenerQuality = true
+			LoggedIn = true
+			fmt.Println("SuperIngenerQuality pageupdateUserQuality - ", SuperIngenerQuality)
 		}
 
 		vars := mux.Vars(r)
@@ -229,9 +271,9 @@ func (s *Server) PageupdateUserQuality() http.HandlerFunc {
 
 		data := map[string]interface{}{
 			"GET":                 get,
-			"Admin":               statusAdmin,
-			"SuperIngenerQuality": statusSuperIngenerQuality,
-			"LoggedIn":            statusLoggedIn,
+			"Admin":               Admin,
+			"SuperIngenerQuality": SuperIngenerQuality,
+			"LoggedIn":            LoggedIn,
 			"User":                user.LastName,
 			"Username":            user.FirstName,
 		}

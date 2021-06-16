@@ -34,78 +34,72 @@ func (s *Server) PageinsertVendor() http.HandlerFunc {
 		//			s.error(w, r, http.StatusUnprocessableEntity, err)
 		//			return
 		//		}
+		Admin := false
+		SuperIngenerQuality := false
+		GroupP1 := false
+		GroupP5 := false
+		LoggedIn := false
 
-		// user := r.Context().Value(ctxKeyUser).(*model.User)
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		id, ok := session.Values["user_id"]
-		if !ok {
-			http.Redirect(w, r, "/", http.StatusSeeOther)
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(id.(int))
-		if err != nil {
-			http.Redirect(w, r, "/", http.StatusSeeOther)
-			//	s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 		//	GET := map[string]bool{
 		//		"admin": admin,
 		//		//	"stockkeeper":         stockkeeper,
-		//		"главный инженер по качеству": superIngenerQuality,
+		//		roleSuperIngenerQuality: superIngenerQuality,
 		//	"stockkeeperWH":       stockkeeperWH,
 		//	"inspector":           inspector,
 		//	}
 		if user.Groups == groupQuality {
-			statusGroupP1 = true
+			GroupP1 = true
 			if user.Role == roleAdministrator {
-				statusAdmin = true
-				statusLoggedIn = true
+				Admin = true
+				LoggedIn = true
 			} else if user.Role == roleSuperIngenerQuality {
-				statusSuperIngenerQuality = true
-				statusLoggedIn = true
-				fmt.Println("SuperIngenerQuality - ", statusSuperIngenerQuality)
+				SuperIngenerQuality = true
+				LoggedIn = true
+				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
 			}
 			data := map[string]interface{}{
-				"Admin":               statusAdmin,
-				"SuperIngenerQuality": statusSuperIngenerQuality,
-				"GroupP1":             statusGroupP1,
+				"Admin":               Admin,
+				"SuperIngenerQuality": SuperIngenerQuality,
+				"GroupP1":             GroupP1,
 				//"GET":      GET,
-				"LoggedIn": statusLoggedIn,
+				"LoggedIn": LoggedIn,
 				"User":     user.LastName,
 				"Username": user.FirstName,
 			}
 			fmt.Println("Check -")
-			tpl.ExecuteTemplate(w, "insertvendor.html", data)
+			err := tpl.ExecuteTemplate(w, "insertvendor.html", data)
+			if err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}
 		}
 
 		if user.Groups == groupQualityP5 {
-			statusGroupP5 = true
+			GroupP5 = true
 			if user.Role == roleAdministrator {
-				statusAdmin = true
-				statusLoggedIn = true
+				Admin = true
+				LoggedIn = true
 			} else if user.Role == roleSuperIngenerQuality {
-				statusSuperIngenerQuality = true
-				statusLoggedIn = true
-				fmt.Println("SuperIngenerQuality - ", statusSuperIngenerQuality)
+				SuperIngenerQuality = true
+				LoggedIn = true
+				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
 			}
 			data := map[string]interface{}{
-				"Admin":               statusAdmin,
-				"SuperIngenerQuality": statusSuperIngenerQuality,
-				"GroupP5":             statusGroupP5,
+				"Admin":               Admin,
+				"SuperIngenerQuality": SuperIngenerQuality,
+				"GroupP5":             GroupP5,
 				//"GET":      GET,
-				"LoggedIn": statusLoggedIn,
+				"LoggedIn": LoggedIn,
 				"User":     user.LastName,
 				"Username": user.FirstName,
 			}
 			fmt.Println("Check -")
-			tpl.ExecuteTemplate(w, "insertvendor.html", data)
+			err := tpl.ExecuteTemplate(w, "insertvendor.html", data)
+			if err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}
 		}
 	}
 }
@@ -131,6 +125,11 @@ func (s *Server) InsertVendor() http.HandlerFunc {
 		s.mu.Lock()
 		defer s.mu.Unlock()
 
+		fmt.Println("Check2 -")
+		Admin := false
+		SuperIngenerQuality := false
+		LoggedIn := false
+
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
 			log.Println(err)
@@ -149,18 +148,18 @@ func (s *Server) InsertVendor() http.HandlerFunc {
 		//	GET := map[string]bool{
 		//		"admin": admin,
 		//	"stockkeeper":         stockkeeper,
-		//		"главный инженер по качеству": superIngenerQuality,
+		//		roleSuperIngenerQuality: superIngenerQuality,
 		//	"stockkeeperWH":       stockkeeperWH,
 		//	"inspector":           inspector,
 		//	}
 
 		if user.Role == roleAdministrator {
-			statusAdmin = true
-			statusLoggedIn = true
+			Admin = true
+			LoggedIn = true
 		} else if user.Role == roleSuperIngenerQuality {
-			statusSuperIngenerQuality = true
-			statusLoggedIn = true
-			fmt.Println("SuperIngenerQuality - ", statusSuperIngenerQuality)
+			SuperIngenerQuality = true
+			LoggedIn = true
+			fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
 		}
 
 		for _, v := range hdata {
@@ -179,17 +178,21 @@ func (s *Server) InsertVendor() http.HandlerFunc {
 		}
 
 		data := map[string]interface{}{
-			"Admin":               statusAdmin,
-			"SuperIngenerQuality": statusSuperIngenerQuality,
+			"Admin":               Admin,
+			"SuperIngenerQuality": SuperIngenerQuality,
 			//"GET":      GET,
-			"LoggedIn": statusLoggedIn,
+			"LoggedIn": LoggedIn,
 			"User":     user.LastName,
 			"Username": user.FirstName,
 		}
 
 		//err = tpl.ExecuteTemplate(w, "layout", data)
 		//	err = tpl.ExecuteTemplate(w, "layout", v)
-		tpl.ExecuteTemplate(w, "insertvendor.html", data)
+		err = tpl.ExecuteTemplate(w, "insertvendor.html", data)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
 
 	}
 
@@ -211,18 +214,23 @@ func (s *Server) PageVendor() http.HandlerFunc {
 		//data := map[string]interface{}{
 		//	"user": "Я тут",
 		//}
+		Admin := false
+		SuperIngenerQuality := false
+		GroupP1 := false
+		GroupP5 := false
+		LoggedIn := false
 
 		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		if user.Groups == groupQuality {
-			statusGroupP1 = true
+			GroupP1 = true
 			if user.Role == roleAdministrator {
-				statusAdmin = true
-				statusLoggedIn = true
+				Admin = true
+				LoggedIn = true
 			} else if user.Role == roleSuperIngenerQuality {
-				statusSuperIngenerQuality = true
-				statusLoggedIn = true
-				fmt.Println("SuperIngenerQuality - ", statusSuperIngenerQuality)
+				SuperIngenerQuality = true
+				LoggedIn = true
+				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
 			}
 
 			get, err := s.store.Vendor().ListVendor()
@@ -232,29 +240,33 @@ func (s *Server) PageVendor() http.HandlerFunc {
 			}
 
 			data := map[string]interface{}{
-				"Admin":               statusAdmin,
-				"SuperIngenerQuality": statusSuperIngenerQuality,
-				"GroupP1":             statusGroupP1,
+				"Admin":               Admin,
+				"SuperIngenerQuality": SuperIngenerQuality,
+				"GroupP1":             GroupP1,
 				"GET":                 get,
-				"LoggedIn":            statusLoggedIn,
+				"LoggedIn":            LoggedIn,
 				"User":                user.LastName,
 				"Username":            user.FirstName,
 			}
 
-			tpl.ExecuteTemplate(w, "showvendor.html", data)
+			err = tpl.ExecuteTemplate(w, "showvendor.html", data)
+			if err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}
 			// send all the vendors as response
 			//json.NewEncoder(w).Encode(get)
 			//fmt.Println("json.NewEncoder(w).Encode(get)")
 		}
 		if user.Groups == groupQualityP5 {
-			statusGroupP5 = true
+			GroupP5 = true
 			if user.Role == roleAdministrator {
-				statusAdmin = true
-				statusLoggedIn = true
+				Admin = true
+				LoggedIn = true
 			} else if user.Role == roleSuperIngenerQuality {
-				statusSuperIngenerQuality = true
-				statusLoggedIn = true
-				fmt.Println("SuperIngenerQuality - ", statusSuperIngenerQuality)
+				SuperIngenerQuality = true
+				LoggedIn = true
+				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
 			}
 
 			get, err := s.store.Vendor().ListVendor()
@@ -264,16 +276,20 @@ func (s *Server) PageVendor() http.HandlerFunc {
 			}
 
 			data := map[string]interface{}{
-				"Admin":               statusAdmin,
-				"SuperIngenerQuality": statusSuperIngenerQuality,
-				"GroupP5":             statusGroupP5,
+				"Admin":               Admin,
+				"SuperIngenerQuality": SuperIngenerQuality,
+				"GroupP5":             GroupP5,
 				"GET":                 get,
-				"LoggedIn":            statusLoggedIn,
+				"LoggedIn":            LoggedIn,
 				"User":                user.LastName,
 				"Username":            user.FirstName,
 			}
 
-			tpl.ExecuteTemplate(w, "showvendor.html", data)
+			err = tpl.ExecuteTemplate(w, "showvendor.html", data)
+			if err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}
 			// send all the vendors as response
 			//json.NewEncoder(w).Encode(get)
 			//fmt.Println("json.NewEncoder(w).Encode(get)")
@@ -291,15 +307,19 @@ func (s *Server) PageupdateVendor() http.HandlerFunc {
 		s.mu.Lock()
 		defer s.mu.Unlock()
 
+		Admin := false
+		SuperIngenerQuality := false
+		LoggedIn := false
+
 		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		if user.Role == roleAdministrator {
-			statusAdmin = true
-			statusLoggedIn = true
+			Admin = true
+			LoggedIn = true
 		} else if user.Role == roleSuperIngenerQuality {
-			statusSuperIngenerQuality = true
-			statusLoggedIn = true
-			fmt.Println("SuperIngenerQuality - ", statusSuperIngenerQuality)
+			SuperIngenerQuality = true
+			LoggedIn = true
+			fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
 		}
 
 		vars := mux.Vars(r)
@@ -317,15 +337,18 @@ func (s *Server) PageupdateVendor() http.HandlerFunc {
 		}
 
 		data := map[string]interface{}{
-			"Admin":               statusAdmin,
-			"SuperIngenerQuality": statusSuperIngenerQuality,
+			"Admin":               Admin,
+			"SuperIngenerQuality": SuperIngenerQuality,
 			"GET":                 get,
-			"LoggedIn":            statusLoggedIn,
+			"LoggedIn":            LoggedIn,
 			"User":                user.LastName,
 			"Username":            user.FirstName,
 		}
-		tpl.ExecuteTemplate(w, "updatevendor.html", data)
-
+		err = tpl.ExecuteTemplate(w, "updatevendor.html", data)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
 	}
 }
 

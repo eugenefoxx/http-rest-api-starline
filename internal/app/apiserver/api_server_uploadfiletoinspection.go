@@ -30,7 +30,7 @@ func (s *Server) UploadFileToInspection() http.HandlerFunc {
 		defer s.mu.Unlock()
 		/*
 			w.Header().Set("Content-Type", "application/json")
-			w.Header().Set("Access-Control-Allow-Origin", "*")
+		https://market-click2.yandex.ru/redir/GAkkM7lQwz62j9BQ6_qgZoep55uRD4T4A5aShDSjUBi68pDQCp1He6qhpWv2RvRNoamhkBdFBph70o8oA-5v9QGTf7JG5pnZ0SxlzCQYReb2bF_tn3F_Ed3CyF0oSFoCRAH-937jxBq2JUxNs50BMfViko7mGN-XBOFiSj2jFcNyuhBmwvRNLvkyl6K7tY_lXjoBWjQ6evL809qJ4bwvHy9VvSxSZLlSoFvVKVXrvH-sIfQQp11YyUsFkPCYgcmVVWOcD_CVF_MsIO8jgMsoqcrT8X4r6B_DrWhxHzw7twaYp1ewGltJCUtYQkIkLNfj6tAOowY8XHzzHe-Sf179_46iw9CxMGQaYL2w4wZJdrdkq3TqPcmSMQgnLbj8lPrP2F_FFxf8qCLalSOLFxV4dbnz5gJXL1Dop-5A37H2D1d2oJDLL48FE4YuLkfV4E_UliMzTaEO7rgs8B2AJJre7jh71xtJjctJfiIUsTBWBz82W8fNY3mqQp5hzJSVrLta9hLeJQ7_G6YsgHNvV4-yNT_5TzQgwmXsVGjkQ86__KIW1XIvUgCOMLkdeNKXHbPS-D1oQHfzN2VN44cM2ropq8t4vU5ztny575SvLUHYqxPoaU31BBMCdi_MQV-42Lgx3aa00knxMIAqcH1iN7RjKyi8uUvDGdLS8OFhfD1p2M8gWAIsENoG8i4HT3yCE_KcxCk7BLG1Bf6gJfLYEPmR-UpwJa_K4yjb62sJlapGVDm6ZcaFdeEuPtz2fRwXXT6VXgkcO5q4-kmnZMml_yETkyffFytNyzzb7fIqy1PurZxhDagk1svk3oTIT-9G7uQs1moXic4P9_3LNRpds4lGT2vpQa0f_TBzoGAO8wS0ruTT83B5cmj3JtMF4I4yuMa4ZNLmOAdY7pujn-ocnZXK1pfpKZoQ2uw46YU4XWio4WKUkeV1XCQ5TWhahIQ0bZ7klpYyqxLywoEpQEt40rByX_u--LOpsP6JSr10t3M5M7bFDPlSRk96FUOIKHIOsg8QPrZEOSU0J2V3JsuR-SyENcjTmPofsJh3YXPBBDbGNVwFJE6M5RPn_-TRx1jQWJ18007_BIONWolqwLIfESqcpt6idl2gICp85EtYS4lbqUNQwdZW08P_GImZNdqwDHebyCTpGxsbmqpit-uIbyYEo7yHURHlGYsp5g07C1SrQvGku2aN0s31D-qvfQVF7c6KdvaKUgklCEFqiAATId9QwL-MWVe_64tH-_PenXfqFExRBF_wB9o1m5KapQiBxFwoSr4m7tJLCvHJOcn3AmE7Xkiwxcn_rCIAUMDzhNvy8w0UVyQdOzIvbvp5r5e08WcasVQVuwbbLa-Ul96AD-umD7I5YGSpmOdB5kHdRIR3uKA2Z4e91W9UnA,,?data=QVyKqSPyGQwNvdoowNEPjcozEqKShkAf7BQtg3MVmxezzWyQ_AnAou0G0CoA2MaUbQhYPmbQ2kCA3q7BRlWBwyjfb1mkXd2WnEgq7VMx6hmefayHx1cpQQV-lWBPVSIopuSJ25hp-eekJl5mU5kqwKcM8lQ4OBdQu4hWqtlETYcUn0RoY7lrcP2C6oFce5VVg7CcEWjy0uo8I9pN3FpZqcKgVnxhgwxM_jeH4d_ZqLqp1UR8xN2dvE_WCkSQdOSO&b64e=1&sign=11c58b9a57be14e2b4bc6c1614ad669c&keyno=1			w.Header().Set("Access-Control-Allow-Origin", "*")
 			w.Header().Set("Access-Control-Allow-Methods", "POST")
 			w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 		*/
@@ -141,10 +141,12 @@ func (s *Server) UploadFileToInspection() http.HandlerFunc {
 			re3 := regexp.MustCompile(`P\d{7}LR\d{10}Q\d{5}D\d{8}`)
 			if re.MatchString(line) != true && re2.MatchString(line) != true && re3.MatchString(line) != true {
 				fmt.Println("не верное сканирование MatchString :\n" + line + "\n")
-				s.logger.Errorf("Не верное сканирование из файла загрузки на входной контроль, П1: %v", line)
+				s.logger.Errorf(
+					"Не верное сканирование из файла загрузки на входной контроль : %v," +
+						"табель сканировавшего сотрудника %v", line , user.Tabel)
 				//	fmt.Fprintf(w, "не верное сканирование :"+v.ScanID)
 				w.Write([]byte("Запись не соответствует: " + line))
-				//	break
+
 				return
 			}
 
@@ -467,7 +469,15 @@ func (s *Server) PageUploadFileToInspectionJSON() http.HandlerFunc {
 		//	if r.Method == http.MethodOptions {
 		//		return
 		//	}
-
+		Admin := false
+		//	SuperIngenerQuality := false
+		//	IngenerQuality := false
+		//	Inspector := false
+		StockkeeperWH := false
+		WarehouseManager := false
+		GroupP1 := false
+		GroupP5 := false
+		LoggedIn := false
 		/*
 			vars := mux.Vars(r)
 			id, err := strconv.Atoi(vars["ID"])
@@ -477,36 +487,37 @@ func (s *Server) PageUploadFileToInspectionJSON() http.HandlerFunc {
 			}
 		*/
 		user := r.Context().Value(ctxKeyUser).(*model.User)
+
 		fmt.Println("user.Groups - ?", user.Groups)
 		fmt.Println("Test json page update")
 		s.logger.Infof("user.Groups - %v", user.Groups)
 		if user.Groups == groupWarehouse {
-			statusStockkeeperWH = true
-			statusWarehouseManager = true
+			StockkeeperWH = true
+			WarehouseManager = true
 		}
 
-		if user.Groups == groupWarehouse {
-			statusGroupP1 = true
+		if user.Groups == groupQuality {
+			GroupP1 = true
 			if user.Role == roleAdministrator {
-				statusAdmin = true
-				statusLoggedIn = true
+				Admin = true
+				LoggedIn = true
 			} else if user.Role == roleStockkeeperWH {
-				statusStockkeeperWH = true
-				statusLoggedIn = true
-				fmt.Println("кладовщик склада - ", statusStockkeeperWH)
+				StockkeeperWH = true
+				LoggedIn = true
+				fmt.Println("кладовщик склада - ", StockkeeperWH)
 			} else if user.Role == roleWarehouseManager {
-				statusWarehouseManager = true
-				statusLoggedIn = true
+				WarehouseManager = true
+				LoggedIn = true
 			}
-			/*else if user.Role == "главный инженер по качеству" {
+			/*else if user.Role == roleSuperIngenerQuality {
 				SuperIngenerQuality = true
 				LoggedIn = true
 				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
-			} else if user.Role == "инженер по качеству" {
+			} else if user.Role == roleIngenerQuality {
 				IngenerQuality = true
 				LoggedIn = true
 				fmt.Println("IngenerQuality - ", IngenerQuality)
-			} else if user.Role == "контролер качества" {
+			} else if user.Role == roleInspector {
 				Inspector = true
 				LoggedIn = true
 
@@ -520,15 +531,15 @@ func (s *Server) PageUploadFileToInspectionJSON() http.HandlerFunc {
 				}
 			*/
 			data := map[string]interface{}{
-				"Admin":            statusAdmin,
-				"WarehouseManager": statusWarehouseManager,
-				"StockkeeperWH":    statusStockkeeperWH,
+				"Admin":            Admin,
+				"WarehouseManager": WarehouseManager,
+				"StockkeeperWH":    StockkeeperWH,
 				//	"SuperIngenerQuality": SuperIngenerQuality,
 				//	"IngenerQuality":      IngenerQuality,
 				//	"Inspector":           Inspector,
-				"GroupP1": statusGroupP1,
+				"GroupP1": GroupP1,
 				//"GET":      get,
-				"LoggedIn": statusLoggedIn,
+				"LoggedIn": LoggedIn,
 				"User":     user.LastName,
 				"Username": user.FirstName,
 			}
@@ -538,29 +549,29 @@ func (s *Server) PageUploadFileToInspectionJSON() http.HandlerFunc {
 				return
 			}
 		}
-		if user.Groups == groupWarehouseP5 {
-			statusGroupP5 = true
+		if user.Groups == groupQualityP5 {
+			GroupP5 = true
 			fmt.Println("Test Upload Page")
 			if user.Role == roleAdministrator {
-				statusAdmin = true
-				statusLoggedIn = true
+				Admin = true
+				LoggedIn = true
 			} else if user.Role == roleStockkeeperWH {
-				statusStockkeeperWH = true
-				statusLoggedIn = true
-				fmt.Println("кладовщик склада - ", statusStockkeeperWH)
+				StockkeeperWH = true
+				LoggedIn = true
+				fmt.Println("кладовщик склада - ", StockkeeperWH)
 			} else if user.Role == roleWarehouseManager {
-				statusWarehouseManager = true
-				statusLoggedIn = true
+				WarehouseManager = true
+				LoggedIn = true
 			}
-			/*else if user.Role == "главный инженер по качеству" {
+			/*else if user.Role == roleSuperIngenerQuality {
 				SuperIngenerQuality = true
 				LoggedIn = true
 				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
-			} else if user.Role == "инженер по качеству" {
+			} else if user.Role == roleIngenerQuality {
 				IngenerQuality = true
 				LoggedIn = true
 				fmt.Println("IngenerQuality - ", IngenerQuality)
-			} else if user.Role == "контролер качества" {
+			} else if user.Role == roleInspector {
 				Inspector = true
 				LoggedIn = true
 
@@ -574,15 +585,15 @@ func (s *Server) PageUploadFileToInspectionJSON() http.HandlerFunc {
 				}
 			*/
 			data := map[string]interface{}{
-				"Admin":            statusAdmin,
-				"WarehouseManager": statusWarehouseManager,
-				"StockkeeperWH":    statusStockkeeperWH,
+				"Admin":            Admin,
+				"WarehouseManager": WarehouseManager,
+				"StockkeeperWH":    StockkeeperWH,
 				//	"SuperIngenerQuality": SuperIngenerQuality,
 				//	"IngenerQuality":      IngenerQuality,
 				//	"Inspector":           Inspector,
-				"GroupP5": statusGroupP5,
+				"GroupP5": GroupP5,
 				//"GET":      get,
-				"LoggedIn": statusLoggedIn,
+				"LoggedIn": LoggedIn,
 				"User":     user.LastName,
 				"Username": user.FirstName,
 			}
