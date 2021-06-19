@@ -9,11 +9,13 @@
         </div>
     </li>
     <li><a href="/test">Test</a></li>-->
+    {{range .GetUser}}
 
-    {{ if .LoggedIn}}
-
+    {{ if .LoggedIn }}
+    <li><h1>active</h1></li>
     {{ if .GroupP1 }}
-    <li><a class="active" href="/operation/main">StarLine П1 {{.Navbar}}</a></li>
+    <li><a class="active" href="/operation/main">StarLine П1</a></li>
+
     {{ if .Admin}}
     <li class="dropdown">
         <a href="javascript:void(0)" class="dropbtn">Логистика</a>
@@ -177,7 +179,7 @@
     {{end}}
 
     {{ if .GroupP5}}
-    <li><a class="active" href="/operation/main">StarLine П5 {{.Navbar}}</a></li>
+    <li><a class="active" href="/operation/main">StarLine П5</a></li>
     {{ if .SuperIngenerQuality}}
     <li class="dropdown">
         <a href="javascript:void(0)" class="dropbtn">Отдел качества</a>
@@ -287,17 +289,20 @@
     {{end}}
     {{end}}
 
+
     <div style="margin-left:800px; margin-top: 10px;">
         Пользователь: {{.User}} {{.Username}}
     </div>
 
     <li class="out"><a href="/logout">Выход</a></li>
     {{ else}}
-    <li><a class="active" href="/operation/main">StarLine {{.Navbar}}</a></li>
+
+    <li><a class="active" href="/operation/main">StarLine</a></li>
     <li><a href="/login">Авторизация</a></li>
     <li style="margin-left:70%;"><a href="/users">Регистрация</a></li>
     <li><a href="/updatepass">Обновить пароль</a></li>
-    {{ end}}
+    {{end}}
+    {{end}}
 
     <div class="modal modal--l" id="modal-3">
         <div class="modal__dialog">
@@ -396,6 +401,7 @@
             </div>
         </div>
     </div>
+
 </ul>
 
 <!--<script src="/assets/js/modal.js" type="text/javascript"></script>-->

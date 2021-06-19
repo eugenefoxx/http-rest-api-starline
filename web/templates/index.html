@@ -8,8 +8,11 @@
         <div style="margin-top: 10px; padding-left: 40px;">
             <h4>Добро пожаловать на портал.</h4>
         </div>
-
-
+        {{range .GetUser}}
+        <div>
+            {{.User}} {{.Username}}
+        </div>
+        {{end}}
         <p style="margin-left: 410px; margin-top: 40px; font-size: 40px; color: red;">
             МИССИЯ
         </p>
