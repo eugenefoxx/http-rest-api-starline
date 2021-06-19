@@ -1,6 +1,3 @@
 apiserver
-internal/app/apiserver/api_server_management_warehouse_personal.go
-internal/app/apiserver/api_server_vendor_management.go
-internal/app/apiserver/server.go
 logs/all.log
 
