@@ -1,3 +1,4 @@
+{{ range .GetParam}}
 <form method="POST" action="/operation/updateuserwarehouse/{{.GET.ID}}">
     <div class="form-group">
         <label for="title">Email</label>
@@ -20,6 +21,7 @@
             <option disabled selected>Выберите позицию</option>
             <option type="text" id="role" value="старший кладовщик склада">старший кладовщик склада</option>
             <option type="text" id="role" value="кладовщик склада">кладовщик склада</option>
+
         </select>
     </div>
     <div class="form-group">
@@ -30,3 +32,4 @@
 
     <button type="submit" class="btn btn-primary--s">Подтвердить</button>
 </form>
+{{end}}

@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html>
+<html lang="ru">
 {{template "head.html" .}}
 
 <body>
@@ -7,6 +7,7 @@
         {{template "navbar.html" .}}
 
         <div class="container">
+            {{ range .GetParam}}
             {{ if eq .SuperIngenerQuality true}}
 
             <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for .." title="Type in a name">
@@ -626,7 +627,7 @@
                 </tbody>
             </table>
             {{ end}}
-
+            {{end}}
         </div>
 
         {{template "footer.html" .}}

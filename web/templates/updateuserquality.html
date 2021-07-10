@@ -1,4 +1,6 @@
+{{ range .GetParam}}
 <form method="POST" action="/operation/updateuserquality/{{.GET.ID}}">
+
     <div class="form-group">
         <label for="title">Email</label>
         <input type="text" style="margin-left:100px;" class="form-control" name="email" id="email"
@@ -30,4 +32,6 @@
     </div>
 
     <button type="submit" class="btn btn-primary--s">Подтвердить</button>
+
 </form>
+{{end}}

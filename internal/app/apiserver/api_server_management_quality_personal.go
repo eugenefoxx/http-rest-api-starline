@@ -18,29 +18,60 @@ func (s *Server) PageshowUsersQuality() http.HandlerFunc {
 		s.mu.Lock()
 		defer s.mu.Unlock()
 
-		Admin := false
-		SuperIngenerQuality := false
-		GroupP1 := false
-		GroupP5 := false
-		LoggedIn := false
-
 		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		if user.Groups == groupQuality {
-			GroupP1 = true
+
 			if user.Role == roleAdministrator {
-				Admin = true
-				LoggedIn = true
+				get, err := s.store.User().ListUsersQuality()
+				if err != nil {
+					s.error(w, r, http.StatusUnprocessableEntity, err)
+					return
+				}
+				params := []Param{
+					{
+						GroupP1:  true,
+						Admin:    true,
+						LoggedIn: true,
+						User:     user.LastName,
+						Username: user.FirstName,
+						GET:      get,
+					},
+				}
+
+				data := map[string]interface{}{
+					"TitleDOC": "Сотрудники качества",
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "showUsersQuality.html", data)
+
 			} else if user.Role == roleSuperIngenerQuality {
-				SuperIngenerQuality = true
-				LoggedIn = true
+				get, err := s.store.User().ListUsersQuality()
+				if err != nil {
+					s.error(w, r, http.StatusUnprocessableEntity, err)
+					return
+				}
+				params := []Param{
+					{
+						GroupP1:             true,
+						SuperIngenerQuality: true,
+						LoggedIn:            true,
+						User:                user.LastName,
+						Username:            user.FirstName,
+						GET:                 get,
+					},
+				}
+
+				data := map[string]interface{}{
+					"TitleDOC": "Сотрудники качества",
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "showUsersQuality.html", data)
+
 			}
 
-			get, err := s.store.User().ListUsersQuality()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
 			/*
 				getRoleQuality, err := s.store.RoleQuality().ListRoleQuality()
 				if err != nil {
@@ -48,54 +79,58 @@ func (s *Server) PageshowUsersQuality() http.HandlerFunc {
 					return
 				}
 			*/
-			data := map[string]interface{}{
-				"TitleDOC":            "Сотрудники качества",
-				"User":                user.LastName,
-				"Username":            user.FirstName,
-				"Admin":               Admin,
-				"SuperIngenerQuality": SuperIngenerQuality,
-				"GroupP1":             GroupP1,
-				"LoggedIn":            LoggedIn,
-				"GET":                 get,
-				//"GetRoleQuality":      getRoleQuality,
-			}
-			err = tpl.ExecuteTemplate(w, "showUsersQuality.html", data)
-			if err != nil {
-				http.Error(w, err.Error(), 400)
-				return
-			}
 		}
 
-		if user.Groups == "качество П5" {
-			GroupP5 = true
-			if user.Role == "Administrator" {
-				Admin = true
-				LoggedIn = true
-			} else if user.Role == "главный инженер по качеству" {
-				SuperIngenerQuality = true
-				LoggedIn = true
-			}
+		if user.Groups == groupQualityP5 {
 
-			get, err := s.store.User().ListUsersQualityP5()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
+			if user.Role == roleAdministrator {
+				get, err := s.store.User().ListUsersQualityP5()
+				if err != nil {
+					s.error(w, r, http.StatusUnprocessableEntity, err)
+					return
+				}
+				params := []Param{
+					{
+						GroupP5:  true,
+						Admin:    true,
+						LoggedIn: true,
+						User:     user.LastName,
+						Username: user.FirstName,
+						GET:      get,
+					},
+				}
 
-			data := map[string]interface{}{
-				"TitleDOC":            "Сотрудники качества",
-				"User":                user.LastName,
-				"Username":            user.FirstName,
-				"Admin":               Admin,
-				"SuperIngenerQuality": SuperIngenerQuality,
-				"GroupP5":             GroupP5,
-				"LoggedIn":            LoggedIn,
-				"GET":                 get,
-			}
-			err = tpl.ExecuteTemplate(w, "showUsersQuality.html", data)
-			if err != nil {
-				http.Error(w, err.Error(), 400)
-				return
+				data := map[string]interface{}{
+					"TitleDOC": "Сотрудники качества",
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "showUsersQuality.html", data)
+
+			} else if user.Role == roleSuperIngenerQuality {
+				get, err := s.store.User().ListUsersQualityP5()
+				if err != nil {
+					s.error(w, r, http.StatusUnprocessableEntity, err)
+					return
+				}
+				params := []Param{
+					{
+						GroupP5:             true,
+						SuperIngenerQuality: true,
+						LoggedIn:            true,
+						User:                user.LastName,
+						Username:            user.FirstName,
+						GET:                 get,
+					},
+				}
+
+				data := map[string]interface{}{
+					"TitleDOC": "Сотрудники качества",
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "showUsersQuality.html", data)
+
 			}
 		}
 	}
@@ -115,10 +150,6 @@ func (s *Server) CreateUserQuality() http.HandlerFunc {
 		s.mu.Lock()
 		defer s.mu.Unlock()
 
-		//	Admin := false
-		SuperIngenerQuality := false
-		//	LoggedIn := false
-
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
 			log.Println(err)
@@ -132,89 +163,60 @@ func (s *Server) CreateUserQuality() http.HandlerFunc {
 		fmt.Println("\njson  struct hdata", hdata)
 		s.logger.Infof("Loading hdata json: %v\n", hdata)
 
-		Groupp1 := "качество"
-		Groupp5 := "качество П5"
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		idd, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(idd.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		if user.Groups == "качество" {
-			if user.Role == "Administrator" {
+		if user.Groups == groupQuality {
+			if user.Role == roleAdministrator {
 				//	Admin = true
 				//	LoggedIn = true
-			} else if user.Role == "главный инженер по качеству" {
-				SuperIngenerQuality = true
-				//	LoggedIn = true
-				fmt.Println("SuperIngenerQuality pageupdateUserQuality - ", SuperIngenerQuality)
-			}
+			} else if user.Role == roleSuperIngenerQuality {
 
-			for _, v := range hdata {
-				fmt.Println(v.Email, v.FirstName, v.LastName, v.Password, v.Role, v.Tabel)
-				s.logger.Infof("P1 create quality employee: %v, %v, %v, %v, %v, %v\n", v.Email, v.FirstName, v.LastName, v.Password, v.Role, v.Tabel)
-				u := &model.User{
-					Email:     v.Email,
-					Password:  v.Password,
-					FirstName: v.FirstName,
-					LastName:  v.LastName,
-					Role:      v.Role,
-					Groups:    Groupp1,
-					Tabel:     v.Tabel,
+				for _, v := range hdata {
+					fmt.Println(v.Email, v.FirstName, v.LastName, v.Password, v.Role, v.Tabel)
+					s.logger.Infof("P1 create quality employee: %v, %v, %v, %v, %v, %v\n", v.Email, v.FirstName, v.LastName, v.Password, v.Role, v.Tabel)
+					u := &model.User{
+						Email:     v.Email,
+						Password:  v.Password,
+						FirstName: v.FirstName,
+						LastName:  v.LastName,
+						Role:      v.Role,
+						Groups:    groupQuality,
+						Tabel:     v.Tabel,
+					}
+
+					if err := s.store.User().CreateUserByManager(u); err != nil {
+						s.error(w, r, http.StatusUnprocessableEntity, err)
+						return
+					}
 				}
-
-				if err := s.store.User().CreateUserByManager(u); err != nil {
-					s.error(w, r, http.StatusUnprocessableEntity, err)
-					return
-				}
-
 			}
 		}
-		if user.Groups == "качество П5" {
-			if user.Role == "Administrator" {
+		if user.Groups == groupQualityP5 {
+			if user.Role == roleAdministrator {
 				//	Admin = true
 				//	LoggedIn = true
-			} else if user.Role == "главный инженер по качеству" {
-				SuperIngenerQuality = true
-				//	LoggedIn = true
-				fmt.Println("SuperIngenerQuality pageupdateUserQuality - ", SuperIngenerQuality)
-			}
+			} else if user.Role == roleSuperIngenerQuality {
+				for _, v := range hdata {
+					fmt.Println(v.Email, v.FirstName, v.LastName, v.Password, v.Role, v.Tabel)
+					s.logger.Infof("P5 create quality employee: %v, %v, %v, %v, %v, %v\n", v.Email, v.FirstName, v.LastName, v.Password, v.Role, v.Tabel)
 
-			for _, v := range hdata {
-				fmt.Println(v.Email, v.FirstName, v.LastName, v.Password, v.Role, v.Tabel)
-				s.logger.Infof("P5 create quality employee: %v, %v, %v, %v, %v, %v\n", v.Email, v.FirstName, v.LastName, v.Password, v.Role, v.Tabel)
+					u := &model.User{
+						Email:     v.Email,
+						Password:  v.Password,
+						FirstName: v.FirstName,
+						LastName:  v.LastName,
+						Role:      v.Role,
+						Groups:    groupQualityP5,
+						Tabel:     v.Tabel,
+					}
 
-				u := &model.User{
-					Email:     v.Email,
-					Password:  v.Password,
-					FirstName: v.FirstName,
-					LastName:  v.LastName,
-					Role:      v.Role,
-					Groups:    Groupp5,
-					Tabel:     v.Tabel,
+					if err := s.store.User().CreateUserByManager(u); err != nil {
+						s.error(w, r, http.StatusUnprocessableEntity, err)
+						return
+					}
 				}
-
-				if err := s.store.User().CreateUserByManager(u); err != nil {
-					s.error(w, r, http.StatusUnprocessableEntity, err)
-					return
-				}
-
 			}
 		}
-
 	}
 }
 
@@ -224,36 +226,7 @@ func (s *Server) PageupdateUserQuality() http.HandlerFunc {
 		s.mu.Lock()
 		defer s.mu.Unlock()
 
-		Admin := false
-		SuperIngenerQuality := false
-		LoggedIn := false
-
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		idd, ok := session.Values["user_id"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		user, err := s.store.User().Find(idd.(int))
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
-			return
-		}
-
-		if user.Role == "Administrator" {
-			Admin = true
-			LoggedIn = true
-		} else if user.Role == "главный инженер по качеству" {
-			SuperIngenerQuality = true
-			LoggedIn = true
-			fmt.Println("SuperIngenerQuality pageupdateUserQuality - ", SuperIngenerQuality)
-		}
+		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		vars := mux.Vars(r)
 		id, err := strconv.Atoi(vars["ID"])
@@ -269,17 +242,25 @@ func (s *Server) PageupdateUserQuality() http.HandlerFunc {
 			return
 		}
 
-		data := map[string]interface{}{
-			"GET":                 get,
-			"Admin":               Admin,
-			"SuperIngenerQuality": SuperIngenerQuality,
-			"LoggedIn":            LoggedIn,
-			"User":                user.LastName,
-			"Username":            user.FirstName,
-		}
+		if user.Role == roleAdministrator {
 
-		//	fmt.Println("Get.email" - get.id)
-		tpl.ExecuteTemplate(w, "updateuserquality.html", data)
+		} else if user.Role == roleSuperIngenerQuality {
+			params := []Param{
+				{
+					LoggedIn:            true,
+					SuperIngenerQuality: true,
+					GET:                 get,
+					User:                user.LastName,
+					Username:            user.FirstName,
+				},
+			}
+
+			data := map[string]interface{}{
+				"GetParam": params,
+			}
+
+			RenderTemplate(w, "updateuserquality.html", data)
+		}
 	}
 }
 
@@ -361,3 +342,4 @@ func (s *Server) DeleteUserQuality() http.HandlerFunc {
 		http.Redirect(w, r, "/operation/showusersquality", 303)
 	}
 }
+
