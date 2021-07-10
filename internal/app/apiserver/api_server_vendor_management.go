@@ -22,84 +22,86 @@ func (s *Server) PageinsertVendor() http.HandlerFunc {
 
 		//	var body, _ = helper.LoadFile("./web/templates/insertsapbyship6.html")
 		//	fmt.Fprintf(w, body)
-		//data := map[string]interface{}{
-		//	"user": "Я тут",
-		//}
-		/*err = tpl.ExecuteTemplate(w, "layout", nil)
-		if err != nil {
-			http.Error(w, err.Error(), 400)
-			return*/
-		//	}
-		//		if err = tpl.ExecuteTemplate(w, "layout", nil); err != nil {
-		//			s.error(w, r, http.StatusUnprocessableEntity, err)
-		//			return
-		//		}
-		Admin := false
-		SuperIngenerQuality := false
-		GroupP1 := false
-		GroupP5 := false
-		LoggedIn := false
 
 		user := r.Context().Value(ctxKeyUser).(*model.User)
-		//	GET := map[string]bool{
-		//		"admin": admin,
-		//		//	"stockkeeper":         stockkeeper,
-		//		roleSuperIngenerQuality: superIngenerQuality,
-		//	"stockkeeperWH":       stockkeeperWH,
-		//	"inspector":           inspector,
-		//	}
+
 		if user.Groups == groupQuality {
-			GroupP1 = true
+
 			if user.Role == roleAdministrator {
-				Admin = true
-				LoggedIn = true
+				params := []Param{
+					{
+						LoggedIn: true,
+						GroupP1:  true,
+						Admin:    true,
+						User:     user.LastName,
+						Username: user.LastName,
+					},
+				}
+
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "insertvendor.html", data)
+
 			} else if user.Role == roleSuperIngenerQuality {
-				SuperIngenerQuality = true
-				LoggedIn = true
-				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
+				params := []Param{
+					{
+						LoggedIn:            true,
+						GroupP1:             true,
+						SuperIngenerQuality: true,
+						User:                user.LastName,
+						Username:            user.LastName,
+					},
+				}
+
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "insertvendor.html", data)
 			}
-			data := map[string]interface{}{
-				"Admin":               Admin,
-				"SuperIngenerQuality": SuperIngenerQuality,
-				"GroupP1":             GroupP1,
-				//"GET":      GET,
-				"LoggedIn": LoggedIn,
-				"User":     user.LastName,
-				"Username": user.FirstName,
-			}
-			fmt.Println("Check -")
-			err := tpl.ExecuteTemplate(w, "insertvendor.html", data)
-			if err != nil {
-				http.Error(w, err.Error(), 400)
-				return
-			}
+
 		}
 
 		if user.Groups == groupQualityP5 {
-			GroupP5 = true
+
 			if user.Role == roleAdministrator {
-				Admin = true
-				LoggedIn = true
+				params := []Param{
+					{
+						LoggedIn: true,
+						GroupP5:  true,
+						Admin:    true,
+						User:     user.LastName,
+						Username: user.LastName,
+					},
+				}
+
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "insertvendor.html", data)
+
 			} else if user.Role == roleSuperIngenerQuality {
-				SuperIngenerQuality = true
-				LoggedIn = true
-				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
+				params := []Param{
+					{
+						LoggedIn:            true,
+						GroupP5:             true,
+						SuperIngenerQuality: true,
+						User:                user.LastName,
+						Username:            user.LastName,
+					},
+				}
+
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "insertvendor.html", data)
+
 			}
-			data := map[string]interface{}{
-				"Admin":               Admin,
-				"SuperIngenerQuality": SuperIngenerQuality,
-				"GroupP5":             GroupP5,
-				//"GET":      GET,
-				"LoggedIn": LoggedIn,
-				"User":     user.LastName,
-				"Username": user.FirstName,
-			}
-			fmt.Println("Check -")
-			err := tpl.ExecuteTemplate(w, "insertvendor.html", data)
-			if err != nil {
-				http.Error(w, err.Error(), 400)
-				return
-			}
+
 		}
 	}
 }
@@ -109,13 +111,7 @@ func (s *Server) InsertVendor() http.HandlerFunc {
 		CodeDebitor string `json:"code_debitor"`
 		NameDebitor string `json:"name_debitor"`
 	}
-	/*
-		type requestDB struct {
-			CodeDebitor string `db:"code_debitor"`
-			NameDebitor string `db:"name_debitor"`
-			SPPElement  string `db:"spp_element"`
-		}
-	*/
+
 	/*tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "insertvendor.html")
 	if err != nil {
 		panic(err)
@@ -126,9 +122,6 @@ func (s *Server) InsertVendor() http.HandlerFunc {
 		defer s.mu.Unlock()
 
 		fmt.Println("Check2 -")
-		Admin := false
-		SuperIngenerQuality := false
-		LoggedIn := false
 
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
@@ -145,23 +138,6 @@ func (s *Server) InsertVendor() http.HandlerFunc {
 
 		user := r.Context().Value(ctxKeyUser).(*model.User)
 
-		//	GET := map[string]bool{
-		//		"admin": admin,
-		//	"stockkeeper":         stockkeeper,
-		//		roleSuperIngenerQuality: superIngenerQuality,
-		//	"stockkeeperWH":       stockkeeperWH,
-		//	"inspector":           inspector,
-		//	}
-
-		if user.Role == roleAdministrator {
-			Admin = true
-			LoggedIn = true
-		} else if user.Role == roleSuperIngenerQuality {
-			SuperIngenerQuality = true
-			LoggedIn = true
-			fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
-		}
-
 		for _, v := range hdata {
 			fmt.Println(v.CodeDebitor, v.NameDebitor)
 			s.logger.Infof("Create vendor: %s, %s", v.CodeDebitor, v.NameDebitor)
@@ -169,29 +145,47 @@ func (s *Server) InsertVendor() http.HandlerFunc {
 				CodeDebitor: v.CodeDebitor,
 				NameDebitor: v.NameDebitor,
 			}
+			if user.Role == roleAdministrator {
+				params := []Param{
+					{
+						LoggedIn: true,
+						Admin:    true,
+						User:     user.LastName,
+						Username: user.FirstName,
+					},
+				}
+				if err := s.store.Vendor().InsertVendor(u); err != nil {
+					s.error(w, r, http.StatusUnprocessableEntity, err)
+					return
+				}
 
-			if err := s.store.Vendor().InsertVendor(u); err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "insertvendor.html", data)
+
+			} else if user.Role == roleSuperIngenerQuality {
+				params := []Param{
+					{
+						LoggedIn:            true,
+						SuperIngenerQuality: true,
+						User:                user.LastName,
+						Username:            user.FirstName,
+					},
+				}
+				if err := s.store.Vendor().InsertVendor(u); err != nil {
+					s.error(w, r, http.StatusUnprocessableEntity, err)
+					return
+				}
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "insertvendor.html", data)
+
 			}
 
-		}
-
-		data := map[string]interface{}{
-			"Admin":               Admin,
-			"SuperIngenerQuality": SuperIngenerQuality,
-			//"GET":      GET,
-			"LoggedIn": LoggedIn,
-			"User":     user.LastName,
-			"Username": user.FirstName,
-		}
-
-		//err = tpl.ExecuteTemplate(w, "layout", data)
-		//	err = tpl.ExecuteTemplate(w, "layout", v)
-		err = tpl.ExecuteTemplate(w, "insertvendor.html", data)
-		if err != nil {
-			http.Error(w, err.Error(), 400)
-			return
 		}
 
 	}
@@ -211,84 +205,78 @@ func (s *Server) PageVendor() http.HandlerFunc {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		//	var body, _ = helper.LoadFile("./web/templates/insertsapbyship6.html")
 		//	fmt.Fprintf(w, body)
-		//data := map[string]interface{}{
-		//	"user": "Я тут",
-		//}
-		Admin := false
-		SuperIngenerQuality := false
-		GroupP1 := false
-		GroupP5 := false
-		LoggedIn := false
 
 		user := r.Context().Value(ctxKeyUser).(*model.User)
+		get, err := s.store.Vendor().ListVendor()
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
 
 		if user.Groups == groupQuality {
-			GroupP1 = true
+
 			if user.Role == roleAdministrator {
-				Admin = true
-				LoggedIn = true
+				params := []Param{
+					{GroupP1: true, LoggedIn: true, Admin: true, User: user.LastName, Username: user.FirstName},
+				}
+				data := map[string]interface{}{
+					"GetParam": params,
+					"GET":      get,
+				}
+
+				RenderTemplate(w, "showvendor.html", data)
+
 			} else if user.Role == roleSuperIngenerQuality {
-				SuperIngenerQuality = true
-				LoggedIn = true
-				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
+				params := []Param{
+					{GroupP1: true, LoggedIn: true, SuperIngenerQuality: true, User: user.LastName, Username: user.FirstName},
+				}
+
+				data := map[string]interface{}{
+					"GetParam": params,
+					"GET":      get,
+				}
+
+				RenderTemplate(w, "showvendor.html", data)
+
 			}
 
-			get, err := s.store.Vendor().ListVendor()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			data := map[string]interface{}{
-				"Admin":               Admin,
-				"SuperIngenerQuality": SuperIngenerQuality,
-				"GroupP1":             GroupP1,
-				"GET":                 get,
-				"LoggedIn":            LoggedIn,
-				"User":                user.LastName,
-				"Username":            user.FirstName,
-			}
-
-			err = tpl.ExecuteTemplate(w, "showvendor.html", data)
-			if err != nil {
-				http.Error(w, err.Error(), 400)
-				return
-			}
 			// send all the vendors as response
 			//json.NewEncoder(w).Encode(get)
 			//fmt.Println("json.NewEncoder(w).Encode(get)")
 		}
 		if user.Groups == groupQualityP5 {
-			GroupP5 = true
+
 			if user.Role == roleAdministrator {
-				Admin = true
-				LoggedIn = true
+				params := []Param{
+					{GroupP5: true, LoggedIn: true, Admin: true, User: user.LastName, Username: user.FirstName},
+				}
+				data := map[string]interface{}{
+					"GetParam": params,
+					"GET":      get,
+				}
+
+				err = tpl.ExecuteTemplate(w, "showvendor.html", data)
+				if err != nil {
+					http.Error(w, err.Error(), 400)
+					return
+				}
+
 			} else if user.Role == roleSuperIngenerQuality {
-				SuperIngenerQuality = true
-				LoggedIn = true
-				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
-			}
+				params := []Param{
+					{GroupP5: true, LoggedIn: true, SuperIngenerQuality: true, User: user.LastName, Username: user.FirstName},
+				}
 
-			get, err := s.store.Vendor().ListVendor()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
+				data := map[string]interface{}{
+					"GetParam": params,
+					"GET":      get,
+				}
 
-			data := map[string]interface{}{
-				"Admin":               Admin,
-				"SuperIngenerQuality": SuperIngenerQuality,
-				"GroupP5":             GroupP5,
-				"GET":                 get,
-				"LoggedIn":            LoggedIn,
-				"User":                user.LastName,
-				"Username":            user.FirstName,
-			}
+				err = tpl.ExecuteTemplate(w, "showvendor.html", data)
+				if err != nil {
+					http.Error(w, err.Error(), 400)
+					return
+				}
 
-			err = tpl.ExecuteTemplate(w, "showvendor.html", data)
-			if err != nil {
-				http.Error(w, err.Error(), 400)
-				return
 			}
 			// send all the vendors as response
 			//json.NewEncoder(w).Encode(get)
@@ -307,20 +295,7 @@ func (s *Server) PageupdateVendor() http.HandlerFunc {
 		s.mu.Lock()
 		defer s.mu.Unlock()
 
-		Admin := false
-		SuperIngenerQuality := false
-		LoggedIn := false
-
 		user := r.Context().Value(ctxKeyUser).(*model.User)
-
-		if user.Role == roleAdministrator {
-			Admin = true
-			LoggedIn = true
-		} else if user.Role == roleSuperIngenerQuality {
-			SuperIngenerQuality = true
-			LoggedIn = true
-			fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
-		}
 
 		vars := mux.Vars(r)
 		id, err := strconv.Atoi(vars["ID"])
@@ -328,7 +303,6 @@ func (s *Server) PageupdateVendor() http.HandlerFunc {
 			log.Println(err)
 			s.logger.Errorf(err.Error())
 		}
-		//fmt.Println("ID - ?", id)
 
 		get, err := s.store.Vendor().EditVendor(id)
 		if err != nil {
@@ -336,18 +310,40 @@ func (s *Server) PageupdateVendor() http.HandlerFunc {
 			return
 		}
 
-		data := map[string]interface{}{
-			"Admin":               Admin,
-			"SuperIngenerQuality": SuperIngenerQuality,
-			"GET":                 get,
-			"LoggedIn":            LoggedIn,
-			"User":                user.LastName,
-			"Username":            user.FirstName,
-		}
-		err = tpl.ExecuteTemplate(w, "updatevendor.html", data)
-		if err != nil {
-			http.Error(w, err.Error(), 400)
-			return
+		if user.Role == roleAdministrator {
+			params := []Param{
+				{
+					LoggedIn: true,
+					Admin:    true,
+					User:     user.FirstName,
+					Username: user.LastName,
+				},
+			}
+
+			data := map[string]interface{}{
+				"GetParam": params,
+				"GET":      get,
+			}
+
+			RenderTemplate(w, "updatevendor.html", data)
+
+		} else if user.Role == roleSuperIngenerQuality {
+			params := []Param{
+				{
+					LoggedIn:            true,
+					SuperIngenerQuality: true,
+					User:                user.LastName,
+					Username:            user.FirstName,
+				},
+			}
+
+			data := map[string]interface{}{
+				"GetParam": params,
+				"GET":      get,
+			}
+
+			RenderTemplate(w, "updatevendor.html", data)
+
 		}
 	}
 }
@@ -437,11 +433,6 @@ func (s *Server) DeleteVendor() http.HandlerFunc {
 			return
 		}
 
-		/*	err = tpl.ExecuteTemplate(w, "layout", nil)
-			if err != nil {
-				http.Error(w, err.Error(), 400)
-				return
-			}*/
 		http.Redirect(w, r, "/operation/showvendor", 303)
 	}
 }

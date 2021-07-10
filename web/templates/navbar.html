@@ -1,18 +1,8 @@
-<ul class="nav">
-
-    <!--    <li class="dropdown">
-        <a href="javascript:void(0)" class="dropbtn">Dropdown</a>
-        <div class="dropdown-content">
-            <a href="/page2">Link 1</a>
-            <a href="/login">Link 2</a>
-            <a href="#">Link 3</a>
-        </div>
-    </li>
-    <li><a href="/test">Test</a></li>-->
-    {{range .GetUser}}
+<ul class="nav" >
+    {{range .GetParam}}
 
     {{ if .LoggedIn }}
-    <li><h1>active</h1></li>
+
     {{ if .GroupP1 }}
     <li><a class="active" href="/operation/main">StarLine П1</a></li>
 

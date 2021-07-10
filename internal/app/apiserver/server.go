@@ -87,19 +87,30 @@ type Server struct {
 	logger logging.Logger
 }
 
-type User struct {
-	Admin               bool
-	Stockkeeper         bool
-	WarehouseManager    bool
-	SuperIngenerQuality bool
-	IngenerQuality      bool
-	StockkeeperWH       bool
-	Inspector           bool
-	GroupP1             bool
-	GroupP5             bool
-	LoggedIn            bool
-	User string
-	Username string
+type Param struct {
+	Admin                 bool
+	Stockkeeper           bool
+	WarehouseManager      bool
+	SuperIngenerQuality   bool
+	IngenerQuality        bool
+	StockkeeperWH         bool
+	Inspector             bool
+	GroupP1               bool
+	GroupP5               bool
+	LoggedIn              bool
+	User                  string
+	Username              string
+	Quality               bool
+	Pobedit               string
+	GET                   interface{}
+	ListVendor            interface{}
+	CountTotal            int
+	HoldInspection        int
+	NotVerifyComponents   int
+	CountVerifyComponents int
+	GetStatic             interface{}
+	HoldCountDebitor      interface{}
+	NotVerifyDebitor      interface{}
 }
 
 func init() {
@@ -217,8 +228,8 @@ func (s *Server) configureRouter() {
 	operation.HandleFunc("/uploadfile", s.UploadFileToInspection()).Methods("POST")
 	//operation.HandleFunc("/uploadfile", s.PageUploadFileToInspectionJSON()).Methods("GET")
 	//operation.HandleFunc("/uploadfile", s.UploadFileToInspectionJSON()).Methods("POST", "OPTIONS")
-	operation.HandleFunc("/historyinspection", s.PagehistoryInspection()).Methods("GET")
-	operation.HandleFunc("/historyinspection", s.HistoryInspection()).Methods("POST")
+	//operation.HandleFunc("/historyinspection", s.PagehistoryInspection()).Methods("GET")
+	operation.HandleFunc("/historyinspection", s.HistoryInspection()).Methods("POST", "GET")
 	operation.HandleFunc("/historyinspectionp5", s.PagehistoryInspectionP5()).Methods("GET")
 	operation.HandleFunc("/historyinspectionp5", s.HistoryInspectionP5()).Methods("POST")
 
@@ -397,11 +408,18 @@ func (s *Server) pagehandleUsersCreate() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		//	var body, _ = helper.LoadFile("./web/templates/register.html")
 		//	fmt.Fprintf(w, body)
-		err := tpl.ExecuteTemplate(w, "register.html", nil)
-		if err != nil {
-			http.Error(w, err.Error(), 400)
-			return
+		params := []Param{
+			{
+				LoggedIn: false,
+			},
 		}
+
+		data := map[string]interface{}{
+			"GetParam": params,
+		}
+
+		RenderTemplate(w, "register.html", data)
+
 		///	err = tpl.ExecuteTemplate(w, "layout", nil)
 		///	if err != nil {
 		///		http.Error(w, err.Error(), 400)
@@ -473,12 +491,23 @@ func (s *Server) handleUsersCreate() http.HandlerFunc {
 		//	}
 		fmt.Println("регистрируюсь")
 		s.logger.Info("End registration")
+		params := []Param{
+			{
+				LoggedIn: false,
+			},
+		}
+
+		data := map[string]interface{}{
+			"GetParam": params,
+		}
+
 		//tpl.ExecuteTemplate(w, "login.html", nil)
-		err := tpl.ExecuteTemplate(w, "register.html", nil)
+		RenderTemplate(w, "register.html", data)
+		/*err := tpl.ExecuteTemplate(w, "register.html", nil)
 		if err != nil {
 			http.Error(w, err.Error(), 400)
 			return
-		}
+		}*/
 		///	err = tpl.ExecuteTemplate(w, "layout", nil)
 		///	if err != nil {
 		///		http.Error(w, err.Error(), 400)
@@ -497,11 +526,18 @@ func (s *Server) pageupdateSessionsCreate() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		//	var body, _ = helper.LoadFile("./web/templates/login.html") // "./web/templates/login.html"
 		//	fmt.Fprintf(w, body)
-		err := tpl.ExecuteTemplate(w, "updateUser.html", nil)
-		if err != nil {
-			http.Error(w, err.Error(), 400)
-			return
+		params := []Param{
+			{
+				LoggedIn: false,
+			},
 		}
+
+		data := map[string]interface{}{
+			"GetParam": params,
+		}
+
+		RenderTemplate(w, "updateUser.html", data)
+
 		///	err = tpl.ExecuteTemplate(w, "layout", nil)
 		///	if err != nil {
 		///		http.Error(w, err.Error(), 400)
@@ -567,11 +603,11 @@ func (s *Server) updateSessionsCreate() http.HandlerFunc {
 		fmt.Println("обновляю пароль")
 		s.logger.Info("Update password")
 		http.Redirect(w, r, "/", 303)
-		err = tpl.ExecuteTemplate(w, "updateUser.html", nil)
-		if err != nil {
-			http.Error(w, err.Error(), 400)
-			return
-		}
+		/*	err = tpl.ExecuteTemplate(w, "updateUser.html", nil)
+			if err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}*/
 	}
 }
 
@@ -583,20 +619,20 @@ func (s *Server) upload() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		//tpl.ExecuteTemplate(w, "base", nil)
 		//fmt.Print("Test Upload")
-		users := []User{
+		params := []Param{
 			{LoggedIn: false},
 		}
 		/*
-		p := &Page{
-			TitleDOC: "Главная",
-			//	Navbar:   "ContentNav",
-			//LoggedIn: false,
-			"GetUser": users,
-		}
+			p := &Page{
+				TitleDOC: "Главная",
+				//	Navbar:   "ContentNav",
+				//LoggedIn: false,
+				"GetParam": params,
+			}
 		*/
 		data := map[string]interface{}{
 			"TitleDOC": "Главная",
-			"GetUser": users,
+			"GetParam": params,
 		}
 		err := tpl.ExecuteTemplate(w, "index0.html", data)
 		if err != nil {
@@ -679,549 +715,259 @@ func (s *Server) home() http.HandlerFunc {
 		if u.Groups == groupWarehouse || u.Groups == groupQuality || u.Groups == groupEmpty || u.Groups == groupAdministrator {
 			//GroupP1 = true
 			if u.Role == roleAdministrator {
-				users := []User{
-					{GroupP1: true},
-					{LoggedIn: true},
-					{Admin: true},
+
+				params := []Param{
+					{
+						GroupP1:  true,
+						LoggedIn: true,
+						Admin:    true,
+						User:     u.LastName,
+						Username: u.FirstName,
+					},
 				}
-				//Admin = true
-				//LoggedIn = true
+
 				data := map[string]interface{}{
 					"TitleDOC": "Главная",
-					"User":     u.LastName,
-					"Username": u.FirstName,
-					"GetUser":  users,
-					//"GET":                 GET,
-					/*"Admin":               Admin,
-					"Stockkeeper":         Stockkeeper,
-					"SuperIngenerQuality": SuperIngenerQuality,
-					"WarehouseManager":    WarehouseManager,
-					"IngenerQuality":      IngenerQuality,
-					"StockkeeperWH":       StockkeeperWH,
-					"Inspector":           Inspector,
-					"GroupP1":             GroupP1,
-					"LoggedIn":            LoggedIn,*/
-
+					"GetParam": params,
 				}
 
-				err := tpl.ExecuteTemplate(w, "index.html", data) // index3.html
-				if err != nil {
-					http.Error(w, err.Error(), 400)
-					return
-				}
-
+				RenderTemplate(w, "index.html", data)
 			} else if u.Role == roleStockkeeper {
-				users := []User{
-					{GroupP1: true},
-					{LoggedIn: true},
-					{Stockkeeper: true},
+				params := []Param{
+					{
+						GroupP1:     true,
+						LoggedIn:    true,
+						Stockkeeper: true,
+						User:        u.LastName,
+						Username:    u.FirstName,
+					},
 				}
 				//Stockkeeper = true
 				//LoggedIn = true
 				data := map[string]interface{}{
 					"TitleDOC": "Главная",
-					"User":     u.LastName,
-					"Username": u.FirstName,
-					"GetUser":  users,
-					//"GET":                 GET,
-					/*"Admin":               Admin,
-					"Stockkeeper":         Stockkeeper,
-					"SuperIngenerQuality": SuperIngenerQuality,
-					"WarehouseManager":    WarehouseManager,
-					"IngenerQuality":      IngenerQuality,
-					"StockkeeperWH":       StockkeeperWH,
-					"Inspector":           Inspector,
-					"GroupP1":             GroupP1,
-					"LoggedIn":            LoggedIn,*/
-
+					"GetParam": params,
 				}
 
-				err := tpl.ExecuteTemplate(w, "index.html", data) // index3.html
-				if err != nil {
-					http.Error(w, err.Error(), 400)
-					return
-				}
+				RenderTemplate(w, "index.html", data)
 
 			} else if u.Role == roleSuperIngenerQuality {
-				users := []User{
-					{GroupP1: true},
-					{LoggedIn: true},
-					{SuperIngenerQuality: true},
-					{User: u.LastName},
-					{Username: u.FirstName},
+				params := []Param{
+					{
+						GroupP1:             true,
+						LoggedIn:            true,
+						SuperIngenerQuality: true,
+						User:                u.LastName,
+						Username:            u.FirstName,
+					},
 				}
 				data := map[string]interface{}{
 					"TitleDOC": "Главная",
-					//"User":     u.LastName,
-					//"Username": u.FirstName,
-					"GetUser":  users,
-					//"GET":                 GET,
-					/*"Admin":               Admin,
-					"Stockkeeper":         Stockkeeper,
-					"SuperIngenerQuality": SuperIngenerQuality,
-					"WarehouseManager":    WarehouseManager,
-					"IngenerQuality":      IngenerQuality,
-					"StockkeeperWH":       StockkeeperWH,
-					"Inspector":           Inspector,
-					"GroupP1":             GroupP1,
-					"LoggedIn":            LoggedIn,*/
-
+					"GetParam": params,
 				}
 
-				err := tpl.ExecuteTemplate(w, "index.html", data) // index3.html
-				if err != nil {
-					http.Error(w, err.Error(), 400)
-					return
-				}
-				//	SuperIngenerQuality = true
-				//	LoggedIn = true
+				RenderTemplate(w, "index.html", data)
 
 			} else if u.Role == roleIngenerQuality {
-				users := []User{
-					{GroupP1: true},
-					{LoggedIn: true},
-					{IngenerQuality: true},
+
+				params := []Param{
+					{
+						GroupP1:        true,
+						LoggedIn:       true,
+						IngenerQuality: true,
+						User:           u.LastName,
+						Username:       u.FirstName,
+					},
 				}
+
 				data := map[string]interface{}{
 					"TitleDOC": "Главная",
-					"User":     u.LastName,
-					"Username": u.FirstName,
-					"GetUser":  users,
-					//"GET":                 GET,
-					/*"Admin":               Admin,
-					"Stockkeeper":         Stockkeeper,
-					"SuperIngenerQuality": SuperIngenerQuality,
-					"WarehouseManager":    WarehouseManager,
-					"IngenerQuality":      IngenerQuality,
-					"StockkeeperWH":       StockkeeperWH,
-					"Inspector":           Inspector,
-					"GroupP1":             GroupP1,
-					"LoggedIn":            LoggedIn,*/
-
+					"GetParam": params,
 				}
 
-				err := tpl.ExecuteTemplate(w, "index.html", data) // index3.html
-				if err != nil {
-					http.Error(w, err.Error(), 400)
-					return
-				}
-				//	IngenerQuality = true
-				//	LoggedIn = true
+				RenderTemplate(w, "index.html", data)
 
 			} else if u.Role == roleStockkeeperWH {
-				users := []User{
-					{GroupP1: true},
-					{LoggedIn: true},
-					{StockkeeperWH: true},
+				params := []Param{
+					{
+						GroupP1:       true,
+						LoggedIn:      true,
+						StockkeeperWH: true,
+						User:          u.LastName,
+						Username:      u.FirstName,
+					},
 				}
 				data := map[string]interface{}{
 					"TitleDOC": "Главная",
-					"User":     u.LastName,
-					"Username": u.FirstName,
-					"GetUser":  users,
-					//"GET":                 GET,
-					/*"Admin":               Admin,
-					"Stockkeeper":         Stockkeeper,
-					"SuperIngenerQuality": SuperIngenerQuality,
-					"WarehouseManager":    WarehouseManager,
-					"IngenerQuality":      IngenerQuality,
-					"StockkeeperWH":       StockkeeperWH,
-					"Inspector":           Inspector,
-					"GroupP1":             GroupP1,
-					"LoggedIn":            LoggedIn,*/
-
+					"GetParam": params,
 				}
 
-				err := tpl.ExecuteTemplate(w, "index.html", data) // index3.html
-				if err != nil {
-					http.Error(w, err.Error(), 400)
-					return
-				}
-				//	StockkeeperWH = true
-				//	LoggedIn = true
+				RenderTemplate(w, "index.html", data)
 
 			} else if u.Role == roleInspector {
-				users := []User{
-					{GroupP1: true},
-					{LoggedIn: true},
-					{Inspector: true},
+				params := []Param{
+					{
+						GroupP1:   true,
+						LoggedIn:  true,
+						Inspector: true,
+						User:      u.LastName,
+						Username:  u.FirstName,
+					},
 				}
 				data := map[string]interface{}{
 					"TitleDOC": "Главная",
-					"User":     u.LastName,
-					"Username": u.FirstName,
-					"GetUser":  users,
-					//"GET":                 GET,
-					/*"Admin":               Admin,
-					"Stockkeeper":         Stockkeeper,
-					"SuperIngenerQuality": SuperIngenerQuality,
-					"WarehouseManager":    WarehouseManager,
-					"IngenerQuality":      IngenerQuality,
-					"StockkeeperWH":       StockkeeperWH,
-					"Inspector":           Inspector,
-					"GroupP1":             GroupP1,
-					"LoggedIn":            LoggedIn,*/
-
+					"GetParam": params,
 				}
 
-				err := tpl.ExecuteTemplate(w, "index.html", data) // index3.html
-				if err != nil {
-					http.Error(w, err.Error(), 400)
-					return
-				}
-				//	Inspector = true
-				//	LoggedIn = true
+				RenderTemplate(w, "index.html", data)
 
 			} else if u.Role == roleWarehouseManager {
-				users := []User{
-					{GroupP1: true},
-					{LoggedIn: true},
-					{WarehouseManager: true},
+				params := []Param{
+					{
+						GroupP1:          true,
+						LoggedIn:         true,
+						WarehouseManager: true,
+						User:             u.LastName,
+						Username:         u.FirstName,
+					},
 				}
 				data := map[string]interface{}{
 					"TitleDOC": "Главная",
-					"User":     u.LastName,
-					"Username": u.FirstName,
-					"GetUser":  users,
-					//"GET":                 GET,
-					/*"Admin":               Admin,
-					"Stockkeeper":         Stockkeeper,
-					"SuperIngenerQuality": SuperIngenerQuality,
-					"WarehouseManager":    WarehouseManager,
-					"IngenerQuality":      IngenerQuality,
-					"StockkeeperWH":       StockkeeperWH,
-					"Inspector":           Inspector,
-					"GroupP1":             GroupP1,
-					"LoggedIn":            LoggedIn,*/
-
+					"GetParam": params,
 				}
 
-				err := tpl.ExecuteTemplate(w, "index.html", data) // index3.html
-				if err != nil {
-					http.Error(w, err.Error(), 400)
-					return
-				}
-				//	WarehouseManager = true
-				//	LoggedIn = true
+				RenderTemplate(w, "index.html", data)
 
 			}
+		}
 
-			//	data := &Page{
-			//		LoggedIn:            LoggedIn,
-			//		Admin:               Admin,
-			//		Stockkeeper:         Stockkeeper,
-			//		SuperIngenerQuality: SuperIngenerQuality,
-			//		StockkeeperWH:       StockkeeperWH,
-			//		Inspector:           Inspector,
-			//		User:                u.LastName,
-			//		ID:                  u.FirstName,
-			//	}
-			//	GET := map[string]bool{
-			//		"Admin":               Admin,
-			//		"Stockkeeper":         Stockkeeper,
-			//		roleSuperIngenerQuality: SuperIngenerQuality,
-			//		"StockkeeperWH":       StockkeeperWH,
-			//		"Inspector":           Inspector,
-			//	}
-
-			/*data := map[string]interface{}{
-				"TitleDOC": "Главная",
-				"User":     u.LastName,
-				"Username": u.FirstName,
-
-				//"GET":                 GET,
-				/*"Admin":               Admin,
-				"Stockkeeper":         Stockkeeper,
-				"SuperIngenerQuality": SuperIngenerQuality,
-				"WarehouseManager":    WarehouseManager,
-				"IngenerQuality":      IngenerQuality,
-				"StockkeeperWH":       StockkeeperWH,
-				"Inspector":           Inspector,
-				"GroupP1":             GroupP1,
-				"LoggedIn":            LoggedIn,*/
-
-			}
-
-			//tpl.ExecuteTemplate(w, "home.html", data)
-			//tpl.ExecuteTemplate(w, "layout", data)
-			//tpl.ExecuteTemplate(w, "base", data)
-		/*	err := tpl.ExecuteTemplate(w, "index.html", data) // index3.html
-			if err != nil {
-				http.Error(w, err.Error(), 400)
-				return
-			}*/
-		//}
+		//tpl.ExecuteTemplate(w, "home.html", data)
+		//tpl.ExecuteTemplate(w, "layout", data)
+		//tpl.ExecuteTemplate(w, "base", data)
 
 		if u.Groups == groupWarehouseP5 || u.Groups == groupQualityP5 {
-			//GroupP5 = true
+
 			if u.Role == roleAdministrator {
-				users := []User{
-					{GroupP5: true},
-					{LoggedIn: true},
-					{Admin: true},
-			}
+				params := []Param{
+					{
+						GroupP5:  true,
+						LoggedIn: true,
+						Admin:    true,
+						User:     u.LastName,
+						Username: u.FirstName,
+					},
+				}
 				data := map[string]interface{}{
 					"TitleDOC": "Главная",
-					"User":     u.LastName,
-					"Username": u.FirstName,
-					"GetUser":  users,
-					//"GET":                 GET,
-					/*"Admin":               Admin,
-					"Stockkeeper":         Stockkeeper,
-					"SuperIngenerQuality": SuperIngenerQuality,
-					"WarehouseManager":    WarehouseManager,
-					"IngenerQuality":      IngenerQuality,
-					"StockkeeperWH":       StockkeeperWH,
-					"Inspector":           Inspector,
-					"GroupP1":             GroupP1,
-					"LoggedIn":            LoggedIn,*/
-
+					"GetParam": params,
 				}
 
-				err := tpl.ExecuteTemplate(w, "index.html", data) // index3.html
-				if err != nil {
-					http.Error(w, err.Error(), 400)
-					return
-				}
-
-				//Admin = true
-				//LoggedIn = true
+				RenderTemplate(w, "index.html", data)
 
 			} else if u.Role == roleStockkeeper {
-				users := []User{
-					{GroupP5: true},
-					{LoggedIn: true},
-					{Stockkeeper: true},
+				params := []Param{
+					{
+						GroupP5:     true,
+						LoggedIn:    true,
+						Stockkeeper: true,
+						User:        u.LastName,
+						Username:    u.FirstName,
+					},
 				}
 				data := map[string]interface{}{
 					"TitleDOC": "Главная",
-					"User":     u.LastName,
-					"Username": u.FirstName,
-					"GetUser":  users,
-					//"GET":                 GET,
-					/*"Admin":               Admin,
-					"Stockkeeper":         Stockkeeper,
-					"SuperIngenerQuality": SuperIngenerQuality,
-					"WarehouseManager":    WarehouseManager,
-					"IngenerQuality":      IngenerQuality,
-					"StockkeeperWH":       StockkeeperWH,
-					"Inspector":           Inspector,
-					"GroupP1":             GroupP1,
-					"LoggedIn":            LoggedIn,*/
-
+					"GetParam": params,
 				}
 
-				err := tpl.ExecuteTemplate(w, "index.html", data) // index3.html
-				if err != nil {
-					http.Error(w, err.Error(), 400)
-					return
-				}
-			//	Stockkeeper = true
-			//	LoggedIn = true
+				RenderTemplate(w, "index.html", data)
 
 			} else if u.Role == roleSuperIngenerQuality {
-				users := []User{
-					{GroupP5: true},
-					{LoggedIn: true},
-					{SuperIngenerQuality: true},
+				params := []Param{
+					{
+						GroupP5:             true,
+						LoggedIn:            true,
+						SuperIngenerQuality: true,
+						User:                u.LastName,
+						Username:            u.FirstName,
+					},
 				}
 				data := map[string]interface{}{
 					"TitleDOC": "Главная",
-					"User":     u.LastName,
-					"Username": u.FirstName,
-					"GetUser":  users,
-					//"GET":                 GET,
-					/*"Admin":               Admin,
-					"Stockkeeper":         Stockkeeper,
-					"SuperIngenerQuality": SuperIngenerQuality,
-					"WarehouseManager":    WarehouseManager,
-					"IngenerQuality":      IngenerQuality,
-					"StockkeeperWH":       StockkeeperWH,
-					"Inspector":           Inspector,
-					"GroupP1":             GroupP1,
-					"LoggedIn":            LoggedIn,*/
-
+					"GetParam": params,
 				}
 
-				err := tpl.ExecuteTemplate(w, "index.html", data) // index3.html
-				if err != nil {
-					http.Error(w, err.Error(), 400)
-					return
-				}
-			//	SuperIngenerQuality = true
-			//	LoggedIn = true
+				RenderTemplate(w, "index.html", data)
 
 			} else if u.Role == roleIngenerQuality {
-				users := []User{
-					{GroupP5: true},
-					{LoggedIn: true},
-					{IngenerQuality: true},
+				params := []Param{
+					{
+						GroupP5:        true,
+						LoggedIn:       true,
+						IngenerQuality: true,
+						User:           u.LastName,
+						Username:       u.FirstName,
+					},
 				}
 				data := map[string]interface{}{
 					"TitleDOC": "Главная",
-					"User":     u.LastName,
-					"Username": u.FirstName,
-					"GetUser":  users,
-					//"GET":                 GET,
-					/*"Admin":               Admin,
-					"Stockkeeper":         Stockkeeper,
-					"SuperIngenerQuality": SuperIngenerQuality,
-					"WarehouseManager":    WarehouseManager,
-					"IngenerQuality":      IngenerQuality,
-					"StockkeeperWH":       StockkeeperWH,
-					"Inspector":           Inspector,
-					"GroupP1":             GroupP1,
-					"LoggedIn":            LoggedIn,*/
-
+					"GetParam": params,
 				}
 
-				err := tpl.ExecuteTemplate(w, "index.html", data) // index3.html
-				if err != nil {
-					http.Error(w, err.Error(), 400)
-					return
-				}
-				//IngenerQuality = true
-				//LoggedIn = true
+				RenderTemplate(w, "index.html", data)
 
 			} else if u.Role == roleStockkeeperWH {
-				users := []User{
-					{GroupP5: true},
-					{LoggedIn: true},
-					{StockkeeperWH: true},
+				params := []Param{
+					{
+						GroupP5:       true,
+						LoggedIn:      true,
+						StockkeeperWH: true,
+						User:          u.LastName,
+						Username:      u.FirstName,
+					},
 				}
 				data := map[string]interface{}{
 					"TitleDOC": "Главная",
-					"User":     u.LastName,
-					"Username": u.FirstName,
-					"GetUser":  users,
-					//"GET":                 GET,
-					/*"Admin":               Admin,
-					"Stockkeeper":         Stockkeeper,
-					"SuperIngenerQuality": SuperIngenerQuality,
-					"WarehouseManager":    WarehouseManager,
-					"IngenerQuality":      IngenerQuality,
-					"StockkeeperWH":       StockkeeperWH,
-					"Inspector":           Inspector,
-					"GroupP1":             GroupP1,
-					"LoggedIn":            LoggedIn,*/
-
+					"GetParam": params,
 				}
 
-				err := tpl.ExecuteTemplate(w, "index.html", data) // index3.html
-				if err != nil {
-					http.Error(w, err.Error(), 400)
-					return
-				}
-			//	StockkeeperWH = true
-			//	LoggedIn = true
+				RenderTemplate(w, "index.html", data)
 
 			} else if u.Role == roleInspector {
-				users := []User{
-					{GroupP5: true},
-					{LoggedIn: true},
-					{LoggedIn: true},
+				params := []Param{
+					{
+						GroupP5:   true,
+						LoggedIn:  true,
+						Inspector: true,
+						User:      u.LastName,
+						Username:  u.FirstName,
+					},
 				}
 				data := map[string]interface{}{
 					"TitleDOC": "Главная",
-					"User":     u.LastName,
-					"Username": u.FirstName,
-					"GetUser":  users,
-					//"GET":                 GET,
-					/*"Admin":               Admin,
-					"Stockkeeper":         Stockkeeper,
-					"SuperIngenerQuality": SuperIngenerQuality,
-					"WarehouseManager":    WarehouseManager,
-					"IngenerQuality":      IngenerQuality,
-					"StockkeeperWH":       StockkeeperWH,
-					"Inspector":           Inspector,
-					"GroupP1":             GroupP1,
-					"LoggedIn":            LoggedIn,*/
-
+					"GetParam": params,
 				}
 
-				err := tpl.ExecuteTemplate(w, "index.html", data) // index3.html
-				if err != nil {
-					http.Error(w, err.Error(), 400)
-					return
-				}
-			//	Inspector = true
-			//	LoggedIn = true
+				RenderTemplate(w, "index.html", data)
 
 			} else if u.Role == roleWarehouseManager {
-				users := []User{
-					{GroupP5: true},
-					{LoggedIn: true},
-					{WarehouseManager: true},
+				params := []Param{
+					{
+						GroupP5:          true,
+						LoggedIn:         true,
+						WarehouseManager: true,
+						User:             u.LastName,
+						Username:         u.FirstName,
+					},
 				}
 				data := map[string]interface{}{
 					"TitleDOC": "Главная",
-					"User":     u.LastName,
-					"Username": u.FirstName,
-					"GetUser":  users,
-					//"GET":                 GET,
-					/*"Admin":               Admin,
-					"Stockkeeper":         Stockkeeper,
-					"SuperIngenerQuality": SuperIngenerQuality,
-					"WarehouseManager":    WarehouseManager,
-					"IngenerQuality":      IngenerQuality,
-					"StockkeeperWH":       StockkeeperWH,
-					"Inspector":           Inspector,
-					"GroupP1":             GroupP1,
-					"LoggedIn":            LoggedIn,*/
-
+					"GetParam": params,
 				}
 
-				err := tpl.ExecuteTemplate(w, "index.html", data) // index3.html
-				if err != nil {
-					http.Error(w, err.Error(), 400)
-					return
-				}
-			//	WarehouseManager = true
-			//	LoggedIn = true
+				RenderTemplate(w, "index.html", data)
+
 			}
 
-			//	data := &Page{
-			//		LoggedIn:            LoggedIn,
-			//		Admin:               Admin,
-			//		Stockkeeper:         Stockkeeper,
-			//		SuperIngenerQuality: SuperIngenerQuality,
-			//		StockkeeperWH:       StockkeeperWH,
-			//		Inspector:           Inspector,
-			//		User:                u.LastName,
-			//		ID:                  u.FirstName,
-			//	}
-			//	GET := map[string]bool{
-			//		"Admin":               Admin,
-			//		"Stockkeeper":         Stockkeeper,
-			//		roleSuperIngenerQuality: SuperIngenerQuality,
-			//		"StockkeeperWH":       StockkeeperWH,
-			//		"Inspector":           Inspector,
-			//	}
-/*
-			data := map[string]interface{}{
-				"TitleDOC": "Главная",
-				"User":     u.LastName,
-				"Username": u.FirstName,
-				//"GET":                 GET,
-				"Admin":               Admin,
-				"Stockkeeper":         Stockkeeper,
-				"SuperIngenerQuality": SuperIngenerQuality,
-				"WarehouseManager":    WarehouseManager,
-				"IngenerQuality":      IngenerQuality,
-				"StockkeeperWH":       StockkeeperWH,
-				"Inspector":           Inspector,
-				"GroupP5":             GroupP5,
-				"LoggedIn":            LoggedIn,
-			}
-*/
-			//tpl.ExecuteTemplate(w, "home.html", data)
-			//tpl.ExecuteTemplate(w, "layout", data)
-			//tpl.ExecuteTemplate(w, "base", data)
-			/*err := tpl.ExecuteTemplate(w, "index.html", data) // index3.html
-			if err != nil {
-				http.Error(w, err.Error(), 400)
-				return
-			}*/
 		}
 	}
 }
@@ -1307,14 +1053,14 @@ func (s *Server) pagehandleSessionsCreate() http.HandlerFunc {
 			//	Navbar:   "ContentNav",
 		}
 		*/
+		params := []Param{
+			{LoggedIn: false},
+		}
 		p := map[string]interface{}{
 			"TitleDOC": "Login",
+			"GetParam": params,
 		}
-		err := tpl.ExecuteTemplate(w, "login.html", p)
-		if err != nil {
-			http.Error(w, err.Error(), 400)
-			return
-		}
+		RenderTemplate(w, "login.html", p)
 	}
 }
 
@@ -1403,461 +1149,302 @@ func (s *Server) handleSessionsCreate() http.HandlerFunc {
 		fmt.Println("handleSessionsCreate()", u.Email, u.Role)
 
 		if u.Groups == groupWarehouse || u.Groups == groupQuality || u.Groups == "" || u.Groups == groupAdministrator {
-			//GroupP1 = true
+
 			if u.Role == roleAdministrator {
-				users := []User{
-					{GroupP1: true},
-					{LoggedIn: true},
-					{Admin: true},
-					{User: u.LastName},
-					{Username: u.FirstName},
+				params := []Param{
+					{
+						GroupP1:  true,
+						LoggedIn: true,
+						Admin:    true,
+						User:     u.LastName,
+						Username: u.FirstName,
+					},
 				}
 				data := map[string]interface{}{
-					//"User":     u.LastName,
-					//"Username": u.FirstName,
-					//		"GET":  GET,
-					"GetUser":  users,
+					"GetParam": params,
 				}
+
+				RenderTemplate(w, "index.html", data)
 				//	tpl.ExecuteTemplate(w, "base", data) //  "index.html"
-				err := tpl.ExecuteTemplate(w, "index.html", data)
-				//err = tpl.ExecuteTemplate(w, "base", data)
-				if err != nil {
-					http.Error(w, err.Error(), 400)
-					return
-				}
+
 				s.respond(w, r, http.StatusOK, nil)
-				//Admin = true
-				//LoggedIn = true
 
 			} else if u.Role == roleStockkeeper {
-				users := []User{
-					{GroupP1: true},
-					{LoggedIn: true},
-					{Stockkeeper: true},
+				params := []Param{
+					{
+						GroupP1:     true,
+						LoggedIn:    true,
+						Stockkeeper: true,
+						User:        u.LastName,
+						Username:    u.FirstName,
+					},
 				}
 				data := map[string]interface{}{
-					"User":     u.LastName,
-					"Username": u.FirstName,
-					//		"GET":  GET,
-					"GetUser":  users,
+					"GetParam": params,
 				}
+
+				RenderTemplate(w, "index.html", data)
 				//	tpl.ExecuteTemplate(w, "base", data) //  "index.html"
-				err := tpl.ExecuteTemplate(w, "index.html", data)
-				//err = tpl.ExecuteTemplate(w, "base", data)
-				if err != nil {
-					http.Error(w, err.Error(), 400)
-					return
-				}
+
 				s.respond(w, r, http.StatusOK, nil)
-				//Stockkeeper = true
-				//LoggedIn = true
 
 			} else if u.Role == roleSuperIngenerQuality {
-				users := []User{
-					{GroupP1: true},
-					{LoggedIn: true},
-					{SuperIngenerQuality: true},
-					{User: u.LastName},
-					{Username: u.FirstName},
+				params := []Param{
+					{
+						GroupP1:             true,
+						LoggedIn:            true,
+						SuperIngenerQuality: true,
+						User:                u.LastName,
+						Username:            u.FirstName,
+					},
 				}
 				data := map[string]interface{}{
-				//	"User":     u.LastName,
-				//	"Username": u.FirstName,
-					//		"GET":  GET,
-					"GetUser":  users,
+					"GetParam": params,
 				}
 				//	tpl.ExecuteTemplate(w, "base", data) //  "index.html"
-				err := tpl.ExecuteTemplate(w, "index.html", data)
+				RenderTemplate(w, "index.html", data)
+
 				//err = tpl.ExecuteTemplate(w, "base", data)
-				if err != nil {
-					http.Error(w, err.Error(), 400)
-					return
-				}
 				//http.Redirect(w, r, "/", http.StatusFound)
 				s.respond(w, r, http.StatusOK, nil)
-			//	SuperIngenerQuality = true
-			//	LoggedIn = true
+
 			} else if u.Role == roleIngenerQuality {
-				users := []User{
-					{GroupP1: true},
-					{LoggedIn: true},
-					{IngenerQuality: true},
+				params := []Param{
+					{
+						GroupP1:        true,
+						LoggedIn:       true,
+						IngenerQuality: true,
+						User:           u.LastName,
+						Username:       u.FirstName,
+					},
 				}
 				data := map[string]interface{}{
-					"User":     u.LastName,
-					"Username": u.FirstName,
-					//		"GET":  GET,
-					"GetUser":  users,
+					"GetParam": params,
 				}
+
+				RenderTemplate(w, "index.html", data)
 				//	tpl.ExecuteTemplate(w, "base", data) //  "index.html"
-				err := tpl.ExecuteTemplate(w, "index.html", data)
-				//err = tpl.ExecuteTemplate(w, "base", data)
-				if err != nil {
-					http.Error(w, err.Error(), 400)
-					return
-				}
+
 				s.respond(w, r, http.StatusOK, nil)
-			//	IngenerQuality = true
-			//	LoggedIn = true
+
 			} else if u.Role == roleStockkeeperWH {
-				users := []User{
-					{GroupP1: true},
-					{LoggedIn: true},
-					{StockkeeperWH: true},
+				params := []Param{
+					{
+						GroupP1:       true,
+						LoggedIn:      true,
+						StockkeeperWH: true,
+						User:          u.LastName,
+						Username:      u.FirstName,
+					},
 				}
 				data := map[string]interface{}{
-					"User":     u.LastName,
-					"Username": u.FirstName,
-					//		"GET":  GET,
-					"GetUser":  users,
+					"GetParam": params,
 				}
+
+				RenderTemplate(w, "index.html", data)
 				//	tpl.ExecuteTemplate(w, "base", data) //  "index.html"
-				err := tpl.ExecuteTemplate(w, "index.html", data)
+
 				//err = tpl.ExecuteTemplate(w, "base", data)
-				if err != nil {
-					http.Error(w, err.Error(), 400)
-					return
-				}
+
 				s.respond(w, r, http.StatusOK, nil)
-			//	StockkeeperWH = true
-			//	LoggedIn = true
 
 			} else if u.Role == roleInspector {
-				users := []User{
-					{GroupP1: true},
-					{LoggedIn: true},
-					{Inspector: true},
+				params := []Param{
+					{
+						GroupP1:   true,
+						LoggedIn:  true,
+						Inspector: true,
+						User:      u.LastName,
+						Username:  u.FirstName,
+					},
 				}
 				data := map[string]interface{}{
-					"User":     u.LastName,
-					"Username": u.FirstName,
-					//		"GET":  GET,
-					"GetUser":  users,
+					"GetParam": params,
 				}
+
+				RenderTemplate(w, "index.html", data)
 				//	tpl.ExecuteTemplate(w, "base", data) //  "index.html"
-				err := tpl.ExecuteTemplate(w, "index.html", data)
+
 				//err = tpl.ExecuteTemplate(w, "base", data)
-				if err != nil {
-					http.Error(w, err.Error(), 400)
-					return
-				}
+
 				s.respond(w, r, http.StatusOK, nil)
-			//	Inspector = true
-			//	LoggedIn = true
 
 			} else if u.Role == roleWarehouseManager {
-				users := []User{
-					{GroupP1: true},
-					{LoggedIn: true},
-					{WarehouseManager: true},
+				params := []Param{
+					{
+						GroupP1:          true,
+						LoggedIn:         true,
+						WarehouseManager: true,
+						User:             u.LastName,
+						Username:         u.FirstName,
+					},
 				}
 				data := map[string]interface{}{
-					"User":     u.LastName,
-					"Username": u.FirstName,
-					//		"GET":  GET,
-					"GetUser":  users,
+					"GetParam": params,
 				}
 				//	tpl.ExecuteTemplate(w, "base", data) //  "index.html"
-				err := tpl.ExecuteTemplate(w, "index.html", data)
+
+				RenderTemplate(w, "index.html", data)
+
 				//err = tpl.ExecuteTemplate(w, "base", data)
-				if err != nil {
-					http.Error(w, err.Error(), 400)
-					return
-				}
-				s.respond(w, r, http.StatusOK, nil)
-			//	WarehouseManager = true
-			//	LoggedIn = true
-			}
 
-			//	GET := map[string]bool{
-			//		"admin":               admin,
-			//		"stockkeeper":         stockkeeper,
-			//		roleSuperIngenerQuality: superIngenerQuality,
-			//		"stockkeeperWH":       stockkeeperWH,
-			//		"inspector":           inspector,
-			//	}
-			/*
-				session, err := s.sessionStore.Get(r, sessionName)
-				if err != nil {
-					s.error(w, r, http.StatusInternalServerError, err)
-					return
-				}
-
-				session.Values["user_id"] = u.ID
-				if err := s.sessionStore.Save(r, w, session); err != nil {
-					s.error(w, r, http.StatusInternalServerError, err)
-					return
-				}
 				s.respond(w, r, http.StatusOK, nil)
 
-				fmt.Println("handleSessionsCreate()", u.Email, u.Role)
-			*/
-			//	iLog.Println("залогинился пользователь", u.Email)
-			//	s.redirectMain()
-			//	s.pageredirectMain()
-			//	_, ok := session.Values["user_id"]
-			//	if !ok {
-
-			//	return
-			//	}
-			//	data := &Page{
-			//		Admin:               Admin,
-			//		Stockkeeper:         Stockkeeper,
-			//		SuperIngenerQuality: SuperIngenerQuality,
-			//		StockkeeperWH:       StockkeeperWH,
-			//		Inspector:           Inspector,
-			//		User:                u.LastName,
-			//		ID:                  u.FirstName,
-			//		LoggedIn:            LoggedIn,
-			//	}
-		/*	data := map[string]interface{}{
-				"User":     u.LastName,
-				"Username": u.FirstName,
-				//		"GET":  GET,
-				"Admin":               Admin,
-				"Stockkeeper":         Stockkeeper,
-				"SuperIngenerQuality": SuperIngenerQuality,
-				"WarehouseManager":    WarehouseManager,
-				"IngenerQuality":      IngenerQuality,
-				"StockkeeperWH":       StockkeeperWH,
-				"Inspector":           Inspector,
-				"GroupP1":             GroupP1,
-				"LoggedIn":            LoggedIn,
-			}*/
-			//	tpl.ExecuteTemplate(w, "base", data) //  "index.html"
-			/*err := tpl.ExecuteTemplate(w, "index.html", data)
-			//err = tpl.ExecuteTemplate(w, "base", data)
-			if err != nil {
-				http.Error(w, err.Error(), 400)
-				return
 			}
-			s.respond(w, r, http.StatusOK, nil)*/
-			//http.Redirect(w, r, "/operation/main", http.StatusFound)
+
 		}
 
 		if u.Groups == groupWarehouseP5 || u.Groups == groupQualityP5 {
-			//GroupP5 = true
+
 			if u.Role == roleAdministrator {
-				users := []User{
-					{GroupP5: true},
-					{LoggedIn: true},
-					{Admin: true},
+				params := []Param{
+					{
+						GroupP5:  true,
+						LoggedIn: true,
+						Admin:    true,
+						User:     u.LastName,
+						Username: u.FirstName,
+					},
 				}
 				data := map[string]interface{}{
-					"User":     u.LastName,
-					"Username": u.FirstName,
-					//		"GET":  GET,
-					"GetUser":  users,
+					"GetParam": params,
 				}
+
+				RenderTemplate(w, "index.html", data)
 				//	tpl.ExecuteTemplate(w, "base", data) //  "index.html"
-				err := tpl.ExecuteTemplate(w, "index.html", data)
+
 				//err = tpl.ExecuteTemplate(w, "base", data)
-				if err != nil {
-					http.Error(w, err.Error(), 400)
-					return
-				}
+
 				s.respond(w, r, http.StatusOK, nil)
-				//Admin = true
-				//LoggedIn = true
+
 			} else if u.Role == roleStockkeeper {
-				users := []User{
-					{GroupP5: true},
-					{LoggedIn: true},
-					{Stockkeeper: true},
+				params := []Param{
+					{
+						GroupP5:     true,
+						LoggedIn:    true,
+						Stockkeeper: true,
+						User:        u.LastName,
+						Username:    u.FirstName,
+					},
 				}
 				data := map[string]interface{}{
-					"User":     u.LastName,
-					"Username": u.FirstName,
-					//		"GET":  GET,
-					"GetUser":  users,
+					"GetParam": params,
 				}
+
+				RenderTemplate(w, "index.html", data)
 				//	tpl.ExecuteTemplate(w, "base", data) //  "index.html"
-				err := tpl.ExecuteTemplate(w, "index.html", data)
+
 				//err = tpl.ExecuteTemplate(w, "base", data)
-				if err != nil {
-					http.Error(w, err.Error(), 400)
-					return
-				}
+
 				s.respond(w, r, http.StatusOK, nil)
-			//	Stockkeeper = true
-			//	LoggedIn = true
+
 			} else if u.Role == roleSuperIngenerQuality {
-				users := []User{
-					{GroupP5: true},
-					{LoggedIn: true},
-					{SuperIngenerQuality: true},
+				params := []Param{
+					{
+						LoggedIn:            true,
+						GroupP5:             true,
+						SuperIngenerQuality: true,
+						User:                u.LastName,
+						Username:            u.FirstName,
+					},
 				}
 				data := map[string]interface{}{
-					"User":     u.LastName,
-					"Username": u.FirstName,
-					//		"GET":  GET,
-					"GetUser":  users,
+					"GetParam": params,
 				}
+
+				RenderTemplate(w, "index.html", data)
 				//	tpl.ExecuteTemplate(w, "base", data) //  "index.html"
-				err := tpl.ExecuteTemplate(w, "index.html", data)
+
 				//err = tpl.ExecuteTemplate(w, "base", data)
-				if err != nil {
-					http.Error(w, err.Error(), 400)
-					return
-				}
+
 				s.respond(w, r, http.StatusOK, nil)
-			//	SuperIngenerQuality = true
-			//	LoggedIn = true
+
 			} else if u.Role == roleIngenerQuality {
-				users := []User{
-					{GroupP5: true},
-					{LoggedIn: true},
-					{IngenerQuality: true},
+				params := []Param{
+					{
+						GroupP5:        true,
+						LoggedIn:       true,
+						IngenerQuality: true,
+						User:           u.LastName,
+						Username:       u.FirstName,
+					},
 				}
 				data := map[string]interface{}{
-					"User":     u.LastName,
-					"Username": u.FirstName,
-					//		"GET":  GET,
-					"GetUser":  users,
+					"GetParam": params,
 				}
+
+				RenderTemplate(w, "index.html", data)
 				//	tpl.ExecuteTemplate(w, "base", data) //  "index.html"
-				err := tpl.ExecuteTemplate(w, "index.html", data)
+
 				//err = tpl.ExecuteTemplate(w, "base", data)
-				if err != nil {
-					http.Error(w, err.Error(), 400)
-					return
-				}
+
 				s.respond(w, r, http.StatusOK, nil)
-			//	IngenerQuality = true
-			//	LoggedIn = true
+
 			} else if u.Role == roleStockkeeperWH {
-				users := []User{
-					{GroupP5: true},
-					{LoggedIn: true},
-					{StockkeeperWH: true},
+				params := []Param{
+					{
+						GroupP5:       true,
+						LoggedIn:      true,
+						StockkeeperWH: true,
+						User:          u.LastName,
+						Username:      u.FirstName,
+					},
 				}
 				data := map[string]interface{}{
-					"User":     u.LastName,
-					"Username": u.FirstName,
-					//		"GET":  GET,
-					"GetUser":  users,
+					"GetParam": params,
 				}
+
+				RenderTemplate(w, "index.html", data)
 				//	tpl.ExecuteTemplate(w, "base", data) //  "index.html"
-				err := tpl.ExecuteTemplate(w, "index.html", data)
+
 				//err = tpl.ExecuteTemplate(w, "base", data)
-				if err != nil {
-					http.Error(w, err.Error(), 400)
-					return
-				}
+
 				s.respond(w, r, http.StatusOK, nil)
-			//	StockkeeperWH = true
-			//	LoggedIn = true
+
 			} else if u.Role == roleInspector {
-				users := []User{
-					{GroupP5: true},
-					{LoggedIn: true},
-					{Inspector: true},
+				params := []Param{
+					{
+						GroupP5:   true,
+						LoggedIn:  true,
+						Inspector: true,
+						User:      u.LastName,
+						Username:  u.FirstName,
+					},
 				}
 				data := map[string]interface{}{
-					"User":     u.LastName,
-					"Username": u.FirstName,
-					//		"GET":  GET,
-					"GetUser":  users,
+					"GetParam": params,
 				}
+
+				RenderTemplate(w, "index.html", data)
 				//	tpl.ExecuteTemplate(w, "base", data) //  "index.html"
-				err := tpl.ExecuteTemplate(w, "index.html", data)
+
 				//err = tpl.ExecuteTemplate(w, "base", data)
-				if err != nil {
-					http.Error(w, err.Error(), 400)
-					return
-				}
+
 				s.respond(w, r, http.StatusOK, nil)
-			//	Inspector = true
-			//	LoggedIn = true
+
 			} else if u.Role == roleWarehouseManager {
-				users := []User{
-					{GroupP5: true},
-					{LoggedIn: true},
-					{WarehouseManager: true},
+				params := []Param{
+					{
+						GroupP5:          true,
+						LoggedIn:         true,
+						WarehouseManager: true,
+						User:             u.LastName,
+						Username:         u.FirstName,
+					},
 				}
 				data := map[string]interface{}{
-					"User":     u.LastName,
-					"Username": u.FirstName,
-					//		"GET":  GET,
-					"GetUser":  users,
+					"GetParam": params,
 				}
+
+				RenderTemplate(w, "index.html", data)
 				//	tpl.ExecuteTemplate(w, "base", data) //  "index.html"
-				err := tpl.ExecuteTemplate(w, "index.html", data)
+
 				//err = tpl.ExecuteTemplate(w, "base", data)
-				if err != nil {
-					http.Error(w, err.Error(), 400)
-					return
-				}
-				s.respond(w, r, http.StatusOK, nil)
-			//	WarehouseManager = true
-			//	LoggedIn = true
-			}
 
-			//	GET := map[string]bool{
-			//		"admin":               admin,
-			//		"stockkeeper":         stockkeeper,
-			//		roleSuperIngenerQuality: superIngenerQuality,
-			//		"stockkeeperWH":       stockkeeperWH,
-			//		"inspector":           inspector,
-			//	}
-			/*
-				session, err := s.sessionStore.Get(r, sessionName)
-				if err != nil {
-					s.error(w, r, http.StatusInternalServerError, err)
-					return
-				}
-
-				session.Values["user_id"] = u.ID
-				if err := s.sessionStore.Save(r, w, session); err != nil {
-					s.error(w, r, http.StatusInternalServerError, err)
-					return
-				}
 				s.respond(w, r, http.StatusOK, nil)
 
-				fmt.Println("handleSessionsCreate()", u.Email, u.Role)
-
-			*/
-			//	iLog.Println("залогинился пользователь", u.Email)
-			//	s.redirectMain()
-			//	s.pageredirectMain()
-			//	_, ok := session.Values["user_id"]
-			//	if !ok {
-
-			//	return
-			//	}
-			//	data := &Page{
-			//		Admin:               Admin,
-			//		Stockkeeper:         Stockkeeper,
-			//		SuperIngenerQuality: SuperIngenerQuality,
-			//		StockkeeperWH:       StockkeeperWH,
-			//		Inspector:           Inspector,
-			//		User:                u.LastName,
-			//		ID:                  u.FirstName,
-			//		LoggedIn:            LoggedIn,
-			//	}
-		/*	data := map[string]interface{}{
-				"User":     u.LastName,
-				"Username": u.FirstName,
-				//		"GET":  GET,
-				"Admin":               Admin,
-				"Stockkeeper":         Stockkeeper,
-				"SuperIngenerQuality": SuperIngenerQuality,
-				"WarehouseManager":    WarehouseManager,
-				"IngenerQuality":      IngenerQuality,
-				"StockkeeperWH":       StockkeeperWH,
-				"Inspector":           Inspector,
-				"GroupP5":             GroupP5,
-				"LoggedIn":            LoggedIn,
-			}*/
-			//	tpl.ExecuteTemplate(w, "base", data) //  "index.html"
-			/*err := tpl.ExecuteTemplate(w, "index.html", data)
-			//err = tpl.ExecuteTemplate(w, "base", data)
-			if err != nil {
-				http.Error(w, err.Error(), 400)
-				return
 			}
-			s.respond(w, r, http.StatusOK, nil)*/
-			//http.Redirect(w, r, "/", http.StatusFound)
+
 		}
 	}
 }
@@ -1915,9 +1502,6 @@ func (s *Server) pageshipmentBySAP() http.HandlerFunc {
 		//		"user": "Я тут",
 		//	}
 
-		Admin := false
-		Stockkeeper := false
-		LoggedIn := false
 		session, err := s.sessionStore.Get(r, sessionName)
 		if err != nil {
 			s.error(w, r, http.StatusInternalServerError, err)
@@ -1936,28 +1520,41 @@ func (s *Server) pageshipmentBySAP() http.HandlerFunc {
 			return
 		}
 		if u.Role == roleAdministrator {
-			Admin = true
-			LoggedIn = true
+			params := []Param{
+				{
+					Admin:    true,
+					LoggedIn: true,
+					User:     u.LastName,
+					Username: u.FirstName,
+				},
+			}
+
+			data := map[string]interface{}{
+				"TitleDOC": "Отгрузка изделий",
+				"GetParam": params,
+			}
+
+			RenderTemplate(w, "insertsapbyship6.html", data)
 
 		} else if u.Role == roleStockkeeper {
-			Stockkeeper = true
-			LoggedIn = true
+			params := []Param{
+				{
+					Stockkeeper: true,
+					LoggedIn:    true,
+					User:        u.LastName,
+					Username:    u.FirstName,
+				},
+			}
+
+			data := map[string]interface{}{
+				"TitleDOC": "Отгрузка изделий",
+				"GetParam": params,
+			}
+
+			RenderTemplate(w, "insertsapbyship6.html", data)
 
 		}
-		data := map[string]interface{}{
-			"TitleDOC":    "Отгрузка изделий",
-			"User":        u.LastName,
-			"Username":    u.FirstName,
-			"Admin":       Admin,
-			"Stockkeeper": Stockkeeper,
-			"LoggedIn":    LoggedIn,
-		}
-		err = tpl.ExecuteTemplate(w, "insertsapbyship6.html", data)
-		///	err = tpl.ExecuteTemplate(w, "layout", data)
-		if err != nil {
-			http.Error(w, err.Error(), 400)
-			return
-		}
+
 		//		if err = tpl.ExecuteTemplate(w, "layout", nil); err != nil {
 		//			s.error(w, r, http.StatusUnprocessableEntity, err)
 		//			return
@@ -2202,9 +1799,7 @@ func (s *Server) pageshowShipmentBySAPBySearchStatic() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		//	var body, _ = helper.LoadFile("./web/templates/showdatebysapbysearchstatic.html")
 		//	fmt.Fprintf(w, body)
-		Admin := false
-		Stockkeeper := false
-		LoggedIn := false
+
 		session, err := s.sessionStore.Get(r, sessionName)
 		if err != nil {
 			s.error(w, r, http.StatusInternalServerError, err)
@@ -2223,27 +1818,40 @@ func (s *Server) pageshowShipmentBySAPBySearchStatic() http.HandlerFunc {
 			return
 		}
 		if u.Role == roleAdministrator {
-			Admin = true
-			LoggedIn = true
+			params := []Param{
+				{
+					Admin:    true,
+					LoggedIn: true,
+					User:     u.LastName,
+					Username: u.FirstName,
+				},
+			}
 
+			data := map[string]interface{}{
+				"TitleDOC": "Отгрузка изделий",
+				"GetParam": params,
+			}
+
+			RenderTemplate(w, "showdatebysapbysearchstatic.html", data)
 		} else if u.Role == roleStockkeeper {
-			Stockkeeper = true
-			LoggedIn = true
+			params := []Param{
+				{
+					Stockkeeper: true,
+					LoggedIn:    true,
+					User:        u.LastName,
+					Username:    u.FirstName,
+				},
+			}
+
+			data := map[string]interface{}{
+				"TitleDOC": "Отгрузка изделий",
+				"GetParam": params,
+			}
+
+			RenderTemplate(w, "showdatebysapbysearchstatic.html", data)
 
 		}
-		data := map[string]interface{}{
-			"TitleDOC":    "Отгрузка изделий",
-			"User":        u.LastName,
-			"Username":    u.FirstName,
-			"Admin":       Admin,
-			"Stockkeeper": Stockkeeper,
-			"LoggedIn":    LoggedIn,
-		}
-		err = tpl.ExecuteTemplate(w, "showdatebysapbysearchstatic.html", data)
-		if err != nil {
-			http.Error(w, err.Error(), 400)
-			return
-		}
+
 		///	if err = tpl.ExecuteTemplate(w, "layout", data); err != nil {
 		///		s.error(w, r, http.StatusUnprocessableEntity, err)
 		///		return
@@ -2260,9 +1868,6 @@ func (s *Server) showShipmentBySAPBySearchStatic() http.HandlerFunc {
 		Material int    `json:"material"`
 	}
 
-	Admin := false
-	Stockkeeper := false
-	LoggedIn := false
 	//tpl, err := template.New("").Delims("<<", ">>").ParseFiles("web/templates/showdatebysap2.html")
 	///tpl, err := template.New("").Delims("<<", ">>").ParseFiles(s.html + "showdatebysap2.html")
 	///if err != nil {
@@ -2289,15 +1894,6 @@ func (s *Server) showShipmentBySAPBySearchStatic() http.HandlerFunc {
 		if err != nil {
 			s.error(w, r, http.StatusUnauthorized, errNotAuthenticated)
 			return
-		}
-		if u.Role == roleAdministrator {
-			Admin = true
-			LoggedIn = true
-
-		} else if u.Role == roleStockkeeper {
-			Stockkeeper = true
-			LoggedIn = true
-
 		}
 
 		search := &searchBy{}
@@ -2328,28 +1924,54 @@ func (s *Server) showShipmentBySAPBySearchStatic() http.HandlerFunc {
 			}
 		*/
 
-		get, err := s.store.Shipmentbysap().ShowDateBySearch(search.LastName, search.Date1, search.Date2, search.Material)
-		if err != nil {
-			s.error(w, r, http.StatusUnprocessableEntity, err)
-			return
+		if u.Role == roleAdministrator {
+			params := []Param{
+				{
+					Admin:    true,
+					LoggedIn: true,
+					User:     u.LastName,
+					Username: u.FirstName,
+				},
+			}
+
+			get, err := s.store.Shipmentbysap().ShowDateBySearch(search.LastName, search.Date1, search.Date2, search.Material)
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			data := map[string]interface{}{
+				"TitleDOC": "Отгрузка изделий",
+				"GET":      get,
+				"GetParam": params,
+			}
+
+			RenderTemplate(w, "showdatebysap2.html", data)
+		} else if u.Role == roleStockkeeper {
+			params := []Param{
+				{
+					Stockkeeper: true,
+					LoggedIn:    true,
+					User:        u.LastName,
+					Username:    u.FirstName,
+				},
+			}
+
+			get, err := s.store.Shipmentbysap().ShowDateBySearch(search.LastName, search.Date1, search.Date2, search.Material)
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			data := map[string]interface{}{
+				"TitleDOC": "Отгрузка изделий",
+				"GET":      get,
+				"GetParam": params,
+			}
+
+			RenderTemplate(w, "showdatebysap2.html", data)
 		}
 
-		data := map[string]interface{}{
-			"TitleDOC":    "Отгрузка изделий",
-			"User":        u.LastName,
-			"Username":    u.FirstName,
-			"Admin":       Admin,
-			"Stockkeeper": Stockkeeper,
-			"LoggedIn":    LoggedIn,
-			"GET":         get,
-		}
-
-		//	err = tpl.ExecuteTemplate(w, "showdatebysap2.html", get)
-		err = tpl.ExecuteTemplate(w, "showdatebysap2.html", data)
-		if err != nil {
-			http.Error(w, err.Error(), 400)
-			return
-		}
 	}
 }
 
@@ -2363,9 +1985,7 @@ func (s *Server) pageidReturn() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		//	var body, _ = helper.LoadFile("./web/templates/insertidreturn2.html")
 		//	fmt.Fprintf(w, body)
-		Admin := false
-		Stockkeeper := false
-		LoggedIn := false
+
 		session, err := s.sessionStore.Get(r, sessionName)
 		if err != nil {
 			s.error(w, r, http.StatusInternalServerError, err)
@@ -2384,27 +2004,41 @@ func (s *Server) pageidReturn() http.HandlerFunc {
 			return
 		}
 		if u.Role == roleAdministrator {
-			Admin = true
-			LoggedIn = true
+			params := []Param{
+				{
+					Admin:    true,
+					LoggedIn: true,
+					User:     u.LastName,
+					Username: u.FirstName,
+				},
+			}
+
+			data := map[string]interface{}{
+				"TitleDOC": "Проверка катушек",
+				"GetParam": params,
+			}
+
+			RenderTemplate(w, "insertidreturn2.html", data)
 
 		} else if u.Role == roleStockkeeper {
-			Stockkeeper = true
-			LoggedIn = true
+			params := []Param{
+				{
+					Stockkeeper: true,
+					LoggedIn:    true,
+					User:        u.LastName,
+					Username:    u.FirstName,
+				},
+			}
+
+			data := map[string]interface{}{
+				"TitleDOC": "Проверка катушек",
+				"GetParam": params,
+			}
+
+			RenderTemplate(w, "insertidreturn2.html", data)
 
 		}
-		data := map[string]interface{}{
-			"TitleDOC":    "Проверка катушек",
-			"User":        u.LastName,
-			"Username":    u.FirstName,
-			"Admin":       Admin,
-			"Stockkeeper": Stockkeeper,
-			"LoggedIn":    LoggedIn,
-		}
-		err = tpl.ExecuteTemplate(w, "insertidreturn2.html", data)
-		if err != nil {
-			http.Error(w, err.Error(), 400)
-			return
-		}
+
 		///	err = tpl.ExecuteTemplate(w, "layout", nil)
 		///	if err != nil {
 		///		http.Error(w, err.Error(), 400)
@@ -2529,13 +2163,10 @@ func (s *Server) idReturn() http.HandlerFunc {
 		//	data := map[string]interface{}{
 		//		"fuck": "OK",
 		//	}
-		err = tpl.ExecuteTemplate(w, "insertidreturn2.html", nil)
+		RenderTemplate(w, "insertidreturn2.html", nil)
+
 		///	err = tpl.ExecuteTemplate(w, "layout", nil)
 		//	tpl.ExecuteTemplate(w, "layout", data)
-		if err != nil {
-			http.Error(w, err.Error(), 400)
-			return
-		}
 
 	}
 }
@@ -2654,19 +2285,7 @@ func (s *Server) showUsersQuality() http.HandlerFunc {
 		s.mu.Lock()
 		defer s.mu.Unlock()
 
-		Admin := false
-		SuperIngenerQuality := false
-		LoggedIn := false
-
 		user := r.Context().Value(ctxKeyUser).(*model.User)
-
-		if user.Role == roleAdministrator {
-			Admin = true
-			LoggedIn = true
-		} else if user.Role == roleSuperIngenerQuality {
-			SuperIngenerQuality = true
-			LoggedIn = true
-		}
 
 		get, err := s.store.User().ListUsersQuality()
 		if err != nil {
@@ -2674,20 +2293,43 @@ func (s *Server) showUsersQuality() http.HandlerFunc {
 			return
 		}
 
-		data := map[string]interface{}{
-			"TitleDOC":            "Сотрудники качества",
-			"User":                user.LastName,
-			"Username":            user.FirstName,
-			"Admin":               Admin,
-			"SuperIngenerQuality": SuperIngenerQuality,
-			"LoggedIn":            LoggedIn,
-			"GET":                 get,
+		if user.Role == roleAdministrator {
+			params := []Param{
+				{
+					Admin:    true,
+					LoggedIn: true,
+					User:     user.LastName,
+					Username: user.FirstName,
+				},
+			}
+
+			data := map[string]interface{}{
+				"TitleDOC": "Сотрудники качества",
+				"GET":      get,
+				"GetParam": params,
+			}
+
+			RenderTemplate(w, "showUsersQuality.html", data)
+		} else if user.Role == roleSuperIngenerQuality {
+			params := []Param{
+				{
+					SuperIngenerQuality: true,
+					LoggedIn:            true,
+					User:                user.LastName,
+					Username:            user.FirstName,
+				},
+			}
+
+			data := map[string]interface{}{
+				"TitleDOC": "Сотрудники качества",
+				"GET":      get,
+				"GetParam": params,
+			}
+
+			RenderTemplate(w, "showUsersQuality.html", data)
+
 		}
-		err = tpl.ExecuteTemplate(w, "showUsersQuality.html", data)
-		if err != nil {
-			http.Error(w, err.Error(), 400)
-			return
-		}
+
 	}
 }
 
@@ -2709,6 +2351,7 @@ func (s *Server) respond(w http.ResponseWriter, r *http.Request, code int, data 
 
 func (s *Server) Pagination(r *http.Request, limit int) (int, int) {
 	keys := r.URL.Query()
+	fmt.Printf("query args = %#v\n", keys)
 	if keys.Get("page") == "" {
 		return 1, 0
 	}
@@ -2729,5 +2372,13 @@ func RenderJSON(w http.ResponseWriter, val interface{}, statusCode int) {
 	if err != nil {
 		log.Println(err)
 		ErrorLogger.Printf(err.Error())
+	}
+}
+
+func RenderTemplate(w http.ResponseWriter, name string, data interface{}) {
+	err := tpl.ExecuteTemplate(w, name, data)
+	if err != nil {
+		http.Error(w, err.Error(), 400)
+		return
 	}
 }

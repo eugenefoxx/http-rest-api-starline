@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html>
+<html lang="ru">
 <!--<meta http-equiv="refresh" content="3" />-->
 {{template "head.html" .}}
 
@@ -7,7 +7,8 @@
     <div class="content">
         {{template "navbar.html" .}}
         <div class="container">
-            {{ if eq .SuperIngenerQuality2 true}}
+            {{ range .GetParam}}
+            {{ if eq .SuperIngenerQuality true}}
             <div class="wrap2">
                 <div class="columninspection1">
                     <ul>
@@ -1169,7 +1170,7 @@
                 }
             }
         </script>
-
+    {{end}}
 
 </body>
 

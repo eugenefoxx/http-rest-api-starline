@@ -1,4 +1,6 @@
+{{ range .GetParam}}
 <form method="POST" action="/operation/updateuserquality/{{.GET.ID}}">
+
     <div class="form-group">
         <label for="title">Email</label>
         <input type="text" style="margin-left:100px;" class="form-control" name="email" id="email"
@@ -18,9 +20,9 @@
         <label for="description">Позиция</label>
         <select style="margin-left:75px;" class="form-control" name="role" required="required">
             <option disabled selected>Выберите позицию</option>
-            <option type="text" id="role" value=roleSuperIngenerQuality>главный инженер по качеству</option>
-            <option type="text" id="role" value=roleIngenerQuality>инженер по качеству</option>
-            <option type="text" id="role" value=roleInspector>контролер качества</option>
+            <option type="text" id="role" value="главный инженер по качеству">главный инженер по качеству</option>
+            <option type="text" id="role" value="инженер по качеству">инженер по качеству</option>
+            <option type="text" id="role" value="контролер качества">контролер качества</option>
         </select>
     </div>
     <div class="form-group">
@@ -30,4 +32,6 @@
     </div>
 
     <button type="submit" class="btn btn-primary--s">Подтвердить</button>
+
 </form>
+{{end}}

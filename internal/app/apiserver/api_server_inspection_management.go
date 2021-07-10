@@ -21,39 +21,74 @@ func (s *Server) PageinInspection() http.HandlerFunc {
 	///	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		Admin := false
-		StockkeeperWH := false
-		WarehouseManager := false
-		SuperIngenerQuality := false
-		LoggedIn := false
 
 		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		if user.Role == roleAdministrator {
-			Admin = true
-			LoggedIn = true
+			params := []Param{
+				{
+					Admin:    true,
+					LoggedIn: true,
+					User:     user.LastName,
+					Username: user.FirstName,
+				},
+			}
+
+			data := map[string]interface{}{
+				"GetParam": params,
+			}
+
+			RenderTemplate(w, "ininspection.html", data)
 		} else if user.Role == roleStockkeeperWH {
-			StockkeeperWH = true
-			LoggedIn = true
-			fmt.Println("кладовщик склада - ", StockkeeperWH)
+			params := []Param{
+				{
+					StockkeeperWH: true,
+					LoggedIn:      true,
+					User:          user.LastName,
+					Username:      user.FirstName,
+				},
+			}
+
+			data := map[string]interface{}{
+				"GetParam": params,
+			}
+
+			RenderTemplate(w, "ininspection.html", data)
+
 		} else if user.Role == roleSuperIngenerQuality {
-			SuperIngenerQuality = true
-			LoggedIn = true
+			params := []Param{
+				{
+					SuperIngenerQuality: true,
+					LoggedIn:            true,
+					User:                user.LastName,
+					Username:            user.FirstName,
+				},
+			}
+
+			data := map[string]interface{}{
+				"GetParam": params,
+			}
+
+			RenderTemplate(w, "ininspection.html", data)
+
 		} else if user.Role == roleWarehouseManager {
-			WarehouseManager = true
-			LoggedIn = true
+			params := []Param{
+				{
+					WarehouseManager: true,
+					LoggedIn:         true,
+					User:             user.LastName,
+					Username:         user.FirstName,
+				},
+			}
+
+			data := map[string]interface{}{
+				"GetParam": params,
+			}
+
+			RenderTemplate(w, "ininspection.html", data)
+
 		}
-		data := map[string]interface{}{
-			"Admin":               Admin,
-			"StockkeeperWH":       StockkeeperWH,
-			"WarehouseManager":    WarehouseManager,
-			"SuperIngenerQuality": SuperIngenerQuality,
-			//	"GET":           get,
-			"LoggedIn": LoggedIn,
-			"User":     user.LastName,
-			"Username": user.FirstName,
-		}
-		tpl.ExecuteTemplate(w, "ininspection.html", data)
+
 		///	tpl.ExecuteTemplate(w, "layout", nil)
 		///	err = tpl.ExecuteTemplate(w, "layout", nil)
 		///	if err != nil {
@@ -88,7 +123,7 @@ func (s *Server) InInspection() http.HandlerFunc {
 		if err != nil {
 			log.Println(err)
 			s.logger.Errorf(err.Error())
-			
+
 		}
 
 		var rdata []req
@@ -398,63 +433,123 @@ func (s *Server) InInspection() http.HandlerFunc {
 func (s *Server) PagehistoryInspection() http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		Admin := false
-		StockkeeperWH := false
-		WarehouseManager := false
-		SuperIngenerQuality := false
-		IngenerQuality := false
-		Quality := false
-		Inspector := false
-		GroupP1 := false
-		GroupP5 := false
-		LoggedIn := false
 
 		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		if user.Groups == groupQuality || user.Groups == groupWarehouse || user.Groups == groupQualityP5 || user.Groups == groupWarehouseP5 {
-			GroupP1 = true
-			GroupP5 = true
+			//GroupP1 = true
+			//GroupP5 = true
 			if user.Role == roleAdministrator {
-				Admin = true
-				LoggedIn = true
+				params := []Param{
+					{
+						GroupP1:  true,
+						GroupP5:  true,
+						Admin:    true,
+						LoggedIn: true,
+						User:     user.LastName,
+						Username: user.FirstName,
+					},
+				}
+
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "showhistoryinspection.html", data)
 			} else if user.Role == roleStockkeeperWH {
-				StockkeeperWH = true
-				LoggedIn = true
-				fmt.Println("кладовщик склада - ", StockkeeperWH)
+				params := []Param{
+					{
+						GroupP1:       true,
+						GroupP5:       true,
+						StockkeeperWH: true,
+						LoggedIn:      true,
+						User:          user.LastName,
+						Username:      user.FirstName,
+					},
+				}
+
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "showhistoryinspection.html", data)
+
 			} else if user.Role == roleSuperIngenerQuality {
-				SuperIngenerQuality = true
-				LoggedIn = true
+				params := []Param{
+					{
+						GroupP1:             true,
+						GroupP5:             true,
+						SuperIngenerQuality: true,
+						LoggedIn:            true,
+						User:                user.LastName,
+						Username:            user.FirstName,
+					},
+				}
+
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "showhistoryinspection.html", data)
+
 			} else if user.Role == roleIngenerQuality {
-				IngenerQuality = true
-				LoggedIn = true
+				params := []Param{
+					{
+						GroupP1:        true,
+						GroupP5:        true,
+						IngenerQuality: true,
+						LoggedIn:       true,
+						User:           user.LastName,
+						Username:       user.FirstName,
+					},
+				}
+
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "showhistoryinspection.html", data)
+
 			} else if user.Groups == groupQuality {
-				Quality = true
-				Inspector = true
-				LoggedIn = true
-				fmt.Println("pageInspection quality - ", Quality)
+				params := []Param{
+					{
+						GroupP1:   true,
+						GroupP5:   true,
+						Inspector: true,
+						Quality:   true,
+						LoggedIn:  true,
+						User:      user.LastName,
+						Username:  user.FirstName,
+					},
+				}
+
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "showhistoryinspection.html", data)
+
 			} else if user.Role == roleWarehouseManager {
-				WarehouseManager = true
-				LoggedIn = true
-			}
-			data := map[string]interface{}{
-				"Admin":               Admin,
-				"StockkeeperWH":       StockkeeperWH,
-				"SuperIngenerQuality": SuperIngenerQuality,
-				"WarehouseManager":    WarehouseManager,
-				"IngenerQuality":      IngenerQuality,
-				"Quality":             Quality,
-				"Inspector":           Inspector,
-				"GroupP1":             GroupP1,
-				"GroupP5":             GroupP5,
-				//	"GET":           get,
-				"LoggedIn": LoggedIn,
-				"User":     user.LastName,
-				"Username": user.FirstName,
+				params := []Param{
+					{
+						GroupP1:          true,
+						GroupP5:          true,
+						WarehouseManager: true,
+						LoggedIn:         true,
+						User:             user.LastName,
+						Username:         user.FirstName,
+					},
+				}
+
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "showhistoryinspection.html", data)
+
 			}
 
-			tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
 		}
-
 	}
 }
 
@@ -470,103 +565,158 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 		s.mu.Lock()
 		defer s.mu.Unlock()
 
-		Admin := false
-		StockkeeperWH := false
-		WarehouseManager := false
-		SuperIngenerQuality := false
-		IngenerQuality := false
-		Quality := false
-		Inspector := false
-		GroupP1 := false
-		GroupP5 := false
-		LoggedIn := false
-
 		user := r.Context().Value(ctxKeyUser).(*model.User)
 
+		search := &req{}
+		materialInt, err := strconv.Atoi(r.FormValue("material"))
+		if err != nil {
+			fmt.Println(err)
+			s.logger.Errorf(err.Error())
+		}
+		search.Date1 = r.FormValue("date1")
+		fmt.Println("date1 - ", search.Date1)
+		//s.infoLog.Printf("date1 - %v", search.Date1)
+		s.logger.Infof("date1 - %v", search.Date1)
+		search.Date2 = r.FormValue("date2")
+		fmt.Println("date2 - ", search.Date2)
+		//s.infoLog.Printf("date2 - %v", search.Date2)
+		s.logger.Infof("date2 - %v", search.Date2)
+		search.Material = materialInt
+		fmt.Println("material - ", search.Material)
+		//s.infoLog.Printf("material - %v", search.Material)
+		s.logger.Infof("material - %v", search.Material)
+		search.EO = r.FormValue("eo")
+		//s.infoLog.Printf("eo - %v", search.EO)
+		s.logger.Infof("eo - %v", search.EO)
+
+		currentData := time.Now()
+		searchDateNow := currentData.Format("2006-01-02")
+
 		if user.Groups == groupQuality || user.Groups == groupWarehouse {
-			GroupP1 = true
-
-			if user.Role == roleAdministrator {
-				Admin = true
-				LoggedIn = true
-			} else if user.Role == roleStockkeeperWH {
-				StockkeeperWH = true
-				LoggedIn = true
-				fmt.Println("кладовщик склада - ", StockkeeperWH)
-			} else if user.Role == roleSuperIngenerQuality {
-				SuperIngenerQuality = true
-				LoggedIn = true
-			} else if user.Role == roleIngenerQuality {
-				IngenerQuality = true
-				LoggedIn = true
-			} else if user.Role == roleInspector {
-				Quality = true
-				Inspector = true
-				LoggedIn = true
-				fmt.Println("pageInspection quality - ", Quality)
-			} else if user.Role == roleWarehouseManager {
-				WarehouseManager = true
-				LoggedIn = true
-			}
-
-			search := &req{}
-			materialInt, err := strconv.Atoi(r.FormValue("material"))
-			if err != nil {
-				fmt.Println(err)
-				s.logger.Errorf(err.Error())
-			}
-			search.Date1 = r.FormValue("date1")
-			fmt.Println("date1 - ", search.Date1)
-			//s.infoLog.Printf("date1 - %v", search.Date1)
-			s.logger.Infof("date1 - %v", search.Date1)
-			search.Date2 = r.FormValue("date2")
-			fmt.Println("date2 - ", search.Date2)
-			//s.infoLog.Printf("date2 - %v", search.Date2)
-			s.logger.Infof("date2 - %v", search.Date2)
-			search.Material = materialInt
-			fmt.Println("material - ", search.Material)
-			//s.infoLog.Printf("material - %v", search.Material)
-			s.logger.Infof("material - %v", search.Material)
-			search.EO = r.FormValue("eo")
-			//s.infoLog.Printf("eo - %v", search.EO)
-			s.logger.Infof("eo - %v", search.EO)
-
-			currentData := time.Now()
-			searchDateNow := currentData.Format("2006-01-02")
+			//GroupP1 = true
 
 			if search.Date1 == "" && search.Date2 == "" && search.Material == 0 && search.EO == "" {
 				fmt.Println("Не заполнены поля ввода")
-				data := map[string]interface{}{
-					"TitleDOC":            "Отчет по истроии ВК",
-					"User":                user.LastName,
-					"Username":            user.FirstName,
-					"Admin":               Admin,
-					"WarehouseManager":    WarehouseManager,
-					"StockkeeperWH":       StockkeeperWH,
-					"SuperIngenerQuality": SuperIngenerQuality,
-					"IngenerQuality":      IngenerQuality,
-					"Quality":             Quality,
-					"Inspector":           Inspector,
-					"GroupP1":             GroupP1,
-					//"GroupP5":             GroupP5,
-					"LoggedIn": LoggedIn,
-					//	"GET":                 get,
-				}
-
-				err = tpl.ExecuteTemplate(w, "errorSearchHistoryInspection.html", data)
-				if err != nil {
-					http.Error(w, err.Error(), 400)
-					return
-				}
-			} else if search.Date1 == "" && search.Date2 == "" {
-				if search.EO != "" {
-
-					val, err := s.redis.Inspection().GetListShowDataByEO(r.Context(), search.EO)
-					if err != nil {
-						//RenderJSON(w, &val, http.StatusOK)
-						fmt.Println(&val)
+				if user.Role == roleAdministrator {
+					params := []Param{
+						{
+							GroupP1:  true,
+							Admin:    true,
+							LoggedIn: true,
+							User:     user.LastName,
+							Username: user.FirstName,
+						},
 					}
 
+					data := map[string]interface{}{
+						"TitleDOC": "Отчет по истории ВК",
+						"GetParam": params,
+					}
+
+					RenderTemplate(w, "errorSearchHistoryInspection.html", data)
+				} else if user.Role == roleStockkeeperWH {
+					params := []Param{
+						{
+							GroupP1:       true,
+							StockkeeperWH: true,
+							LoggedIn:      true,
+							User:          user.LastName,
+							Username:      user.FirstName,
+						},
+					}
+
+					data := map[string]interface{}{
+						"TitleDOC": "Отчет по истории ВК",
+						"GetParam": params,
+					}
+
+					RenderTemplate(w, "errorSearchHistoryInspection.html", data)
+
+				} else if user.Role == roleSuperIngenerQuality {
+					params := []Param{
+						{
+							GroupP1:             true,
+							SuperIngenerQuality: true,
+							LoggedIn:            true,
+							User:                user.LastName,
+							Username:            user.FirstName,
+						},
+					}
+
+					data := map[string]interface{}{
+						"TitleDOC": "Отчет по истории ВК",
+						"GetParam": params,
+					}
+
+					RenderTemplate(w, "errorSearchHistoryInspection.html", data)
+
+				} else if user.Role == roleIngenerQuality {
+					params := []Param{
+						{
+							GroupP1:        true,
+							IngenerQuality: true,
+							LoggedIn:       true,
+							User:           user.LastName,
+							Username:       user.FirstName,
+						},
+					}
+
+					data := map[string]interface{}{
+						"TitleDOC": "Отчет по истории ВК",
+						"GetParam": params,
+					}
+
+					RenderTemplate(w, "errorSearchHistoryInspection.html", data)
+
+				} else if user.Role == roleInspector {
+					params := []Param{
+						{
+							GroupP1:   true,
+							Inspector: true,
+							Quality:   true,
+							LoggedIn:  true,
+							User:      user.LastName,
+							Username:  user.FirstName,
+						},
+					}
+
+					data := map[string]interface{}{
+						"TitleDOC": "Отчет по истории ВК",
+						"GetParam": params,
+					}
+
+					RenderTemplate(w, "errorSearchHistoryInspection.html", data)
+
+				} else if user.Role == roleWarehouseManager {
+					params := []Param{
+						{
+							GroupP1:          true,
+							WarehouseManager: true,
+							LoggedIn:         true,
+							User:             user.LastName,
+							Username:         user.FirstName,
+						},
+					}
+
+					data := map[string]interface{}{
+						"TitleDOC": "Отчет по истории ВК",
+						"GetParam": params,
+					}
+
+					RenderTemplate(w, "errorSearchHistoryInspection.html", data)
+
+				}
+
+			} else if search.Date1 == "" && search.Date2 == "" {
+				if search.EO != "" {
+					/*
+						val, err := s.redis.Inspection().GetListShowDataByEO(r.Context(), search.EO)
+						if err != nil {
+							//RenderJSON(w, &val, http.StatusOK)
+							s.logger.Errorf("Redis not connected: %v\n", &val)
+							fmt.Println(&val)
+						}
+					*/
 					get, err := s.store.Inspection().ListShowDataByEO(search.EO)
 					//get, err := s.store.Inspection().ListShowDataByEO(val)
 					if err != nil {
@@ -574,7 +724,7 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						return
 					}
 
-					_ = s.redis.Inspection().SetListShowDataByEO(r.Context(), get)
+					//_ = s.redis.Inspection().SetListShowDataByEO(r.Context(), get)
 					/*
 						count, _ := s.store.Inspection().CountInspection()
 						fmt.Println(count)
@@ -582,66 +732,284 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						page, begin := s.Pagination(r, limit)
 						fmt.Printf("Current Page: %d, Begin: %d\n", page, begin)
 					*/
-					data := map[string]interface{}{
-						"TitleDOC":            "Отчет по истроии ВК",
-						"User":                user.LastName,
-						"Username":            user.FirstName,
-						"Admin":               Admin,
-						"WarehouseManager":    WarehouseManager,
-						"StockkeeperWH":       StockkeeperWH,
-						"SuperIngenerQuality": SuperIngenerQuality,
-						"IngenerQuality":      IngenerQuality,
-						"Quality":             Quality,
-						"Inspector":           Inspector,
-						"LoggedIn":            LoggedIn,
-						"GroupP1":             GroupP1,
-						"Pobedit":             "Победит 1",
-						//"GroupP5":             GroupP5,
-						"GET": get,
+
+					if user.Role == roleAdministrator {
+						params := []Param{
+							{
+								GroupP1:  true,
+								Admin:    true,
+								LoggedIn: true,
+								User:     user.LastName,
+								Username: user.FirstName,
+								Pobedit:  "Победит 1",
+								GET:      get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+					} else if user.Role == roleStockkeeperWH {
+						params := []Param{
+							{
+								GroupP1:       true,
+								StockkeeperWH: true,
+								LoggedIn:      true,
+								User:          user.LastName,
+								Username:      user.FirstName,
+								Pobedit:       "Победит 1",
+								GET:           get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleSuperIngenerQuality {
+						params := []Param{
+							{
+								GroupP1:             true,
+								SuperIngenerQuality: true,
+								LoggedIn:            true,
+								User:                user.LastName,
+								Username:            user.FirstName,
+								Pobedit:             "Победит 1",
+								GET:                 get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleIngenerQuality {
+						params := []Param{
+							{
+								GroupP1:        true,
+								IngenerQuality: true,
+								LoggedIn:       true,
+								User:           user.LastName,
+								Username:       user.FirstName,
+								Pobedit:        "Победит 1",
+								GET:            get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleInspector {
+						params := []Param{
+							{
+								GroupP1:   true,
+								Inspector: true,
+								Quality:   true,
+								LoggedIn:  true,
+								User:      user.LastName,
+								Username:  user.FirstName,
+								Pobedit:   "Победит 1",
+								GET:       get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleWarehouseManager {
+						params := []Param{
+							{
+								GroupP1:          true,
+								WarehouseManager: true,
+								LoggedIn:         true,
+								User:             user.LastName,
+								Username:         user.FirstName,
+								Pobedit:          "Победит 1",
+								GET:              get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
 					}
 
-					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
-					if err != nil {
-						http.Error(w, err.Error(), 400)
-						return
-					}
 				} else if search.Material != 0 {
-
+					/*
 					count, _ := s.store.Inspection().CountInspection()
-					fmt.Println(count)
-					limit := 2
+					fmt.Println("test count, str 861", count)
+					limit := 3
 					page, begin := s.Pagination(r, limit)
 					fmt.Printf("Current Page: %d, Begin: %d\n", page, begin)
-					get, err := s.store.Inspection().ListShowDataBySap(search.Material, begin, limit)
-
+					get, err := s.store.Inspection().ListShowDataBySapPagination(search.Material, begin, limit)
 					if err != nil {
 						s.error(w, r, http.StatusUnprocessableEntity, err)
 						return
 					}
 
-					data := map[string]interface{}{
-						"TitleDOC":            "Отчет по истроии ВК",
-						"User":                user.LastName,
-						"Username":            user.FirstName,
-						"Admin":               Admin,
-						"WarehouseManager":    WarehouseManager,
-						"StockkeeperWH":       StockkeeperWH,
-						"SuperIngenerQuality": SuperIngenerQuality,
-						"IngenerQuality":      IngenerQuality,
-						"Quality":             Quality,
-						"Inspector":           Inspector,
-						"LoggedIn":            LoggedIn,
-						"GroupP1":             GroupP1,
-						"Pobedit":             "Победит 1",
-						//	"GroupP5":             GroupP5,
-						"GET": get,
+					dataget, err := json.Marshal(get); if err != nil {
+						log.Fatalf("Сбой маршаллинга %s", err)
 					}
-					// RenderJSON(w, get, http.StatusOK)
-					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
+
+					fmt.Printf("dataget - %s\n", dataget)
+					*/
+					get, err := s.store.Inspection().ListShowDataBySap(search.Material)
 					if err != nil {
-						http.Error(w, err.Error(), 400)
+						s.error(w, r, http.StatusUnprocessableEntity, err)
 						return
 					}
+					if user.Role == roleAdministrator {
+						params := []Param{
+							{
+								GroupP1:  true,
+								Admin:    true,
+								LoggedIn: true,
+								User:     user.LastName,
+								Username: user.FirstName,
+								Pobedit:  "Победит 1",
+								GET:      get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						datta, err := json.Marshal(data); if err != nil {
+							log.Fatalf("Сбой маршаллинга %s", err)
+						}
+
+						fmt.Printf("datta - %s\n", datta)
+
+					//	RenderTemplate(w, "showhistoryinspection.html", data)
+						fmt.Println("renderJSON is done")
+						//RenderJSON(w, data, http.StatusOK)
+						//json.NewEncoder(w).Encode(data)
+					} else if user.Role == roleStockkeeperWH {
+						params := []Param{
+							{
+								GroupP1:       true,
+								StockkeeperWH: true,
+								LoggedIn:      true,
+								User:          user.LastName,
+								Username:      user.FirstName,
+								Pobedit:       "Победит 1",
+								GET:           get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleSuperIngenerQuality {
+						params := []Param{
+							{
+								GroupP1:             true,
+								SuperIngenerQuality: true,
+								LoggedIn:            true,
+								User:                user.LastName,
+								Username:            user.FirstName,
+								Pobedit:             "Победит 1",
+								GET:                 get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleIngenerQuality {
+						params := []Param{
+							{
+								GroupP1:        true,
+								IngenerQuality: true,
+								LoggedIn:       true,
+								User:           user.LastName,
+								Username:       user.FirstName,
+								Pobedit:        "Победит 1",
+								GET:            get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleInspector {
+						params := []Param{
+							{
+								GroupP1:   true,
+								Inspector: true,
+								Quality:   true,
+								LoggedIn:  true,
+								User:      user.LastName,
+								Username:  user.FirstName,
+								Pobedit:   "Победит 1",
+								GET:       get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleWarehouseManager {
+						params := []Param{
+							{
+								GroupP1:          true,
+								WarehouseManager: true,
+								LoggedIn:         true,
+								User:             user.LastName,
+								Username:         user.FirstName,
+								Pobedit:          "Победит 1",
+								GET:              get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					}
+
 				}
 			} else if search.Date1 != "" && search.Date2 == "" {
 
@@ -654,29 +1022,128 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						return
 					}
 
-					data := map[string]interface{}{
-						"TitleDOC":            "Отчет по истроии ВК",
-						"User":                user.LastName,
-						"Username":            user.FirstName,
-						"Admin":               Admin,
-						"WarehouseManager":    WarehouseManager,
-						"StockkeeperWH":       StockkeeperWH,
-						"SuperIngenerQuality": SuperIngenerQuality,
-						"IngenerQuality":      IngenerQuality,
-						"Quality":             Quality,
-						"Inspector":           Inspector,
-						"LoggedIn":            LoggedIn,
-						"GroupP1":             GroupP1,
-						"Pobedit":             "Победит 1",
-						//	"GroupP5":             GroupP5,
-						"GET": get,
+					if user.Role == roleAdministrator {
+						params := []Param{
+							{
+								GroupP1:  true,
+								Admin:    true,
+								LoggedIn: true,
+								User:     user.LastName,
+								Username: user.FirstName,
+								Pobedit:  "Победит 1",
+								GET:      get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+					} else if user.Role == roleStockkeeperWH {
+						params := []Param{
+							{
+								GroupP1:       true,
+								StockkeeperWH: true,
+								LoggedIn:      true,
+								User:          user.LastName,
+								Username:      user.FirstName,
+								Pobedit:       "Победит 1",
+								GET:           get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleSuperIngenerQuality {
+						params := []Param{
+							{
+								GroupP1:             true,
+								SuperIngenerQuality: true,
+								LoggedIn:            true,
+								User:                user.LastName,
+								Username:            user.FirstName,
+								Pobedit:             "Победит 1",
+								GET:                 get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleIngenerQuality {
+						params := []Param{
+							{
+								GroupP1:        true,
+								IngenerQuality: true,
+								LoggedIn:       true,
+								User:           user.LastName,
+								Username:       user.FirstName,
+								Pobedit:        "Победит 1",
+								GET:            get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleInspector {
+						params := []Param{
+							{
+								GroupP1:   true,
+								Inspector: true,
+								Quality:   true,
+								LoggedIn:  true,
+								User:      user.LastName,
+								Username:  user.FirstName,
+								Pobedit:   "Победит 1",
+								GET:       get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleWarehouseManager {
+						params := []Param{
+							{
+								GroupP1:          true,
+								WarehouseManager: true,
+								LoggedIn:         true,
+								User:             user.LastName,
+								Username:         user.FirstName,
+								Pobedit:          "Победит 1",
+								GET:              get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
 					}
 
-					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
-					if err != nil {
-						http.Error(w, err.Error(), 400)
-						return
-					}
 				} else if search.EO != "" {
 					fmt.Println("OK EO")
 
@@ -686,28 +1153,126 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						return
 					}
 
-					data := map[string]interface{}{
-						"TitleDOC":            "Отчет по истроии ВК",
-						"User":                user.LastName,
-						"Username":            user.FirstName,
-						"Admin":               Admin,
-						"WarehouseManager":    WarehouseManager,
-						"StockkeeperWH":       StockkeeperWH,
-						"SuperIngenerQuality": SuperIngenerQuality,
-						"IngenerQuality":      IngenerQuality,
-						"Quality":             Quality,
-						"Inspector":           Inspector,
-						"LoggedIn":            LoggedIn,
-						"GroupP1":             GroupP1,
-						"Pobedit":             "Победит 1",
-						//	"GroupP5":             GroupP5,
-						"GET": get,
-					}
+					if user.Role == roleAdministrator {
+						params := []Param{
+							{
+								GroupP1:  true,
+								Admin:    true,
+								LoggedIn: true,
+								User:     user.LastName,
+								Username: user.FirstName,
+								Pobedit:  "Победит 1",
+								GET:      get,
+							},
+						}
 
-					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
-					if err != nil {
-						http.Error(w, err.Error(), 400)
-						return
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+					} else if user.Role == roleStockkeeperWH {
+						params := []Param{
+							{
+								GroupP1:       true,
+								StockkeeperWH: true,
+								LoggedIn:      true,
+								User:          user.LastName,
+								Username:      user.FirstName,
+								Pobedit:       "Победит 1",
+								GET:           get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleSuperIngenerQuality {
+						params := []Param{
+							{
+								GroupP1:             true,
+								SuperIngenerQuality: true,
+								LoggedIn:            true,
+								User:                user.LastName,
+								Username:            user.FirstName,
+								Pobedit:             "Победит 1",
+								GET:                 get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleIngenerQuality {
+						params := []Param{
+							{
+								GroupP1:        true,
+								IngenerQuality: true,
+								LoggedIn:       true,
+								User:           user.LastName,
+								Username:       user.FirstName,
+								Pobedit:        "Победит 1",
+								GET:            get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleInspector {
+						params := []Param{
+							{
+								GroupP1:   true,
+								Inspector: true,
+								Quality:   true,
+								LoggedIn:  true,
+								User:      user.LastName,
+								Username:  user.FirstName,
+								Pobedit:   "Победит 1",
+								GET:       get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleWarehouseManager {
+						params := []Param{
+							{
+								GroupP1:          true,
+								WarehouseManager: true,
+								LoggedIn:         true,
+								User:             user.LastName,
+								Username:         user.FirstName,
+								Pobedit:          "Победит 1",
+								GET:              get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
 					}
 
 				} else {
@@ -718,29 +1283,128 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						return
 					}
 
-					data := map[string]interface{}{
-						"TitleDOC":            "Отчет по истроии ВК",
-						"User":                user.LastName,
-						"Username":            user.FirstName,
-						"Admin":               Admin,
-						"WarehouseManager":    WarehouseManager,
-						"StockkeeperWH":       StockkeeperWH,
-						"SuperIngenerQuality": SuperIngenerQuality,
-						"IngenerQuality":      IngenerQuality,
-						"Quality":             Quality,
-						"Inspector":           Inspector,
-						"LoggedIn":            LoggedIn,
-						"GroupP1":             GroupP1,
-						"Pobedit":             "Победит 1",
-						//	"GroupP5":             GroupP5,
-						"GET": get,
+					if user.Role == roleAdministrator {
+						params := []Param{
+							{
+								GroupP1:  true,
+								Admin:    true,
+								LoggedIn: true,
+								User:     user.LastName,
+								Username: user.FirstName,
+								Pobedit:  "Победит 1",
+								GET:      get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+					} else if user.Role == roleStockkeeperWH {
+						params := []Param{
+							{
+								GroupP1:       true,
+								StockkeeperWH: true,
+								LoggedIn:      true,
+								User:          user.LastName,
+								Username:      user.FirstName,
+								Pobedit:       "Победит 1",
+								GET:           get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleSuperIngenerQuality {
+						params := []Param{
+							{
+								GroupP1:             true,
+								SuperIngenerQuality: true,
+								LoggedIn:            true,
+								User:                user.LastName,
+								Username:            user.FirstName,
+								Pobedit:             "Победит 1",
+								GET:                 get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleIngenerQuality {
+						params := []Param{
+							{
+								GroupP1:        true,
+								IngenerQuality: true,
+								LoggedIn:       true,
+								User:           user.LastName,
+								Username:       user.FirstName,
+								Pobedit:        "Победит 1",
+								GET:            get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleInspector {
+						params := []Param{
+							{
+								GroupP1:   true,
+								Inspector: true,
+								Quality:   true,
+								LoggedIn:  true,
+								User:      user.LastName,
+								Username:  user.FirstName,
+								Pobedit:   "Победит 1",
+								GET:       get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleWarehouseManager {
+						params := []Param{
+							{
+								GroupP1:          true,
+								WarehouseManager: true,
+								LoggedIn:         true,
+								User:             user.LastName,
+								Username:         user.FirstName,
+								Pobedit:          "Победит 1",
+								GET:              get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
 					}
 
-					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
-					if err != nil {
-						http.Error(w, err.Error(), 400)
-						return
-					}
 				}
 			} else {
 				if search.Material != 0 {
@@ -752,29 +1416,128 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						return
 					}
 
-					data := map[string]interface{}{
-						"TitleDOC":            "Отчет по истроии ВК",
-						"User":                user.LastName,
-						"Username":            user.FirstName,
-						"Admin":               Admin,
-						"WarehouseManager":    WarehouseManager,
-						"StockkeeperWH":       StockkeeperWH,
-						"SuperIngenerQuality": SuperIngenerQuality,
-						"IngenerQuality":      IngenerQuality,
-						"Quality":             Quality,
-						"Inspector":           Inspector,
-						"LoggedIn":            LoggedIn,
-						"GroupP1":             GroupP1,
-						"Pobedit":             "Победит 1",
-						//	"GroupP5":             GroupP5,
-						"GET": get,
+					if user.Role == roleAdministrator {
+						params := []Param{
+							{
+								GroupP1:  true,
+								Admin:    true,
+								LoggedIn: true,
+								User:     user.LastName,
+								Username: user.FirstName,
+								Pobedit:  "Победит 1",
+								GET:      get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+					} else if user.Role == roleStockkeeperWH {
+						params := []Param{
+							{
+								GroupP1:       true,
+								StockkeeperWH: true,
+								LoggedIn:      true,
+								User:          user.LastName,
+								Username:      user.FirstName,
+								Pobedit:       "Победит 1",
+								GET:           get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleSuperIngenerQuality {
+						params := []Param{
+							{
+								GroupP1:             true,
+								SuperIngenerQuality: true,
+								LoggedIn:            true,
+								User:                user.LastName,
+								Username:            user.FirstName,
+								Pobedit:             "Победит 1",
+								GET:                 get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleIngenerQuality {
+						params := []Param{
+							{
+								GroupP1:        true,
+								IngenerQuality: true,
+								LoggedIn:       true,
+								User:           user.LastName,
+								Username:       user.FirstName,
+								Pobedit:        "Победит 1",
+								GET:            get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleInspector {
+						params := []Param{
+							{
+								GroupP1:   true,
+								Inspector: true,
+								Quality:   true,
+								LoggedIn:  true,
+								User:      user.LastName,
+								Username:  user.FirstName,
+								Pobedit:   "Победит 1",
+								GET:       get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleWarehouseManager {
+						params := []Param{
+							{
+								GroupP1:          true,
+								WarehouseManager: true,
+								LoggedIn:         true,
+								User:             user.LastName,
+								Username:         user.FirstName,
+								Pobedit:          "Победит 1",
+								GET:              get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
 					}
 
-					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
-					if err != nil {
-						http.Error(w, err.Error(), 400)
-						return
-					}
 				} else if search.EO != "" {
 					fmt.Println("OK EO")
 
@@ -784,28 +1547,126 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						return
 					}
 
-					data := map[string]interface{}{
-						"TitleDOC":            "Отчет по истроии ВК",
-						"User":                user.LastName,
-						"Username":            user.FirstName,
-						"Admin":               Admin,
-						"WarehouseManager":    WarehouseManager,
-						"StockkeeperWH":       StockkeeperWH,
-						"SuperIngenerQuality": SuperIngenerQuality,
-						"IngenerQuality":      IngenerQuality,
-						"Quality":             Quality,
-						"Inspector":           Inspector,
-						"LoggedIn":            LoggedIn,
-						"GroupP1":             GroupP1,
-						"Pobedit":             "Победит 1",
-						//	"GroupP5":             GroupP5,
-						"GET": get,
-					}
+					if user.Role == roleAdministrator {
+						params := []Param{
+							{
+								GroupP1:  true,
+								Admin:    true,
+								LoggedIn: true,
+								User:     user.LastName,
+								Username: user.FirstName,
+								Pobedit:  "Победит 1",
+								GET:      get,
+							},
+						}
 
-					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
-					if err != nil {
-						http.Error(w, err.Error(), 400)
-						return
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+					} else if user.Role == roleStockkeeperWH {
+						params := []Param{
+							{
+								GroupP1:       true,
+								StockkeeperWH: true,
+								LoggedIn:      true,
+								User:          user.LastName,
+								Username:      user.FirstName,
+								Pobedit:       "Победит 1",
+								GET:           get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleSuperIngenerQuality {
+						params := []Param{
+							{
+								GroupP1:             true,
+								SuperIngenerQuality: true,
+								LoggedIn:            true,
+								User:                user.LastName,
+								Username:            user.FirstName,
+								Pobedit:             "Победит 1",
+								GET:                 get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleIngenerQuality {
+						params := []Param{
+							{
+								GroupP1:        true,
+								IngenerQuality: true,
+								LoggedIn:       true,
+								User:           user.LastName,
+								Username:       user.FirstName,
+								Pobedit:        "Победит 1",
+								GET:            get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleInspector {
+						params := []Param{
+							{
+								GroupP1:   true,
+								Inspector: true,
+								Quality:   true,
+								LoggedIn:  true,
+								User:      user.LastName,
+								Username:  user.FirstName,
+								Pobedit:   "Победит 1",
+								GET:       get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleWarehouseManager {
+						params := []Param{
+							{
+								GroupP1:          true,
+								WarehouseManager: true,
+								LoggedIn:         true,
+								User:             user.LastName,
+								Username:         user.FirstName,
+								Pobedit:          "Победит 1",
+								GET:              get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
 					}
 
 				} else {
@@ -816,58 +1677,133 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						return
 					}
 
-					data := map[string]interface{}{
-						"TitleDOC":            "Отчет по истроии ВК",
-						"User":                user.LastName,
-						"Username":            user.FirstName,
-						"Admin":               Admin,
-						"WarehouseManager":    WarehouseManager,
-						"StockkeeperWH":       StockkeeperWH,
-						"SuperIngenerQuality": SuperIngenerQuality,
-						"IngenerQuality":      IngenerQuality,
-						"Quality":             Quality,
-						"Inspector":           Inspector,
-						"LoggedIn":            LoggedIn,
-						"GroupP1":             GroupP1,
-						"Pobedit":             "Победит 1",
-						//	"GroupP5":             GroupP5,
-						"GET": get,
+					if user.Role == roleAdministrator {
+						params := []Param{
+							{
+								GroupP1:  true,
+								Admin:    true,
+								LoggedIn: true,
+								User:     user.LastName,
+								Username: user.FirstName,
+								Pobedit:  "Победит 1",
+								GET:      get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+					} else if user.Role == roleStockkeeperWH {
+						params := []Param{
+							{
+								GroupP1:       true,
+								StockkeeperWH: true,
+								LoggedIn:      true,
+								User:          user.LastName,
+								Username:      user.FirstName,
+								Pobedit:       "Победит 1",
+								GET:           get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleSuperIngenerQuality {
+						params := []Param{
+							{
+								GroupP1:             true,
+								SuperIngenerQuality: true,
+								LoggedIn:            true,
+								User:                user.LastName,
+								Username:            user.FirstName,
+								Pobedit:             "Победит 1",
+								GET:                 get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleIngenerQuality {
+						params := []Param{
+							{
+								GroupP1:        true,
+								IngenerQuality: true,
+								LoggedIn:       true,
+								User:           user.LastName,
+								Username:       user.FirstName,
+								Pobedit:        "Победит 1",
+								GET:            get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleInspector {
+						params := []Param{
+							{
+								GroupP1:   true,
+								Inspector: true,
+								Quality:   true,
+								LoggedIn:  true,
+								User:      user.LastName,
+								Username:  user.FirstName,
+								Pobedit:   "Победит 1",
+								GET:       get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleWarehouseManager {
+						params := []Param{
+							{
+								GroupP1:          true,
+								WarehouseManager: true,
+								LoggedIn:         true,
+								User:             user.LastName,
+								Username:         user.FirstName,
+								Pobedit:          "Победит 1",
+								GET:              get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
 					}
 
-					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
-					if err != nil {
-						http.Error(w, err.Error(), 400)
-						return
-					}
 				}
 			}
 		}
 
 		if user.Groups == groupQualityP5 || user.Groups == groupWarehouseP5 {
-
-			GroupP5 = true
-			if user.Role == roleAdministrator {
-				Admin = true
-				LoggedIn = true
-			} else if user.Role == roleStockkeeperWH {
-				StockkeeperWH = true
-				LoggedIn = true
-				fmt.Println("кладовщик склада - ", StockkeeperWH)
-			} else if user.Role == roleSuperIngenerQuality {
-				SuperIngenerQuality = true
-				LoggedIn = true
-			} else if user.Role == roleIngenerQuality {
-				IngenerQuality = true
-				LoggedIn = true
-			} else if user.Role == roleInspector {
-				Quality = true
-				Inspector = true
-				LoggedIn = true
-				fmt.Println("pageInspection quality - ", Quality)
-			} else if user.Role == roleWarehouseManager {
-				WarehouseManager = true
-				LoggedIn = true
-			}
 
 			search := &req{}
 			materialInt, err := strconv.Atoi(r.FormValue("material"))
@@ -896,28 +1832,122 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 
 			if search.Date1 == "" && search.Date2 == "" && search.Material == 0 && search.EO == "" {
 				fmt.Println("Не заполнены поля ввода")
-				data := map[string]interface{}{
-					"TitleDOC":            "Отчет по истроии ВК",
-					"User":                user.LastName,
-					"Username":            user.FirstName,
-					"Admin":               Admin,
-					"WarehouseManager":    WarehouseManager,
-					"StockkeeperWH":       StockkeeperWH,
-					"SuperIngenerQuality": SuperIngenerQuality,
-					"IngenerQuality":      IngenerQuality,
-					"Quality":             Quality,
-					"Inspector":           Inspector,
-					//	"GroupP1":             GroupP1,
-					"GroupP5":  GroupP5,
-					"LoggedIn": LoggedIn,
-					//	"GET":                 get,
+				if user.Role == roleAdministrator {
+					params := []Param{
+						{
+							GroupP5:  true,
+							Admin:    true,
+							LoggedIn: true,
+							User:     user.LastName,
+							Username: user.FirstName,
+							Pobedit:  "Победит 1",
+						},
+					}
+
+					data := map[string]interface{}{
+						"TitleDOC": "Отчет по истории ВК",
+						"GetParam": params,
+					}
+
+					RenderTemplate(w, "errorSearchHistoryInspection.html", data)
+				} else if user.Role == roleStockkeeperWH {
+					params := []Param{
+						{
+							GroupP5:       true,
+							StockkeeperWH: true,
+							LoggedIn:      true,
+							User:          user.LastName,
+							Username:      user.FirstName,
+							Pobedit:       "Победит 1",
+						},
+					}
+
+					data := map[string]interface{}{
+						"TitleDOC": "Отчет по истории ВК",
+						"GetParam": params,
+					}
+
+					RenderTemplate(w, "errorSearchHistoryInspection.html", data)
+
+				} else if user.Role == roleSuperIngenerQuality {
+					params := []Param{
+						{
+							GroupP5:             true,
+							SuperIngenerQuality: true,
+							LoggedIn:            true,
+							User:                user.LastName,
+							Username:            user.FirstName,
+							Pobedit:             "Победит 1",
+						},
+					}
+
+					data := map[string]interface{}{
+						"TitleDOC": "Отчет по истории ВК",
+						"GetParam": params,
+					}
+
+					RenderTemplate(w, "errorSearchHistoryInspection.html", data)
+
+				} else if user.Role == roleIngenerQuality {
+					params := []Param{
+						{
+							GroupP5:        true,
+							IngenerQuality: true,
+							LoggedIn:       true,
+							User:           user.LastName,
+							Username:       user.FirstName,
+							Pobedit:        "Победит 1",
+						},
+					}
+
+					data := map[string]interface{}{
+						"TitleDOC": "Отчет по истории ВК",
+						"GetParam": params,
+					}
+
+					RenderTemplate(w, "errorSearchHistoryInspection.html", data)
+
+				} else if user.Role == roleInspector {
+					params := []Param{
+						{
+							GroupP5:   true,
+							Inspector: true,
+							Quality:   true,
+							LoggedIn:  true,
+							User:      user.LastName,
+							Username:  user.FirstName,
+							Pobedit:   "Победит 1",
+						},
+					}
+
+					data := map[string]interface{}{
+						"TitleDOC": "Отчет по истории ВК",
+						"GetParam": params,
+					}
+
+					RenderTemplate(w, "errorSearchHistoryInspection.html", data)
+
+				} else if user.Role == roleWarehouseManager {
+					params := []Param{
+						{
+							GroupP5:          true,
+							WarehouseManager: true,
+							LoggedIn:         true,
+							User:             user.LastName,
+							Username:         user.FirstName,
+							Pobedit:          "Победит 1",
+						},
+					}
+
+					data := map[string]interface{}{
+						"TitleDOC": "Отчет по истории ВК",
+						"GetParam": params,
+					}
+
+					RenderTemplate(w, "errorSearchHistoryInspection.html", data)
+
 				}
 
-				err = tpl.ExecuteTemplate(w, "errorSearchHistoryInspection.html", data)
-				if err != nil {
-					http.Error(w, err.Error(), 400)
-					return
-				}
 			} else if search.Date1 == "" && search.Date2 == "" {
 				if search.EO != "" {
 
@@ -932,31 +1962,130 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 					page, begin := s.Pagination(r, limit)
 					fmt.Printf("Current Page: %d, Begin: %d\n", page, begin)
 
-					data := map[string]interface{}{
-						"TitleDOC":            "Отчет по истроии ВК",
-						"User":                user.LastName,
-						"Username":            user.FirstName,
-						"Admin":               Admin,
-						"WarehouseManager":    WarehouseManager,
-						"StockkeeperWH":       StockkeeperWH,
-						"SuperIngenerQuality": SuperIngenerQuality,
-						"IngenerQuality":      IngenerQuality,
-						"Quality":             Quality,
-						"Inspector":           Inspector,
-						"LoggedIn":            LoggedIn,
-						//	"GroupP1":             GroupP1,
-						"GroupP5": GroupP5,
-						"Pobedit": "Победит 1",
-						"GET":     get,
+					if user.Role == roleAdministrator {
+						params := []Param{
+							{
+								GroupP5:  true,
+								Admin:    true,
+								LoggedIn: true,
+								User:     user.LastName,
+								Username: user.FirstName,
+								Pobedit:  "Победит 1",
+								GET:      get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+					} else if user.Role == roleStockkeeperWH {
+						params := []Param{
+							{
+								GroupP5:       true,
+								StockkeeperWH: true,
+								LoggedIn:      true,
+								User:          user.LastName,
+								Username:      user.FirstName,
+								Pobedit:       "Победит 1",
+								GET:           get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleSuperIngenerQuality {
+						params := []Param{
+							{
+								GroupP5:             true,
+								SuperIngenerQuality: true,
+								LoggedIn:            true,
+								User:                user.LastName,
+								Username:            user.FirstName,
+								Pobedit:             "Победит 1",
+								GET:                 get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleIngenerQuality {
+						params := []Param{
+							{
+								GroupP5:        true,
+								IngenerQuality: true,
+								LoggedIn:       true,
+								User:           user.LastName,
+								Username:       user.FirstName,
+								Pobedit:        "Победит 1",
+								GET:            get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleInspector {
+						params := []Param{
+							{
+								GroupP5:   true,
+								Inspector: true,
+								Quality:   true,
+								LoggedIn:  true,
+								User:      user.LastName,
+								Username:  user.FirstName,
+								Pobedit:   "Победит 1",
+								GET:       get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleWarehouseManager {
+						params := []Param{
+							{
+								GroupP5:          true,
+								WarehouseManager: true,
+								LoggedIn:         true,
+								User:             user.LastName,
+								Username:         user.FirstName,
+								Pobedit:          "Победит 1",
+								GET:              get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
 					}
 
-					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
-					if err != nil {
-						http.Error(w, err.Error(), 400)
-						return
-					}
 				} else if search.Material != 0 {
-
+					/*
 					count, _ := s.store.Inspection().CountInspection()
 					fmt.Println(count)
 					limit := 2
@@ -968,30 +2097,135 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						s.error(w, r, http.StatusUnprocessableEntity, err)
 						return
 					}
+					*/
+					get, err := s.store.Inspection().ListShowDataBySap(search.Material)
 
-					data := map[string]interface{}{
-						"TitleDOC":            "Отчет по истроии ВК",
-						"User":                user.LastName,
-						"Username":            user.FirstName,
-						"Admin":               Admin,
-						"WarehouseManager":    WarehouseManager,
-						"StockkeeperWH":       StockkeeperWH,
-						"SuperIngenerQuality": SuperIngenerQuality,
-						"IngenerQuality":      IngenerQuality,
-						"Quality":             Quality,
-						"Inspector":           Inspector,
-						"LoggedIn":            LoggedIn,
-						//	"GroupP1":             GroupP1,
-						"GroupP5": GroupP5,
-						"Pobedit": "Победит 1",
-						"GET":     get,
-					}
-					// RenderJSON(w, get, http.StatusOK)
-					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
 					if err != nil {
-						http.Error(w, err.Error(), 400)
+						s.error(w, r, http.StatusUnprocessableEntity, err)
 						return
 					}
+					if user.Role == roleAdministrator {
+						params := []Param{
+							{
+								GroupP5:  true,
+								Admin:    true,
+								LoggedIn: true,
+								User:     user.LastName,
+								Username: user.FirstName,
+								Pobedit:  "Победит 1",
+								GET:      get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+					} else if user.Role == roleStockkeeperWH {
+						params := []Param{
+							{
+								GroupP5:       true,
+								StockkeeperWH: true,
+								LoggedIn:      true,
+								User:          user.LastName,
+								Username:      user.FirstName,
+								Pobedit:       "Победит 1",
+								GET:           get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleSuperIngenerQuality {
+						params := []Param{
+							{
+								GroupP5:             true,
+								SuperIngenerQuality: true,
+								LoggedIn:            true,
+								User:                user.LastName,
+								Username:            user.FirstName,
+								Pobedit:             "Победит 1",
+								GET:                 get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleIngenerQuality {
+						params := []Param{
+							{
+								GroupP5:        true,
+								IngenerQuality: true,
+								LoggedIn:       true,
+								User:           user.LastName,
+								Username:       user.FirstName,
+								Pobedit:        "Победит 1",
+								GET:            get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleInspector {
+						params := []Param{
+							{
+								GroupP5:   true,
+								Inspector: true,
+								Quality:   true,
+								LoggedIn:  true,
+								User:      user.LastName,
+								Username:  user.FirstName,
+								Pobedit:   "Победит 1",
+								GET:       get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleWarehouseManager {
+						params := []Param{
+							{
+								GroupP5:          true,
+								WarehouseManager: true,
+								LoggedIn:         true,
+								User:             user.LastName,
+								Username:         user.FirstName,
+								Pobedit:          "Победит 1",
+								GET:              get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					}
+
 				}
 			} else if search.Date1 != "" && search.Date2 == "" {
 
@@ -1004,29 +2238,128 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						return
 					}
 
-					data := map[string]interface{}{
-						"TitleDOC":            "Отчет по истроии ВК",
-						"User":                user.LastName,
-						"Username":            user.FirstName,
-						"Admin":               Admin,
-						"WarehouseManager":    WarehouseManager,
-						"StockkeeperWH":       StockkeeperWH,
-						"SuperIngenerQuality": SuperIngenerQuality,
-						"IngenerQuality":      IngenerQuality,
-						"Quality":             Quality,
-						"Inspector":           Inspector,
-						"LoggedIn":            LoggedIn,
-						//	"GroupP1":             GroupP1,
-						"GroupP5": GroupP5,
-						"Pobedit": "Победит 1",
-						"GET":     get,
+					if user.Role == roleAdministrator {
+						params := []Param{
+							{
+								GroupP5:  true,
+								Admin:    true,
+								LoggedIn: true,
+								User:     user.LastName,
+								Username: user.FirstName,
+								Pobedit:  "Победит 1",
+								GET:      get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+					} else if user.Role == roleStockkeeperWH {
+						params := []Param{
+							{
+								GroupP5:       true,
+								StockkeeperWH: true,
+								LoggedIn:      true,
+								User:          user.LastName,
+								Username:      user.FirstName,
+								Pobedit:       "Победит 1",
+								GET:           get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleSuperIngenerQuality {
+						params := []Param{
+							{
+								GroupP5:             true,
+								SuperIngenerQuality: true,
+								LoggedIn:            true,
+								User:                user.LastName,
+								Username:            user.FirstName,
+								Pobedit:             "Победит 1",
+								GET:                 get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleIngenerQuality {
+						params := []Param{
+							{
+								GroupP5:        true,
+								IngenerQuality: true,
+								LoggedIn:       true,
+								User:           user.LastName,
+								Username:       user.FirstName,
+								Pobedit:        "Победит 1",
+								GET:            get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleInspector {
+						params := []Param{
+							{
+								GroupP5:   true,
+								Inspector: true,
+								Quality:   true,
+								LoggedIn:  true,
+								User:      user.LastName,
+								Username:  user.FirstName,
+								Pobedit:   "Победит 1",
+								GET:       get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleWarehouseManager {
+						params := []Param{
+							{
+								GroupP5:          true,
+								WarehouseManager: true,
+								LoggedIn:         true,
+								User:             user.LastName,
+								Username:         user.FirstName,
+								Pobedit:          "Победит 1",
+								GET:              get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
 					}
 
-					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
-					if err != nil {
-						http.Error(w, err.Error(), 400)
-						return
-					}
 				} else if search.EO != "" {
 					fmt.Println("OK EO")
 
@@ -1036,28 +2369,126 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						return
 					}
 
-					data := map[string]interface{}{
-						"TitleDOC":            "Отчет по истроии ВК",
-						"User":                user.LastName,
-						"Username":            user.FirstName,
-						"Admin":               Admin,
-						"WarehouseManager":    WarehouseManager,
-						"StockkeeperWH":       StockkeeperWH,
-						"SuperIngenerQuality": SuperIngenerQuality,
-						"IngenerQuality":      IngenerQuality,
-						"Quality":             Quality,
-						"Inspector":           Inspector,
-						"LoggedIn":            LoggedIn,
-						//	"GroupP1":             GroupP1,
-						"GroupP5": GroupP5,
-						"Pobedit": "Победит 1",
-						"GET":     get,
-					}
+					if user.Role == roleAdministrator {
+						params := []Param{
+							{
+								GroupP5:  true,
+								Admin:    true,
+								LoggedIn: true,
+								User:     user.LastName,
+								Username: user.FirstName,
+								Pobedit:  "Победит 1",
+								GET:      get,
+							},
+						}
 
-					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
-					if err != nil {
-						http.Error(w, err.Error(), 400)
-						return
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+					} else if user.Role == roleStockkeeperWH {
+						params := []Param{
+							{
+								GroupP5:       true,
+								StockkeeperWH: true,
+								LoggedIn:      true,
+								User:          user.LastName,
+								Username:      user.FirstName,
+								Pobedit:       "Победит 1",
+								GET:           get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleSuperIngenerQuality {
+						params := []Param{
+							{
+								GroupP5:             true,
+								SuperIngenerQuality: true,
+								LoggedIn:            true,
+								User:                user.LastName,
+								Username:            user.FirstName,
+								Pobedit:             "Победит 1",
+								GET:                 get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleIngenerQuality {
+						params := []Param{
+							{
+								GroupP5:        true,
+								IngenerQuality: true,
+								LoggedIn:       true,
+								User:           user.LastName,
+								Username:       user.FirstName,
+								Pobedit:        "Победит 1",
+								GET:            get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleInspector {
+						params := []Param{
+							{
+								GroupP5:   true,
+								Inspector: true,
+								Quality:   true,
+								LoggedIn:  true,
+								User:      user.LastName,
+								Username:  user.FirstName,
+								Pobedit:   "Победит 1",
+								GET:       get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleWarehouseManager {
+						params := []Param{
+							{
+								GroupP5:          true,
+								WarehouseManager: true,
+								LoggedIn:         true,
+								User:             user.LastName,
+								Username:         user.FirstName,
+								Pobedit:          "Победит 1",
+								GET:              get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
 					}
 
 				} else {
@@ -1068,29 +2499,128 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						return
 					}
 
-					data := map[string]interface{}{
-						"TitleDOC":            "Отчет по истроии ВК",
-						"User":                user.LastName,
-						"Username":            user.FirstName,
-						"Admin":               Admin,
-						"WarehouseManager":    WarehouseManager,
-						"StockkeeperWH":       StockkeeperWH,
-						"SuperIngenerQuality": SuperIngenerQuality,
-						"IngenerQuality":      IngenerQuality,
-						"Quality":             Quality,
-						"Inspector":           Inspector,
-						"LoggedIn":            LoggedIn,
-						//	"GroupP1":             GroupP1,
-						"GroupP5": GroupP5,
-						"Pobedit": "Победит 1",
-						"GET":     get,
+					if user.Role == roleAdministrator {
+						params := []Param{
+							{
+								GroupP5:  true,
+								Admin:    true,
+								LoggedIn: true,
+								User:     user.LastName,
+								Username: user.FirstName,
+								Pobedit:  "Победит 1",
+								GET:      get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+					} else if user.Role == roleStockkeeperWH {
+						params := []Param{
+							{
+								GroupP5:       true,
+								StockkeeperWH: true,
+								LoggedIn:      true,
+								User:          user.LastName,
+								Username:      user.FirstName,
+								Pobedit:       "Победит 1",
+								GET:           get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleSuperIngenerQuality {
+						params := []Param{
+							{
+								GroupP5:             true,
+								SuperIngenerQuality: true,
+								LoggedIn:            true,
+								User:                user.LastName,
+								Username:            user.FirstName,
+								Pobedit:             "Победит 1",
+								GET:                 get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleIngenerQuality {
+						params := []Param{
+							{
+								GroupP5:        true,
+								IngenerQuality: true,
+								LoggedIn:       true,
+								User:           user.LastName,
+								Username:       user.FirstName,
+								Pobedit:        "Победит 1",
+								GET:            get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleInspector {
+						params := []Param{
+							{
+								GroupP5:   true,
+								Inspector: true,
+								Quality:   true,
+								LoggedIn:  true,
+								User:      user.LastName,
+								Username:  user.FirstName,
+								Pobedit:   "Победит 1",
+								GET:       get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleWarehouseManager {
+						params := []Param{
+							{
+								GroupP5:          true,
+								WarehouseManager: true,
+								LoggedIn:         true,
+								User:             user.LastName,
+								Username:         user.FirstName,
+								Pobedit:          "Победит 1",
+								GET:              get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
 					}
 
-					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
-					if err != nil {
-						http.Error(w, err.Error(), 400)
-						return
-					}
 				}
 			} else {
 				if search.Material != 0 {
@@ -1102,29 +2632,128 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						return
 					}
 
-					data := map[string]interface{}{
-						"TitleDOC":            "Отчет по истроии ВК",
-						"User":                user.LastName,
-						"Username":            user.FirstName,
-						"Admin":               Admin,
-						"WarehouseManager":    WarehouseManager,
-						"StockkeeperWH":       StockkeeperWH,
-						"SuperIngenerQuality": SuperIngenerQuality,
-						"IngenerQuality":      IngenerQuality,
-						"Quality":             Quality,
-						"Inspector":           Inspector,
-						"LoggedIn":            LoggedIn,
-						//	"GroupP1":             GroupP1,
-						"GroupP5": GroupP5,
-						"Pobedit": "Победит 1",
-						"GET":     get,
+					if user.Role == roleAdministrator {
+						params := []Param{
+							{
+								GroupP5:  true,
+								Admin:    true,
+								LoggedIn: true,
+								User:     user.LastName,
+								Username: user.FirstName,
+								Pobedit:  "Победит 1",
+								GET:      get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+					} else if user.Role == roleStockkeeperWH {
+						params := []Param{
+							{
+								GroupP5:       true,
+								StockkeeperWH: true,
+								LoggedIn:      true,
+								User:          user.LastName,
+								Username:      user.FirstName,
+								Pobedit:       "Победит 1",
+								GET:           get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleSuperIngenerQuality {
+						params := []Param{
+							{
+								GroupP5:             true,
+								SuperIngenerQuality: true,
+								LoggedIn:            true,
+								User:                user.LastName,
+								Username:            user.FirstName,
+								Pobedit:             "Победит 1",
+								GET:                 get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleIngenerQuality {
+						params := []Param{
+							{
+								GroupP5:        true,
+								IngenerQuality: true,
+								LoggedIn:       true,
+								User:           user.LastName,
+								Username:       user.FirstName,
+								Pobedit:        "Победит 1",
+								GET:            get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleInspector {
+						params := []Param{
+							{
+								GroupP5:   true,
+								Inspector: true,
+								Quality:   true,
+								LoggedIn:  true,
+								User:      user.LastName,
+								Username:  user.FirstName,
+								Pobedit:   "Победит 1",
+								GET:       get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleWarehouseManager {
+						params := []Param{
+							{
+								GroupP5:          true,
+								WarehouseManager: true,
+								LoggedIn:         true,
+								User:             user.LastName,
+								Username:         user.FirstName,
+								Pobedit:          "Победит 1",
+								GET:              get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
 					}
 
-					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
-					if err != nil {
-						http.Error(w, err.Error(), 400)
-						return
-					}
 				} else if search.EO != "" {
 					fmt.Println("OK EO")
 
@@ -1134,28 +2763,126 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						return
 					}
 
-					data := map[string]interface{}{
-						"TitleDOC":            "Отчет по истроии ВК",
-						"User":                user.LastName,
-						"Username":            user.FirstName,
-						"Admin":               Admin,
-						"WarehouseManager":    WarehouseManager,
-						"StockkeeperWH":       StockkeeperWH,
-						"SuperIngenerQuality": SuperIngenerQuality,
-						"IngenerQuality":      IngenerQuality,
-						"Quality":             Quality,
-						"Inspector":           Inspector,
-						"LoggedIn":            LoggedIn,
-						//	"GroupP1":             GroupP1,
-						"GroupP5": GroupP5,
-						"Pobedit": "Победит 1",
-						"GET":     get,
-					}
+					if user.Role == roleAdministrator {
+						params := []Param{
+							{
+								GroupP5:  true,
+								Admin:    true,
+								LoggedIn: true,
+								User:     user.LastName,
+								Username: user.FirstName,
+								Pobedit:  "Победит 1",
+								GET:      get,
+							},
+						}
 
-					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
-					if err != nil {
-						http.Error(w, err.Error(), 400)
-						return
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+					} else if user.Role == roleStockkeeperWH {
+						params := []Param{
+							{
+								GroupP5:       true,
+								StockkeeperWH: true,
+								LoggedIn:      true,
+								User:          user.LastName,
+								Username:      user.FirstName,
+								Pobedit:       "Победит 1",
+								GET:           get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleSuperIngenerQuality {
+						params := []Param{
+							{
+								GroupP5:             true,
+								SuperIngenerQuality: true,
+								LoggedIn:            true,
+								User:                user.LastName,
+								Username:            user.FirstName,
+								Pobedit:             "Победит 1",
+								GET:                 get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleIngenerQuality {
+						params := []Param{
+							{
+								GroupP5:        true,
+								IngenerQuality: true,
+								LoggedIn:       true,
+								User:           user.LastName,
+								Username:       user.FirstName,
+								Pobedit:        "Победит 1",
+								GET:            get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleInspector {
+						params := []Param{
+							{
+								GroupP5:   true,
+								Inspector: true,
+								Quality:   true,
+								LoggedIn:  true,
+								User:      user.LastName,
+								Username:  user.FirstName,
+								Pobedit:   "Победит 1",
+								GET:       get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleWarehouseManager {
+						params := []Param{
+							{
+								GroupP5:          true,
+								WarehouseManager: true,
+								LoggedIn:         true,
+								User:             user.LastName,
+								Username:         user.FirstName,
+								Pobedit:          "Победит 1",
+								GET:              get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
 					}
 
 				} else {
@@ -1166,51 +2893,131 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 						return
 					}
 
-					data := map[string]interface{}{
-						"TitleDOC":            "Отчет по истроии ВК",
-						"User":                user.LastName,
-						"Username":            user.FirstName,
-						"Admin":               Admin,
-						"WarehouseManager":    WarehouseManager,
-						"StockkeeperWH":       StockkeeperWH,
-						"SuperIngenerQuality": SuperIngenerQuality,
-						"IngenerQuality":      IngenerQuality,
-						"Quality":             Quality,
-						"Inspector":           Inspector,
-						"LoggedIn":            LoggedIn,
-						//	"GroupP1":             GroupP1,
-						"GroupP5": GroupP5,
-						"Pobedit": "Победит 1",
-						"GET":     get,
+					if user.Role == roleAdministrator {
+						params := []Param{
+							{
+								GroupP5:  true,
+								Admin:    true,
+								LoggedIn: true,
+								User:     user.LastName,
+								Username: user.FirstName,
+								Pobedit:  "Победит 1",
+								GET:      get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+					} else if user.Role == roleStockkeeperWH {
+						params := []Param{
+							{
+								GroupP5:       true,
+								StockkeeperWH: true,
+								LoggedIn:      true,
+								User:          user.LastName,
+								Username:      user.FirstName,
+								Pobedit:       "Победит 1",
+								GET:           get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleSuperIngenerQuality {
+						params := []Param{
+							{
+								GroupP5:             true,
+								SuperIngenerQuality: true,
+								LoggedIn:            true,
+								User:                user.LastName,
+								Username:            user.FirstName,
+								Pobedit:             "Победит 1",
+								GET:                 get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleIngenerQuality {
+						params := []Param{
+							{
+								GroupP5:        true,
+								IngenerQuality: true,
+								LoggedIn:       true,
+								User:           user.LastName,
+								Username:       user.FirstName,
+								Pobedit:        "Победит 1",
+								GET:            get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleInspector {
+						params := []Param{
+							{
+								GroupP5:   true,
+								Inspector: true,
+								Quality:   true,
+								LoggedIn:  true,
+								User:      user.LastName,
+								Username:  user.FirstName,
+								Pobedit:   "Победит 1",
+								GET:       get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleWarehouseManager {
+						params := []Param{
+							{
+								GroupP5:          true,
+								WarehouseManager: true,
+								LoggedIn:         true,
+								User:             user.LastName,
+								Username:         user.FirstName,
+								Pobedit:          "Победит 1",
+								GET:              get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
 					}
 
-					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
-					if err != nil {
-						http.Error(w, err.Error(), 400)
-						return
-					}
 				}
 			}
 		}
-		/*
-				data := map[string]interface{}{
-					"TitleDOC":            "Отчет по истроии ВК",
-					"User":                user.LastName,
-					"Username":            user.FirstName,
-					"Admin":               Admin,
-					"StockkeeperWH":       StockkeeperWH,
-					roleSuperIngenerQuality: SuperIngenerQuality,
-					"Quality":             Quality,
-					"LoggedIn":            LoggedIn,
-					"GET":                 get,
-				}
-
-			err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", nil)
-			if err != nil {
-				http.Error(w, err.Error(), 400)
-				return
-			}
-		*/
 
 	}
 }
@@ -1219,61 +3026,122 @@ func (s *Server) HistoryInspection() http.HandlerFunc {
 func (s *Server) PagehistoryInspectionP5() http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		Admin := false
-		StockkeeperWH := false
-		WarehouseManager := false
-		SuperIngenerQuality := false
-		IngenerQuality := false
-		Quality := false
-		Inspector := false
-		GroupP1 := false
-		GroupP5 := false
-		LoggedIn := false
 
 		user := r.Context().Value(ctxKeyUser).(*model.User)
 
 		if user.Groups == groupQualityP5 || user.Groups == groupWarehouseP5 || user.Groups == groupQuality || user.Groups == groupWarehouse {
-			GroupP5 = true
-			GroupP1 = true
+
 			if user.Role == roleAdministrator {
-				Admin = true
-				LoggedIn = true
+				params := []Param{
+					{
+						Admin:    true,
+						LoggedIn: true,
+						GroupP5:  true,
+						GroupP1:  true,
+						User:     user.LastName,
+						Username: user.FirstName,
+					},
+				}
+
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "showhistoryinspection.html", data)
+
 			} else if user.Role == roleStockkeeperWH {
-				StockkeeperWH = true
-				LoggedIn = true
-				fmt.Println("кладовщик склада - ", StockkeeperWH)
+				params := []Param{
+					{
+						StockkeeperWH: true,
+						LoggedIn:      true,
+						GroupP5:       true,
+						GroupP1:       true,
+						User:          user.LastName,
+						Username:      user.FirstName,
+					},
+				}
+
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "showhistoryinspection.html", data)
+
 			} else if user.Role == roleSuperIngenerQuality {
-				SuperIngenerQuality = true
-				LoggedIn = true
+				params := []Param{
+					{
+						SuperIngenerQuality: true,
+						LoggedIn:            true,
+						GroupP5:             true,
+						GroupP1:             true,
+						User:                user.LastName,
+						Username:            user.FirstName,
+					},
+				}
+
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "showhistoryinspection.html", data)
+
 			} else if user.Role == roleIngenerQuality {
-				IngenerQuality = true
-				LoggedIn = true
+				params := []Param{
+					{
+						IngenerQuality: true,
+						LoggedIn:       true,
+						GroupP5:        true,
+						GroupP1:        true,
+						User:           user.LastName,
+						Username:       user.FirstName,
+					},
+				}
+
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "showhistoryinspection.html", data)
+
 			} else if user.Groups == groupQuality {
-				Quality = true
-				Inspector = true
-				LoggedIn = true
-				fmt.Println("pageInspection quality - ", Quality)
+				params := []Param{
+					{
+						Inspector: true,
+						Quality:   true,
+						LoggedIn:  true,
+						GroupP5:   true,
+						GroupP1:   true,
+						User:      user.LastName,
+						Username:  user.FirstName,
+					},
+				}
+
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "showhistoryinspection.html", data)
+
 			} else if user.Role == roleWarehouseManager {
-				WarehouseManager = true
-				LoggedIn = true
-			}
-			data := map[string]interface{}{
-				"Admin":               Admin,
-				"StockkeeperWH":       StockkeeperWH,
-				"SuperIngenerQuality": SuperIngenerQuality,
-				"WarehouseManager":    WarehouseManager,
-				"IngenerQuality":      IngenerQuality,
-				"Quality":             Quality,
-				"Inspector":           Inspector,
-				"GroupP5":             GroupP5,
-				"GroupP1":             GroupP1,
-				//	"GET":           get,
-				"LoggedIn": LoggedIn,
-				"User":     user.LastName,
-				"Username": user.FirstName,
+				params := []Param{
+					{
+						WarehouseManager: true,
+						LoggedIn:         true,
+						GroupP5:          true,
+						GroupP1:          true,
+						User:             user.LastName,
+						Username:         user.FirstName,
+					},
+				}
+
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "showhistoryinspection.html", data)
+
 			}
 
-			tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
 		}
 	}
 }
@@ -1290,90 +3158,150 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 		s.mu.Lock()
 		defer s.mu.Unlock()
 
-		Admin := false
-		StockkeeperWH := false
-		WarehouseManager := false
-		SuperIngenerQuality := false
-		IngenerQuality := false
-		Quality := false
-		Inspector := false
-		GroupP5 := false
-		GroupP1 := false
-		LoggedIn := false
-
 		user := r.Context().Value(ctxKeyUser).(*model.User)
 
+		search := &req{}
+		materialInt, err := strconv.Atoi(r.FormValue("material"))
+		if err != nil {
+			fmt.Println(err)
+			s.logger.Errorf(err.Error())
+		}
+		search.Date1 = r.FormValue("date1")
+		fmt.Println("date1 - ", search.Date1)
+		//s.infoLog.Printf("date1 - %v", search.Date1)
+		search.Date2 = r.FormValue("date2")
+		fmt.Println("date2 - ", search.Date2)
+		//s.infoLog.Printf("date2 - %v", search.Date2)
+		search.Material = materialInt
+		fmt.Println("material - ", search.Material)
+		//s.infoLog.Printf("material - %v", search.Material)
+		search.EO = r.FormValue("eo")
+		//s.infoLog.Printf("eo - %v", search.EO)
+
+		currentData := time.Now()
+		searchDateNow := currentData.Format("2006-01-02")
+
 		if user.Groups == groupQualityP5 || user.Groups == groupWarehouseP5 {
-			GroupP5 = true
-			if user.Role == roleAdministrator {
-				Admin = true
-				LoggedIn = true
-			} else if user.Role == roleStockkeeperWH {
-				StockkeeperWH = true
-				LoggedIn = true
-				fmt.Println("кладовщик склада - ", StockkeeperWH)
-			} else if user.Role == roleSuperIngenerQuality {
-				SuperIngenerQuality = true
-				LoggedIn = true
-			} else if user.Role == roleIngenerQuality {
-				IngenerQuality = true
-				LoggedIn = true
-			} else if user.Role == roleInspector {
-				Quality = true
-				Inspector = true
-				LoggedIn = true
-				fmt.Println("pageInspection quality - ", Quality)
-			} else if user.Role == roleWarehouseManager {
-				WarehouseManager = true
-				LoggedIn = true
-			}
-
-			search := &req{}
-			materialInt, err := strconv.Atoi(r.FormValue("material"))
-			if err != nil {
-				fmt.Println(err)
-				s.logger.Errorf(err.Error())
-			}
-			search.Date1 = r.FormValue("date1")
-			fmt.Println("date1 - ", search.Date1)
-			//s.infoLog.Printf("date1 - %v", search.Date1)
-			search.Date2 = r.FormValue("date2")
-			fmt.Println("date2 - ", search.Date2)
-			//s.infoLog.Printf("date2 - %v", search.Date2)
-			search.Material = materialInt
-			fmt.Println("material - ", search.Material)
-			//s.infoLog.Printf("material - %v", search.Material)
-			search.EO = r.FormValue("eo")
-			//s.infoLog.Printf("eo - %v", search.EO)
-
-			currentData := time.Now()
-			searchDateNow := currentData.Format("2006-01-02")
 
 			if search.Date1 == "" && search.Date2 == "" && search.Material == 0 && search.EO == "" {
 				fmt.Println("Не заполнены поля ввода")
-				data := map[string]interface{}{
-					"TitleDOC":            "Отчет по истроии ВК",
-					"User":                user.LastName,
-					"Username":            user.FirstName,
-					"Admin":               Admin,
-					"WarehouseManager":    WarehouseManager,
-					"StockkeeperWH":       StockkeeperWH,
-					"SuperIngenerQuality": SuperIngenerQuality,
-					"IngenerQuality":      IngenerQuality,
-					"Quality":             Quality,
-					"Inspector":           Inspector,
-					"GroupP5":             GroupP5,
-					"Pobedit":             "Победит 5",
-					//"GroupP1":             GroupP1,
-					"LoggedIn": LoggedIn,
-					//	"GET":                 get,
+				if user.Role == roleAdministrator {
+					params := []Param{
+						{
+							GroupP5:  true,
+							Admin:    true,
+							LoggedIn: true,
+							User:     user.LastName,
+							Username: user.FirstName,
+							Pobedit:  "Победит 5",
+						},
+					}
+
+					data := map[string]interface{}{
+						"TitleDOC": "Отчет по истории ВК",
+						"GetParam": params,
+					}
+
+					RenderTemplate(w, "errorSearchHistoryInspection.html", data)
+
+				} else if user.Role == roleStockkeeperWH {
+					params := []Param{
+						{
+							GroupP5:       true,
+							StockkeeperWH: true,
+							LoggedIn:      true,
+							User:          user.LastName,
+							Username:      user.FirstName,
+							Pobedit:       "Победит 5",
+						},
+					}
+
+					data := map[string]interface{}{
+						"TitleDOC": "Отчет по истории ВК",
+						"GetParam": params,
+					}
+
+					RenderTemplate(w, "errorSearchHistoryInspection.html", data)
+
+				} else if user.Role == roleSuperIngenerQuality {
+					params := []Param{
+						{
+							GroupP5:             true,
+							SuperIngenerQuality: true,
+							LoggedIn:            true,
+							User:                user.LastName,
+							Username:            user.FirstName,
+							Pobedit:             "Победит 5",
+						},
+					}
+
+					data := map[string]interface{}{
+						"TitleDOC": "Отчет по истории ВК",
+						"GetParam": params,
+					}
+
+					RenderTemplate(w, "errorSearchHistoryInspection.html", data)
+
+				} else if user.Role == roleIngenerQuality {
+					params := []Param{
+						{
+							GroupP5:        true,
+							IngenerQuality: true,
+							LoggedIn:       true,
+							User:           user.LastName,
+							Username:       user.FirstName,
+							Pobedit:        "Победит 5",
+						},
+					}
+
+					data := map[string]interface{}{
+						"TitleDOC": "Отчет по истории ВК",
+						"GetParam": params,
+					}
+
+					RenderTemplate(w, "errorSearchHistoryInspection.html", data)
+
+				} else if user.Role == roleInspector {
+					params := []Param{
+						{
+							GroupP5:   true,
+							Inspector: true,
+							Quality:   true,
+							LoggedIn:  true,
+							User:      user.LastName,
+							Username:  user.FirstName,
+							Pobedit:   "Победит 5",
+						},
+					}
+
+					data := map[string]interface{}{
+						"TitleDOC": "Отчет по истории ВК",
+						"GetParam": params,
+					}
+
+					RenderTemplate(w, "errorSearchHistoryInspection.html", data)
+
+				} else if user.Role == roleWarehouseManager {
+					params := []Param{
+						{
+							GroupP5:          true,
+							WarehouseManager: true,
+							LoggedIn:         true,
+							User:             user.LastName,
+							Username:         user.FirstName,
+							Pobedit:          "Победит 5",
+						},
+					}
+
+					data := map[string]interface{}{
+						"TitleDOC": "Отчет по истории ВК",
+						"GetParam": params,
+					}
+
+					RenderTemplate(w, "errorSearchHistoryInspection.html", data)
+
 				}
 
-				err = tpl.ExecuteTemplate(w, "errorSearchHistoryInspection.html", data)
-				if err != nil {
-					http.Error(w, err.Error(), 400)
-					return
-				}
 			} else if search.Date1 == "" && search.Date2 == "" {
 				if search.EO != "" {
 
@@ -1388,29 +3316,129 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 					//	page, begin := s.Pagination(r, limit)
 					//	fmt.Printf("Current Page: %d, Begin: %d\n", page, begin)
 
-					data := map[string]interface{}{
-						"TitleDOC":            "Отчет по истроии ВК",
-						"User":                user.LastName,
-						"Username":            user.FirstName,
-						"Admin":               Admin,
-						"WarehouseManager":    WarehouseManager,
-						"StockkeeperWH":       StockkeeperWH,
-						"SuperIngenerQuality": SuperIngenerQuality,
-						"IngenerQuality":      IngenerQuality,
-						"Quality":             Quality,
-						"Inspector":           Inspector,
-						"LoggedIn":            LoggedIn,
-						"Pobedit":             "Победит 5",
-						//"GroupP1":             GroupP1,
-						"GroupP5": GroupP5,
-						"GET":     get,
+					if user.Role == roleAdministrator {
+						params := []Param{
+							{
+								GroupP5:  true,
+								Admin:    true,
+								LoggedIn: true,
+								User:     user.LastName,
+								Username: user.FirstName,
+								Pobedit:  "Победит 5",
+								GET:      get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleStockkeeperWH {
+						params := []Param{
+							{
+								GroupP5:       true,
+								StockkeeperWH: true,
+								LoggedIn:      true,
+								User:          user.LastName,
+								Username:      user.FirstName,
+								Pobedit:       "Победит 5",
+								GET:           get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleSuperIngenerQuality {
+						params := []Param{
+							{
+								GroupP5:             true,
+								SuperIngenerQuality: true,
+								LoggedIn:            true,
+								User:                user.LastName,
+								Username:            user.FirstName,
+								Pobedit:             "Победит 5",
+								GET:                 get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleIngenerQuality {
+						params := []Param{
+							{
+								GroupP5:        true,
+								IngenerQuality: true,
+								LoggedIn:       true,
+								User:           user.LastName,
+								Username:       user.FirstName,
+								Pobedit:        "Победит 5",
+								GET:            get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleInspector {
+						params := []Param{
+							{
+								GroupP5:   true,
+								Inspector: true,
+								Quality:   true,
+								LoggedIn:  true,
+								User:      user.LastName,
+								Username:  user.FirstName,
+								Pobedit:   "Победит 5",
+								GET:       get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleWarehouseManager {
+						params := []Param{
+							{
+								GroupP5:          true,
+								WarehouseManager: true,
+								LoggedIn:         true,
+								User:             user.LastName,
+								Username:         user.FirstName,
+								Pobedit:          "Победит 5",
+								GET:              get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
 					}
 
-					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
-					if err != nil {
-						http.Error(w, err.Error(), 400)
-						return
-					}
 				} else if search.Material != 0 {
 
 					//	count, _ := s.store.Inspection().CountInspection()
@@ -1426,29 +3454,129 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 						return
 					}
 
-					data := map[string]interface{}{
-						"TitleDOC":            "Отчет по истроии ВК",
-						"User":                user.LastName,
-						"Username":            user.FirstName,
-						"Admin":               Admin,
-						"WarehouseManager":    WarehouseManager,
-						"StockkeeperWH":       StockkeeperWH,
-						"SuperIngenerQuality": SuperIngenerQuality,
-						"IngenerQuality":      IngenerQuality,
-						"Quality":             Quality,
-						"Inspector":           Inspector,
-						"LoggedIn":            LoggedIn,
-						"Pobedit":             "Победит 5",
-						//	"GroupP1":             GroupP1,
-						"GroupP5": GroupP5,
-						"GET":     get,
+					if user.Role == roleAdministrator {
+						params := []Param{
+							{
+								GroupP5:  true,
+								Admin:    true,
+								LoggedIn: true,
+								User:     user.LastName,
+								Username: user.FirstName,
+								Pobedit:  "Победит 5",
+								GET:      get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleStockkeeperWH {
+						params := []Param{
+							{
+								GroupP5:       true,
+								StockkeeperWH: true,
+								LoggedIn:      true,
+								User:          user.LastName,
+								Username:      user.FirstName,
+								Pobedit:       "Победит 5",
+								GET:           get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleSuperIngenerQuality {
+						params := []Param{
+							{
+								GroupP5:             true,
+								SuperIngenerQuality: true,
+								LoggedIn:            true,
+								User:                user.LastName,
+								Username:            user.FirstName,
+								Pobedit:             "Победит 5",
+								GET:                 get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleIngenerQuality {
+						params := []Param{
+							{
+								GroupP5:        true,
+								IngenerQuality: true,
+								LoggedIn:       true,
+								User:           user.LastName,
+								Username:       user.FirstName,
+								Pobedit:        "Победит 5",
+								GET:            get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleInspector {
+						params := []Param{
+							{
+								GroupP5:   true,
+								Inspector: true,
+								Quality:   true,
+								LoggedIn:  true,
+								User:      user.LastName,
+								Username:  user.FirstName,
+								Pobedit:   "Победит 5",
+								GET:       get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleWarehouseManager {
+						params := []Param{
+							{
+								GroupP5:          true,
+								WarehouseManager: true,
+								LoggedIn:         true,
+								User:             user.LastName,
+								Username:         user.FirstName,
+								Pobedit:          "Победит 5",
+								GET:              get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
 					}
-					//	RenderJSON(w, get, http.StatusOK)
-					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
-					if err != nil {
-						http.Error(w, err.Error(), 400)
-						return
-					}
+
 				}
 			} else if search.Date1 != "" && search.Date2 == "" {
 
@@ -1461,29 +3589,129 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 						return
 					}
 
-					data := map[string]interface{}{
-						"TitleDOC":            "Отчет по истроии ВК",
-						"User":                user.LastName,
-						"Username":            user.FirstName,
-						"Admin":               Admin,
-						"WarehouseManager":    WarehouseManager,
-						"StockkeeperWH":       StockkeeperWH,
-						"SuperIngenerQuality": SuperIngenerQuality,
-						"IngenerQuality":      IngenerQuality,
-						"Quality":             Quality,
-						"Inspector":           Inspector,
-						"LoggedIn":            LoggedIn,
-						//	"GroupP1":             GroupP1,
-						"GroupP5": GroupP5,
-						"Pobedit": "Победит 5",
-						"GET":     get,
+					if user.Role == roleAdministrator {
+						params := []Param{
+							{
+								GroupP5:  true,
+								Admin:    true,
+								LoggedIn: true,
+								User:     user.LastName,
+								Username: user.FirstName,
+								Pobedit:  "Победит 5",
+								GET:      get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleStockkeeperWH {
+						params := []Param{
+							{
+								GroupP5:       true,
+								StockkeeperWH: true,
+								LoggedIn:      true,
+								User:          user.LastName,
+								Username:      user.FirstName,
+								Pobedit:       "Победит 5",
+								GET:           get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleSuperIngenerQuality {
+						params := []Param{
+							{
+								GroupP5:             true,
+								SuperIngenerQuality: true,
+								LoggedIn:            true,
+								User:                user.LastName,
+								Username:            user.FirstName,
+								Pobedit:             "Победит 5",
+								GET:                 get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleIngenerQuality {
+						params := []Param{
+							{
+								GroupP5:        true,
+								IngenerQuality: true,
+								LoggedIn:       true,
+								User:           user.LastName,
+								Username:       user.FirstName,
+								Pobedit:        "Победит 5",
+								GET:            get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleInspector {
+						params := []Param{
+							{
+								GroupP5:   true,
+								Inspector: true,
+								Quality:   true,
+								LoggedIn:  true,
+								User:      user.LastName,
+								Username:  user.FirstName,
+								Pobedit:   "Победит 5",
+								GET:       get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleWarehouseManager {
+						params := []Param{
+							{
+								GroupP5:          true,
+								WarehouseManager: true,
+								LoggedIn:         true,
+								User:             user.LastName,
+								Username:         user.FirstName,
+								Pobedit:          "Победит 5",
+								GET:              get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
 					}
 
-					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
-					if err != nil {
-						http.Error(w, err.Error(), 400)
-						return
-					}
 				} else if search.EO != "" {
 					fmt.Println("OK EO")
 
@@ -1493,28 +3721,127 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 						return
 					}
 
-					data := map[string]interface{}{
-						"TitleDOC":            "Отчет по истроии ВК",
-						"User":                user.LastName,
-						"Username":            user.FirstName,
-						"Admin":               Admin,
-						"WarehouseManager":    WarehouseManager,
-						"StockkeeperWH":       StockkeeperWH,
-						"SuperIngenerQuality": SuperIngenerQuality,
-						"IngenerQuality":      IngenerQuality,
-						"Quality":             Quality,
-						"Inspector":           Inspector,
-						"LoggedIn":            LoggedIn,
-						//	"GroupP1":             GroupP1,
-						"GroupP5": GroupP5,
-						"Pobedit": "Победит 5",
-						"GET":     get,
-					}
+					if user.Role == roleAdministrator {
+						params := []Param{
+							{
+								GroupP5:  true,
+								Admin:    true,
+								LoggedIn: true,
+								User:     user.LastName,
+								Username: user.FirstName,
+								Pobedit:  "Победит 5",
+								GET:      get,
+							},
+						}
 
-					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
-					if err != nil {
-						http.Error(w, err.Error(), 400)
-						return
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleStockkeeperWH {
+						params := []Param{
+							{
+								GroupP5:       true,
+								StockkeeperWH: true,
+								LoggedIn:      true,
+								User:          user.LastName,
+								Username:      user.FirstName,
+								Pobedit:       "Победит 5",
+								GET:           get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleSuperIngenerQuality {
+						params := []Param{
+							{
+								GroupP5:             true,
+								SuperIngenerQuality: true,
+								LoggedIn:            true,
+								User:                user.LastName,
+								Username:            user.FirstName,
+								Pobedit:             "Победит 5",
+								GET:                 get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleIngenerQuality {
+						params := []Param{
+							{
+								GroupP5:        true,
+								IngenerQuality: true,
+								LoggedIn:       true,
+								User:           user.LastName,
+								Username:       user.FirstName,
+								Pobedit:        "Победит 5",
+								GET:            get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleInspector {
+						params := []Param{
+							{
+								GroupP5:   true,
+								Inspector: true,
+								Quality:   true,
+								LoggedIn:  true,
+								User:      user.LastName,
+								Username:  user.FirstName,
+								Pobedit:   "Победит 5",
+								GET:       get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleWarehouseManager {
+						params := []Param{
+							{
+								GroupP5:          true,
+								WarehouseManager: true,
+								LoggedIn:         true,
+								User:             user.LastName,
+								Username:         user.FirstName,
+								Pobedit:          "Победит 5",
+								GET:              get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
 					}
 
 				} else {
@@ -1525,29 +3852,129 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 						return
 					}
 
-					data := map[string]interface{}{
-						"TitleDOC":            "Отчет по истроии ВК",
-						"User":                user.LastName,
-						"Username":            user.FirstName,
-						"Admin":               Admin,
-						"WarehouseManager":    WarehouseManager,
-						"StockkeeperWH":       StockkeeperWH,
-						"SuperIngenerQuality": SuperIngenerQuality,
-						"IngenerQuality":      IngenerQuality,
-						"Quality":             Quality,
-						"Inspector":           Inspector,
-						"LoggedIn":            LoggedIn,
-						//	"GroupP1":             GroupP1,
-						"GroupP5": GroupP5,
-						"Pobedit": "Победит 5",
-						"GET":     get,
+					if user.Role == roleAdministrator {
+						params := []Param{
+							{
+								GroupP5:  true,
+								Admin:    true,
+								LoggedIn: true,
+								User:     user.LastName,
+								Username: user.FirstName,
+								Pobedit:  "Победит 5",
+								GET:      get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleStockkeeperWH {
+						params := []Param{
+							{
+								GroupP5:       true,
+								StockkeeperWH: true,
+								LoggedIn:      true,
+								User:          user.LastName,
+								Username:      user.FirstName,
+								Pobedit:       "Победит 5",
+								GET:           get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleSuperIngenerQuality {
+						params := []Param{
+							{
+								GroupP5:             true,
+								SuperIngenerQuality: true,
+								LoggedIn:            true,
+								User:                user.LastName,
+								Username:            user.FirstName,
+								Pobedit:             "Победит 5",
+								GET:                 get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleIngenerQuality {
+						params := []Param{
+							{
+								GroupP5:        true,
+								IngenerQuality: true,
+								LoggedIn:       true,
+								User:           user.LastName,
+								Username:       user.FirstName,
+								Pobedit:        "Победит 5",
+								GET:            get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleInspector {
+						params := []Param{
+							{
+								GroupP5:   true,
+								Inspector: true,
+								Quality:   true,
+								LoggedIn:  true,
+								User:      user.LastName,
+								Username:  user.FirstName,
+								Pobedit:   "Победит 5",
+								GET:       get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleWarehouseManager {
+						params := []Param{
+							{
+								GroupP5:          true,
+								WarehouseManager: true,
+								LoggedIn:         true,
+								User:             user.LastName,
+								Username:         user.FirstName,
+								Pobedit:          "Победит 5",
+								GET:              get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
 					}
 
-					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
-					if err != nil {
-						http.Error(w, err.Error(), 400)
-						return
-					}
 				}
 			} else {
 				if search.Material != 0 {
@@ -1559,29 +3986,129 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 						return
 					}
 
-					data := map[string]interface{}{
-						"TitleDOC":            "Отчет по истроии ВК",
-						"User":                user.LastName,
-						"Username":            user.FirstName,
-						"Admin":               Admin,
-						"WarehouseManager":    WarehouseManager,
-						"StockkeeperWH":       StockkeeperWH,
-						"SuperIngenerQuality": SuperIngenerQuality,
-						"IngenerQuality":      IngenerQuality,
-						"Quality":             Quality,
-						"Inspector":           Inspector,
-						"LoggedIn":            LoggedIn,
-						//	"GroupP1":             GroupP1,
-						"GroupP5": GroupP5,
-						"Pobedit": "Победит 5",
-						"GET":     get,
+					if user.Role == roleAdministrator {
+						params := []Param{
+							{
+								GroupP5:  true,
+								Admin:    true,
+								LoggedIn: true,
+								User:     user.LastName,
+								Username: user.FirstName,
+								Pobedit:  "Победит 5",
+								GET:      get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleStockkeeperWH {
+						params := []Param{
+							{
+								GroupP5:       true,
+								StockkeeperWH: true,
+								LoggedIn:      true,
+								User:          user.LastName,
+								Username:      user.FirstName,
+								Pobedit:       "Победит 5",
+								GET:           get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleSuperIngenerQuality {
+						params := []Param{
+							{
+								GroupP5:             true,
+								SuperIngenerQuality: true,
+								LoggedIn:            true,
+								User:                user.LastName,
+								Username:            user.FirstName,
+								Pobedit:             "Победит 5",
+								GET:                 get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleIngenerQuality {
+						params := []Param{
+							{
+								GroupP5:        true,
+								IngenerQuality: true,
+								LoggedIn:       true,
+								User:           user.LastName,
+								Username:       user.FirstName,
+								Pobedit:        "Победит 5",
+								GET:            get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleInspector {
+						params := []Param{
+							{
+								GroupP5:   true,
+								Inspector: true,
+								Quality:   true,
+								LoggedIn:  true,
+								User:      user.LastName,
+								Username:  user.FirstName,
+								Pobedit:   "Победит 5",
+								GET:       get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleWarehouseManager {
+						params := []Param{
+							{
+								GroupP5:          true,
+								WarehouseManager: true,
+								LoggedIn:         true,
+								User:             user.LastName,
+								Username:         user.FirstName,
+								Pobedit:          "Победит 5",
+								GET:              get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
 					}
 
-					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
-					if err != nil {
-						http.Error(w, err.Error(), 400)
-						return
-					}
 				} else if search.EO != "" {
 					fmt.Println("OK EO")
 
@@ -1591,28 +4118,127 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 						return
 					}
 
-					data := map[string]interface{}{
-						"TitleDOC":            "Отчет по истроии ВК",
-						"User":                user.LastName,
-						"Username":            user.FirstName,
-						"Admin":               Admin,
-						"WarehouseManager":    WarehouseManager,
-						"StockkeeperWH":       StockkeeperWH,
-						"SuperIngenerQuality": SuperIngenerQuality,
-						"IngenerQuality":      IngenerQuality,
-						"Quality":             Quality,
-						"Inspector":           Inspector,
-						"LoggedIn":            LoggedIn,
-						//	"GroupP1":             GroupP1,
-						"GroupP5": GroupP5,
-						"Pobedit": "Победит 5",
-						"GET":     get,
-					}
+					if user.Role == roleAdministrator {
+						params := []Param{
+							{
+								GroupP5:  true,
+								Admin:    true,
+								LoggedIn: true,
+								User:     user.LastName,
+								Username: user.FirstName,
+								Pobedit:  "Победит 5",
+								GET:      get,
+							},
+						}
 
-					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
-					if err != nil {
-						http.Error(w, err.Error(), 400)
-						return
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleStockkeeperWH {
+						params := []Param{
+							{
+								GroupP5:       true,
+								StockkeeperWH: true,
+								LoggedIn:      true,
+								User:          user.LastName,
+								Username:      user.FirstName,
+								Pobedit:       "Победит 5",
+								GET:           get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleSuperIngenerQuality {
+						params := []Param{
+							{
+								GroupP5:             true,
+								SuperIngenerQuality: true,
+								LoggedIn:            true,
+								User:                user.LastName,
+								Username:            user.FirstName,
+								Pobedit:             "Победит 5",
+								GET:                 get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleIngenerQuality {
+						params := []Param{
+							{
+								GroupP5:        true,
+								IngenerQuality: true,
+								LoggedIn:       true,
+								User:           user.LastName,
+								Username:       user.FirstName,
+								Pobedit:        "Победит 5",
+								GET:            get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleInspector {
+						params := []Param{
+							{
+								GroupP5:   true,
+								Inspector: true,
+								Quality:   true,
+								LoggedIn:  true,
+								User:      user.LastName,
+								Username:  user.FirstName,
+								Pobedit:   "Победит 5",
+								GET:       get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleWarehouseManager {
+						params := []Param{
+							{
+								GroupP5:          true,
+								WarehouseManager: true,
+								LoggedIn:         true,
+								User:             user.LastName,
+								Username:         user.FirstName,
+								Pobedit:          "Победит 5",
+								GET:              get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
 					}
 
 				} else {
@@ -1623,108 +4249,254 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 						return
 					}
 
-					data := map[string]interface{}{
-						"TitleDOC":            "Отчет по истроии ВК",
-						"User":                user.LastName,
-						"Username":            user.FirstName,
-						"Admin":               Admin,
-						"WarehouseManager":    WarehouseManager,
-						"StockkeeperWH":       StockkeeperWH,
-						"SuperIngenerQuality": SuperIngenerQuality,
-						"IngenerQuality":      IngenerQuality,
-						"Quality":             Quality,
-						"Inspector":           Inspector,
-						"LoggedIn":            LoggedIn,
-						//	"GroupP1":             GroupP1,
-						"GroupP5": GroupP5,
-						"Pobedit": "Победит 5",
-						"GET":     get,
+					if user.Role == roleAdministrator {
+						params := []Param{
+							{
+								GroupP5:  true,
+								Admin:    true,
+								LoggedIn: true,
+								User:     user.LastName,
+								Username: user.FirstName,
+								Pobedit:  "Победит 5",
+								GET:      get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleStockkeeperWH {
+						params := []Param{
+							{
+								GroupP5:       true,
+								StockkeeperWH: true,
+								LoggedIn:      true,
+								User:          user.LastName,
+								Username:      user.FirstName,
+								Pobedit:       "Победит 5",
+								GET:           get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleSuperIngenerQuality {
+						params := []Param{
+							{
+								GroupP5:             true,
+								SuperIngenerQuality: true,
+								LoggedIn:            true,
+								User:                user.LastName,
+								Username:            user.FirstName,
+								Pobedit:             "Победит 5",
+								GET:                 get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleIngenerQuality {
+						params := []Param{
+							{
+								GroupP5:        true,
+								IngenerQuality: true,
+								LoggedIn:       true,
+								User:           user.LastName,
+								Username:       user.FirstName,
+								Pobedit:        "Победит 5",
+								GET:            get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleInspector {
+						params := []Param{
+							{
+								GroupP5:   true,
+								Inspector: true,
+								Quality:   true,
+								LoggedIn:  true,
+								User:      user.LastName,
+								Username:  user.FirstName,
+								Pobedit:   "Победит 5",
+								GET:       get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleWarehouseManager {
+						params := []Param{
+							{
+								GroupP5:          true,
+								WarehouseManager: true,
+								LoggedIn:         true,
+								User:             user.LastName,
+								Username:         user.FirstName,
+								Pobedit:          "Победит 5",
+								GET:              get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
 					}
 
-					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
-					if err != nil {
-						http.Error(w, err.Error(), 400)
-						return
-					}
 				}
 			}
 		}
 
 		if user.Groups == groupQuality || user.Groups == groupWarehouse {
-			GroupP1 = true
-			if user.Role == roleAdministrator {
-				Admin = true
-				LoggedIn = true
-			} else if user.Role == roleStockkeeperWH {
-				StockkeeperWH = true
-				LoggedIn = true
-				fmt.Println("кладовщик склада - ", StockkeeperWH)
-			} else if user.Role == roleSuperIngenerQuality {
-				SuperIngenerQuality = true
-				LoggedIn = true
-			} else if user.Role == roleIngenerQuality {
-				IngenerQuality = true
-				LoggedIn = true
-			} else if user.Role == roleInspector {
-				Quality = true
-				Inspector = true
-				LoggedIn = true
-				fmt.Println("pageInspection quality - ", Quality)
-			} else if user.Role == roleWarehouseManager {
-				WarehouseManager = true
-				LoggedIn = true
-			}
-
-			search := &req{}
-			materialInt, err := strconv.Atoi(r.FormValue("material"))
-			if err != nil {
-				fmt.Println(err)
-				s.logger.Errorf(err.Error())
-			}
-			search.Date1 = r.FormValue("date1")
-			fmt.Println("date1 - ", search.Date1)
-			//s.infoLog.Printf("date1 - %v", search.Date1)
-			s.logger.Infof("date1 - %v", search.Date1)
-			search.Date2 = r.FormValue("date2")
-			fmt.Println("date2 - ", search.Date2)
-			//s.infoLog.Printf("date2 - %v", search.Date2)
-			s.logger.Infof("date2 - %v", search.Date2)
-			search.Material = materialInt
-			fmt.Println("material - ", search.Material)
-			//s.infoLog.Printf("material - %v", search.Material)
-			s.logger.Infof("material - %v", search.Material)
-			search.EO = r.FormValue("eo")
-			//s.infoLog.Printf("eo - %v", search.EO)
-			s.logger.Infof("eo - %v", search.EO)
-
-			currentData := time.Now()
-			searchDateNow := currentData.Format("2006-01-02")
 
 			if search.Date1 == "" && search.Date2 == "" && search.Material == 0 && search.EO == "" {
 				fmt.Println("Не заполнены поля ввода")
-				data := map[string]interface{}{
-					"TitleDOC":            "Отчет по истроии ВК",
-					"User":                user.LastName,
-					"Username":            user.FirstName,
-					"Admin":               Admin,
-					"WarehouseManager":    WarehouseManager,
-					"StockkeeperWH":       StockkeeperWH,
-					"SuperIngenerQuality": SuperIngenerQuality,
-					"IngenerQuality":      IngenerQuality,
-					"Quality":             Quality,
-					"Inspector":           Inspector,
-					//	"GroupP5":             GroupP5,
-					"GroupP1":  GroupP1,
-					"Pobedit":  "Победит 5",
-					"LoggedIn": LoggedIn,
-					//	"GET":                 get,
+				if user.Role == roleAdministrator {
+					params := []Param{
+						{
+							GroupP1:  true,
+							Admin:    true,
+							LoggedIn: true,
+							User:     user.LastName,
+							Username: user.FirstName,
+							Pobedit:  "Победит 5",
+						},
+					}
+
+					data := map[string]interface{}{
+						"TitleDOC": "Отчет по истории ВК",
+						"GetParam": params,
+					}
+
+					RenderTemplate(w, "errorSearchHistoryInspection.html", data)
+
+				} else if user.Role == roleStockkeeperWH {
+					params := []Param{
+						{
+							GroupP1:       true,
+							StockkeeperWH: true,
+							LoggedIn:      true,
+							User:          user.LastName,
+							Username:      user.FirstName,
+							Pobedit:       "Победит 5",
+						},
+					}
+
+					data := map[string]interface{}{
+						"TitleDOC": "Отчет по истории ВК",
+						"GetParam": params,
+					}
+
+					RenderTemplate(w, "errorSearchHistoryInspection.html", data)
+
+				} else if user.Role == roleSuperIngenerQuality {
+					params := []Param{
+						{
+							GroupP1:             true,
+							SuperIngenerQuality: true,
+							LoggedIn:            true,
+							User:                user.LastName,
+							Username:            user.FirstName,
+							Pobedit:             "Победит 5",
+						},
+					}
+
+					data := map[string]interface{}{
+						"TitleDOC": "Отчет по истории ВК",
+						"GetParam": params,
+					}
+
+					RenderTemplate(w, "errorSearchHistoryInspection.html", data)
+
+				} else if user.Role == roleIngenerQuality {
+					params := []Param{
+						{
+							GroupP1:        true,
+							IngenerQuality: true,
+							LoggedIn:       true,
+							User:           user.LastName,
+							Username:       user.FirstName,
+							Pobedit:        "Победит 5",
+						},
+					}
+
+					data := map[string]interface{}{
+						"TitleDOC": "Отчет по истории ВК",
+						"GetParam": params,
+					}
+
+					RenderTemplate(w, "errorSearchHistoryInspection.html", data)
+
+				} else if user.Role == roleInspector {
+					params := []Param{
+						{
+							GroupP1:   true,
+							Inspector: true,
+							Quality:   true,
+							LoggedIn:  true,
+							User:      user.LastName,
+							Username:  user.FirstName,
+							Pobedit:   "Победит 5",
+						},
+					}
+
+					data := map[string]interface{}{
+						"TitleDOC": "Отчет по истории ВК",
+						"GetParam": params,
+					}
+
+					RenderTemplate(w, "errorSearchHistoryInspection.html", data)
+
+				} else if user.Role == roleWarehouseManager {
+					params := []Param{
+						{
+							GroupP1:          true,
+							WarehouseManager: true,
+							LoggedIn:         true,
+							User:             user.LastName,
+							Username:         user.FirstName,
+							Pobedit:          "Победит 5",
+						},
+					}
+
+					data := map[string]interface{}{
+						"TitleDOC": "Отчет по истории ВК",
+						"GetParam": params,
+					}
+
+					RenderTemplate(w, "errorSearchHistoryInspection.html", data)
+
 				}
 
-				err = tpl.ExecuteTemplate(w, "errorSearchHistoryInspection.html", data)
-				if err != nil {
-					http.Error(w, err.Error(), 400)
-					return
-				}
 			} else if search.Date1 == "" && search.Date2 == "" {
 				if search.EO != "" {
 
@@ -1739,29 +4511,129 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 					//	page, begin := s.Pagination(r, limit)
 					//	fmt.Printf("Current Page: %d, Begin: %d\n", page, begin)
 
-					data := map[string]interface{}{
-						"TitleDOC":            "Отчет по истроии ВК",
-						"User":                user.LastName,
-						"Username":            user.FirstName,
-						"Admin":               Admin,
-						"WarehouseManager":    WarehouseManager,
-						"StockkeeperWH":       StockkeeperWH,
-						"SuperIngenerQuality": SuperIngenerQuality,
-						"IngenerQuality":      IngenerQuality,
-						"Quality":             Quality,
-						"Inspector":           Inspector,
-						"LoggedIn":            LoggedIn,
-						"GroupP1":             GroupP1,
-						"Pobedit":             "Победит 5",
-						//	"GroupP5":             GroupP5,
-						"GET": get,
+					if user.Role == roleAdministrator {
+						params := []Param{
+							{
+								GroupP1:  true,
+								Admin:    true,
+								LoggedIn: true,
+								User:     user.LastName,
+								Username: user.FirstName,
+								Pobedit:  "Победит 5",
+								GET:      get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleStockkeeperWH {
+						params := []Param{
+							{
+								GroupP1:       true,
+								StockkeeperWH: true,
+								LoggedIn:      true,
+								User:          user.LastName,
+								Username:      user.FirstName,
+								Pobedit:       "Победит 5",
+								GET:           get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleSuperIngenerQuality {
+						params := []Param{
+							{
+								GroupP1:             true,
+								SuperIngenerQuality: true,
+								LoggedIn:            true,
+								User:                user.LastName,
+								Username:            user.FirstName,
+								Pobedit:             "Победит 5",
+								GET:                 get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleIngenerQuality {
+						params := []Param{
+							{
+								GroupP1:        true,
+								IngenerQuality: true,
+								LoggedIn:       true,
+								User:           user.LastName,
+								Username:       user.FirstName,
+								Pobedit:        "Победит 5",
+								GET:            get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleInspector {
+						params := []Param{
+							{
+								GroupP1:   true,
+								Inspector: true,
+								Quality:   true,
+								LoggedIn:  true,
+								User:      user.LastName,
+								Username:  user.FirstName,
+								Pobedit:   "Победит 5",
+								GET:       get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleWarehouseManager {
+						params := []Param{
+							{
+								GroupP1:          true,
+								WarehouseManager: true,
+								LoggedIn:         true,
+								User:             user.LastName,
+								Username:         user.FirstName,
+								Pobedit:          "Победит 5",
+								GET:              get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
 					}
 
-					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
-					if err != nil {
-						http.Error(w, err.Error(), 400)
-						return
-					}
 				} else if search.Material != 0 {
 
 					//	count, _ := s.store.Inspection().CountInspection()
@@ -1777,29 +4649,271 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 						return
 					}
 
-					data := map[string]interface{}{
-						"TitleDOC":            "Отчет по истроии ВК",
-						"User":                user.LastName,
-						"Username":            user.FirstName,
-						"Admin":               Admin,
-						"WarehouseManager":    WarehouseManager,
-						"StockkeeperWH":       StockkeeperWH,
-						"SuperIngenerQuality": SuperIngenerQuality,
-						"IngenerQuality":      IngenerQuality,
-						"Quality":             Quality,
-						"Inspector":           Inspector,
-						"LoggedIn":            LoggedIn,
-						"GroupP1":             GroupP1,
-						"Pobedit":             "Победит 5",
-						//	"GroupP5":             GroupP5,
-						"GET": get,
+					if user.Role == roleAdministrator {
+						params := []Param{
+							{
+								GroupP1:  true,
+								Admin:    true,
+								LoggedIn: true,
+								User:     user.LastName,
+								Username: user.FirstName,
+								Pobedit:  "Победит 5",
+								GET:      get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleStockkeeperWH {
+						params := []Param{
+							{
+								GroupP1:       true,
+								StockkeeperWH: true,
+								LoggedIn:      true,
+								User:          user.LastName,
+								Username:      user.FirstName,
+								Pobedit:       "Победит 5",
+								GET:           get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleSuperIngenerQuality {
+						params := []Param{
+							{
+								GroupP1:             true,
+								SuperIngenerQuality: true,
+								LoggedIn:            true,
+								User:                user.LastName,
+								Username:            user.FirstName,
+								Pobedit:             "Победит 5",
+								GET:                 get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleIngenerQuality {
+						params := []Param{
+							{
+								GroupP1:        true,
+								IngenerQuality: true,
+								LoggedIn:       true,
+								User:           user.LastName,
+								Username:       user.FirstName,
+								Pobedit:        "Победит 5",
+								GET:            get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleInspector {
+						params := []Param{
+							{
+								GroupP1:   true,
+								Inspector: true,
+								Quality:   true,
+								LoggedIn:  true,
+								User:      user.LastName,
+								Username:  user.FirstName,
+								Pobedit:   "Победит 5",
+								GET:       get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleWarehouseManager {
+						params := []Param{
+							{
+								GroupP1:          true,
+								WarehouseManager: true,
+								LoggedIn:         true,
+								User:             user.LastName,
+								Username:         user.FirstName,
+								Pobedit:          "Победит 5",
+								GET:              get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
 					}
-					//	RenderJSON(w, get, http.StatusOK)
-					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
+
+					//}
+
+				} else if search.Material != 0 {
+
+					//	count, _ := s.store.Inspection().CountInspection()
+					//	fmt.Println(count)
+					//	limit := 2
+					//	page, begin := s.Pagination(r, limit)
+					//	fmt.Printf("Current Page: %d, Begin: %d\n", page, begin)
+					//	get, err := s.store.Inspection().ListShowDataBySap(search.Material, begin, limit)
+					get, err := s.store.Inspection().ListShowDataBySapP5(search.Material)
+
 					if err != nil {
-						http.Error(w, err.Error(), 400)
+						s.error(w, r, http.StatusUnprocessableEntity, err)
 						return
 					}
+
+					if user.Role == roleAdministrator {
+						params := []Param{
+							{
+								GroupP1:  true,
+								Admin:    true,
+								LoggedIn: true,
+								User:     user.LastName,
+								Username: user.FirstName,
+								Pobedit:  "Победит 5",
+								GET:      get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleStockkeeperWH {
+						params := []Param{
+							{
+								GroupP1:       true,
+								StockkeeperWH: true,
+								LoggedIn:      true,
+								User:          user.LastName,
+								Username:      user.FirstName,
+								Pobedit:       "Победит 5",
+								GET:           get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleSuperIngenerQuality {
+						params := []Param{
+							{
+								GroupP1:             true,
+								SuperIngenerQuality: true,
+								LoggedIn:            true,
+								User:                user.LastName,
+								Username:            user.FirstName,
+								Pobedit:             "Победит 5",
+								GET:                 get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleIngenerQuality {
+						params := []Param{
+							{
+								GroupP1:        true,
+								IngenerQuality: true,
+								LoggedIn:       true,
+								User:           user.LastName,
+								Username:       user.FirstName,
+								Pobedit:        "Победит 5",
+								GET:            get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleInspector {
+						params := []Param{
+							{
+								GroupP1:   true,
+								Inspector: true,
+								Quality:   true,
+								LoggedIn:  true,
+								User:      user.LastName,
+								Username:  user.FirstName,
+								Pobedit:   "Победит 5",
+								GET:       get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleWarehouseManager {
+						params := []Param{
+							{
+								GroupP1:          true,
+								WarehouseManager: true,
+								LoggedIn:         true,
+								User:             user.LastName,
+								Username:         user.FirstName,
+								Pobedit:          "Победит 5",
+								GET:              get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					}
+
+					//	RenderJSON(w, get, http.StatusOK)
+
 				}
 			} else if search.Date1 != "" && search.Date2 == "" {
 
@@ -1812,29 +4926,129 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 						return
 					}
 
-					data := map[string]interface{}{
-						"TitleDOC":            "Отчет по истроии ВК",
-						"User":                user.LastName,
-						"Username":            user.FirstName,
-						"Admin":               Admin,
-						"WarehouseManager":    WarehouseManager,
-						"StockkeeperWH":       StockkeeperWH,
-						"SuperIngenerQuality": SuperIngenerQuality,
-						"IngenerQuality":      IngenerQuality,
-						"Quality":             Quality,
-						"Inspector":           Inspector,
-						"LoggedIn":            LoggedIn,
-						"GroupP1":             GroupP1,
-						"Pobedit":             "Победит 5",
-						//	"GroupP5":             GroupP5,
-						"GET": get,
+					if user.Role == roleAdministrator {
+						params := []Param{
+							{
+								GroupP1:  true,
+								Admin:    true,
+								LoggedIn: true,
+								User:     user.LastName,
+								Username: user.FirstName,
+								Pobedit:  "Победит 5",
+								GET:      get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleStockkeeperWH {
+						params := []Param{
+							{
+								GroupP1:       true,
+								StockkeeperWH: true,
+								LoggedIn:      true,
+								User:          user.LastName,
+								Username:      user.FirstName,
+								Pobedit:       "Победит 5",
+								GET:           get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleSuperIngenerQuality {
+						params := []Param{
+							{
+								GroupP1:             true,
+								SuperIngenerQuality: true,
+								LoggedIn:            true,
+								User:                user.LastName,
+								Username:            user.FirstName,
+								Pobedit:             "Победит 5",
+								GET:                 get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleIngenerQuality {
+						params := []Param{
+							{
+								GroupP1:        true,
+								IngenerQuality: true,
+								LoggedIn:       true,
+								User:           user.LastName,
+								Username:       user.FirstName,
+								Pobedit:        "Победит 5",
+								GET:            get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleInspector {
+						params := []Param{
+							{
+								GroupP1:   true,
+								Inspector: true,
+								Quality:   true,
+								LoggedIn:  true,
+								User:      user.LastName,
+								Username:  user.FirstName,
+								Pobedit:   "Победит 5",
+								GET:       get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleWarehouseManager {
+						params := []Param{
+							{
+								GroupP1:          true,
+								WarehouseManager: true,
+								LoggedIn:         true,
+								User:             user.LastName,
+								Username:         user.FirstName,
+								Pobedit:          "Победит 5",
+								GET:              get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
 					}
 
-					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
-					if err != nil {
-						http.Error(w, err.Error(), 400)
-						return
-					}
 				} else if search.EO != "" {
 					fmt.Println("OK EO")
 
@@ -1844,28 +5058,127 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 						return
 					}
 
-					data := map[string]interface{}{
-						"TitleDOC":            "Отчет по истроии ВК",
-						"User":                user.LastName,
-						"Username":            user.FirstName,
-						"Admin":               Admin,
-						"WarehouseManager":    WarehouseManager,
-						"StockkeeperWH":       StockkeeperWH,
-						"SuperIngenerQuality": SuperIngenerQuality,
-						"IngenerQuality":      IngenerQuality,
-						"Quality":             Quality,
-						"Inspector":           Inspector,
-						"LoggedIn":            LoggedIn,
-						"GroupP1":             GroupP1,
-						"Pobedit":             "Победит 5",
-						//	"GroupP5":             GroupP5,
-						"GET": get,
-					}
+					if user.Role == roleAdministrator {
+						params := []Param{
+							{
+								GroupP1:  true,
+								Admin:    true,
+								LoggedIn: true,
+								User:     user.LastName,
+								Username: user.FirstName,
+								Pobedit:  "Победит 5",
+								GET:      get,
+							},
+						}
 
-					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
-					if err != nil {
-						http.Error(w, err.Error(), 400)
-						return
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleStockkeeperWH {
+						params := []Param{
+							{
+								GroupP1:       true,
+								StockkeeperWH: true,
+								LoggedIn:      true,
+								User:          user.LastName,
+								Username:      user.FirstName,
+								Pobedit:       "Победит 5",
+								GET:           get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleSuperIngenerQuality {
+						params := []Param{
+							{
+								GroupP1:             true,
+								SuperIngenerQuality: true,
+								LoggedIn:            true,
+								User:                user.LastName,
+								Username:            user.FirstName,
+								Pobedit:             "Победит 5",
+								GET:                 get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleIngenerQuality {
+						params := []Param{
+							{
+								GroupP1:        true,
+								IngenerQuality: true,
+								LoggedIn:       true,
+								User:           user.LastName,
+								Username:       user.FirstName,
+								Pobedit:        "Победит 5",
+								GET:            get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleInspector {
+						params := []Param{
+							{
+								GroupP1:   true,
+								Inspector: true,
+								Quality:   true,
+								LoggedIn:  true,
+								User:      user.LastName,
+								Username:  user.FirstName,
+								Pobedit:   "Победит 5",
+								GET:       get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleWarehouseManager {
+						params := []Param{
+							{
+								GroupP1:          true,
+								WarehouseManager: true,
+								LoggedIn:         true,
+								User:             user.LastName,
+								Username:         user.FirstName,
+								Pobedit:          "Победит 5",
+								GET:              get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
 					}
 
 				} else {
@@ -1876,29 +5189,129 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 						return
 					}
 
-					data := map[string]interface{}{
-						"TitleDOC":            "Отчет по истроии ВК",
-						"User":                user.LastName,
-						"Username":            user.FirstName,
-						"Admin":               Admin,
-						"WarehouseManager":    WarehouseManager,
-						"StockkeeperWH":       StockkeeperWH,
-						"SuperIngenerQuality": SuperIngenerQuality,
-						"IngenerQuality":      IngenerQuality,
-						"Quality":             Quality,
-						"Inspector":           Inspector,
-						"LoggedIn":            LoggedIn,
-						"GroupP1":             GroupP1,
-						"Pobedit":             "Победит 5",
-						//	"GroupP5":             GroupP5,
-						"GET": get,
+					if user.Role == roleAdministrator {
+						params := []Param{
+							{
+								GroupP1:  true,
+								Admin:    true,
+								LoggedIn: true,
+								User:     user.LastName,
+								Username: user.FirstName,
+								Pobedit:  "Победит 5",
+								GET:      get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleStockkeeperWH {
+						params := []Param{
+							{
+								GroupP1:       true,
+								StockkeeperWH: true,
+								LoggedIn:      true,
+								User:          user.LastName,
+								Username:      user.FirstName,
+								Pobedit:       "Победит 5",
+								GET:           get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleSuperIngenerQuality {
+						params := []Param{
+							{
+								GroupP1:             true,
+								SuperIngenerQuality: true,
+								LoggedIn:            true,
+								User:                user.LastName,
+								Username:            user.FirstName,
+								Pobedit:             "Победит 5",
+								GET:                 get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleIngenerQuality {
+						params := []Param{
+							{
+								GroupP1:        true,
+								IngenerQuality: true,
+								LoggedIn:       true,
+								User:           user.LastName,
+								Username:       user.FirstName,
+								Pobedit:        "Победит 5",
+								GET:            get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleInspector {
+						params := []Param{
+							{
+								GroupP1:   true,
+								Inspector: true,
+								Quality:   true,
+								LoggedIn:  true,
+								User:      user.LastName,
+								Username:  user.FirstName,
+								Pobedit:   "Победит 5",
+								GET:       get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleWarehouseManager {
+						params := []Param{
+							{
+								GroupP1:          true,
+								WarehouseManager: true,
+								LoggedIn:         true,
+								User:             user.LastName,
+								Username:         user.FirstName,
+								Pobedit:          "Победит 5",
+								GET:              get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
 					}
 
-					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
-					if err != nil {
-						http.Error(w, err.Error(), 400)
-						return
-					}
 				}
 			} else {
 				if search.Material != 0 {
@@ -1910,29 +5323,129 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 						return
 					}
 
-					data := map[string]interface{}{
-						"TitleDOC":            "Отчет по истроии ВК",
-						"User":                user.LastName,
-						"Username":            user.FirstName,
-						"Admin":               Admin,
-						"WarehouseManager":    WarehouseManager,
-						"StockkeeperWH":       StockkeeperWH,
-						"SuperIngenerQuality": SuperIngenerQuality,
-						"IngenerQuality":      IngenerQuality,
-						"Quality":             Quality,
-						"Inspector":           Inspector,
-						"LoggedIn":            LoggedIn,
-						"GroupP1":             GroupP1,
-						"Pobedit":             "Победит 5",
-						//	"GroupP5":             GroupP5,
-						"GET": get,
+					if user.Role == roleAdministrator {
+						params := []Param{
+							{
+								GroupP1:  true,
+								Admin:    true,
+								LoggedIn: true,
+								User:     user.LastName,
+								Username: user.FirstName,
+								Pobedit:  "Победит 5",
+								GET:      get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleStockkeeperWH {
+						params := []Param{
+							{
+								GroupP1:       true,
+								StockkeeperWH: true,
+								LoggedIn:      true,
+								User:          user.LastName,
+								Username:      user.FirstName,
+								Pobedit:       "Победит 5",
+								GET:           get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleSuperIngenerQuality {
+						params := []Param{
+							{
+								GroupP1:             true,
+								SuperIngenerQuality: true,
+								LoggedIn:            true,
+								User:                user.LastName,
+								Username:            user.FirstName,
+								Pobedit:             "Победит 5",
+								GET:                 get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleIngenerQuality {
+						params := []Param{
+							{
+								GroupP1:        true,
+								IngenerQuality: true,
+								LoggedIn:       true,
+								User:           user.LastName,
+								Username:       user.FirstName,
+								Pobedit:        "Победит 5",
+								GET:            get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleInspector {
+						params := []Param{
+							{
+								GroupP1:   true,
+								Inspector: true,
+								Quality:   true,
+								LoggedIn:  true,
+								User:      user.LastName,
+								Username:  user.FirstName,
+								Pobedit:   "Победит 5",
+								GET:       get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleWarehouseManager {
+						params := []Param{
+							{
+								GroupP1:          true,
+								WarehouseManager: true,
+								LoggedIn:         true,
+								User:             user.LastName,
+								Username:         user.FirstName,
+								Pobedit:          "Победит 5",
+								GET:              get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
 					}
 
-					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
-					if err != nil {
-						http.Error(w, err.Error(), 400)
-						return
-					}
 				} else if search.EO != "" {
 					fmt.Println("OK EO")
 
@@ -1942,28 +5455,127 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 						return
 					}
 
-					data := map[string]interface{}{
-						"TitleDOC":            "Отчет по истроии ВК",
-						"User":                user.LastName,
-						"Username":            user.FirstName,
-						"Admin":               Admin,
-						"WarehouseManager":    WarehouseManager,
-						"StockkeeperWH":       StockkeeperWH,
-						"SuperIngenerQuality": SuperIngenerQuality,
-						"IngenerQuality":      IngenerQuality,
-						"Quality":             Quality,
-						"Inspector":           Inspector,
-						"LoggedIn":            LoggedIn,
-						"GroupP1":             GroupP1,
-						"Pobedit":             "Победит 5",
-						//	"GroupP5":             GroupP5,
-						"GET": get,
-					}
+					if user.Role == roleAdministrator {
+						params := []Param{
+							{
+								GroupP1:  true,
+								Admin:    true,
+								LoggedIn: true,
+								User:     user.LastName,
+								Username: user.FirstName,
+								Pobedit:  "Победит 5",
+								GET:      get,
+							},
+						}
 
-					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
-					if err != nil {
-						http.Error(w, err.Error(), 400)
-						return
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleStockkeeperWH {
+						params := []Param{
+							{
+								GroupP1:       true,
+								StockkeeperWH: true,
+								LoggedIn:      true,
+								User:          user.LastName,
+								Username:      user.FirstName,
+								Pobedit:       "Победит 5",
+								GET:           get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleSuperIngenerQuality {
+						params := []Param{
+							{
+								GroupP1:             true,
+								SuperIngenerQuality: true,
+								LoggedIn:            true,
+								User:                user.LastName,
+								Username:            user.FirstName,
+								Pobedit:             "Победит 5",
+								GET:                 get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleIngenerQuality {
+						params := []Param{
+							{
+								GroupP1:        true,
+								IngenerQuality: true,
+								LoggedIn:       true,
+								User:           user.LastName,
+								Username:       user.FirstName,
+								Pobedit:        "Победит 5",
+								GET:            get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleInspector {
+						params := []Param{
+							{
+								GroupP1:   true,
+								Inspector: true,
+								Quality:   true,
+								LoggedIn:  true,
+								User:      user.LastName,
+								Username:  user.FirstName,
+								Pobedit:   "Победит 5",
+								GET:       get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleWarehouseManager {
+						params := []Param{
+							{
+								GroupP1:          true,
+								WarehouseManager: true,
+								LoggedIn:         true,
+								User:             user.LastName,
+								Username:         user.FirstName,
+								Pobedit:          "Победит 5",
+								GET:              get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
 					}
 
 				} else {
@@ -1974,29 +5586,129 @@ func (s *Server) HistoryInspectionP5() http.HandlerFunc {
 						return
 					}
 
-					data := map[string]interface{}{
-						"TitleDOC":            "Отчет по истроии ВК",
-						"User":                user.LastName,
-						"Username":            user.FirstName,
-						"Admin":               Admin,
-						"WarehouseManager":    WarehouseManager,
-						"StockkeeperWH":       StockkeeperWH,
-						"SuperIngenerQuality": SuperIngenerQuality,
-						"IngenerQuality":      IngenerQuality,
-						"Quality":             Quality,
-						"Inspector":           Inspector,
-						"LoggedIn":            LoggedIn,
-						"GroupP1":             GroupP1,
-						"Pobedit":             "Победит 5",
-						//	"GroupP5":             GroupP5,
-						"GET": get,
+					if user.Role == roleAdministrator {
+						params := []Param{
+							{
+								GroupP1:  true,
+								Admin:    true,
+								LoggedIn: true,
+								User:     user.LastName,
+								Username: user.FirstName,
+								Pobedit:  "Победит 5",
+								GET:      get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleStockkeeperWH {
+						params := []Param{
+							{
+								GroupP1:       true,
+								StockkeeperWH: true,
+								LoggedIn:      true,
+								User:          user.LastName,
+								Username:      user.FirstName,
+								Pobedit:       "Победит 5",
+								GET:           get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleSuperIngenerQuality {
+						params := []Param{
+							{
+								GroupP1:             true,
+								SuperIngenerQuality: true,
+								LoggedIn:            true,
+								User:                user.LastName,
+								Username:            user.FirstName,
+								Pobedit:             "Победит 5",
+								GET:                 get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleIngenerQuality {
+						params := []Param{
+							{
+								GroupP1:        true,
+								IngenerQuality: true,
+								LoggedIn:       true,
+								User:           user.LastName,
+								Username:       user.FirstName,
+								Pobedit:        "Победит 5",
+								GET:            get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleInspector {
+						params := []Param{
+							{
+								GroupP1:   true,
+								Inspector: true,
+								Quality:   true,
+								LoggedIn:  true,
+								User:      user.LastName,
+								Username:  user.FirstName,
+								Pobedit:   "Победит 5",
+								GET:       get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
+					} else if user.Role == roleWarehouseManager {
+						params := []Param{
+							{
+								GroupP1:          true,
+								WarehouseManager: true,
+								LoggedIn:         true,
+								User:             user.LastName,
+								Username:         user.FirstName,
+								Pobedit:          "Победит 5",
+								GET:              get,
+							},
+						}
+
+						data := map[string]interface{}{
+							"TitleDOC": "Отчет по истории ВК",
+							"GetParam": params,
+						}
+
+						RenderTemplate(w, "showhistoryinspection.html", data)
+
 					}
 
-					err = tpl.ExecuteTemplate(w, "showhistoryinspection.html", data)
-					if err != nil {
-						http.Error(w, err.Error(), 400)
-						return
-					}
 				}
 			}
 		}
@@ -2013,42 +5725,209 @@ func (s *Server) PageInspection() http.HandlerFunc {
 		s.mu.Lock()
 		defer s.mu.Unlock()
 		//w.Header().Add("Content-Type", "application/json")
-		//	Admin := true
-		//	Warehouse := true
-		StockkeeperWH := false
-		WarehouseManager := false
-		//	Quality := false
-		Inspector := false
-		SuperIngenerQuality := false
-		IngenerQuality := false
-		SuperIngenerQuality2 := false
-		GroupP1 := false
-		GroupP5 := false
-		MixP1P5 := false
-		LoggedIn := true
 
 		user := r.Context().Value(ctxKeyUser).(*model.User)
 
+		get, err := s.store.Inspection().ListInspection()
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		countTotal, err := s.store.Inspection().CountTotalInspection()
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		holdInspection, err := s.store.Inspection().HoldInspection()
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		notVerifyComponents, err := s.store.Inspection().NotVerifyComponents()
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		getStatic, err := s.store.Inspection().CountDebitor()
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		holdCountDebitor, err := s.store.Inspection().HoldCountDebitor()
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		notVerifyDebitor, err := s.store.Inspection().NotVerifyDebitor()
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		countVerifyComponents, err := s.store.Inspection().CountVerifyComponents()
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		listVendor, err := s.store.Vendor().ListVendor()
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
 		if user.Groups == groupQuality || user.Groups == groupWarehouse {
-			GroupP1 = true
+			//GroupP1 = true
 			if user.Role == roleSuperIngenerQuality {
-				SuperIngenerQuality = true
-				SuperIngenerQuality2 = true
-				MixP1P5 = true
-				LoggedIn = true
-				fmt.Println("pageInspection SuperIngenerQuality - ", SuperIngenerQuality)
+				params := []Param{
+					{
+						LoggedIn:              true,
+						GroupP1:               true,
+						SuperIngenerQuality:   true,
+						User:                  user.LastName,
+						Username:              user.FirstName,
+						Pobedit:               "Победит 1",
+						GET:                   get,
+						ListVendor:            listVendor,
+						CountTotal:            countTotal,
+						HoldInspection:        holdInspection,
+						NotVerifyComponents:   notVerifyComponents,
+						CountVerifyComponents: countVerifyComponents,
+						GetStatic:             getStatic,
+						HoldCountDebitor:      holdCountDebitor,
+						NotVerifyDebitor:      notVerifyDebitor,
+					},
+				}
+
+				data := map[string]interface{}{
+					"TitleDOC": "Список ВК",
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "showinspection.html", data)
+
 			} else if user.Role == roleStockkeeperWH {
-				StockkeeperWH = true
+				params := []Param{
+					{
+						LoggedIn:              true,
+						GroupP1:               true,
+						StockkeeperWH:         true,
+						User:                  user.LastName,
+						Username:              user.FirstName,
+						Pobedit:               "Победит 1",
+						GET:                   get,
+						ListVendor:            listVendor,
+						CountTotal:            countTotal,
+						HoldInspection:        holdInspection,
+						NotVerifyComponents:   notVerifyComponents,
+						CountVerifyComponents: countVerifyComponents,
+						GetStatic:             getStatic,
+						HoldCountDebitor:      holdCountDebitor,
+						NotVerifyDebitor:      notVerifyDebitor,
+					},
+				}
+
+				data := map[string]interface{}{
+					"TitleDOC": "Список ВК",
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "showinspection.html", data)
+				//StockkeeperWH = true
 				//	Warehouse = false
 				//	WarehouseManager = true
-				LoggedIn = true
+				//LoggedIn = true
 			} else if user.Role == roleIngenerQuality {
-				IngenerQuality = true
+				params := []Param{
+					{
+						LoggedIn:              true,
+						GroupP1:               true,
+						IngenerQuality:        true,
+						User:                  user.LastName,
+						Username:              user.FirstName,
+						Pobedit:               "Победит 1",
+						GET:                   get,
+						ListVendor:            listVendor,
+						CountTotal:            countTotal,
+						HoldInspection:        holdInspection,
+						NotVerifyComponents:   notVerifyComponents,
+						CountVerifyComponents: countVerifyComponents,
+						GetStatic:             getStatic,
+						HoldCountDebitor:      holdCountDebitor,
+						NotVerifyDebitor:      notVerifyDebitor,
+					},
+				}
+
+				data := map[string]interface{}{
+					"TitleDOC": "Список ВК",
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "showinspection.html", data)
+				//IngenerQuality = true
 			} else if user.Role == roleInspector {
-				Inspector = true
+				params := []Param{
+					{
+						LoggedIn:              true,
+						GroupP1:               true,
+						Inspector:             true,
+						User:                  user.LastName,
+						Username:              user.FirstName,
+						Pobedit:               "Победит 1",
+						GET:                   get,
+						ListVendor:            listVendor,
+						CountTotal:            countTotal,
+						HoldInspection:        holdInspection,
+						NotVerifyComponents:   notVerifyComponents,
+						CountVerifyComponents: countVerifyComponents,
+						GetStatic:             getStatic,
+						HoldCountDebitor:      holdCountDebitor,
+						NotVerifyDebitor:      notVerifyDebitor,
+					},
+				}
+
+				data := map[string]interface{}{
+					"TitleDOC": "Список ВК",
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "showinspection.html", data)
+				//Inspector = true
 			} else if user.Role == roleWarehouseManager {
-				WarehouseManager = true
-				LoggedIn = true
+				params := []Param{
+					{
+						LoggedIn:              true,
+						GroupP1:               true,
+						WarehouseManager:      true,
+						User:                  user.LastName,
+						Username:              user.FirstName,
+						Pobedit:               "Победит 1",
+						GET:                   get,
+						ListVendor:            listVendor,
+						CountTotal:            countTotal,
+						HoldInspection:        holdInspection,
+						NotVerifyComponents:   notVerifyComponents,
+						CountVerifyComponents: countVerifyComponents,
+						GetStatic:             getStatic,
+						HoldCountDebitor:      holdCountDebitor,
+						NotVerifyDebitor:      notVerifyDebitor,
+					},
+				}
+
+				data := map[string]interface{}{
+					"TitleDOC": "Список ВК",
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "showinspection.html", data)
+				//	WarehouseManager = true
+				//	LoggedIn = true
 			} /* else if user.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
@@ -2060,111 +5939,158 @@ func (s *Server) PageInspection() http.HandlerFunc {
 				//	fmt.Println("pageInspection quality - ", Quality)
 			} */
 
-			get, err := s.store.Inspection().ListInspection()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			countTotal, err := s.store.Inspection().CountTotalInspection()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			holdInspection, err := s.store.Inspection().HoldInspection()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			notVerifyComponents, err := s.store.Inspection().NotVerifyComponents()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			getStatic, err := s.store.Inspection().CountDebitor()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			holdCountDebitor, err := s.store.Inspection().HoldCountDebitor()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			notVerifyDebitor, err := s.store.Inspection().NotVerifyDebitor()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			countVerifyComponents, err := s.store.Inspection().CountVerifyComponents()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			listVendor, err := s.store.Vendor().ListVendor()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			groups := map[string]interface{}{
-				"TitleDOC": "Список ВК",
-				"User":     user.LastName,
-				"Username": user.FirstName,
-				//	"Admin":                Admin,
-				//	"Quality":              Quality,
-				"Inspector":        Inspector,
-				"IngenerQuality":   IngenerQuality,
-				"WarehouseManager": WarehouseManager,
-				//	"Warehouse":            Warehouse,
-				"StockkeeperWH":         StockkeeperWH,
-				"SuperIngenerQuality":   SuperIngenerQuality,
-				"SuperIngenerQuality2":  SuperIngenerQuality2,
-				"GroupP1":               GroupP1,
-				"MixP1P5":               MixP1P5,
-				"GET":                   get,
-				"ListVendor":            listVendor,
-				"CountTotal":            countTotal,
-				"HoldInspection":        holdInspection,
-				"NotVerifyComponents":   notVerifyComponents,
-				"CountVerifyComponents": countVerifyComponents,
-				"GetStatic":             getStatic,
-				"HoldCountDebitor":      holdCountDebitor,
-				"NotVerifyDebitor":      notVerifyDebitor,
-				"LoggedIn":              LoggedIn,
-				"Pobedit":               "Победит 1",
-			}
-
-			tpl.ExecuteTemplate(w, "showinspection.html", groups)
 			//	json.NewEncoder(w).Encode(get)
 		}
 
 		if user.Groups == groupQualityP5 || user.Groups == groupWarehouseP5 {
-			GroupP5 = true
+			//GroupP5 = true
 			if user.Role == roleSuperIngenerQuality {
-				SuperIngenerQuality = true
-				SuperIngenerQuality2 = true
-				LoggedIn = true
-				fmt.Println("pageInspection SuperIngenerQuality - ", SuperIngenerQuality)
+				params := []Param{
+					{
+						LoggedIn:              true,
+						GroupP1:               true,
+						SuperIngenerQuality:   true,
+						User:                  user.LastName,
+						Username:              user.FirstName,
+						Pobedit:               "Победит 5",
+						GET:                   get,
+						ListVendor:            listVendor,
+						CountTotal:            countTotal,
+						HoldInspection:        holdInspection,
+						NotVerifyComponents:   notVerifyComponents,
+						CountVerifyComponents: countVerifyComponents,
+						GetStatic:             getStatic,
+						HoldCountDebitor:      holdCountDebitor,
+						NotVerifyDebitor:      notVerifyDebitor,
+					},
+				}
+
+				data := map[string]interface{}{
+					"TitleDOC": "Список ВК",
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "showinspection.html", data)
+				//	SuperIngenerQuality = true
+				//	SuperIngenerQuality2 = true
+				//	LoggedIn = true
+				//	fmt.Println("pageInspection SuperIngenerQuality - ", SuperIngenerQuality)
 			} else if user.Role == roleStockkeeperWH {
-				StockkeeperWH = true
+				params := []Param{
+					{
+						LoggedIn:              true,
+						GroupP1:               true,
+						StockkeeperWH:         true,
+						User:                  user.LastName,
+						Username:              user.FirstName,
+						Pobedit:               "Победит 5",
+						GET:                   get,
+						ListVendor:            listVendor,
+						CountTotal:            countTotal,
+						HoldInspection:        holdInspection,
+						NotVerifyComponents:   notVerifyComponents,
+						CountVerifyComponents: countVerifyComponents,
+						GetStatic:             getStatic,
+						HoldCountDebitor:      holdCountDebitor,
+						NotVerifyDebitor:      notVerifyDebitor,
+					},
+				}
+
+				data := map[string]interface{}{
+					"TitleDOC": "Список ВК",
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "showinspection.html", data)
+				//StockkeeperWH = true
 				//	Warehouse = false
 				//	WarehouseManager = true
-				LoggedIn = true
+				//LoggedIn = true
 			} else if user.Role == roleIngenerQuality {
-				IngenerQuality = true
+				params := []Param{
+					{
+						LoggedIn:              true,
+						GroupP1:               true,
+						IngenerQuality:        true,
+						User:                  user.LastName,
+						Username:              user.FirstName,
+						Pobedit:               "Победит 5",
+						GET:                   get,
+						ListVendor:            listVendor,
+						CountTotal:            countTotal,
+						HoldInspection:        holdInspection,
+						NotVerifyComponents:   notVerifyComponents,
+						CountVerifyComponents: countVerifyComponents,
+						GetStatic:             getStatic,
+						HoldCountDebitor:      holdCountDebitor,
+						NotVerifyDebitor:      notVerifyDebitor,
+					},
+				}
+
+				data := map[string]interface{}{
+					"TitleDOC": "Список ВК",
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "showinspection.html", data)
+				//IngenerQuality = true
 			} else if user.Role == roleInspector {
-				Inspector = true
+				params := []Param{
+					{
+						LoggedIn:              true,
+						GroupP1:               true,
+						Inspector:             true,
+						User:                  user.LastName,
+						Username:              user.FirstName,
+						Pobedit:               "Победит 5",
+						GET:                   get,
+						ListVendor:            listVendor,
+						CountTotal:            countTotal,
+						HoldInspection:        holdInspection,
+						NotVerifyComponents:   notVerifyComponents,
+						CountVerifyComponents: countVerifyComponents,
+						GetStatic:             getStatic,
+						HoldCountDebitor:      holdCountDebitor,
+						NotVerifyDebitor:      notVerifyDebitor,
+					},
+				}
+
+				data := map[string]interface{}{
+					"TitleDOC": "Список ВК",
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "showinspection.html", data)
+				//Inspector = true
 			} else if user.Role == roleWarehouseManager {
-				WarehouseManager = true
-				LoggedIn = true
+				params := []Param{
+					{
+						LoggedIn:              true,
+						GroupP1:               true,
+						WarehouseManager:      true,
+						User:                  user.LastName,
+						Username:              user.FirstName,
+						Pobedit:               "Победит 5",
+						GET:                   get,
+						ListVendor:            listVendor,
+						CountTotal:            countTotal,
+						HoldInspection:        holdInspection,
+						NotVerifyComponents:   notVerifyComponents,
+						CountVerifyComponents: countVerifyComponents,
+						GetStatic:             getStatic,
+						HoldCountDebitor:      holdCountDebitor,
+						NotVerifyDebitor:      notVerifyDebitor,
+					},
+				}
+
+				data := map[string]interface{}{
+					"TitleDOC": "Список ВК",
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "showinspection.html", data)
+				//WarehouseManager = true
+				//LoggedIn = true
 			} /* else if user.Role == roleAdministrator {
 				Admin = true
 				LoggedIn = true
@@ -2176,88 +6102,6 @@ func (s *Server) PageInspection() http.HandlerFunc {
 				//	fmt.Println("pageInspection quality - ", Quality)
 			} */
 
-			get, err := s.store.Inspection().ListInspectionP5()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			countTotal, err := s.store.Inspection().CountTotalInspectionP5()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			holdInspection, err := s.store.Inspection().HoldInspectionP5()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			notVerifyComponents, err := s.store.Inspection().NotVerifyComponentsP5()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			getStatic, err := s.store.Inspection().CountDebitorP5()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			holdCountDebitor, err := s.store.Inspection().HoldCountDebitorP5()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			notVerifyDebitor, err := s.store.Inspection().NotVerifyDebitorP5()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			countVerifyComponents, err := s.store.Inspection().CountVerifyComponentsP5()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			listVendor, err := s.store.Vendor().ListVendor()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			groups := map[string]interface{}{
-				"TitleDOC": "Список ВК",
-				"User":     user.LastName,
-				"Username": user.FirstName,
-				//	"Admin":                Admin,
-				//	"Quality":              Quality,
-				"Inspector":        Inspector,
-				"IngenerQuality":   IngenerQuality,
-				"WarehouseManager": WarehouseManager,
-				//	"Warehouse":            Warehouse,
-				"StockkeeperWH":         StockkeeperWH,
-				"SuperIngenerQuality":   SuperIngenerQuality,
-				"SuperIngenerQuality2":  SuperIngenerQuality2,
-				"GroupP5":               GroupP5,
-				"GET":                   get,
-				"ListVendor":            listVendor,
-				"CountTotal":            countTotal,
-				"HoldInspection":        holdInspection,
-				"NotVerifyComponents":   notVerifyComponents,
-				"GetStatic":             getStatic,
-				"HoldCountDebitor":      holdCountDebitor,
-				"NotVerifyDebitor":      notVerifyDebitor,
-				"CountVerifyComponents": countVerifyComponents,
-				"LoggedIn":              LoggedIn,
-				"Pobedit":               "Победит 5",
-			}
-
-			tpl.ExecuteTemplate(w, "showinspection.html", groups)
 			//	json.NewEncoder(w).Encode(get)
 		}
 	}
@@ -2271,34 +6115,128 @@ func (s *Server) PageInspectionMix() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		s.mu.Lock()
 		defer s.mu.Unlock()
+
 		//w.Header().Add("Content-Type", "application/json")
-		//	Admin := true
-		//	Warehouse := true
-		StockkeeperWH := false
-		WarehouseManager := false
-		//	Quality := false
-		Inspector := false
-		SuperIngenerQuality := false
-		IngenerQuality := false
-		SuperIngenerQuality2 := false
-		GroupP1 := false
-		GroupP5 := false
-		//MixP1P5 := false
-		LoggedIn := true
 
 		user := r.Context().Value(ctxKeyUser).(*model.User)
+
+		get, err := s.store.Inspection().ListInspectionP5()
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		countTotal, err := s.store.Inspection().CountTotalInspectionP5()
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		holdInspection, err := s.store.Inspection().HoldInspectionP5()
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		notVerifyComponents, err := s.store.Inspection().NotVerifyComponentsP5()
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		getStatic, err := s.store.Inspection().CountDebitorP5()
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		holdCountDebitor, err := s.store.Inspection().HoldCountDebitorP5()
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		notVerifyDebitor, err := s.store.Inspection().NotVerifyDebitorP5()
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		countVerifyComponents, err := s.store.Inspection().CountVerifyComponentsP5()
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		listVendor, err := s.store.Vendor().ListVendor()
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
 
 		if user.Groups == groupQuality && user.Role == roleSuperIngenerQuality ||
 			user.Groups == groupQuality && user.Role == roleIngenerQuality {
 			//	MixP1P5 = true
-			GroupP1 = true
+			//GroupP1 = true
 			if user.Role == roleSuperIngenerQuality {
-				SuperIngenerQuality = true
-				SuperIngenerQuality2 = true
-				LoggedIn = true
-				fmt.Println("pageInspection SuperIngenerQuality - ", SuperIngenerQuality)
+				params := []Param{
+					{
+						LoggedIn:              true,
+						GroupP1:               true,
+						SuperIngenerQuality:   true,
+						User:                  user.LastName,
+						Username:              user.FirstName,
+						Pobedit:               "Победит 5",
+						GET:                   get,
+						ListVendor:            listVendor,
+						CountTotal:            countTotal,
+						HoldInspection:        holdInspection,
+						NotVerifyComponents:   notVerifyComponents,
+						CountVerifyComponents: countVerifyComponents,
+						GetStatic:             getStatic,
+						HoldCountDebitor:      holdCountDebitor,
+						NotVerifyDebitor:      notVerifyDebitor,
+					},
+				}
+
+				data := map[string]interface{}{
+					"TitleDOC": "Список ВК",
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "showinspectionmix.html", data)
+				//	SuperIngenerQuality = true
+				//	SuperIngenerQuality2 = true
+				//	LoggedIn = true
+				//	fmt.Println("pageInspection SuperIngenerQuality - ", SuperIngenerQuality)
 			} else if user.Role == roleIngenerQuality {
-				IngenerQuality = true
+				params := []Param{
+					{
+						LoggedIn:              true,
+						GroupP1:               true,
+						IngenerQuality:        true,
+						User:                  user.LastName,
+						Username:              user.FirstName,
+						Pobedit:               "Победит 5",
+						GET:                   get,
+						ListVendor:            listVendor,
+						CountTotal:            countTotal,
+						HoldInspection:        holdInspection,
+						NotVerifyComponents:   notVerifyComponents,
+						CountVerifyComponents: countVerifyComponents,
+						GetStatic:             getStatic,
+						HoldCountDebitor:      holdCountDebitor,
+						NotVerifyDebitor:      notVerifyDebitor,
+					},
+				}
+
+				data := map[string]interface{}{
+					"TitleDOC": "Список ВК",
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "showinspectionmix.html", data)
+				//IngenerQuality = true
 			} /* else if user.Role == roleStockkeeperWH {
 				StockkeeperWH = true
 				//	Warehouse = false
@@ -2322,103 +6260,69 @@ func (s *Server) PageInspectionMix() http.HandlerFunc {
 				//	fmt.Println("pageInspection quality - ", Quality)
 			} */
 
-			get, err := s.store.Inspection().ListInspectionP5()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			countTotal, err := s.store.Inspection().CountTotalInspectionP5()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			holdInspection, err := s.store.Inspection().HoldInspectionP5()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			notVerifyComponents, err := s.store.Inspection().NotVerifyComponentsP5()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			getStatic, err := s.store.Inspection().CountDebitorP5()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			holdCountDebitor, err := s.store.Inspection().HoldCountDebitorP5()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			notVerifyDebitor, err := s.store.Inspection().NotVerifyDebitorP5()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			countVerifyComponents, err := s.store.Inspection().CountVerifyComponentsP5()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			listVendor, err := s.store.Vendor().ListVendor()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			groups := map[string]interface{}{
-				"TitleDOC": "Список ВК",
-				"User":     user.LastName,
-				"Username": user.FirstName,
-				//	"Admin":                Admin,
-				//	"Quality":              Quality,
-				"Inspector":        Inspector,
-				"IngenerQuality":   IngenerQuality,
-				"WarehouseManager": WarehouseManager,
-				//	"Warehouse":            Warehouse,
-				"StockkeeperWH":        StockkeeperWH,
-				"SuperIngenerQuality":  SuperIngenerQuality,
-				"SuperIngenerQuality2": SuperIngenerQuality2,
-				//"MixP1P5":              MixP1P5,
-				"GroupP1":               GroupP1,
-				"GET":                   get,
-				"ListVendor":            listVendor,
-				"CountTotal":            countTotal,
-				"HoldInspection":        holdInspection,
-				"NotVerifyComponents":   notVerifyComponents,
-				"GetStatic":             getStatic,
-				"HoldCountDebitor":      holdCountDebitor,
-				"NotVerifyDebitor":      notVerifyDebitor,
-				"CountVerifyComponents": countVerifyComponents,
-				"LoggedIn":              LoggedIn,
-				"Pobedit":               "Победит 5",
-			}
-
-			tpl.ExecuteTemplate(w, "showinspectionmix.html", groups)
 			//	json.NewEncoder(w).Encode(get)
 		}
 
 		if user.Groups == groupQualityP5 && user.Role == roleSuperIngenerQuality ||
 			user.Groups == groupQualityP5 && user.Role == roleIngenerQuality {
 			//	MixP1P5 = true
-			GroupP5 = true
+			//GroupP5 = true
 			if user.Role == roleSuperIngenerQuality {
-				SuperIngenerQuality = true
-				SuperIngenerQuality2 = true
-				LoggedIn = true
-				fmt.Println("pageInspection SuperIngenerQuality - ", SuperIngenerQuality)
+				params := []Param{
+					{
+						LoggedIn:              true,
+						GroupP5:               true,
+						IngenerQuality:        true,
+						User:                  user.LastName,
+						Username:              user.FirstName,
+						Pobedit:               "Победит 1",
+						GET:                   get,
+						ListVendor:            listVendor,
+						CountTotal:            countTotal,
+						HoldInspection:        holdInspection,
+						NotVerifyComponents:   notVerifyComponents,
+						CountVerifyComponents: countVerifyComponents,
+						GetStatic:             getStatic,
+						HoldCountDebitor:      holdCountDebitor,
+						NotVerifyDebitor:      notVerifyDebitor,
+					},
+				}
+
+				data := map[string]interface{}{
+					"TitleDOC": "Список ВК",
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "showinspectionmix.html", data)
+
 			} else if user.Role == roleIngenerQuality {
-				IngenerQuality = true
+				params := []Param{
+					{
+						LoggedIn:              true,
+						GroupP5:               true,
+						IngenerQuality:        true,
+						User:                  user.LastName,
+						Username:              user.FirstName,
+						Pobedit:               "Победит 1",
+						GET:                   get,
+						ListVendor:            listVendor,
+						CountTotal:            countTotal,
+						HoldInspection:        holdInspection,
+						NotVerifyComponents:   notVerifyComponents,
+						CountVerifyComponents: countVerifyComponents,
+						GetStatic:             getStatic,
+						HoldCountDebitor:      holdCountDebitor,
+						NotVerifyDebitor:      notVerifyDebitor,
+					},
+				}
+
+				data := map[string]interface{}{
+					"TitleDOC": "Список ВК",
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "showinspectionmix.html", data)
+				//	IngenerQuality = true
 			} /* else if user.Role == roleStockkeeperWH {
 				StockkeeperWH = true
 				//	Warehouse = false
@@ -2442,89 +6346,6 @@ func (s *Server) PageInspectionMix() http.HandlerFunc {
 				//	fmt.Println("pageInspection quality - ", Quality)
 			} */
 
-			get, err := s.store.Inspection().ListInspection()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			countTotal, err := s.store.Inspection().CountTotalInspection()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			holdInspection, err := s.store.Inspection().HoldInspection()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			notVerifyComponents, err := s.store.Inspection().NotVerifyComponents()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			getStatic, err := s.store.Inspection().CountDebitor()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			holdCountDebitor, err := s.store.Inspection().HoldCountDebitor()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			notVerifyDebitor, err := s.store.Inspection().NotVerifyDebitor()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			countVerifyComponents, err := s.store.Inspection().CountVerifyComponents()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			listVendor, err := s.store.Vendor().ListVendor()
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			groups := map[string]interface{}{
-				"TitleDOC": "Список ВК",
-				"User":     user.LastName,
-				"Username": user.FirstName,
-				//	"Admin":                Admin,
-				//	"Quality":              Quality,
-				"Inspector":        Inspector,
-				"IngenerQuality":   IngenerQuality,
-				"WarehouseManager": WarehouseManager,
-				//	"Warehouse":            Warehouse,
-				"StockkeeperWH":        StockkeeperWH,
-				"SuperIngenerQuality":  SuperIngenerQuality,
-				"SuperIngenerQuality2": SuperIngenerQuality2,
-				//"MixP1P5":              MixP1P5,
-				"GroupP5":               GroupP5,
-				"GET":                   get,
-				"ListVendor":            listVendor,
-				"CountTotal":            countTotal,
-				"HoldInspection":        holdInspection,
-				"NotVerifyComponents":   notVerifyComponents,
-				"GetStatic":             getStatic,
-				"HoldCountDebitor":      holdCountDebitor,
-				"NotVerifyDebitor":      notVerifyDebitor,
-				"CountVerifyComponents": countVerifyComponents,
-				"LoggedIn":              LoggedIn,
-				"Pobedit":               "Победит 1",
-			}
-
-			tpl.ExecuteTemplate(w, "showinspectionmix.html", groups)
 			//	json.NewEncoder(w).Encode(get)
 		}
 
@@ -2667,13 +6488,6 @@ func (s *Server) PageupdateInspectionJSON() http.HandlerFunc {
 		//	if r.Method == http.MethodOptions {
 		//		return
 		//	}
-		Admin := false
-		SuperIngenerQuality := false
-		IngenerQuality := false
-		Inspector := false
-		GroupP1 := false
-		GroupP5 := false
-		LoggedIn := false
 
 		vars := mux.Vars(r)
 		id, err := strconv.Atoi(vars["ID"])
@@ -2688,6 +6502,12 @@ func (s *Server) PageupdateInspectionJSON() http.HandlerFunc {
 		fmt.Println("Test json page update")
 		//s.infoLog.Printf("user.Groups - %v", user.Groups)
 		s.logger.Infof("user.Groups - %v", user.Groups)
+
+		get, err := s.store.Inspection().EditInspection(id)
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
 		/*
 			if (user.Groups == groupQuality && user.Role == roleSuperIngenerQuality) ||
 				(user.Groups == groupQuality && user.Role == roleIngenerQuality) {
@@ -2736,90 +6556,158 @@ func (s *Server) PageupdateInspectionJSON() http.HandlerFunc {
 			}
 		*/
 		if user.Groups == groupQuality {
-			GroupP1 = true
+
 			if user.Role == roleAdministrator {
-				Admin = true
-				LoggedIn = true
+				params := []Param{
+					{
+						GroupP1:  true,
+						LoggedIn: true,
+						Admin:    true,
+						User:     user.LastName,
+						Username: user.FirstName,
+						GET:      get,
+					},
+				}
+
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "updateinspectionjson.html", data)
+
 			} else if user.Role == roleSuperIngenerQuality {
-				SuperIngenerQuality = true
-				LoggedIn = true
-				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
+				params := []Param{
+					{
+						GroupP1:             true,
+						LoggedIn:            true,
+						SuperIngenerQuality: true,
+						User:                user.LastName,
+						Username:            user.FirstName,
+						GET:                 get,
+					},
+				}
+
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "updateinspectionjson.html", data)
+
 			} else if user.Role == roleIngenerQuality {
-				IngenerQuality = true
-				LoggedIn = true
-				fmt.Println("IngenerQuality - ", IngenerQuality)
+				params := []Param{
+					{
+						GroupP1:        true,
+						LoggedIn:       true,
+						IngenerQuality: true,
+						User:           user.LastName,
+						Username:       user.FirstName,
+						GET:            get,
+					},
+				}
+
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "updateinspectionjson.html", data)
+
 			} else if user.Role == roleInspector {
-				Inspector = true
-				LoggedIn = true
+				params := []Param{
+					{
+						GroupP1:   true,
+						LoggedIn:  true,
+						Inspector: true,
+						User:      user.LastName,
+						Username:  user.FirstName,
+						GET:       get,
+					},
+				}
+
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "updateinspectionjson.html", data)
 
 			}
-			//fmt.Println("ID - ?", id)
 
-			get, err := s.store.Inspection().EditInspection(id)
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			data := map[string]interface{}{
-				"Admin":               Admin,
-				"SuperIngenerQuality": SuperIngenerQuality,
-				"IngenerQuality":      IngenerQuality,
-				"Inspector":           Inspector,
-				"GroupP1":             GroupP1,
-				"GET":                 get,
-				"LoggedIn":            LoggedIn,
-				"User":                user.LastName,
-				"Username":            user.FirstName,
-			}
-			err = tpl.ExecuteTemplate(w, "updateinspectionjson.html", data)
-			if err != nil {
-				http.Error(w, err.Error(), 400)
-				return
-			}
 		}
 		if user.Groups == groupQualityP5 {
-			GroupP5 = true
+
 			if user.Role == roleAdministrator {
-				Admin = true
-				LoggedIn = true
+				params := []Param{
+					{
+						GroupP5:  true,
+						LoggedIn: true,
+						Admin:    true,
+						User:     user.LastName,
+						Username: user.FirstName,
+						GET:      get,
+					},
+				}
+
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "updateinspectionjson.html", data)
+
 			} else if user.Role == roleSuperIngenerQuality {
-				SuperIngenerQuality = true
-				LoggedIn = true
-				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
+				params := []Param{
+					{
+						GroupP5:             true,
+						LoggedIn:            true,
+						SuperIngenerQuality: true,
+						User:                user.LastName,
+						Username:            user.FirstName,
+						GET:                 get,
+					},
+				}
+
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "updateinspectionjson.html", data)
+
 			} else if user.Role == roleIngenerQuality {
-				IngenerQuality = true
-				LoggedIn = true
-				fmt.Println("IngenerQuality - ", IngenerQuality)
+				params := []Param{
+					{
+						GroupP5:        true,
+						LoggedIn:       true,
+						IngenerQuality: true,
+						User:           user.LastName,
+						Username:       user.FirstName,
+						GET:            get,
+					},
+				}
+
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "updateinspectionjson.html", data)
+
 			} else if user.Role == roleInspector {
-				Inspector = true
-				LoggedIn = true
+				params := []Param{
+					{
+						GroupP5:   true,
+						LoggedIn:  true,
+						Inspector: true,
+						User:      user.LastName,
+						Username:  user.FirstName,
+						GET:       get,
+					},
+				}
+
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "updateinspectionjson.html", data)
 
 			}
-			//fmt.Println("ID - ?", id)
 
-			get, err := s.store.Inspection().EditInspectionP5(id)
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			data := map[string]interface{}{
-				"Admin":               Admin,
-				"SuperIngenerQuality": SuperIngenerQuality,
-				"IngenerQuality":      IngenerQuality,
-				"Inspector":           Inspector,
-				"GroupP5":             GroupP5,
-				"GET":                 get,
-				"LoggedIn":            LoggedIn,
-				"User":                user.LastName,
-				"Username":            user.FirstName,
-			}
-			err = tpl.ExecuteTemplate(w, "updateinspectionjson.html", data)
-			if err != nil {
-				http.Error(w, err.Error(), 400)
-				return
-			}
 		}
 
 	}
@@ -2838,13 +6726,6 @@ func (s *Server) PageupdateInspectionJSONmix() http.HandlerFunc {
 		//	if r.Method == http.MethodOptions {
 		//		return
 		//	}
-		Admin := false
-		SuperIngenerQuality := false
-		IngenerQuality := false
-		Inspector := false
-		GroupP1 := false
-		GroupP5 := false
-		LoggedIn := false
 
 		vars := mux.Vars(r)
 		id, err := strconv.Atoi(vars["ID"])
@@ -2860,96 +6741,142 @@ func (s *Server) PageupdateInspectionJSONmix() http.HandlerFunc {
 		//s.infoLog.Printf("user.Groups - %v", user.Groups)
 		s.logger.Infof("user.Groups - %v", user.Groups)
 
+		get, err := s.store.Inspection().EditInspectionP5(id)
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
+
 		if (user.Groups == groupQuality && user.Role == roleSuperIngenerQuality) ||
 			(user.Groups == groupQuality && user.Role == roleIngenerQuality) {
 			fmt.Println("Test mix page update")
-			GroupP1 = true
+
 			if user.Role == roleAdministrator {
-				Admin = true
-				LoggedIn = true
+				params := []Param{
+					{
+						GroupP1:  true,
+						LoggedIn: true,
+						Admin:    true,
+						User:     user.LastName,
+						Username: user.FirstName,
+						GET:      get,
+					},
+				}
+
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "updateinspectionjsonmix.html", data)
+
 			} else if user.Role == roleSuperIngenerQuality {
-				SuperIngenerQuality = true
-				LoggedIn = true
-				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
+				params := []Param{
+					{
+						GroupP1:             true,
+						LoggedIn:            true,
+						SuperIngenerQuality: true,
+						User:                user.LastName,
+						Username:            user.FirstName,
+						GET:                 get,
+					},
+				}
+
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "updateinspectionjsonmix.html", data)
+
 			} else if user.Role == roleIngenerQuality {
-				IngenerQuality = true
-				LoggedIn = true
-				fmt.Println("IngenerQuality - ", IngenerQuality)
+				params := []Param{
+					{
+						GroupP1:        true,
+						LoggedIn:       true,
+						IngenerQuality: true,
+						User:           user.LastName,
+						Username:       user.FirstName,
+						GET:            get,
+					},
+				}
+
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "updateinspectionjsonmix.html", data)
+
 			} /*else if user.Role == roleInspector {
 				Inspector = true
 				LoggedIn = true
 
 			}*/
 			//fmt.Println("ID - ?", id)
-
-			get, err := s.store.Inspection().EditInspectionP5(id)
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			data := map[string]interface{}{
-				"Admin":               Admin,
-				"SuperIngenerQuality": SuperIngenerQuality,
-				"IngenerQuality":      IngenerQuality,
-				"Inspector":           Inspector,
-				"GroupP1":             GroupP1,
-				"GET":                 get,
-				"LoggedIn":            LoggedIn,
-				"User":                user.LastName,
-				"Username":            user.FirstName,
-			}
-			err = tpl.ExecuteTemplate(w, "updateinspectionjsonmix.html", data)
-			if err != nil {
-				http.Error(w, err.Error(), 400)
-				return
-			}
 		}
 
 		if (user.Groups == groupQualityP5 && user.Role == roleSuperIngenerQuality) ||
 			(user.Groups == groupQualityP5 && user.Role == roleIngenerQuality) {
 			fmt.Println("Test mix page update")
-			GroupP5 = true
+
 			if user.Role == roleAdministrator {
-				Admin = true
-				LoggedIn = true
+				params := []Param{
+					{
+						GroupP5:  true,
+						LoggedIn: true,
+						Admin:    true,
+						User:     user.LastName,
+						Username: user.FirstName,
+						GET:      get,
+					},
+				}
+
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "updateinspectionjsonmix.html", data)
+
 			} else if user.Role == roleSuperIngenerQuality {
-				SuperIngenerQuality = true
-				LoggedIn = true
-				fmt.Println("SuperIngenerQuality - ", SuperIngenerQuality)
+				params := []Param{
+					{
+						GroupP5:             true,
+						LoggedIn:            true,
+						SuperIngenerQuality: true,
+						User:                user.LastName,
+						Username:            user.FirstName,
+						GET:                 get,
+					},
+				}
+
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "updateinspectionjsonmix.html", data)
+
 			} else if user.Role == roleIngenerQuality {
-				IngenerQuality = true
-				LoggedIn = true
-				fmt.Println("IngenerQuality - ", IngenerQuality)
+				params := []Param{
+					{
+						GroupP5:        true,
+						LoggedIn:       true,
+						IngenerQuality: true,
+						User:           user.LastName,
+						Username:       user.FirstName,
+						GET:            get,
+					},
+				}
+
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "updateinspectionjsonmix.html", data)
+
 			} /*else if user.Role == roleInspector {
 				Inspector = true
 				LoggedIn = true
 
 			}*/
 			//fmt.Println("ID - ?", id)
-
-			get, err := s.store.Inspection().EditInspection(id)
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			data := map[string]interface{}{
-				"Admin":               Admin,
-				"SuperIngenerQuality": SuperIngenerQuality,
-				"IngenerQuality":      IngenerQuality,
-				"Inspector":           Inspector,
-				"GroupP5":             GroupP5,
-				"GET":                 get,
-				"LoggedIn":            LoggedIn,
-				"User":                user.LastName,
-				"Username":            user.FirstName,
-			}
-			err = tpl.ExecuteTemplate(w, "updateinspectionjsonmix.html", data)
-			if err != nil {
-				http.Error(w, err.Error(), 400)
-				return
-			}
 		}
 	}
 }
@@ -3426,39 +7353,7 @@ func (s *Server) PageListAcceptWHInspection() http.HandlerFunc { // acceptinspec
 		s.mu.Lock()
 		defer s.mu.Unlock()
 
-		Admin := false
-		StockkeeperWH := false
-		WarehouseManager := false
-		LoggedIn := false
-		stockkeeperWH := false
-		//superIngenerQuality := true
-		//quality := false
-		//	statusStr := false
-
 		user := r.Context().Value(ctxKeyUser).(*model.User)
-
-		if user.Groups == groupWarehouse {
-			stockkeeperWH = true
-			WarehouseManager = true
-		}
-		/*
-			if user.Groups == groupQuality {
-				quality = true
-			} else if user.Groups == groupWarehouse {
-				stockkeeperWH = true
-			}
-		*/
-		if user.Role == roleAdministrator {
-			Admin = true
-			LoggedIn = true
-		} else if user.Role == roleStockkeeperWH {
-			StockkeeperWH = true
-			LoggedIn = true
-			fmt.Println("кладовщик склада - ", StockkeeperWH)
-		} else if user.Role == roleWarehouseManager {
-			WarehouseManager = true
-			LoggedIn = true
-		}
 
 		get, err := s.store.Inspection().ListAcceptWHInspection()
 		if err != nil {
@@ -3466,25 +7361,57 @@ func (s *Server) PageListAcceptWHInspection() http.HandlerFunc { // acceptinspec
 			return
 		}
 
-		groups := map[string]interface{}{
-			//	"quality":   quality,
-			"Warehouse":        stockkeeperWH,
-			"WarehouseManager": WarehouseManager,
-			//	roleSuperIngenerQuality: superIngenerQuality,
-			"GET": get,
-			//	"status":    statusStr,
-			"Admin":         Admin,
-			"StockkeeperWH": StockkeeperWH,
-			"LoggedIn":      LoggedIn,
-			"User":          user.LastName,
-			"Username":      user.FirstName,
-		}
+		if user.Role == roleAdministrator {
+			params := []Param{
+				{
+					LoggedIn: true,
+					Admin:    true,
+					User:     user.LastName,
+					Username: user.FirstName,
+					GET:      get,
+				},
+			}
 
-		err = tpl.ExecuteTemplate(w, "acceptinspection.html", groups)
+			data := map[string]interface{}{
+				"GetParam": params,
+			}
 
-		if err != nil {
-			http.Error(w, err.Error(), 400)
-			return
+			RenderTemplate(w, "acceptinspection.html", data)
+
+		} else if user.Role == roleStockkeeperWH {
+			params := []Param{
+				{
+					LoggedIn:      true,
+					StockkeeperWH: true,
+					User:          user.LastName,
+					Username:      user.FirstName,
+					GET:           get,
+				},
+			}
+
+			data := map[string]interface{}{
+				"GetParam": params,
+			}
+
+			RenderTemplate(w, "acceptinspection.html", data)
+
+		} else if user.Role == roleWarehouseManager {
+			params := []Param{
+				{
+					LoggedIn:         true,
+					WarehouseManager: true,
+					User:             user.LastName,
+					Username:         user.FirstName,
+					GET:              get,
+				},
+			}
+
+			data := map[string]interface{}{
+				"GetParam": params,
+			}
+
+			RenderTemplate(w, "acceptinspection.html", data)
+
 		}
 	}
 }
@@ -3533,8 +7460,6 @@ func (s *Server) PageacceptWarehouseInspection() http.HandlerFunc {
 				LoggedIn = true
 			}
 
-			//fmt.Println("ID - ?", id)
-
 			get, err := s.store.Inspection().EditAcceptWarehouseInspection(id)
 			if err != nil {
 				s.error(w, r, http.StatusUnprocessableEntity, err)
@@ -3571,8 +7496,6 @@ func (s *Server) PageacceptWarehouseInspection() http.HandlerFunc {
 				WarehouseManager = true
 				LoggedIn = true
 			}
-
-			//fmt.Println("ID - ?", id)
 
 			get, err := s.store.Inspection().EditAcceptWarehouseInspectionP5(id)
 			if err != nil {
@@ -3678,13 +7601,6 @@ func (s *Server) PageacceptWarehouseInspectionJSON() http.HandlerFunc {
 		s.mu.Lock()
 		defer s.mu.Unlock()
 
-		Admin := false
-		StockkeeperWH := false
-		WarehouseManager := false
-		GroupP1 := false
-		GroupP5 := false
-		LoggedIn := false
-
 		vars := mux.Vars(r)
 		id, err := strconv.Atoi(vars["ID"])
 		if err != nil {
@@ -3697,83 +7613,127 @@ func (s *Server) PageacceptWarehouseInspectionJSON() http.HandlerFunc {
 		fmt.Println("user.Groups - ?", user.Groups)
 		//s.infoLog.Printf("user.Groups - %v\n", user.Groups)
 		s.logger.Info("user.Groups - %v\n", user.Groups)
+		get, err := s.store.Inspection().EditAcceptWarehouseInspection(id)
+		if err != nil {
+			s.error(w, r, http.StatusUnprocessableEntity, err)
+			return
+		}
 
 		if user.Groups == groupWarehouse {
-			GroupP1 = true
+
 			if user.Role == roleAdministrator {
-				Admin = true
-				LoggedIn = true
+				params := []Param{
+					{
+						GroupP1:  true,
+						LoggedIn: true,
+						Admin:    true,
+						User:     user.LastName,
+						Username: user.FirstName,
+						GET:      get,
+					},
+				}
+
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "acceptWarehouseInspectionjson.html", data)
 
 			} else if user.Role == roleStockkeeperWH {
-				StockkeeperWH = true
-				LoggedIn = true
+				params := []Param{
+					{
+						GroupP1:       true,
+						LoggedIn:      true,
+						StockkeeperWH: true,
+						User:          user.LastName,
+						Username:      user.FirstName,
+						GET:           get,
+					},
+				}
+
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "acceptWarehouseInspectionjson.html", data)
 
 			} else if user.Role == roleWarehouseManager {
-				WarehouseManager = true
-				LoggedIn = true
+				params := []Param{
+					{
+						GroupP1:          true,
+						LoggedIn:         true,
+						WarehouseManager: true,
+						User:             user.LastName,
+						Username:         user.FirstName,
+						GET:              get,
+					},
+				}
+
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "acceptWarehouseInspectionjson.html", data)
+
 			}
 
-			//fmt.Println("ID - ?", id)
-
-			get, err := s.store.Inspection().EditAcceptWarehouseInspection(id)
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
-
-			data := map[string]interface{}{
-				"User":             user.LastName,
-				"Username":         user.FirstName,
-				"Admin":            Admin,
-				"WarehouseManager": WarehouseManager,
-				"StockkeeperWH":    StockkeeperWH,
-				"GroupP1":          GroupP1,
-				"LoggedIn":         LoggedIn,
-				"GET":              get,
-			}
-			err = tpl.ExecuteTemplate(w, "acceptWarehouseInspectionjson.html", data)
-			if err != nil {
-				http.Error(w, err.Error(), 400)
-				return
-			}
 		}
 		if user.Groups == groupWarehouseP5 {
-			GroupP5 = true
+
 			if user.Role == roleAdministrator {
-				Admin = true
-				LoggedIn = true
+				params := []Param{
+					{
+						GroupP5:  true,
+						LoggedIn: true,
+						Admin:    true,
+						User:     user.LastName,
+						Username: user.FirstName,
+						GET:      get,
+					},
+				}
+
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "acceptWarehouseInspectionjson.html", data)
 
 			} else if user.Role == roleStockkeeperWH {
-				StockkeeperWH = true
-				LoggedIn = true
+				params := []Param{
+					{
+						GroupP5:       true,
+						LoggedIn:      true,
+						StockkeeperWH: true,
+						User:          user.LastName,
+						Username:      user.FirstName,
+						GET:           get,
+					},
+				}
+
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
+
+				RenderTemplate(w, "acceptWarehouseInspectionjson.html", data)
 
 			} else if user.Role == roleWarehouseManager {
-				WarehouseManager = true
-				LoggedIn = true
-			}
+				params := []Param{
+					{
+						GroupP5:          true,
+						LoggedIn:         true,
+						WarehouseManager: true,
+						User:             user.LastName,
+						Username:         user.FirstName,
+						GET:              get,
+					},
+				}
 
-			//fmt.Println("ID - ?", id)
+				data := map[string]interface{}{
+					"GetParam": params,
+				}
 
-			get, err := s.store.Inspection().EditAcceptWarehouseInspectionP5(id)
-			if err != nil {
-				s.error(w, r, http.StatusUnprocessableEntity, err)
-				return
-			}
+				RenderTemplate(w, "acceptWarehouseInspectionjson.html", data)
 
-			data := map[string]interface{}{
-				"User":             user.LastName,
-				"Username":         user.FirstName,
-				"Admin":            Admin,
-				"WarehouseManager": WarehouseManager,
-				"StockkeeperWH":    StockkeeperWH,
-				"GroupP5":          GroupP5,
-				"LoggedIn":         LoggedIn,
-				"GET":              get,
-			}
-			err = tpl.ExecuteTemplate(w, "acceptWarehouseInspectionjson.html", data)
-			if err != nil {
-				http.Error(w, err.Error(), 400)
-				return
 			}
 		}
 	}
