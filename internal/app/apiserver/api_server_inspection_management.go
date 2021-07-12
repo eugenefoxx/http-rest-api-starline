@@ -5727,7 +5727,7 @@ func (s *Server) PageInspection() http.HandlerFunc {
 		//w.Header().Add("Content-Type", "application/json")
 
 		user := r.Context().Value(ctxKeyUser).(*model.User)
-
+/*
 		get, err := s.store.Inspection().ListInspection()
 		if err != nil {
 			s.error(w, r, http.StatusUnprocessableEntity, err)
@@ -5781,10 +5781,63 @@ func (s *Server) PageInspection() http.HandlerFunc {
 			s.error(w, r, http.StatusUnprocessableEntity, err)
 			return
 		}
-
+*/
 		if user.Groups == groupQuality || user.Groups == groupWarehouse {
 			//GroupP1 = true
+			get, err := s.store.Inspection().ListInspection()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+			countTotal, err := s.store.Inspection().CountTotalInspection()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			holdInspection, err := s.store.Inspection().HoldInspection()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			notVerifyComponents, err := s.store.Inspection().NotVerifyComponents()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			getStatic, err := s.store.Inspection().CountDebitor()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			holdCountDebitor, err := s.store.Inspection().HoldCountDebitor()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			notVerifyDebitor, err := s.store.Inspection().NotVerifyDebitor()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			countVerifyComponents, err := s.store.Inspection().CountVerifyComponents()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			listVendor, err := s.store.Vendor().ListVendor()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
 			if user.Role == roleSuperIngenerQuality {
+
 				params := []Param{
 					{
 						LoggedIn:              true,
@@ -5944,6 +5997,58 @@ func (s *Server) PageInspection() http.HandlerFunc {
 
 		if user.Groups == groupQualityP5 || user.Groups == groupWarehouseP5 {
 			//GroupP5 = true
+			get, err := s.store.Inspection().ListInspectionP5()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+			countTotal, err := s.store.Inspection().CountTotalInspectionP5()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			holdInspection, err := s.store.Inspection().HoldInspectionP5()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			notVerifyComponents, err := s.store.Inspection().NotVerifyComponentsP5()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			getStatic, err := s.store.Inspection().CountDebitorP5()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			holdCountDebitor, err := s.store.Inspection().HoldCountDebitorP5()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			notVerifyDebitor, err := s.store.Inspection().NotVerifyDebitorP5()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			countVerifyComponents, err := s.store.Inspection().CountVerifyComponentsP5()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
+
+			listVendor, err := s.store.Vendor().ListVendor()
+			if err != nil {
+				s.error(w, r, http.StatusUnprocessableEntity, err)
+				return
+			}
 			if user.Role == roleSuperIngenerQuality {
 				params := []Param{
 					{
